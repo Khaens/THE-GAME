@@ -52,7 +52,7 @@
               "RelativeDocumentMoniker": "THE-GAME\\User.h",
               "ToolTip": "D:\\Github Desktop\\THE-GAME\\THE-GAME\\User.h",
               "RelativeToolTip": "THE-GAME\\User.h",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAiAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2025-10-28T18:12:46.25Z",
               "IsPinned": true,
@@ -69,8 +69,7 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-10-28T18:14:04.098Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Document",
@@ -82,8 +81,7 @@
               "RelativeToolTip": "THE-GAME\\Deck.cpp",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAZAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-10-28T19:57:17.243Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-28T19:57:17.243Z"
             },
             {
               "$type": "Document",
@@ -95,8 +93,7 @@
               "RelativeToolTip": "THE-GAME\\Player.cpp",
               "ViewState": "AgIAAAkAAAAAAAAAAAAAABIAAAAPAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-10-28T18:18:11.177Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-28T18:18:11.177Z"
             },
             {
               "$type": "Document",
@@ -120,8 +117,7 @@
               "RelativeToolTip": "THE-GAME\\Card.cpp",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-10-28T18:03:00.212Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-28T18:03:00.212Z"
             },
             {
               "$type": "Document",
@@ -145,8 +141,7 @@
               "RelativeToolTip": "THE-GAME\\main.cpp",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-10-28T17:28:29.015Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-28T17:28:29.015Z"
             }
           ]
         }
