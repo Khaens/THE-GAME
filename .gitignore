@@ -39,3 +39,32 @@
 
 # debug information files
 *.dwo
+
+# ======================================
+# Visual Studio Specific
+# ======================================
+.vs/
+*.VC.db
+*.VC.opendb
+*.VC.VC.opendb
+*.vcxproj.user
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.ipch
+*.aps
+*.ncb
+*.opensdf
+*.sdf
+*.cachefile
+*.tlog
+*.idb
+*.log
+*.tmp
+
+# Ignore local test/build folders
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Tt]emp/
