@@ -1,0 +1,7 @@
+<Project>
+  <PropertyGroup>
+    <!-- Tell MSBuild to use the repo's vcpkg.json -->
+    <VcpkgEnableManifest>true</VcpkgEnableManifest>
+    <VcpkgManifestRoot>$(MSBuildThisFileDirectory)</VcpkgManifestRoot>
+  </PropertyGroup>
+</Project>
