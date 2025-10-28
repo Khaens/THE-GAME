@@ -1,5 +1,7 @@
 #pragma once
 #include <string>
+#include <sqlite_orm/sqlite_orm.h>
+
 class User
 {
 private:
