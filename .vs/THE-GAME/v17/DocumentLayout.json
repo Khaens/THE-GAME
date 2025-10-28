@@ -1,9 +1,17 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\",
+  "WorkspaceRootPath": "C:\\Users\\sebig\\OneDrive\\Desktop\\Cursuri Facultate\\Anul 2\\Semestrul 1\\Modern C\u002B\u002B\\THE-GAME\\THE-GAME\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{6DB65FC9-C450-41FD-90B7-33E88CA16CBC}|THE-GAME\\THE-GAME.vcxproj|C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\THE-GAME\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{6DB65FC9-C450-41FD-90B7-33E88CA16CBC}|THE-GAME\\THE-GAME.vcxproj|C:\\Users\\sebig\\OneDrive\\Desktop\\Cursuri Facultate\\Anul 2\\Semestrul 1\\Modern C\u002B\u002B\\THE-GAME\\THE-GAME\\THE-GAME\\Card.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{6DB65FC9-C450-41FD-90B7-33E88CA16CBC}|THE-GAME\\THE-GAME.vcxproj|solutionrelative:THE-GAME\\Card.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6DB65FC9-C450-41FD-90B7-33E88CA16CBC}|THE-GAME\\THE-GAME.vcxproj|C:\\Users\\sebig\\OneDrive\\Desktop\\Cursuri Facultate\\Anul 2\\Semestrul 1\\Modern C\u002B\u002B\\THE-GAME\\THE-GAME\\THE-GAME\\Card.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{6DB65FC9-C450-41FD-90B7-33E88CA16CBC}|THE-GAME\\THE-GAME.vcxproj|solutionrelative:THE-GAME\\Card.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6DB65FC9-C450-41FD-90B7-33E88CA16CBC}|THE-GAME\\THE-GAME.vcxproj|C:\\Users\\sebig\\OneDrive\\Desktop\\Cursuri Facultate\\Anul 2\\Semestrul 1\\Modern C\u002B\u002B\\THE-GAME\\THE-GAME\\THE-GAME\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{6DB65FC9-C450-41FD-90B7-33E88CA16CBC}|THE-GAME\\THE-GAME.vcxproj|solutionrelative:THE-GAME\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
@@ -19,12 +27,38 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "Card.cpp",
+              "DocumentMoniker": "C:\\Users\\sebig\\OneDrive\\Desktop\\Cursuri Facultate\\Anul 2\\Semestrul 1\\Modern C\u002B\u002B\\THE-GAME\\THE-GAME\\THE-GAME\\Card.cpp",
+              "RelativeDocumentMoniker": "THE-GAME\\Card.cpp",
+              "ToolTip": "C:\\Users\\sebig\\OneDrive\\Desktop\\Cursuri Facultate\\Anul 2\\Semestrul 1\\Modern C\u002B\u002B\\THE-GAME\\THE-GAME\\THE-GAME\\Card.cpp",
+              "RelativeToolTip": "THE-GAME\\Card.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-10-28T18:03:00.212Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Card.h",
+              "DocumentMoniker": "C:\\Users\\sebig\\OneDrive\\Desktop\\Cursuri Facultate\\Anul 2\\Semestrul 1\\Modern C\u002B\u002B\\THE-GAME\\THE-GAME\\THE-GAME\\Card.h",
+              "RelativeDocumentMoniker": "THE-GAME\\Card.h",
+              "ToolTip": "C:\\Users\\sebig\\OneDrive\\Desktop\\Cursuri Facultate\\Anul 2\\Semestrul 1\\Modern C\u002B\u002B\\THE-GAME\\THE-GAME\\THE-GAME\\Card.h",
+              "RelativeToolTip": "THE-GAME\\Card.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-10-28T17:52:03.078Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
               "Title": "main.cpp",
-              "DocumentMoniker": "C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\THE-GAME\\main.cpp",
+              "DocumentMoniker": "C:\\Users\\sebig\\OneDrive\\Desktop\\Cursuri Facultate\\Anul 2\\Semestrul 1\\Modern C\u002B\u002B\\THE-GAME\\THE-GAME\\THE-GAME\\main.cpp",
               "RelativeDocumentMoniker": "THE-GAME\\main.cpp",
-              "ToolTip": "C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\THE-GAME\\main.cpp",
+              "ToolTip": "C:\\Users\\sebig\\OneDrive\\Desktop\\Cursuri Facultate\\Anul 2\\Semestrul 1\\Modern C\u002B\u002B\\THE-GAME\\THE-GAME\\THE-GAME\\main.cpp",
               "RelativeToolTip": "THE-GAME\\main.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-10-28T17:28:29.015Z",
               "EditorCaption": ""
