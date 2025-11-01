@@ -7,6 +7,6 @@ protected:
 	std::string m_cardValue;
 public:
 	Card(const std::string& cardValue);
-	const std::string& getCardValue() const;
+	const std::string& GetCardValue() const;
 };
 

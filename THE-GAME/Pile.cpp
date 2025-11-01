@@ -1,14 +1,14 @@
 #include "Pile.h"
 
-const Card& Pile::getTopCard()
+const Card& Pile::GetTopCard()
 {
     return m_wholePile.back();
 }
 
-bool Pile::canPlaceCard(const Card& c)
+bool Pile::CanPlaceCard(const Card& c)
 {
-    int top = std::stoi(getTopCard().getCardValue());
-    int value = std::stoi(c.getCardValue());
+    int top = std::stoi(GetTopCard().GetCardValue());
+    int value = std::stoi(c.GetCardValue());
 
     if (m_type == PileType::ASCENDING)
         return (value > top) || (value == top - 10);

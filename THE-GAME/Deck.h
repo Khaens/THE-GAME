@@ -12,6 +12,6 @@ private:
 public:
 	Deck() = default;
 	void InsertCard(Card* insertedCard);
-	void ShuffleCards();
+	void ShuffleDeck();
 };
 

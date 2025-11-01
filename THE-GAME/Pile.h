@@ -10,8 +10,8 @@ private:
 	PileType m_type;
 
 public:
-	const Card& getTopCard();
-	bool canPlaceCard(const Card& c);
+	const Card& GetTopCard();
+	bool CanPlaceCard(const Card& c);
 	// void placeCard(const Card& c);
 };
 
