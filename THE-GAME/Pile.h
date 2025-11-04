@@ -1,18 +1,21 @@
 #pragma once
 #include "Card.h"
 #include "PileType.h"
-#include <vector>
+#include <stack>
+#include <stdexcept>
 
 class Pile
 {
 private:
-	//std::vector<Card> m_wholePile; ??? nu cred ca ar trebui aici, ci lasat in Deck
+	std::stack<Card*> m_cards;
 	PileType m_type;
-	//probabil ar trebui sa avem 4 membri pt fiecare gramada de joc
+	
 
 public:
-	const Card& GetTopCard();
-	bool CanPlaceCard(const Card& c);
-	// void placeCard(const Card& c);
+	Pile(PileType type);
+	const Card* GetTopCard();
+	bool CanPlaceCard(const Card* c);
+	PileType GetPileType() const;
+	void PlaceCard(const Card* c);
 };
 
