@@ -19,3 +19,9 @@ const std::unordered_set<Card*>& Player::GetHand() const
 	return m_hand;
 }
 
+Card* Player::ChooseCard(std::string cardValue)
+{
+	return *std::find_if(m_hand.begin(), m_hand.end(),
+		[&cardValue](Card* c) { return c->GetCardValue() == cardValue; });
+}
+

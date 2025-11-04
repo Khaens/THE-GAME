@@ -13,10 +13,12 @@ public:
 	Game(size_t numberOfPlayers);
 	size_t WhoStartsFirst();
 	bool IsGameOver(const Player* currentPlayer);
+	void OneRound();
 	void StartGame();
 	void NextPlayer();
 	Player& GetCurrentPlayer();
 	void FirstRoundDealing();
+	int NumberOfPlayableCardsInHand();
 private:
 	size_t m_numberOfPlayers;
 	size_t m_currentPlayerIndex = 0;

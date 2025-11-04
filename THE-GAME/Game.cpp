@@ -72,20 +72,80 @@ bool Game::IsGameOver(const Player* currentPlayer)
 	return true;
 }
 
+void Game::OneRound()
+{
+	Player& currentPlayer = GetCurrentPlayer();
+	std::cout << "\nIt's " << currentPlayer.GetUsername() << "'s turn.\n";
+	// Here would be the logic for the player to make their move
+	std::cout << "Your hand:\n";
+	for (auto card : currentPlayer.GetHand()) {
+		std::cout << card->GetCardValue() << " ";
+	}
+	std::cout << "Pick a card to play from your hand.\n";
+	std::string chosenCardValue;
+	std::cin >> chosenCardValue;
+	Card* chosenCard = currentPlayer.ChooseCard(chosenCardValue);
+	std::cout << "Choose a pile to place the card on (A1/A2 for Ascending, D1/D2 for Descending): ";
+	std::string pileChoice;
+	std::cin >> pileChoice;
+	Pile* chosenPile = nullptr;
+	if (pileChoice == "A1") chosenPile = &m_ascPile1;
+	else if (pileChoice == "A2") chosenPile = &m_ascPile2;
+	else if (pileChoice == "D1") chosenPile = &m_descPile1;
+	else if (pileChoice == "D2") chosenPile = &m_descPile2;
+	chosenPile->PlaceCard(chosenCard);
+	currentPlayer.RemoveCardFromHand(chosenCard);
+	// Drawing cards 
+	Card* drawnCard = m_wholeDeck.DrawCard();
+	currentPlayer.AddCardToHand(drawnCard);
+}
+
 void Game::StartGame()
 {	
 	FirstRoundDealing();
 	m_wholeDeck.ShuffleDeck();
 	m_currentPlayerIndex = WhoStartsFirst();
 	Player& startingPlayer = m_players[m_currentPlayerIndex];
+	size_t minimumCardsNeeded;
 	while(!IsGameOver(&GetCurrentPlayer())) {
-		// Game logic for each player's turn would go here
-		NextPlayer();
+		if(!m_wholeDeck.IsEmpty()) {
+			minimumCardsNeeded = 2;
+		}
+		else {
+			minimumCardsNeeded = 1;
+		}
+		if (minimumCardsNeeded == 2) {
+			OneRound();
+			OneRound();
+		}
+		else {
+			OneRound();
+		}
+		int x = NumberOfPlayableCardsInHand();
+		if(x == 0) {
+			std::cout << "Nu mai poti pune nici o carte. Trecem la urmatorul jucator.\n";
+			NextPlayer();
+			continue;
+		}
+		std::cout << "Mai poti pune " << x << " carti.\n";
+		std::cout << "Doresti sa continui? (y/n): ";
+		char optiune;
+		std::cin >> optiune;
+		if (optiune == 'n') {
+			NextPlayer();
+			continue;
+		}
+		else if(optiune == 'y') {
+			std::cout << "Cate carti doresti sa mai pui? ";
+			size_t numCards;
+			std::cin >> numCards;
+			for (size_t i = 0; i < numCards; i++) {
+				OneRound();
+			}
+			NextPlayer();
+		}
 	}
 }
-
-
-
 
 void Game::NextPlayer()
 {
@@ -108,5 +168,18 @@ void Game::FirstRoundDealing()
 			currentPlayer.AddCardToHand(dealtCard);
 		}
 	}
+}
+
+int Game::NumberOfPlayableCardsInHand()
+{
+	Player& currentPlayer = GetCurrentPlayer();
+	int count = 0;
+	for (Card* card : currentPlayer.GetHand()) {
+		if (m_ascPile1.CanPlaceCard(card) || m_ascPile2.CanPlaceCard(card) ||
+			m_descPile1.CanPlaceCard(card) || m_descPile2.CanPlaceCard(card)) {
+			count++;
+		}
+	}
+	return count;
 }
 
