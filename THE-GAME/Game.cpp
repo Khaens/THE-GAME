@@ -2,6 +2,7 @@
 
 Game::Game(size_t numberOfPlayers) : m_numberOfPlayers{numberOfPlayers}
 {
+	m_players.reserve(m_numberOfPlayers);
 }
 
 size_t Game::WhoStartsFirst()
@@ -39,4 +40,14 @@ size_t Game::WhoStartsFirst()
 	size_t randomChoice = dist(gen);
 	std::cout << "Player " << randomChoice << " will start The Game!\n";
 	return randomChoice - 1;
+}
+
+void Game::NextPlayer()
+{
+	m_currentPlayerIndex = (m_currentPlayerIndex + 1) % m_numberOfPlayers;
+}
+
+Player& Game::GetCurrentPlayer()
+{
+	return m_players[m_currentPlayerIndex];
 }

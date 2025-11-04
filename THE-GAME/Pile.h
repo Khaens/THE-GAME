@@ -6,8 +6,9 @@
 class Pile
 {
 private:
-	std::vector<Card> m_wholePile;
+	//std::vector<Card> m_wholePile; ??? nu cred ca ar trebui aici, ci lasat in Deck
 	PileType m_type;
+	//probabil ar trebui sa avem 4 membri pt fiecare gramada de joc
 
 public:
 	const Card& GetTopCard();

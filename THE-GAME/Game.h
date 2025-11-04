@@ -14,5 +14,9 @@ public:
 
 private:
 	size_t m_numberOfPlayers;
+	size_t m_currentPlayerIndex = 0;
 	std::vector<Player> m_players;
+
+	void NextPlayer();
+	Player& GetCurrentPlayer();
 };

@@ -2,7 +2,7 @@
 
 const Card& Pile::GetTopCard()
 {
-    return m_wholePile.back();
+    //return cartea de sus; //work in progress...
 }
 
 bool Pile::CanPlaceCard(const Card& c)
