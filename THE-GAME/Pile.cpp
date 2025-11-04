@@ -1,7 +1,14 @@
 #include "Pile.h"
 
 Pile::Pile(PileType type) : m_type{ type }
-{}
+{
+    if (type == PileType::ASCENDING) {
+        m_cards.push(new Card("1"));
+    }
+    else {
+        m_cards.push(new Card("100"));
+    }
+}
 
 const Card* Pile::GetTopCard()
 {

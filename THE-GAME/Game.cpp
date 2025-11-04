@@ -3,6 +3,14 @@
 Game::Game(size_t numberOfPlayers) : m_numberOfPlayers{numberOfPlayers}
 {
 	m_players.reserve(m_numberOfPlayers);
+	if(numberOfPlayers < 2 || numberOfPlayers > 5) {
+		throw std::invalid_argument("Number of players must be between 2 and 5.");
+	}
+	for (int i = 2; i < 100; i++) {
+		Card* newCard = new Card(std::to_string(i));
+		m_wholeDeck.InsertCard(newCard);
+		m_wholeDeck.InsertCard(newCard);
+	}
 }
 
 size_t Game::WhoStartsFirst()
@@ -44,15 +52,40 @@ size_t Game::WhoStartsFirst()
 
 bool Game::IsGameOver(const Player* currentPlayer)
 {
+	Card* firstCard = nullptr;
+	Card* secondCard = nullptr;
 	std::vector<Card*> playerHand(currentPlayer->GetHand().begin(), currentPlayer->GetHand().end());
 	for (Card* card : playerHand) {
 		if (m_ascPile1.CanPlaceCard(card) || m_ascPile2.CanPlaceCard(card) ||
 			m_descPile1.CanPlaceCard(card) || m_descPile2.CanPlaceCard(card)) {
-			return false;
+			if(!firstCard) {
+				firstCard = card;
+			}
+			else {
+				secondCard = card;
+				break;
+			}
 		}
 	}
+	if (m_wholeDeck.IsEmpty() && firstCard) return false;
+	else if (!m_wholeDeck.IsEmpty() && firstCard != secondCard) return false;
 	return true;
 }
+
+void Game::StartGame()
+{	
+	FirstRoundDealing();
+	m_wholeDeck.ShuffleDeck();
+	m_currentPlayerIndex = WhoStartsFirst();
+	Player& startingPlayer = m_players[m_currentPlayerIndex];
+	while(!IsGameOver(&GetCurrentPlayer())) {
+		// Game logic for each player's turn would go here
+		NextPlayer();
+	}
+}
+
+
+
 
 void Game::NextPlayer()
 {
@@ -63,3 +96,17 @@ Player& Game::GetCurrentPlayer()
 {
 	return m_players[m_currentPlayerIndex];
 }
+
+void Game::FirstRoundDealing()
+{
+	for (size_t i = 0; i < m_numberOfPlayers; i++) {
+		m_players.emplace_back("Player" + std::to_string(i + 1), "password");
+		Player& currentPlayer = m_players[i];
+		for (size_t j = 0; j < 6; j++) {
+			// Assuming Deck has a method to deal cards
+			Card* dealtCard = m_wholeDeck.DrawCard();
+			currentPlayer.AddCardToHand(dealtCard);
+		}
+	}
+}
+

@@ -13,5 +13,7 @@ public:
 	Deck() = default;
 	void InsertCard(Card* insertedCard);
 	void ShuffleDeck();
+	Card* DrawCard();
+	bool IsEmpty() const;
 };
 

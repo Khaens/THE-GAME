@@ -7,12 +7,16 @@
 #include <random>
 #include "Player.h"
 #include "Pile.h"
+#include "Deck.h"
 class Game {
 public:
 	Game(size_t numberOfPlayers);
 	size_t WhoStartsFirst();
 	bool IsGameOver(const Player* currentPlayer);
-
+	void StartGame();
+	void NextPlayer();
+	Player& GetCurrentPlayer();
+	void FirstRoundDealing();
 private:
 	size_t m_numberOfPlayers;
 	size_t m_currentPlayerIndex = 0;
@@ -21,7 +25,5 @@ private:
 	Pile m_ascPile2{ PileType::ASCENDING };
 	Pile m_descPile1{ PileType::DESCENDING };
 	Pile m_descPile2{ PileType::DESCENDING };
-
-	void NextPlayer();
-	Player& GetCurrentPlayer();
+	Deck m_wholeDeck;
 };
