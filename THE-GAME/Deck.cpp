@@ -3,7 +3,7 @@
 
 void Deck::InsertCard(Card* insertedCard)
 {
-	m_initialCards.push_back(*insertedCard);
+	m_initialCards.push_back(insertedCard);
 }
 
 void Deck::ShuffleDeck()

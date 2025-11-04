@@ -3,7 +3,7 @@
 
 class Card
 {
-protected:
+private:
 	std::string m_cardValue;
 public:
 	Card(const std::string& cardValue);

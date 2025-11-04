@@ -7,7 +7,7 @@
 class Deck 
 {
 private:
-	std::vector<Card> m_initialCards;
+	std::vector<Card*> m_initialCards;
 	
 public:
 	Deck() = default;
