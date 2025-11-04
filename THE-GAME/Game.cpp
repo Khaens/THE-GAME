@@ -42,6 +42,18 @@ size_t Game::WhoStartsFirst()
 	return randomChoice - 1;
 }
 
+bool Game::IsGameOver(const Player* currentPlayer)
+{
+	std::vector<Card*> playerHand(currentPlayer->GetHand().begin(), currentPlayer->GetHand().end());
+	for (Card* card : playerHand) {
+		if (m_ascPile1.CanPlaceCard(card) || m_ascPile2.CanPlaceCard(card) ||
+			m_descPile1.CanPlaceCard(card) || m_descPile2.CanPlaceCard(card)) {
+			return false;
+		}
+	}
+	return true;
+}
+
 void Game::NextPlayer()
 {
 	m_currentPlayerIndex = (m_currentPlayerIndex + 1) % m_numberOfPlayers;

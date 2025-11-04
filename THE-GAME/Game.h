@@ -11,7 +11,7 @@ class Game {
 public:
 	Game(size_t numberOfPlayers);
 	size_t WhoStartsFirst();
-
+	bool IsGameOver(const Player* currentPlayer);
 
 private:
 	size_t m_numberOfPlayers;

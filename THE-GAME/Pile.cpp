@@ -21,7 +21,7 @@ bool Pile::CanPlaceCard(const Card* c)
 
 PileType Pile::GetPileType() const
 {
-    return PileType();
+    return m_type;
 }
 
 void Pile::PlaceCard(const Card* c)
