@@ -3,11 +3,17 @@
 Pile::Pile(PileType type) : m_type{ type }
 {
     if (type == PileType::ASCENDING) {
-        m_cards.push(new Card("1"));
+        m_initialCard = new Card("1");
     }
     else {
-        m_cards.push(new Card("100"));
+        m_initialCard = new Card("100");
     }
+    m_cards.push(m_initialCard);
+}
+
+Pile::~Pile()
+{
+    delete m_initialCard;
 }
 
 const Card* Pile::GetTopCard()

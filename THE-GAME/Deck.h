@@ -1,8 +1,7 @@
 #pragma once
 #include "Card.h"
 #include <vector>
-#include <ctime>
-#include <cstdlib>
+#include <random>
 
 class Deck 
 {
@@ -11,6 +10,7 @@ private:
 	
 public:
 	Deck() = default;
+	~Deck();
 	void InsertCard(Card* insertedCard);
 	void ShuffleDeck();
 	Card* DrawCard();

@@ -1,5 +1,10 @@
 #include "Deck.h"
 
+Deck::~Deck()
+{
+	for (Card* card : m_initialCards)
+		delete card;
+}
 
 void Deck::InsertCard(Card* insertedCard)
 {
@@ -8,11 +13,9 @@ void Deck::InsertCard(Card* insertedCard)
 
 void Deck::ShuffleDeck()
 {
-	//srand(time(0)); -> va fi pus in main O SINGURA DATA!
-	for (size_t i = m_initialCards.size() - 1; i > 0; i--) {
-		int j = rand() % (i + 1);
-		std::swap(m_initialCards[i], m_initialCards[j]);
-	}
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::shuffle(m_initialCards.begin(), m_initialCards.end(), gen);
 }
 
 Card* Deck::DrawCard()
