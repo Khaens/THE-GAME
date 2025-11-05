@@ -13,7 +13,7 @@ public:
 	Game(size_t numberOfPlayers);
 	size_t WhoStartsFirst();
 	bool IsGameOver(const Player* currentPlayer);
-	void OneRound();
+	void OneRound(Player* currentPlayer);
 	void StartGame();
 	void NextPlayer();
 	Player& GetCurrentPlayer();

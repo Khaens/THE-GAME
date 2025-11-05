@@ -15,5 +15,6 @@ public:
 	void ShuffleDeck();
 	Card* DrawCard();
 	bool IsEmpty() const;
+	size_t GetSize() const;
 };
 

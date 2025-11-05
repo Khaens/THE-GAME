@@ -35,3 +35,8 @@ bool Deck::IsEmpty() const
 	return m_initialCards.empty();
 }
 
+size_t Deck::GetSize() const
+{
+	return m_initialCards.size();
+}
+
