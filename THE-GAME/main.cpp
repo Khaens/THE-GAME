@@ -1,8 +1,14 @@
 #include "Game.h"
+#include "MainWindow.h"
+#include <QApplication>
 
-int main() {
-	// Testing
-	Game g(2);
-	g.StartGame();
-	return 0;
+int main(int argc, char* argv[]) {
+	QApplication app(argc, argv);
+
+	Game g(3);
+	MainWindow w;
+	//w.setGame(&g);
+	w.show();
+
+	return app.exec();
 }

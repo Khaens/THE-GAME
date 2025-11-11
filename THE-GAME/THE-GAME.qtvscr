@@ -1,0 +1,429 @@
+<FlowDocument xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" FontFamily="Segoe UI" FontSize="12">
+  <FlowDocument.Tag><![CDATA[{
+  "timestamp": "2025-11-11 21:17:01",
+  "files": {
+    "D:\\Github Desktop\\THE-GAME\\THE-GAME\\THE-GAME.vcxproj": {
+      "before": "7Vlbb9s2FO7zgP2EAYKQws5DLDtO03SRVbiy5xlzHCPOpQ8DDFqiba26gaTSZOt+yf7sDiWSsnyJnaZLh8B5CCDyI3X46fA7F//z06tX5vu7wNduMaFeFDb0WqWqazh0ItcLpw09YZODE/299eMP5oBEf2CHaS08QYnPLhGZYkYb+ofE811dg11CeJoxFv9sGNSZ4QDRSuA5JKLRhFWcKDBcfIv9KMbECOiYLzMOq9W6DrtrmtllOOiQKIm1Hhpjv6GLF9pROPGmCUEMDKQZGOCrZrVu6PiJixt6C4+T6ZcbL6wfyhWwprCVlWJMozjITeF/5sBHbBKRwEo3MQ31nCFgIONj1fINxl1gHyOKN5gnUN/DwIy9u+Ojp3IHW/wnzD1k2ta8PdI401AeuuCw6SN3L9+Ogtjzce6HNiJuxYljXTMeQLWw82kzqoMCvBkVIC/cjBqAlVugfHSPyWbcFS2itqFKXNUFqmYFopYwKVEbMClNGzDp8bfAXN7HuLIJl5G0AZVSpDBLBIGYgCyy+4IAdvxojPxc8q5toTnXmVpbtbeVqmksDQuF+g3ff46ImwkYX2kackggxHadxHOtv47d8fGbifPuwDl6Uz04qk3cg3fV8duDeh2fnDioduyMnb+V7KVrxDYXUcT64Jw0Rg62Ln9td5pnbdMoDgssqKkbfaZZ9JCaqs5T5ed5EMK3SY3I6RK3MYgjwjRxpIa+V762RYwaIDbb//1MhSI7jisiilViIJ5Kp+O6ne+rgbS7Ho86Db20Vy4I/f6XvbK0fr/UaJTmAk5JlxGssERqaTEKcQ+zmnHse04a4BbkPp0W1IELpW/peWOCiIepxUiCTWN5XCyQBl5GkU8xs25rR/VcjuWoANszRJDDMBkC8ir0IAOAvQuja7n/etoKofD5iJvAtfpmzN3MIh8DBVOCgvOYeYH3Z/opxedZO/1diVch/vlIfzneCpnD89H2Uny1+ziBLgpztrgQHdt3DIe8aAHBYlCsiDgJoTV9UYqdDw2FxUNQO+xmkrzdCqlxwxmGskf/+uAg88BlPniOwINmyyOL4Wou2lQSnm0JeuZCFL7zKKNliFSP3qe0r0JWL3KQD/GohRiS8UOFx62ofQpRC+FgR5UqfNckHKkS7WhaT5P0qJdHlLxnBV3jV/8M8Z6LurS8aoVs1wvTVDZDz8nG4zJb6Wqq1BUDkJTfIBKCDPd4j8dK/0OyWRjMEh6ADls9ewY1r8iQ1KMCDAgGgXMwpRHJbafWTbdfPzwdtdofrjqnI/u8PzzvtU9fl9fg93mlsHon9Sqeo0ObB4UOPoOUV5i0OKrgPRROEzTFQ4ZCF4p7izIX6vtDqFuWptSippvVEcjn+SF0sSzNaGmjYbfX7tvtUbPXG9kfPx5W4WCDi7bdvOye90c3zYt+t98Zaq/LS+vhYEtj8tMYi9/G7Hnhp/w7DZPx8J6CU1hwSAqpq2nkQ8rkDg4xtNyyiqObUcRNF/ysnc42ADLkO7NSN/+I83H5iZ4p73baoSvl9ZVsw+RnLrjhw775SxI6/KApip8CfFoceuWUYqwbMuJBQuJImKzPVkyoRcr1s+RYPSrAOv/NbkJ/dxN2N0F1HwoxblEFnkmhd9q802beD5Pa/A19Uurq/1yZd5r8Qm7A4/oVLPs9NE+78y6EbAerjoXoS69uP6gWu/Uv",
+      "after": "7Vltc9pGEM7nzvQ/qKozwEyNsHGcF4MyDhDCFPALjp0PmWEO6QA1kk6VTo5pk//evVckMMEkTtJJ8Afbuts77T23u8/u6uPvDx7Unt8EvnGN48QjYd3cK1dMA4cOcb1wUjdTOt59Yj63f/2ldhqTv7BDjSYeo9SnFyieYJrUzRep57umAbuE8DSlNHpmWYkzxQFKyoHnxCQhY1p2SGC5+Br7JMKxFSQjtszar1SqJuxuGLUOxUE7JmlkdNEI+3VTvrBBwrE3SWNEQcFECIP4bbNGJ3T81MV1s4lH6eTDlRdW99UKWJPbyuYyNSs/yFRhP7VTH9ExiQObb1Kz9LOQgAGBx23L1yh3jn2MErxGPSn1PRQU6N0cHnwpdrDFV0HuU6rdGbcNlatZ2kIXDJY/MvPyGySIPB/P7bCBYrfsRJFpWJ+QamLn3XqpNgrweqkAeeF6qVPQ8g5SPprheL3c6yQvdReopKsuQDXNAbUkw4FaI8NhWiPDj38HmYtZhMvr5ARIa6Q4RFpmCSAIJhAW6SwXANs+GSF/HvIuGzLmXIpobe89Lldq1tKwjFB/4tl7ErsigLGVNUsNSQm5XTv1XPvfQ3d0+GjsPN11Dh5Vdg/2xu7u08ro8W61ip88cdDeoTNyPuqwx9fIbc4JoX0wziRCDrYvXrXax71WzcoPS1mIpi55nwj2UDFVn6fCzvNJkYWzndHLwfC6WoEws3C2M9pLODUZEKFdj5FH3SzsFPV4qVCvFwrGybnxW+vGS2hSzM2+/ZuWqeC4Qsm0d4q9Ad9OYtb0YiBDEs9Kb/WONUv/KyIE44j5tcqoEUQkpobcpm7uFC8bkktPEZ2W3vY0ZTaiqCzZthzBTolyDsYv830XDpgjpNKHnaJCmR84Q4wFUzFtbomK+Xm2ZJ5gH0eR7zmciBdoiU/LuwFT52/peqMYxR5ObBqnuGYtj8sFSsELQvwEU/t676A6pw01KoUbUxQjh+J4AJKvQw8yFdg7N8okuaHOMRLYfz5sOcr+dsCNwf3vDbmrKfExQDCJUXASUS/w/uFXKa9n5fR3BV6nIt8O9B/HWiHD+Xaw/Si22tksQOcD8/JiTQklYJShK4qnRMXzDDetIKGFJcBFMpVcIAFZNJ1RiIsUajcgi8zmQG25IL+GF0Syer9vWAyhX+Md2WjxNfZXZxCOJd8g2NtgGVDd1NfdJ/QlSUOojF9gqCOx5Pi62UgTSgKeSxzpiiF3WevzkdVZyxkVpsVyFhm4ezhJ0ASKEm7YKHRAzVfeBJLRC3xDMyo/MxyS+q4REmr4BHgeG/Mk6A/2Pzf2IwP+8FZAgGZcmNfysDhmOZE/K2sTtcSps5lPLsNt3VAcssaDNlobUmOuJ5dbuXAAWQB2zTtKA+nxVGAwxdCyyGG9mWMoSJfdnOX3LOGFvHAxhctkYOWUVUoyZGTcE+sEdON9WECQvt+FO/MhR2siilROpa4CMqJlpbWxsiRWqSWt+k7X8CXAKl/i/ZWCttZlLTeGJHfBPyO0mTC4tViaizj3YbE8+v/UwCoUc9AyP+0h1u9VQYf3dKGC9UJefwvpTNj7vOCrSVNeAYS2KxSHkPN0WX/Z5r+hgMwNCi4E0UGz25hCv01WPfpRC5zGGAK0A6RJ4rnuiX3V6Vf3j4bN1ovX7aNh46Q/OOm2jh4WV8iXWAV6+076VSwlgxYzo+QelLFSpcVRLd5F4SQFJh9QFLrQWLQT6kJvcR96JktTetGxK5ofyGc1H3TQbcNqGsNBp9vqN1rD42532HjzZr8CBzs9bzWOLzon/eHV8Xm/028PjIfFpfVwsKWx+U304NOAB+Yh8BP90GyVuXpeaAylvOqiKg/reuG7+QsG6WgwS+BbgQ04JVDR1qz5kD51G4cYvhiIRkRHoMxOLyFeOa2U0O8Unbq5HWTTElBiYWKjlHsFAS6efzPzfpmGDjsodwJ2CnALeehbpzRinZDGHuRijhJTbZtbJvQi7T2iZtaPWmCVCwhn6m+daetM3LXviSlyzPxljqRteVPT3jLEliGi+zFqxRD3aNYquv/P+WHLDFsnUk60WT+Wim928xJkaXmm6zFvb+V6BitasZnvgaoHm+lVqS6M7mnJjt9yk0p/RLX/Aw=="
+    }
+  }
+}]]></FlowDocument.Tag>
+  <Section Margin="0,24" TextAlignment="Center">
+    <Paragraph FontSize="24" FontWeight="Bold" Margin="12,0">
+      <LineBreak />
+      <Span Foreground="Gray">Qt Visual Studio Tools</Span>
+    </Paragraph>
+    <Paragraph FontSize="42" Margin="12,0" FontWeight="Bold">
+      <Span TextDecorations="Underline">Project Format Conversion</Span>
+    </Paragraph>
+    <Paragraph Margin="12,8" FontSize="18">
+      <Span>Report generated on 2025-11-11 21:17:01</Span>
+    </Paragraph>
+  </Section>
+  <Section>
+    <Paragraph FontSize="32" FontWeight="Bold" Margin="12,0">
+      <Span>Files</Span>
+    </Paragraph>
+    <Paragraph Margin="24,12,0,0">
+      <Span FontFamily="Consolas" FontSize="14" Background="WhiteSmoke"><![CDATA[D:\Github Desktop\THE-GAME\THE-GAME\THE-GAME.vcxproj]]></Span>
+      <LineBreak />
+      <Hyperlink NavigateUri="file://D:\Github Desktop\THE-GAME\THE-GAME\THE-GAME.vcxproj?before">[Before]</Hyperlink>
+      <Hyperlink NavigateUri="file://D:\Github Desktop\THE-GAME\THE-GAME\THE-GAME.vcxproj?after">[After]</Hyperlink>
+      <Hyperlink NavigateUri="file://D:\Github Desktop\THE-GAME\THE-GAME\THE-GAME.vcxproj?diff&amp;before&amp;after">
+                        [Diff before/after]
+                    </Hyperlink>
+      <Hyperlink NavigateUri="file://D:\Github Desktop\THE-GAME\THE-GAME\THE-GAME.vcxproj?diff&amp;before&amp;current">
+                        [Diff before/current]
+                    </Hyperlink>
+      <Hyperlink NavigateUri="file://D:\Github Desktop\THE-GAME\THE-GAME\THE-GAME.vcxproj?diff&amp;after&amp;current">
+                        [Diff after/current]
+                    </Hyperlink>
+      <LineBreak />
+    </Paragraph>
+  </Section>
+  <Section>
+    <Paragraph FontSize="32" FontWeight="Bold" Margin="12,0">
+      <Span>Changes</Span>
+    </Paragraph>
+    <Paragraph FontSize="20" FontWeight="Bold" Margin="12">
+      <Span><![CDATA[🡺 Enabling multi-processor compilation]]></Span>
+    </Paragraph>
+    <Table CellSpacing="0" BorderBrush="Gray" BorderThickness="0.5">
+      <Table.Columns>
+        <TableColumn />
+        <TableColumn />
+      </Table.Columns>
+      <TableRowGroup>
+        <TableRow Background="Orange">
+          <TableCell ColumnSpan="2" BorderThickness="0.5" BorderBrush="Gray">
+            <Paragraph Margin="10,5" FontWeight="Bold">
+              <Span><![CDATA[D:\Github Desktop\THE-GAME\THE-GAME\THE-GAME.vcxproj]]></Span>
+            </Paragraph>
+          </TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell ColumnSpan="2" Background="WhiteSmoke" BorderBrush="Gray" BorderThickness="0.5" />
+        </TableRow>
+        <TableRow>
+          <TableCell BorderThickness="0, 0, 0.5, 0" BorderBrush="Gray">
+            <Paragraph FontFamily="Consolas" Margin="4, 0" />
+          </TableCell>
+          <TableCell BorderThickness="0, 0, 0.5, 0" BorderBrush="Gray">
+            <Paragraph FontFamily="Consolas" Margin="4, 0">
+              <Span Background="LightGreen"><![CDATA[      <MultiProcessorCompilation>true</MultiProcessorCompilation>]]></Span>
+            </Paragraph>
+          </TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell ColumnSpan="2" Background="WhiteSmoke" BorderBrush="Gray" BorderThickness="0.5" />
+        </TableRow>
+        <TableRow>
+          <TableCell BorderThickness="0, 0, 0.5, 0" BorderBrush="Gray">
+            <Paragraph FontFamily="Consolas" Margin="4, 0" />
+          </TableCell>
+          <TableCell BorderThickness="0, 0, 0.5, 0" BorderBrush="Gray">
+            <Paragraph FontFamily="Consolas" Margin="4, 0">
+              <Span Background="LightGreen"><![CDATA[      <MultiProcessorCompilation>true</MultiProcessorCompilation>]]></Span>
+            </Paragraph>
+          </TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell ColumnSpan="2" Background="WhiteSmoke" BorderBrush="Gray" BorderThickness="0.5" />
+        </TableRow>
+        <TableRow>
+          <TableCell BorderThickness="0, 0, 0.5, 0" BorderBrush="Gray">
+            <Paragraph FontFamily="Consolas" Margin="4, 0" />
+          </TableCell>
+          <TableCell BorderThickness="0, 0, 0.5, 0" BorderBrush="Gray">
+            <Paragraph FontFamily="Consolas" Margin="4, 0">
+              <Span Background="LightGreen"><![CDATA[      <MultiProcessorCompilation>true</MultiProcessorCompilation>]]></Span>
+            </Paragraph>
+          </TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell ColumnSpan="2" Background="WhiteSmoke" BorderBrush="Gray" BorderThickness="0.5" />
+        </TableRow>
+        <TableRow>
+          <TableCell BorderThickness="0, 0, 0.5, 0" BorderBrush="Gray">
+            <Paragraph FontFamily="Consolas" Margin="4, 0" />
+          </TableCell>
+          <TableCell BorderThickness="0, 0, 0.5, 0" BorderBrush="Gray">
+            <Paragraph FontFamily="Consolas" Margin="4, 0">
+              <Span Background="LightGreen"><![CDATA[      <MultiProcessorCompilation>true</MultiProcessorCompilation>]]></Span>
+            </Paragraph>
+          </TableCell>
+        </TableRow>
+      </TableRowGroup>
+    </Table>
+    <Paragraph FontSize="20" FontWeight="Bold" Margin="12">
+      <Span><![CDATA[🡺 Project format version]]></Span>
+    </Paragraph>
+    <Table CellSpacing="0" BorderBrush="Gray" BorderThickness="0.5">
+      <Table.Columns>
+        <TableColumn />
+        <TableColumn />
+      </Table.Columns>
+      <TableRowGroup>
+        <TableRow Background="Orange">
+          <TableCell ColumnSpan="2" BorderThickness="0.5" BorderBrush="Gray">
+            <Paragraph Margin="10,5" FontWeight="Bold">
+              <Span><![CDATA[D:\Github Desktop\THE-GAME\THE-GAME\THE-GAME.vcxproj]]></Span>
+            </Paragraph>
+          </TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell ColumnSpan="2" Background="WhiteSmoke" BorderBrush="Gray" BorderThickness="0.5" />
+        </TableRow>
+        <TableRow>
+          <TableCell BorderThickness="0, 0, 0.5, 0" BorderBrush="Gray">
+            <Paragraph FontFamily="Consolas" Margin="4, 0" />
+          </TableCell>
+          <TableCell BorderThickness="0, 0, 0.5, 0" BorderBrush="Gray">
+            <Paragraph FontFamily="Consolas" Margin="4, 0">
+              <Span Background="LightGreen"><![CDATA[    <Keyword>QtVS_v304</Keyword>]]></Span>
+            </Paragraph>
+          </TableCell>
+        </TableRow>
+      </TableRowGroup>
+    </Table>
+    <Paragraph FontSize="20" FontWeight="Bold" Margin="12">
+      <Span><![CDATA[🡺 Fallback for QTMSBUILD environment variable]]></Span>
+    </Paragraph>
+    <Table CellSpacing="0" BorderBrush="Gray" BorderThickness="0.5">
+      <Table.Columns>
+        <TableColumn />
+        <TableColumn />
+      </Table.Columns>
+      <TableRowGroup>
+        <TableRow Background="Orange">
+          <TableCell ColumnSpan="2" BorderThickness="0.5" BorderBrush="Gray">
+            <Paragraph Margin="10,5" FontWeight="Bold">
+              <Span><![CDATA[D:\Github Desktop\THE-GAME\THE-GAME\THE-GAME.vcxproj]]></Span>
+            </Paragraph>
+          </TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell ColumnSpan="2" Background="WhiteSmoke" BorderBrush="Gray" BorderThickness="0.5" />
+        </TableRow>
+        <TableRow>
+          <TableCell BorderThickness="0, 0, 0.5, 0" BorderBrush="Gray">
+            <Paragraph FontFamily="Consolas" Margin="4, 0" />
+          </TableCell>
+          <TableCell BorderThickness="0, 0, 0.5, 0" BorderBrush="Gray">
+            <Paragraph FontFamily="Consolas" Margin="4, 0">
+              <Span Background="LightGreen"><![CDATA[    <QtMsBuild Condition="'$(QtMsBuild)'=='' OR !Exists('$(QtMsBuild)\qt.targets')">$(MSBuildProjectDirectory)\QtMsBuild</QtMsBuild>]]></Span>
+            </Paragraph>
+          </TableCell>
+        </TableRow>
+      </TableRowGroup>
+    </Table>
+    <Paragraph FontSize="20" FontWeight="Bold" Margin="12">
+      <Span><![CDATA[🡺 Default Qt properties]]></Span>
+    </Paragraph>
+    <Table CellSpacing="0" BorderBrush="Gray" BorderThickness="0.5">
+      <Table.Columns>
+        <TableColumn />
+        <TableColumn />
+      </Table.Columns>
+      <TableRowGroup>
+        <TableRow Background="Orange">
+          <TableCell ColumnSpan="2" BorderThickness="0.5" BorderBrush="Gray">
+            <Paragraph Margin="10,5" FontWeight="Bold">
+              <Span><![CDATA[D:\Github Desktop\THE-GAME\THE-GAME\THE-GAME.vcxproj]]></Span>
+            </Paragraph>
+          </TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell ColumnSpan="2" Background="WhiteSmoke" BorderBrush="Gray" BorderThickness="0.5" />
+        </TableRow>
+        <TableRow>
+          <TableCell BorderThickness="0, 0, 0.5, 0" BorderBrush="Gray">
+            <Paragraph FontFamily="Consolas" Margin="4, 0" />
+          </TableCell>
+          <TableCell BorderThickness="0, 0, 0.5, 0" BorderBrush="Gray">
+            <Paragraph FontFamily="Consolas" Margin="4, 0">
+              <Span Background="LightGreen"><![CDATA[  <Import Project="$(QtMsBuild)\qt_defaults.props" Condition="Exists('$(QtMsBuild)\qt_defaults.props')" />]]></Span>
+            </Paragraph>
+          </TableCell>
+        </TableRow>
+      </TableRowGroup>
+    </Table>
+    <Paragraph FontSize="20" FontWeight="Bold" Margin="12">
+      <Span><![CDATA[🡺 Qt build settings]]></Span>
+    </Paragraph>
+    <Table CellSpacing="0" BorderBrush="Gray" BorderThickness="0.5">
+      <Table.Columns>
+        <TableColumn />
+        <TableColumn />
+      </Table.Columns>
+      <TableRowGroup>
+        <TableRow Background="Orange">
+          <TableCell ColumnSpan="2" BorderThickness="0.5" BorderBrush="Gray">
+            <Paragraph Margin="10,5" FontWeight="Bold">
+              <Span><![CDATA[D:\Github Desktop\THE-GAME\THE-GAME\THE-GAME.vcxproj]]></Span>
+            </Paragraph>
+          </TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell ColumnSpan="2" Background="WhiteSmoke" BorderBrush="Gray" BorderThickness="0.5" />
+        </TableRow>
+        <TableRow>
+          <TableCell BorderThickness="0, 0, 0.5, 0" BorderBrush="Gray">
+            <Paragraph FontFamily="Consolas" Margin="4, 0" />
+          </TableCell>
+          <TableCell BorderThickness="0, 0, 0.5, 0" BorderBrush="Gray">
+            <Paragraph FontFamily="Consolas" Margin="4, 0">
+              <Span Background="LightGreen"><![CDATA[  <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />]]></Span>
+            </Paragraph>
+          </TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell BorderThickness="0, 0, 0.5, 0" BorderBrush="Gray">
+            <Paragraph FontFamily="Consolas" Margin="4, 0" />
+          </TableCell>
+          <TableCell BorderThickness="0, 0, 0.5, 0" BorderBrush="Gray">
+            <Paragraph FontFamily="Consolas" Margin="4, 0">
+              <Span Background="LightGreen"><![CDATA[  <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />]]></Span>
+            </Paragraph>
+          </TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell BorderThickness="0, 0, 0.5, 0" BorderBrush="Gray">
+            <Paragraph FontFamily="Consolas" Margin="4, 0" />
+          </TableCell>
+          <TableCell BorderThickness="0, 0, 0.5, 0" BorderBrush="Gray">
+            <Paragraph FontFamily="Consolas" Margin="4, 0">
+              <Span Background="LightGreen"><![CDATA[  <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />]]></Span>
+            </Paragraph>
+          </TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell BorderThickness="0, 0, 0.5, 0" BorderBrush="Gray">
+            <Paragraph FontFamily="Consolas" Margin="4, 0" />
+          </TableCell>
+          <TableCell BorderThickness="0, 0, 0.5, 0" BorderBrush="Gray">
+            <Paragraph FontFamily="Consolas" Margin="4, 0">
+              <Span Background="LightGreen"><![CDATA[  <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />]]></Span>
+            </Paragraph>
+          </TableCell>
+        </TableRow>
+      </TableRowGroup>
+    </Table>
+    <Paragraph FontSize="20" FontWeight="Bold" Margin="12">
+      <Span><![CDATA[🡺 Warn if Qt/MSBuild is not found]]></Span>
+    </Paragraph>
+    <Table CellSpacing="0" BorderBrush="Gray" BorderThickness="0.5">
+      <Table.Columns>
+        <TableColumn />
+        <TableColumn />
+      </Table.Columns>
+      <TableRowGroup>
+        <TableRow Background="Orange">
+          <TableCell ColumnSpan="2" BorderThickness="0.5" BorderBrush="Gray">
+            <Paragraph Margin="10,5" FontWeight="Bold">
+              <Span><![CDATA[D:\Github Desktop\THE-GAME\THE-GAME\THE-GAME.vcxproj]]></Span>
+            </Paragraph>
+          </TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell ColumnSpan="2" Background="WhiteSmoke" BorderBrush="Gray" BorderThickness="0.5" />
+        </TableRow>
+        <TableRow>
+          <TableCell BorderThickness="0, 0, 0.5, 0" BorderBrush="Gray">
+            <Paragraph FontFamily="Consolas" Margin="4, 0" />
+          </TableCell>
+          <TableCell BorderThickness="0, 0, 0.5, 0" BorderBrush="Gray">
+            <Paragraph FontFamily="Consolas" Margin="4, 0">
+              <Span Background="LightGreen"><![CDATA[  <Target Name="QtMsBuildNotFound" BeforeTargets="CustomBuild;ClCompile" Condition="!Exists('$(QtMsBuild)\qt.targets') OR !Exists('$(QtMsBuild)\Qt.props')">]]></Span>
+            </Paragraph>
+          </TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell BorderThickness="0, 0, 0.5, 0" BorderBrush="Gray">
+            <Paragraph FontFamily="Consolas" Margin="4, 0" />
+          </TableCell>
+          <TableCell BorderThickness="0, 0, 0.5, 0" BorderBrush="Gray">
+            <Paragraph FontFamily="Consolas" Margin="4, 0">
+              <Span Background="LightGreen"><![CDATA[    <Message Importance="High" Text="QtMsBuild: could not locate qt.targets, qt.props; project may not build correctly." />]]></Span>
+            </Paragraph>
+          </TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell BorderThickness="0, 0, 0.5, 0" BorderBrush="Gray">
+            <Paragraph FontFamily="Consolas" Margin="4, 0" />
+          </TableCell>
+          <TableCell BorderThickness="0, 0, 0.5, 0" BorderBrush="Gray">
+            <Paragraph FontFamily="Consolas" Margin="4, 0">
+              <Span Background="LightGreen"><![CDATA[  </Target>]]></Span>
+            </Paragraph>
+          </TableCell>
+        </TableRow>
+      </TableRowGroup>
+    </Table>
+    <Paragraph FontSize="20" FontWeight="Bold" Margin="12">
+      <Span><![CDATA[🡺 Qt property sheet]]></Span>
+    </Paragraph>
+    <Table CellSpacing="0" BorderBrush="Gray" BorderThickness="0.5">
+      <Table.Columns>
+        <TableColumn />
+        <TableColumn />
+      </Table.Columns>
+      <TableRowGroup>
+        <TableRow Background="Orange">
+          <TableCell ColumnSpan="2" BorderThickness="0.5" BorderBrush="Gray">
+            <Paragraph Margin="10,5" FontWeight="Bold">
+              <Span><![CDATA[D:\Github Desktop\THE-GAME\THE-GAME\THE-GAME.vcxproj]]></Span>
+            </Paragraph>
+          </TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell ColumnSpan="2" Background="WhiteSmoke" BorderBrush="Gray" BorderThickness="0.5" />
+        </TableRow>
+        <TableRow>
+          <TableCell BorderThickness="0, 0, 0.5, 0" BorderBrush="Gray">
+            <Paragraph FontFamily="Consolas" Margin="4, 0" />
+          </TableCell>
+          <TableCell BorderThickness="0, 0, 0.5, 0" BorderBrush="Gray">
+            <Paragraph FontFamily="Consolas" Margin="4, 0">
+              <Span Background="LightGreen"><![CDATA[    <Import Project="$(QtMsBuild)\Qt.props" />]]></Span>
+            </Paragraph>
+          </TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell ColumnSpan="2" Background="WhiteSmoke" BorderBrush="Gray" BorderThickness="0.5" />
+        </TableRow>
+        <TableRow>
+          <TableCell BorderThickness="0, 0, 0.5, 0" BorderBrush="Gray">
+            <Paragraph FontFamily="Consolas" Margin="4, 0" />
+          </TableCell>
+          <TableCell BorderThickness="0, 0, 0.5, 0" BorderBrush="Gray">
+            <Paragraph FontFamily="Consolas" Margin="4, 0">
+              <Span Background="LightGreen"><![CDATA[    <Import Project="$(QtMsBuild)\Qt.props" />]]></Span>
+            </Paragraph>
+          </TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell ColumnSpan="2" Background="WhiteSmoke" BorderBrush="Gray" BorderThickness="0.5" />
+        </TableRow>
+        <TableRow>
+          <TableCell BorderThickness="0, 0, 0.5, 0" BorderBrush="Gray">
+            <Paragraph FontFamily="Consolas" Margin="4, 0" />
+          </TableCell>
+          <TableCell BorderThickness="0, 0, 0.5, 0" BorderBrush="Gray">
+            <Paragraph FontFamily="Consolas" Margin="4, 0">
+              <Span Background="LightGreen"><![CDATA[    <Import Project="$(QtMsBuild)\Qt.props" />]]></Span>
+            </Paragraph>
+          </TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell ColumnSpan="2" Background="WhiteSmoke" BorderBrush="Gray" BorderThickness="0.5" />
+        </TableRow>
+        <TableRow>
+          <TableCell BorderThickness="0, 0, 0.5, 0" BorderBrush="Gray">
+            <Paragraph FontFamily="Consolas" Margin="4, 0" />
+          </TableCell>
+          <TableCell BorderThickness="0, 0, 0.5, 0" BorderBrush="Gray">
+            <Paragraph FontFamily="Consolas" Margin="4, 0">
+              <Span Background="LightGreen"><![CDATA[    <Import Project="$(QtMsBuild)\Qt.props" />]]></Span>
+            </Paragraph>
+          </TableCell>
+        </TableRow>
+      </TableRowGroup>
+    </Table>
+    <Paragraph FontSize="20" FontWeight="Bold" Margin="12">
+      <Span><![CDATA[🡺 Qt targets]]></Span>
+    </Paragraph>
+    <Table CellSpacing="0" BorderBrush="Gray" BorderThickness="0.5">
+      <Table.Columns>
+        <TableColumn />
+        <TableColumn />
+      </Table.Columns>
+      <TableRowGroup>
+        <TableRow Background="Orange">
+          <TableCell ColumnSpan="2" BorderThickness="0.5" BorderBrush="Gray">
+            <Paragraph Margin="10,5" FontWeight="Bold">
+              <Span><![CDATA[D:\Github Desktop\THE-GAME\THE-GAME\THE-GAME.vcxproj]]></Span>
+            </Paragraph>
+          </TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell ColumnSpan="2" Background="WhiteSmoke" BorderBrush="Gray" BorderThickness="0.5" />
+        </TableRow>
+        <TableRow>
+          <TableCell BorderThickness="0, 0, 0.5, 0" BorderBrush="Gray">
+            <Paragraph FontFamily="Consolas" Margin="4, 0" />
+          </TableCell>
+          <TableCell BorderThickness="0, 0, 0.5, 0" BorderBrush="Gray">
+            <Paragraph FontFamily="Consolas" Margin="4, 0">
+              <Span Background="LightGreen"><![CDATA[  <Import Project="$(QtMsBuild)\qt.targets" Condition="Exists('$(QtMsBuild)\qt.targets')" />]]></Span>
+            </Paragraph>
+          </TableCell>
+        </TableRow>
+      </TableRowGroup>
+    </Table>
+  </Section>
+  <Section>
+    <Paragraph />
+  </Section>
+</FlowDocument>
+<!--28ikKd+/T/66/lrG5zhl0BIIJcteocYnLLpGrb0pI10=-->
