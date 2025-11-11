@@ -1,0 +1,26 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "x64\\Debug\\lr.cppm.obj",
+            "outputs": [
+                "C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Login-Register\\x64\\Debug\\vc143.pdb",
+                "x64\\Debug\\",
+                "C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Login-Register\\x64\\Debug\\lr.cppm.ifc"
+            ],
+            "provides": [
+                {
+                    "logical-name": "lr",
+                    "source-path": "c:\\users\\rmama\\documents\\github\\the-game\\login-register\\lr.cppm",
+                    "is-interface": true
+                }
+            ],
+            "requires": [
+                {
+                    "logical-name": "std"
+                }
+            ]
+        }
+    ]
+}

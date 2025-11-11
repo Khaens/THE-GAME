@@ -41,6 +41,11 @@
   <ItemGroup>
     <QtUic Include="MainWindow.ui" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Login-Register\Login-Register.vcxproj">
+      <Project>{346dd210-d7b8-47c8-95e9-035762a52fb4}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -87,6 +92,7 @@
   </PropertyGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <QtModules>core;gui;widgets</QtModules>
+    <QtInstall>6.9.3_msvc2022_64</QtInstall>
   </PropertyGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <QtModules>core;gui;widgets</QtModules>
