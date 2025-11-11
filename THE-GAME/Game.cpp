@@ -74,13 +74,10 @@ bool Game::IsGameOver(const Player* currentPlayer)
 
 void Game::OneRound(Player* currentPlayer)
 {
-	currentPlayer = &GetCurrentPlayer();
+	
 	std::cout << "\nIt's " << currentPlayer->GetUsername() << "'s turn.\n";
-	// Here would be the logic for the player to make their move
 	std::cout << "Your hand:\n";
-	for (auto card : currentPlayer->GetHand()) {
-		std::cout << card->GetCardValue() << " ";
-	}
+	currentPlayer->ShowHand();
 	std::cout << "Pick a card to play from your hand.\n";
 	std::string chosenCardValue;
 	std::cin >> chosenCardValue;
@@ -99,59 +96,56 @@ void Game::OneRound(Player* currentPlayer)
 
 void Game::StartGame()
 {	
-	FirstRoundDealing();
 	m_wholeDeck.ShuffleDeck();
+	FirstRoundDealing();
 	m_currentPlayerIndex = WhoStartsFirst();
-	Player& startingPlayer = m_players[m_currentPlayerIndex];
 	size_t minimumCardsNeeded;
 	while(!IsGameOver(&GetCurrentPlayer())) {
+		Player& currentPlayer = m_players[m_currentPlayerIndex];
+		int playedCards = 0;
 		if (!m_wholeDeck.IsEmpty()) {
 			minimumCardsNeeded = 2;
+			OneRound(&currentPlayer);
+			OneRound(&currentPlayer);
+			playedCards = 2;
 		}
 		else if (m_wholeDeck.IsEmpty() || m_wholeDeck.GetSize() == 1) {
 			minimumCardsNeeded = 1;
+			OneRound(&currentPlayer);
+			playedCards = 1;
 		}
-		if (minimumCardsNeeded == 2) {
-			OneRound(&startingPlayer);
-			OneRound(&startingPlayer);
-			for (size_t idx = 0; idx < minimumCardsNeeded; idx++) {
-				Card* drawnCard = m_wholeDeck.DrawCard();
-				startingPlayer.AddCardToHand(drawnCard);
-			}
-		}
-		else {
-			OneRound(&startingPlayer);
-			Card* drawnCard = m_wholeDeck.DrawCard();
-			startingPlayer.AddCardToHand(drawnCard);
-		}
-		int x = NumberOfPlayableCardsInHand();
-		if(x == 0) {
+		
+
+		int nrOfPlayableCards = NumberOfPlayableCardsInHand();
+		if(nrOfPlayableCards == 0) {
 			std::cout << "Nu mai poti pune nici o carte. Trecem la urmatorul jucator.\n";
-			NextPlayer();
-			continue;
+			for (size_t i = 0; i < playedCards; i++) {
+				Card* drawnCard = m_wholeDeck.DrawCard();
+				currentPlayer.AddCardToHand(drawnCard);
+			}
 		}
 		else {
-			std::cout << "Mai poti pune " << x << " carti.\n";
-			std::cout << "Doresti sa continui? (y/n): ";
-			char optiune;
-			std::cin >> optiune;
-			if (optiune == 'n') {
-				NextPlayer();
-				continue;
-			}
-			else if (optiune == 'y') {
-				std::cout << "Cate carti doresti sa mai pui? ";
-				size_t numCards;
-				std::cin >> numCards;
-				for (size_t i = 0; i < numCards; i++) {
-					OneRound(&startingPlayer);
+			while (nrOfPlayableCards > 0) {
+				std::cout << "Mai poti pune " << nrOfPlayableCards << " carti.\n";
+				std::cout << "Doresti sa continui? (y/n): ";
+				char optiune;
+				std::cin >> optiune;
+				if (optiune == 'n') {
+					break;
 				}
-				for (size_t i = 0; i < numCards; i++) {
-					Card* drawnCard = m_wholeDeck.DrawCard();
-					startingPlayer.AddCardToHand(drawnCard);
+				else if (optiune == 'y') {
+					OneRound(&currentPlayer);
+					playedCards++;
 				}
-				NextPlayer();
+				nrOfPlayableCards--;
 			}
+			for (size_t i = 0; i < playedCards; i++) {
+				Card* drawnCard = m_wholeDeck.DrawCard();
+				currentPlayer.AddCardToHand(drawnCard);
+			}
+			/*currentPlayer.ShowHand();
+			m_wholeDeck.ShowDeck();*/
+			NextPlayer();
 		}
 	}
 }

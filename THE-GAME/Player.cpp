@@ -1,5 +1,5 @@
 #include "Player.h"
-
+#include <iostream>
 Player::Player(const std::string& username, const std::string& password) : User(username, password)
 {
 }
@@ -23,5 +23,12 @@ Card* Player::ChooseCard(std::string cardValue)
 {
 	return *std::find_if(m_hand.begin(), m_hand.end(),
 		[&cardValue](Card* c) { return c->GetCardValue() == cardValue; });
+}
+
+void Player::ShowHand()
+{
+	for (auto card : m_hand) {
+		std::cout << card->GetCardValue() << " ";
+	}
 }
 

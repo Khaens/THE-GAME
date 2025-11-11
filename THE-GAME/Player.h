@@ -15,5 +15,7 @@ public:
     void RemoveCardFromHand(Card* card);
 	const std::unordered_set<Card*>& GetHand() const;
     Card* ChooseCard(std::string cardValue);
+
+    void ShowHand();
 };
 

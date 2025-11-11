@@ -2,8 +2,7 @@
 
 int main() {
 	// Testing
-	Game g(5);
-	size_t first = g.WhoStartsFirst();
-	std::cout << first;
+	Game g(2);
+	g.StartGame();
 	return 0;
 }

@@ -2,6 +2,7 @@
 #include "Card.h"
 #include <vector>
 #include <random>
+#include <iostream>
 
 class Deck 
 {
@@ -16,5 +17,7 @@ public:
 	Card* DrawCard();
 	bool IsEmpty() const;
 	size_t GetSize() const;
+
+	void ShowDeck() const;
 };
 

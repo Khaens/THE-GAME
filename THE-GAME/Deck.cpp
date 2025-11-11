@@ -40,3 +40,17 @@ size_t Deck::GetSize() const
 	return m_initialCards.size();
 }
 
+void Deck::ShowDeck() const
+{
+	std::vector<std::string> cardValues;
+	for (const auto& card : m_initialCards) {
+		cardValues.push_back(card->GetCardValue());
+	}
+	std::sort(cardValues.begin(), cardValues.end());
+	std::cout << "\n";
+	for (const auto& value : cardValues) {
+		std::cout << value << " ";
+	}
+	std::cout << std::endl;
+}
+
