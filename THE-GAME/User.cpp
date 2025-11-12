@@ -24,3 +24,8 @@ void User::login() const
 
 }
 
+UserModel User::ToModel() const
+{
+	return UserModel{ -1, m_username, m_password };
+}
+
