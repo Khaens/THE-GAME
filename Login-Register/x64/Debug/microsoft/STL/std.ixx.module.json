@@ -5,9 +5,9 @@
         {
             "primary-output": "x64\\Debug\\microsoft/STL\\std.ixx.obj",
             "outputs": [
-                "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Login-Register\\x64\\Debug\\vc143.pdb",
+                "D:\\Github Desktop\\THE-GAME\\Login-Register\\x64\\Debug\\vc143.pdb",
                 "x64\\Debug\\microsoft/STL\\",
-                "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Login-Register\\x64\\Debug\\microsoft\\STL\\std.ixx.ifc"
+                "D:\\Github Desktop\\THE-GAME\\Login-Register\\x64\\Debug\\microsoft\\STL\\std.ixx.ifc"
             ],
             "provides": [
                 {

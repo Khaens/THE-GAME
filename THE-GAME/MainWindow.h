@@ -2,6 +2,7 @@
 
 #include <QMainWindow>
 #include "ui_MainWindow.h"
+#include "Game.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindowClass; };
@@ -12,10 +13,14 @@ class MainWindow : public QMainWindow
 	Q_OBJECT
 
 public:
-	MainWindow(QWidget *parent = nullptr);
+	MainWindow(QWidget* parent = nullptr);
 	~MainWindow();
 
-private:
-	Ui::MainWindowClass *ui;
-};
+private slots:
+	void onNewGameClicked();
+	void onExitClicked();
 
+private:
+	Ui::MainWindowClass* ui;
+	void setupMenuStyle();
+};
