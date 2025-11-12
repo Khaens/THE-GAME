@@ -23,6 +23,12 @@ private:
 
 public:
     Database(const std::string& path = "users.db");
-
+    int insertUser(const UserModel& user);
+    UserModel getUserById(int id);
+    UserModel getUserByUsername(const std::string& username);
+    std::vector<UserModel> getAllUsers();
+    void updateUser(const UserModel& user);
+    void deleteUser(int id);
+    bool userExists(const std::string& username);
 };
 

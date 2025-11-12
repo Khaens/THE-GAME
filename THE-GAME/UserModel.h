@@ -7,7 +7,7 @@ struct UserModel
     std::string username;
     std::string password;
 
-    UserModel();
+    UserModel() = default;
     UserModel(int id, const std::string& user, const std::string& pass);
 };
 
