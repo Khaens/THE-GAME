@@ -19,6 +19,7 @@ public:
 private slots:
 	void onNewGameClicked();
 	void onExitClicked();
+	void onHelpClicked();
 
 private:
 	Ui::MainWindowClass* ui;

@@ -31,6 +31,8 @@ public:
     QVBoxLayout *verticalLayout;
     QPushButton *newGameButton;
     QPushButton *exitGameButton;
+    QPushButton *settingsButton;
+    QPushButton *helpButton;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
 
@@ -84,6 +86,20 @@ public:
 
         verticalLayout->addWidget(exitGameButton, 0, Qt::AlignmentFlag::AlignHCenter);
 
+        settingsButton = new QPushButton(widget);
+        settingsButton->setObjectName("settingsButton");
+        settingsButton->setGeometry(QRect(740, 550, 75, 75));
+        sizePolicy.setHeightForWidth(settingsButton->sizePolicy().hasHeightForWidth());
+        settingsButton->setSizePolicy(sizePolicy);
+        settingsButton->setMinimumSize(QSize(75, 75));
+        settingsButton->setMaximumSize(QSize(75, 75));
+        helpButton = new QPushButton(widget);
+        helpButton->setObjectName("helpButton");
+        helpButton->setGeometry(QRect(740, 460, 75, 75));
+        sizePolicy.setHeightForWidth(helpButton->sizePolicy().hasHeightForWidth());
+        helpButton->setSizePolicy(sizePolicy);
+        helpButton->setMinimumSize(QSize(75, 75));
+        helpButton->setMaximumSize(QSize(75, 75));
         MainWindowClass->setCentralWidget(centralWidget);
         mainToolBar = new QToolBar(MainWindowClass);
         mainToolBar->setObjectName("mainToolBar");
@@ -103,6 +119,8 @@ public:
         titleLabel->setText(QString());
         newGameButton->setText(QString());
         exitGameButton->setText(QString());
+        settingsButton->setText(QCoreApplication::translate("MainWindowClass", "SETTINGS", nullptr));
+        helpButton->setText(QString());
     } // retranslateUi
 
 };

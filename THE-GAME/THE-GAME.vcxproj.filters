@@ -42,6 +42,9 @@
     <ClCompile Include="UserModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="HelpDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Card.h">
@@ -71,6 +74,9 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="MainWindow.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="HelpDialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

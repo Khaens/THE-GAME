@@ -5,7 +5,7 @@
 int main(int argc, char* argv[]) {
 	QApplication app(argc, argv);
 
-	Game g(3);
+	//Game g(3);
 	MainWindow w;
 	//w.setGame(&g);
 	w.show();

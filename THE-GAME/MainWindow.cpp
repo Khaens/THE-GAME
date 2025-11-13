@@ -1,5 +1,8 @@
 ﻿#include "MainWindow.h"
+#include "HelpDialog.h"
 #include <QPixmap>
+#include <QMessageBox>
+
 
 MainWindow::MainWindow(QWidget* parent)
 	: QMainWindow(parent)
@@ -10,7 +13,8 @@ MainWindow::MainWindow(QWidget* parent)
 
 	// Conectează butoanele la slot-uri
 	connect(ui->newGameButton, &QPushButton::clicked, this, &MainWindow::onNewGameClicked);
-	connect(ui->exitGameButton, &QPushButton::clicked, this, &MainWindow::onExitClicked);
+	connect(ui->exitGameButton, &QPushButton::clicked, this, &MainWindow::onExitClicked); 
+	connect(ui->helpButton, &QPushButton::clicked, this, &MainWindow::onHelpClicked);
 
 	// Încarcă imaginea pentru titlu
 	QPixmap titlePixmap("Assets/TitleCard.png"); // ajustează calea
@@ -47,8 +51,18 @@ void MainWindow::setupMenuStyle()
 	}
 	)";
 
+	QString helpButtonStyle = R"(
+	QPushButton {
+		border-image: url(Assets/Button_Help.png);
+	}
+	QPushButton:pressed {
+		border-image: url(Assets/Button_Help_Pressed.png);
+	}
+	)";
+
 	ui->newGameButton->setStyleSheet(gameButtonStyle);
 	ui->exitGameButton->setStyleSheet(exitButtonStyle);
+	ui->helpButton->setStyleSheet(helpButtonStyle);
 }
 
 void MainWindow::onNewGameClicked()
@@ -61,4 +75,10 @@ void MainWindow::onNewGameClicked()
 void MainWindow::onExitClicked()
 {
 	close();
+}
+
+void MainWindow::onHelpClicked()
+{
+	HelpDialog helpDialog(this);
+	helpDialog.exec();
 }
