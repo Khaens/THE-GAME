@@ -11,9 +11,11 @@
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QVBoxLayout>
@@ -25,13 +27,15 @@ class Ui_MainWindowClass
 {
 public:
     QWidget *centralWidget;
-    QWidget *widget;
+    QVBoxLayout *verticalLayout_2;
     QLabel *titleLabel;
-    QWidget *verticalLayoutWidget;
     QVBoxLayout *verticalLayout;
     QPushButton *newGameButton;
-    QPushButton *exitGameButton;
     QPushButton *settingsButton;
+    QPushButton *exitGameButton;
+    QSpacerItem *verticalSpacerBottom;
+    QHBoxLayout *horizontalLayoutBottom;
+    QSpacerItem *bottomSpacer;
     QPushButton *helpButton;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -41,65 +45,87 @@ public:
         if (MainWindowClass->objectName().isEmpty())
             MainWindowClass->setObjectName("MainWindowClass");
         MainWindowClass->resize(1080, 720);
-        QSizePolicy sizePolicy(QSizePolicy::Policy::Fixed, QSizePolicy::Policy::Fixed);
+        QSizePolicy sizePolicy(QSizePolicy::Policy::Preferred, QSizePolicy::Policy::Preferred);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(MainWindowClass->sizePolicy().hasHeightForWidth());
         MainWindowClass->setSizePolicy(sizePolicy);
         MainWindowClass->setMinimumSize(QSize(800, 600));
-        MainWindowClass->setMaximumSize(QSize(1080, 720));
         centralWidget = new QWidget(MainWindowClass);
         centralWidget->setObjectName("centralWidget");
-        widget = new QWidget(centralWidget);
-        widget->setObjectName("widget");
-        widget->setGeometry(QRect(20, 30, 861, 661));
-        titleLabel = new QLabel(widget);
+        verticalLayout_2 = new QVBoxLayout(centralWidget);
+        verticalLayout_2->setSpacing(6);
+        verticalLayout_2->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_2->setObjectName("verticalLayout_2");
+        titleLabel = new QLabel(centralWidget);
         titleLabel->setObjectName("titleLabel");
         titleLabel->setEnabled(true);
-        titleLabel->setGeometry(QRect(310, 0, 300, 300));
         sizePolicy.setHeightForWidth(titleLabel->sizePolicy().hasHeightForWidth());
         titleLabel->setSizePolicy(sizePolicy);
-        titleLabel->setMinimumSize(QSize(300, 300));
-        titleLabel->setMaximumSize(QSize(300, 300));
+        titleLabel->setMinimumSize(QSize(400, 400));
+        titleLabel->setScaledContents(false);
         titleLabel->setAlignment(Qt::AlignmentFlag::AlignCenter);
-        verticalLayoutWidget = new QWidget(widget);
-        verticalLayoutWidget->setObjectName("verticalLayoutWidget");
-        verticalLayoutWidget->setGeometry(QRect(340, 340, 251, 161));
-        verticalLayout = new QVBoxLayout(verticalLayoutWidget);
-        verticalLayout->setSpacing(6);
-        verticalLayout->setContentsMargins(11, 11, 11, 11);
+
+        verticalLayout_2->addWidget(titleLabel);
+
+        verticalLayout = new QVBoxLayout();
+        verticalLayout->setSpacing(3);
         verticalLayout->setObjectName("verticalLayout");
-        verticalLayout->setContentsMargins(0, 0, 0, 0);
-        newGameButton = new QPushButton(verticalLayoutWidget);
+        newGameButton = new QPushButton(centralWidget);
         newGameButton->setObjectName("newGameButton");
-        sizePolicy.setHeightForWidth(newGameButton->sizePolicy().hasHeightForWidth());
-        newGameButton->setSizePolicy(sizePolicy);
+        QSizePolicy sizePolicy1(QSizePolicy::Policy::MinimumExpanding, QSizePolicy::Policy::Preferred);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(newGameButton->sizePolicy().hasHeightForWidth());
+        newGameButton->setSizePolicy(sizePolicy1);
         newGameButton->setMinimumSize(QSize(150, 75));
 
         verticalLayout->addWidget(newGameButton, 0, Qt::AlignmentFlag::AlignHCenter);
 
-        exitGameButton = new QPushButton(verticalLayoutWidget);
+        settingsButton = new QPushButton(centralWidget);
+        settingsButton->setObjectName("settingsButton");
+        sizePolicy1.setHeightForWidth(settingsButton->sizePolicy().hasHeightForWidth());
+        settingsButton->setSizePolicy(sizePolicy1);
+        settingsButton->setMinimumSize(QSize(150, 75));
+
+        verticalLayout->addWidget(settingsButton, 0, Qt::AlignmentFlag::AlignHCenter);
+
+        exitGameButton = new QPushButton(centralWidget);
         exitGameButton->setObjectName("exitGameButton");
-        sizePolicy.setHeightForWidth(exitGameButton->sizePolicy().hasHeightForWidth());
-        exitGameButton->setSizePolicy(sizePolicy);
+        sizePolicy1.setHeightForWidth(exitGameButton->sizePolicy().hasHeightForWidth());
+        exitGameButton->setSizePolicy(sizePolicy1);
         exitGameButton->setMinimumSize(QSize(150, 75));
 
         verticalLayout->addWidget(exitGameButton, 0, Qt::AlignmentFlag::AlignHCenter);
 
-        settingsButton = new QPushButton(widget);
-        settingsButton->setObjectName("settingsButton");
-        settingsButton->setGeometry(QRect(740, 550, 75, 75));
-        sizePolicy.setHeightForWidth(settingsButton->sizePolicy().hasHeightForWidth());
-        settingsButton->setSizePolicy(sizePolicy);
-        settingsButton->setMinimumSize(QSize(75, 75));
-        settingsButton->setMaximumSize(QSize(75, 75));
-        helpButton = new QPushButton(widget);
+
+        verticalLayout_2->addLayout(verticalLayout);
+
+        verticalSpacerBottom = new QSpacerItem(20, 40, QSizePolicy::Policy::Minimum, QSizePolicy::Policy::Expanding);
+
+        verticalLayout_2->addItem(verticalSpacerBottom);
+
+        horizontalLayoutBottom = new QHBoxLayout();
+        horizontalLayoutBottom->setSpacing(6);
+        horizontalLayoutBottom->setObjectName("horizontalLayoutBottom");
+        bottomSpacer = new QSpacerItem(40, 20, QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Minimum);
+
+        horizontalLayoutBottom->addItem(bottomSpacer);
+
+        helpButton = new QPushButton(centralWidget);
         helpButton->setObjectName("helpButton");
-        helpButton->setGeometry(QRect(740, 460, 75, 75));
-        sizePolicy.setHeightForWidth(helpButton->sizePolicy().hasHeightForWidth());
-        helpButton->setSizePolicy(sizePolicy);
-        helpButton->setMinimumSize(QSize(75, 75));
-        helpButton->setMaximumSize(QSize(75, 75));
+        QSizePolicy sizePolicy2(QSizePolicy::Policy::Minimum, QSizePolicy::Policy::Minimum);
+        sizePolicy2.setHorizontalStretch(0);
+        sizePolicy2.setVerticalStretch(0);
+        sizePolicy2.setHeightForWidth(helpButton->sizePolicy().hasHeightForWidth());
+        helpButton->setSizePolicy(sizePolicy2);
+        helpButton->setMinimumSize(QSize(50, 50));
+
+        horizontalLayoutBottom->addWidget(helpButton);
+
+
+        verticalLayout_2->addLayout(horizontalLayoutBottom);
+
         MainWindowClass->setCentralWidget(centralWidget);
         mainToolBar = new QToolBar(MainWindowClass);
         mainToolBar->setObjectName("mainToolBar");
@@ -118,8 +144,8 @@ public:
         MainWindowClass->setWindowTitle(QCoreApplication::translate("MainWindowClass", "MainWindow", nullptr));
         titleLabel->setText(QString());
         newGameButton->setText(QString());
-        exitGameButton->setText(QString());
         settingsButton->setText(QCoreApplication::translate("MainWindowClass", "SETTINGS", nullptr));
+        exitGameButton->setText(QString());
         helpButton->setText(QString());
     } // retranslateUi
 

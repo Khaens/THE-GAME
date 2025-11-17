@@ -15,13 +15,13 @@ void HelpDialog::setupUI()
     setFixedSize(700, 600);
 
     QVBoxLayout* mainLayout = new QVBoxLayout(this);
-    mainLayout->setSpacing(15);
-    mainLayout->setContentsMargins(20, 20, 20, 20);
+    mainLayout->setSpacing(10);
+    mainLayout->setContentsMargins(10, 10, 10, 10);
 
     // Title
-    QLabel* titleLabel = new QLabel("HOW TO PLAY", this);
+    QLabel* titleLabel = new QLabel("HELP - THE GAME", this);
     titleLabel->setAlignment(Qt::AlignCenter);
-    titleLabel->setStyleSheet("font-size: 24px; font-weight: bold; color: #2C3E50; margin-bottom: 10px;");
+    titleLabel->setStyleSheet("font-size: 24px; font-weight: bold; color: #ffffff; margin-bottom: 10px;");
     mainLayout->addWidget(titleLabel);
 
     // Rules text browser
@@ -47,37 +47,36 @@ void HelpDialog::setupStyle()
 {
     setStyleSheet(R"(
         QDialog {
-            background-color: #ECF0F1;
+            background-color: #8e273b;
         }
         
         QTextBrowser {
-            background-color: white;
-            border: 2px solid #BDC3C7;
-            border-radius: 8px;
-            padding: 15px;
+            background-color: #deaf11;
+            border: 1px solid #ff2424;
+            padding: 10px;
             font-size: 13px;
             color: #2C3E50;
         }
         
         QTextBrowser QScrollBar:vertical {
             border: none;
-            background: #ECF0F1;
+            background: #3d431a;
             width: 10px;
             margin: 0px;
         }
         
         QTextBrowser QScrollBar::handle:vertical {
-            background: #95A5A6;
+            background: #654b1f;
             border-radius: 5px;
             min-height: 20px;
         }
         
         QTextBrowser QScrollBar::handle:vertical:hover {
-            background: #7F8C8D;
+            background: #4a3f1e;
         }
         
         QPushButton {
-            background-color: #3498DB;
+            background-color: #f3d05a;
             color: white;
             border: none;
             border-radius: 8px;
@@ -87,11 +86,11 @@ void HelpDialog::setupStyle()
         }
         
         QPushButton:hover {
-            background-color: #2980B9;
+            background-color: #e3b310;
         }
         
         QPushButton:pressed {
-            background-color: #21618C;
+            background-color: #869e22;
         }
     )");
 }
@@ -100,12 +99,12 @@ QString HelpDialog::getGameRules()
 {
     return R"(
         <html>
-        <body style='font-family: Arial, sans-serif; line-height: 1.6;'>
+        <body style='font-family: Arial, sans-serif; line-height: 1.25; background-color: #c34158;'>
             
-            <h2 style='color: #E74C3C; margin-top: 0;'>🎯 OBJECTIVE</h2>
-            <p>Work together to play all 98 cards from the deck onto four piles before running out of moves!</p>
-            
-            <h2 style='color: #E74C3C;'>📚 SETUP</h2>
+            <h2 style='color: #f3d05a; margin-top: 10px;'>OBJECTIVE</h2>
+            <p>Work together to play all cards from the deck and your very own hands onto the four piles before running out of moves!</p>
+           
+            <h2 style='color: #f3d05a;'>SETUP</h2>
             <ul>
                 <li><b>Players:</b> 2-5 players (cooperative game)</li>
                 <li><b>Starting Hand:</b> Each player receives 6 cards</li>
@@ -117,16 +116,17 @@ QString HelpDialog::getGameRules()
                 </li>
             </ul>
             
-            <h2 style='color: #E74C3C;'>🎮 HOW TO PLAY</h2>
+            <h2 style='color: #f3d05a;'>HOW TO PLAY</h2>
             
-            <h3 style='color: #2980B9;'>On Your Turn:</h3>
+            <h3 style='color: #ffffff;'>On Your Turn:</h3>
             <ol>
                 <li><b>Play at least 2 cards</b> from your hand onto any of the four piles</li>
+                <li>If there are no more cards that can be drawn, only a minimum of 1 card is to be played</li>
                 <li>After playing, draw back to 6 cards (if deck has cards)</li>
                 <li>Pass the turn to the next player</li>
             </ol>
             
-            <h3 style='color: #2980B9;'>Card Placement Rules:</h3>
+            <h3 style='color: #ffffff;'>Card Placement Rules:</h3>
             <ul>
                 <li><b style='color: #27AE60;'>Ascending Piles:</b> Play higher numbers (e.g., 1 → 15 → 28 → 45...)</li>
                 <li><b style='color: #E67E22;'>Descending Piles:</b> Play lower numbers (e.g., 100 → 82 → 67 → 43...)</li>
@@ -139,29 +139,29 @@ QString HelpDialog::getGameRules()
                 </li>
             </ul>
             
-            <h3 style='color: #2980B9;'>Communication Rules:</h3>
+            <h3 style='color: #ffffff;'>Communication Rules:</h3>
             <ul>
-                <li>❌ <b>Cannot</b> say specific card numbers</li>
-                <li>✅ <b>Can</b> give hints like "I have very high cards" or "I can help with the descending pile"</li>
-                <li>✅ <b>Can</b> discuss strategy generally</li>
+                <li><b>Cannot</b> say specific card numbers</li>
+                <li><b>Can</b> give hints like "I have very high cards" or "I can help with the descending pile"</li>
+                <li><b>Can</b> discuss strategy generally</li>
             </ul>
             
-            <h2 style='color: #E74C3C;'>🏆 WINNING & LOSING</h2>
+            <h2 style='color: #f3d05a;'>WINNING & LOSING</h2>
             <ul>
-                <li><b style='color: #27AE60;'>You WIN</b> if all 98 cards are played!</li>
-                <li><b style='color: #C0392B;'>You LOSE</b> if a player cannot play the minimum 2 cards (or 1 card when deck is empty)</li>
+                <li><b style='color: #27AE60;'>You WIN</b> if all cards from both the players' hands and the main deck are onto the decks</li>
+                <li><b style='color: #C0392B;'>You LOSE</b> if a player cannot play the minimum cards required</li>
             </ul>
             
-            <h2 style='color: #E74C3C;'>💡 TIPS FOR SUCCESS</h2>
+            <h2 style='color: #f3d05a;'>TIPS FOR SUCCESS</h2>
             <ul>
-                <li>🤝 <b>Communicate constantly</b> - teamwork is essential!</li>
-                <li>⏰ <b>Save the "backward trick"</b> for emergencies</li>
-                <li>🎯 <b>Spread cards across all piles</b> - don't focus on just one</li>
-                <li>📊 <b>Middle-range cards (40-60)</b> are the hardest to play - use them wisely!</li>
-                <li>🔄 <b>Plan ahead</b> - think about what cards teammates might need</li>
+                <li><b>Communicate constantly</b> - teamwork is essential!</li>
+                <li><b>Save the "backward trick"</b> for emergencies</li>
+                <li><b>Spread cards across all piles</b> - don't focus on just one</li>
+                <li><b>Middle-range cards (40-60)</b> are the hardest to play - use them wisely!</li>
+                <li><b>Plan ahead</b> - think about what cards teammates might need</li>
             </ul>
             
-            <p style='text-align: center; margin-top: 20px; font-size: 16px; color: #7F8C8D;'>
+            <p style='text-align: center; margin-top: 20px; margin-bottom: 10px; font-size: 16px; color: #ffffff;'>
                 <b>Good luck, and remember - in The Game, you play together or lose together!</b>
             </p>
             
