@@ -5,14 +5,14 @@
         {
             "primary-output": "x64\\Debug\\lr.cppm.obj",
             "outputs": [
-                "D:\\Github Desktop\\THE-GAME\\Login-Register\\x64\\Debug\\vc143.pdb",
+                "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Login-Register\\x64\\Debug\\vc143.pdb",
                 "x64\\Debug\\",
-                "D:\\Github Desktop\\THE-GAME\\Login-Register\\x64\\Debug\\lr.cppm.ifc"
+                "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Login-Register\\x64\\Debug\\lr.cppm.ifc"
             ],
             "provides": [
                 {
                     "logical-name": "lr",
-                    "source-path": "d:\\github desktop\\the-game\\login-register\\lr.cppm",
+                    "source-path": "c:\\users\\sebig\\onedrive\\documente\\github\\the-game\\login-register\\lr.cppm",
                     "is-interface": true
                 }
             ],

@@ -31,6 +31,7 @@
     <ClCompile Include="UserModel.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AchievementsModel.h" />
     <ClInclude Include="Card.h" />
     <ClInclude Include="Deck.h" />
     <ClInclude Include="Game.h" />

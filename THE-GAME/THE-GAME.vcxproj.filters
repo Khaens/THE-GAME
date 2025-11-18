@@ -71,6 +71,9 @@
     <ClInclude Include="UserModel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="AchievementsModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="MainWindow.h">
