@@ -1,7 +1,11 @@
 {
     "Version": "1.2",
     "Data": {
+<<<<<<< Updated upstream
         "Source": "c:\\users\\mihne\\onedrive\\documents\\github\\the-game\\login-register\\lr.cppm",
+=======
+        "Source": "d:\\github desktop\\the-game\\login-register\\lr.cppm",
+>>>>>>> Stashed changes
         "ProvidedModule": "lr",
         "Includes": [],
         "ImportedModules": [],

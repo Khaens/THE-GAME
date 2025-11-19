@@ -1,13 +1,21 @@
 {
     "Version": "1.2",
     "Data": {
+<<<<<<< Updated upstream
         "Source": "c:\\users\\mihne\\onedrive\\documents\\github\\the-game\\login-register\\lr.cppm",
+=======
+        "Source": "d:\\github desktop\\the-game\\login-register\\lr.cppm",
+>>>>>>> Stashed changes
         "ProvidedModule": "lr",
         "Includes": [],
         "ImportedModules": [
             {
                 "Name": "std",
+<<<<<<< Updated upstream
                 "BMI": "C:\\Users\\mihne\\OneDrive\\Documents\\GitHub\\THE-GAME\\Login-Register\\x64\\Debug\\microsoft\\STL\\std.ixx.ifc"
+=======
+                "BMI": "D:\\Github Desktop\\THE-GAME\\Login-Register\\x64\\Debug\\microsoft\\STL\\std.ixx.ifc"
+>>>>>>> Stashed changes
             }
         ],
         "ImportedHeaderUnits": []
