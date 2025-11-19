@@ -5,14 +5,14 @@
         {
             "primary-output": "x64\\Debug\\microsoft/STL\\std.ixx.obj",
             "outputs": [
-                "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Login-Register\\x64\\Debug\\vc143.pdb",
+                "C:\\Users\\mihne\\OneDrive\\Documents\\GitHub\\THE-GAME\\Login-Register\\x64\\Debug\\vc143.pdb",
                 "x64\\Debug\\microsoft/STL\\",
-                "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Login-Register\\x64\\Debug\\microsoft\\STL\\std.ixx.ifc"
+                "C:\\Users\\mihne\\OneDrive\\Documents\\GitHub\\THE-GAME\\Login-Register\\x64\\Debug\\microsoft\\STL\\std.ixx.ifc"
             ],
             "provides": [
                 {
                     "logical-name": "std",
-                    "source-path": "c:\\program files\\microsoft visual studio\\2022\\community\\vc\\tools\\msvc\\14.44.35207\\modules\\std.ixx",
+                    "source-path": "c:\\program files\\microsoft visual studio\\2022\\community\\vc\\tools\\msvc\\14.41.34120\\modules\\std.ixx",
                     "is-interface": true
                 }
             ],

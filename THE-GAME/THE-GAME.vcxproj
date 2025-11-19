@@ -25,21 +25,15 @@
     <ClCompile Include="HelpDialog.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainWindow.cpp" />
-    <ClCompile Include="Pile.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="User.cpp" />
-    <ClCompile Include="UserModel.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AchievementsModel.h" />
     <ClInclude Include="Card.h" />
     <ClInclude Include="Deck.h" />
     <ClInclude Include="Game.h" />
     <QtMoc Include="HelpDialog.h" />
-    <ClInclude Include="UserModel.h" />
     <QtMoc Include="MainWindow.h" />
-    <ClInclude Include="Pile.h" />
-    <ClInclude Include="PileType.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="User.h" />
   </ItemGroup>

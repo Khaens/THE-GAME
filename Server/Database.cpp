@@ -1,4 +1,5 @@
 #include "Database.h"
+#include "UserModel.h"
 
 Database::Database(const std::string& path) : storage(initStorage(path)), dbPath(path)
 {
@@ -16,7 +17,7 @@ UserModel Database::getUserById(int id) {
 UserModel Database::getUserByUsername(const std::string& username) {
     using namespace sqlite_orm;
     auto users = storage.get_all<UserModel>(
-        where(c(&UserModel::username) == username)
+        where(c(&UserModel::m_username) == username)
     );
     if (users.empty()) {
         throw std::runtime_error("User not found");
@@ -39,7 +40,7 @@ void Database::deleteUser(int id) {
 bool Database::userExists(const std::string& username) {
     using namespace sqlite_orm;
     auto count = storage.count<UserModel>(
-        where(c(&UserModel::username) == username)
+        where(c(&UserModel::m_username) == username)
     );
     return count > 0;
 }

@@ -30,16 +30,10 @@
     <ClCompile Include="Deck.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Pile.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MainWindow.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="UserModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="HelpDialog.cpp">
@@ -59,19 +53,7 @@
     <ClInclude Include="Deck.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Pile.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PileType.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Game.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="UserModel.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="AchievementsModel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

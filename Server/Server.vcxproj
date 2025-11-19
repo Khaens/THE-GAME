@@ -135,11 +135,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CardServer.cpp" />
     <ClCompile Include="Database.cpp" />
+    <ClCompile Include="DeckServer.cpp" />
+    <ClCompile Include="GameServer.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Pile.cpp" />
+    <ClCompile Include="PlayerServer.cpp" />
+    <ClCompile Include="UserModel.cpp" />
+    <ClCompile Include="UserServer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AchievementsModel.h" />
+    <ClInclude Include="CardServer.h" />
     <ClInclude Include="Database.h" />
+    <ClInclude Include="DeckServer.h" />
+    <ClInclude Include="GameServer.h" />
+    <ClInclude Include="Pile.h" />
+    <ClInclude Include="PileType.h" />
+    <ClInclude Include="PlayerServer.h" />
+    <ClInclude Include="UserModel.h" />
+    <ClInclude Include="UserServer.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\THE-GAME\THE-GAME.vcxproj">
