@@ -2,17 +2,10 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-<<<<<<< Updated upstream
       <FullPath>C:\Users\mihne\OneDrive\Documents\GitHub\THE-GAME\x64\Debug\Login-Register.dll</FullPath>
     </ProjectOutput>
     <ProjectOutput>
       <FullPath>C:\Users\mihne\OneDrive\Documents\GitHub\THE-GAME\x64\Debug\THE-GAME.exe</FullPath>
-=======
-      <FullPath>D:\Github Desktop\THE-GAME\x64\Debug\Login-Register.dll</FullPath>
-    </ProjectOutput>
-    <ProjectOutput>
-      <FullPath>D:\Github Desktop\THE-GAME\x64\Debug\THE-GAME.exe</FullPath>
->>>>>>> Stashed changes
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

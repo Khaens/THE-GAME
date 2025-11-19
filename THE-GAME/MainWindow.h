@@ -1,8 +1,7 @@
-﻿#pragma once
+#pragma once
 
 #include <QMainWindow>
 #include <QPixmap>
-#include <QStackedWidget>
 #include "ui_MainWindow.h"
 #include "Game.h"
 
@@ -19,26 +18,21 @@ public:
     ~MainWindow();
 
 protected:
+    // handle widget resizing to rescale pixmap / adapt views
     void resizeEvent(QResizeEvent* event) override;
 
 private slots:
     void onNewGameClicked();
     void onExitClicked();
     void onHelpClicked();
-    void onBackToMenuClicked();  // Nou: pentru a reveni la meniu
+
+    // toggle fullscreen (F11)
     void toggleFullScreen();
 
 private:
     Ui::MainWindowClass* ui;
     void setupMenuStyle();
 
-    // Pentru overlay widget system
-    QWidget* m_helpWidget;
-
-    // Funcție pentru a crea widget-ul de help
-    QWidget* createHelpWidget();
-    QString getGameRules();
-
-    // Cache pentru pixmap
+    // cache original title pixmap so we can scale it on resize
     QPixmap m_titlePixmap;
 };

@@ -22,6 +22,7 @@
     <ClCompile Include="Card.cpp" />
     <ClCompile Include="Deck.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="HelpDialog.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -31,11 +32,7 @@
     <ClInclude Include="Card.h" />
     <ClInclude Include="Deck.h" />
     <ClInclude Include="Game.h" />
-<<<<<<< Updated upstream
     <QtMoc Include="HelpDialog.h" />
-=======
-    <ClInclude Include="UserModel.h" />
->>>>>>> Stashed changes
     <QtMoc Include="MainWindow.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="User.h" />
