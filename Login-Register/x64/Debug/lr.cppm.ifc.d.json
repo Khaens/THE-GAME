@@ -1,13 +1,13 @@
 {
     "Version": "1.2",
     "Data": {
-        "Source": "c:\\users\\mihne\\onedrive\\documents\\github\\the-game\\login-register\\lr.cppm",
+        "Source": "d:\\github desktop\\the-game\\login-register\\lr.cppm",
         "ProvidedModule": "lr",
         "Includes": [],
         "ImportedModules": [
             {
                 "Name": "std",
-                "BMI": "C:\\Users\\mihne\\OneDrive\\Documents\\GitHub\\THE-GAME\\Login-Register\\x64\\Debug\\microsoft\\STL\\std.ixx.ifc"
+                "BMI": "D:\\Github Desktop\\THE-GAME\\Login-Register\\x64\\Debug\\microsoft\\STL\\std.ixx.ifc"
             }
         ],
         "ImportedHeaderUnits": []
