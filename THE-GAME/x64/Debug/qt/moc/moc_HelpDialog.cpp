@@ -52,7 +52,7 @@ template <> constexpr inline auto HelpDialog::qt_create_metaobjectdata<qt_meta_t
             qt_methods, qt_properties, qt_enums);
 }
 Q_CONSTINIT const QMetaObject HelpDialog::staticMetaObject = { {
-    QMetaObject::SuperData::link<QDialog::staticMetaObject>(),
+    QMetaObject::SuperData::link<QWidget::staticMetaObject>(),
     qt_staticMetaObjectStaticContent<qt_meta_tag_ZN10HelpDialogE_t>.stringdata,
     qt_staticMetaObjectStaticContent<qt_meta_tag_ZN10HelpDialogE_t>.data,
     qt_static_metacall,
@@ -80,12 +80,12 @@ void *HelpDialog::qt_metacast(const char *_clname)
     if (!_clname) return nullptr;
     if (!strcmp(_clname, qt_staticMetaObjectStaticContent<qt_meta_tag_ZN10HelpDialogE_t>.strings))
         return static_cast<void*>(this);
-    return QDialog::qt_metacast(_clname);
+    return QWidget::qt_metacast(_clname);
 }
 
 int HelpDialog::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
-    _id = QDialog::qt_metacall(_c, _id, _a);
+    _id = QWidget::qt_metacall(_c, _id, _a);
     return _id;
 }
 QT_WARNING_POP

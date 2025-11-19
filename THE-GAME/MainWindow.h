@@ -2,9 +2,10 @@
 
 #include <QMainWindow>
 #include <QPixmap>
-#include <QStackedWidget>
 #include "ui_MainWindow.h"
 #include "Game.h"
+#include "HelpDialog.h"
+#include "SettingsDialog.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindowClass; };
@@ -25,17 +26,16 @@ private slots:
     void onNewGameClicked();
     void onExitClicked();
     void onHelpClicked();
-    void onBackToMenuClicked(); 
+    void onSettingsClicked();
     void toggleFullScreen();
 
 private:
     Ui::MainWindowClass* ui;
     void setupMenuStyle();
 
-    QWidget* m_helpWidget;
-
-    QWidget* createHelpWidget();
-    QString getGameRules();
+    // Overlay dialogs
+    HelpDialog* m_helpDialog;
+    SettingsDialog* m_settingsDialog;
 
     // Cache pentru pixmap
     QPixmap m_titlePixmap;

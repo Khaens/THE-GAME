@@ -22,9 +22,11 @@
     <ClCompile Include="Card.cpp" />
     <ClCompile Include="Deck.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="HelpDialog.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="SettingsDialog.cpp" />
     <ClCompile Include="User.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -32,7 +34,9 @@
     <ClInclude Include="Deck.h" />
     <ClInclude Include="Game.h" />
     <QtMoc Include="MainWindow.h" />
+    <QtMoc Include="HelpDialog.h" />
     <ClInclude Include="Player.h" />
+    <QtMoc Include="SettingsDialog.h" />
     <ClInclude Include="User.h" />
   </ItemGroup>
   <ItemGroup>

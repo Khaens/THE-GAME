@@ -44,7 +44,7 @@ template <> constexpr inline auto MainWindow::qt_create_metaobjectdata<qt_meta_t
         "",
         "onExitClicked",
         "onHelpClicked",
-        "onBackToMenuClicked",
+        "onSettingsClicked",
         "toggleFullScreen"
     };
 
@@ -55,7 +55,7 @@ template <> constexpr inline auto MainWindow::qt_create_metaobjectdata<qt_meta_t
         QtMocHelpers::SlotData<void()>(3, 2, QMC::AccessPrivate, QMetaType::Void),
         // Slot 'onHelpClicked'
         QtMocHelpers::SlotData<void()>(4, 2, QMC::AccessPrivate, QMetaType::Void),
-        // Slot 'onBackToMenuClicked'
+        // Slot 'onSettingsClicked'
         QtMocHelpers::SlotData<void()>(5, 2, QMC::AccessPrivate, QMetaType::Void),
         // Slot 'toggleFullScreen'
         QtMocHelpers::SlotData<void()>(6, 2, QMC::AccessPrivate, QMetaType::Void),
@@ -85,7 +85,7 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 0: _t->onNewGameClicked(); break;
         case 1: _t->onExitClicked(); break;
         case 2: _t->onHelpClicked(); break;
-        case 3: _t->onBackToMenuClicked(); break;
+        case 3: _t->onSettingsClicked(); break;
         case 4: _t->toggleFullScreen(); break;
         default: ;
         }
