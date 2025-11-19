@@ -1,26 +1,11 @@
 {
-    "version": 1,
-    "revision": 0,
-    "rules": [
-        {
-            "primary-output": "x64\\Debug\\lr.obj",
-            "outputs": [
-                "x64\\Debug\\lr.cppm.ifc.dt.module.json",
-                "x64\\Debug\\lr.cppm.ifc.dt.d.json",
-                "x64\\Debug\\lr.ifc"
-            ],
-            "provides": [
-                {
-                    "logical-name": "lr",
-                    "source-path": "d:\\github desktop\\the-game\\login-register\\lr.cppm",
-                    "is-interface": true
-                }
-            ],
-            "requires": [
-                {
-                    "logical-name": "std"
-                }
-            ]
-        }
-    ]
+    "Version": "1.1",
+    "Data": {
+        "Source": "c:\\users\\mihne\\onedrive\\documents\\github\\the-game\\login-register\\lr.cppm",
+        "ProvidedModule": "lr",
+        "ImportedModules": [
+            "std"
+        ],
+        "ImportedHeaderUnits": []
+    }
 }
