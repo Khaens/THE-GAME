@@ -1,34 +1,47 @@
 #include "PlayerServer.h"
 #include <iostream>
-Player::Player(const std::string& username, const std::string& password) : User(username, password)
+template <typename Ability>
+Player<Ability>::Player(const std::string& username, const std::string& password) : User(username, password)
 {
 }
-
-void Player::AddCardToHand(Card* card)
+template <typename Ability>
+void Player<Ability>::AddCardToHand(Card* card)
 {
 	m_hand.insert(card);
 }
-
-void Player::RemoveCardFromHand(Card* card)
+template <typename Ability>
+void Player<Ability>::RemoveCardFromHand(Card* card)
 {
 	m_hand.erase(card);
 }
-
-const std::unordered_set<Card*>& Player::GetHand() const
+template <typename Ability>
+const std::unordered_set<Card*>& Player<Ability>::GetHand() const
 {
 	return m_hand;
 }
-
-Card* Player::ChooseCard(std::string cardValue)
+template <typename Ability>
+Card* Player<Ability>::ChooseCard(std::string cardValue)
 {
 	return *std::find_if(m_hand.begin(), m_hand.end(),
 		[&cardValue](Card* c) { return c->GetCardValue() == cardValue; });
 }
-
-void Player::ShowHand()
+template<typename Ability>
+const std::string& Player<Ability>::GetUsername() const
+{
+	return User::GetUsername();
+}
+template <typename Ability>
+void Player<Ability>::ShowHand()
 {
 	for (auto card : m_hand) {
 		std::cout << card->GetCardValue() << " ";
 	}
 }
 
+template<typename Ability>
+void Player<Ability>::UseAbility()
+{
+	ability.UseAbility();
+}
+
+template class Player<Gambler>;

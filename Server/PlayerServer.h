@@ -1,22 +1,26 @@
 #pragma once
 #include "UserServer.h"
+#include "IPlayer.h"
 #include "CardServer.h"
-#include <unordered_set>
+#include "Gambler.h"
+template <typename Ability>
 class Player :
-    public User
+	public User, public IPlayer
 {
 private:
     std::unordered_set<Card*> m_hand;
-
+	Ability ability;
 public:
     Player(const std::string& username, const std::string& password);
 
-    void AddCardToHand(Card* card);
-    void RemoveCardFromHand(Card* card);
-    const std::unordered_set<Card*>& GetHand() const;
-    Card* ChooseCard(std::string cardValue);
+    void AddCardToHand(Card* card) override;
+    void RemoveCardFromHand(Card* card) override;
+    const std::unordered_set<Card*>& GetHand() const override;
+    Card* ChooseCard(std::string cardValue) override;
+    const std::string& GetUsername() const override;
 
-    void ShowHand();
+    void ShowHand() override;
+	void UseAbility() override;
 };
 
 

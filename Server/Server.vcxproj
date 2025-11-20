@@ -138,6 +138,7 @@
     <ClCompile Include="CardServer.cpp" />
     <ClCompile Include="Database.cpp" />
     <ClCompile Include="DeckServer.cpp" />
+    <ClCompile Include="Gambler.cpp" />
     <ClCompile Include="GameServer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Pile.cpp" />
@@ -150,7 +151,9 @@
     <ClInclude Include="CardServer.h" />
     <ClInclude Include="Database.h" />
     <ClInclude Include="DeckServer.h" />
+    <ClInclude Include="Gambler.h" />
     <ClInclude Include="GameServer.h" />
+    <ClInclude Include="IPlayer.h" />
     <ClInclude Include="Pile.h" />
     <ClInclude Include="PileType.h" />
     <ClInclude Include="PlayerServer.h" />

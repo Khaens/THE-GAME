@@ -8,8 +8,9 @@ Game::Game(size_t numberOfPlayers) : m_numberOfPlayers{ numberOfPlayers }
 	}
 	for (int i = 2; i < 100; i++) {
 		Card* newCard = new Card(std::to_string(i));
+		Card* newCard2 = new Card(std::to_string(i));
 		m_wholeDeck.InsertCard(newCard);
-		m_wholeDeck.InsertCard(newCard);
+		m_wholeDeck.InsertCard(newCard2);
 	}
 }
 
@@ -50,11 +51,11 @@ size_t Game::WhoStartsFirst()
 	return randomChoice - 1;
 }
 
-bool Game::IsGameOver(const Player* currentPlayer)
+bool Game::IsGameOver(const IPlayer& currentPlayer)
 {
 	Card* firstCard = nullptr;
 	Card* secondCard = nullptr;
-	std::vector<Card*> playerHand(currentPlayer->GetHand().begin(), currentPlayer->GetHand().end());
+	std::vector<Card*> playerHand(currentPlayer.GetHand().begin(), currentPlayer.GetHand().end());
 	for (Card* card : playerHand) {
 		if (m_ascPile1.CanPlaceCard(card) || m_ascPile2.CanPlaceCard(card) ||
 			m_descPile1.CanPlaceCard(card) || m_descPile2.CanPlaceCard(card)) {
@@ -72,16 +73,16 @@ bool Game::IsGameOver(const Player* currentPlayer)
 	return true;
 }
 
-void Game::OneRound(Player* currentPlayer)
+void Game::OneRound(IPlayer& currentPlayer)
 {
 
-	std::cout << "\nIt's " << currentPlayer->GetUsername() << "'s turn.\n";
+	std::cout << "\nIt's " << currentPlayer.GetUsername() << "'s turn.\n";
 	std::cout << "Your hand:\n";
-	currentPlayer->ShowHand();
+	currentPlayer.ShowHand();
 	std::cout << "Pick a card to play from your hand.\n";
 	std::string chosenCardValue;
 	std::cin >> chosenCardValue;
-	Card* chosenCard = currentPlayer->ChooseCard(chosenCardValue);
+	Card* chosenCard = currentPlayer.ChooseCard(chosenCardValue);
 	std::cout << "Choose a pile to place the card on (A1/A2 for Ascending, D1/D2 for Descending): ";
 	std::string pileChoice;
 	std::cin >> pileChoice;
@@ -91,7 +92,7 @@ void Game::OneRound(Player* currentPlayer)
 	else if (pileChoice == "D1") chosenPile = &m_descPile1;
 	else if (pileChoice == "D2") chosenPile = &m_descPile2;
 	chosenPile->PlaceCard(chosenCard);
-	currentPlayer->RemoveCardFromHand(chosenCard);
+	currentPlayer.RemoveCardFromHand(chosenCard);
 }
 
 void Game::StartGame()
@@ -100,18 +101,18 @@ void Game::StartGame()
 	FirstRoundDealing();
 	m_currentPlayerIndex = WhoStartsFirst();
 	size_t minimumCardsNeeded;
-	while (!IsGameOver(&GetCurrentPlayer())) {
-		Player& currentPlayer = m_players[m_currentPlayerIndex];
+	while (!IsGameOver(GetCurrentPlayer())) {
+		IPlayer& currentPlayer = GetCurrentPlayer();
 		int playedCards = 0;
 		if (!m_wholeDeck.IsEmpty()) {
 			minimumCardsNeeded = 2;
-			OneRound(&currentPlayer);
-			OneRound(&currentPlayer);
+			OneRound(currentPlayer);
+			OneRound(currentPlayer);
 			playedCards = 2;
 		}
 		else if (m_wholeDeck.IsEmpty() || m_wholeDeck.GetSize() == 1) {
 			minimumCardsNeeded = 1;
-			OneRound(&currentPlayer);
+			OneRound(currentPlayer);
 			playedCards = 1;
 		}
 
@@ -134,7 +135,7 @@ void Game::StartGame()
 					break;
 				}
 				else if (optiune == 'y') {
-					OneRound(&currentPlayer);
+					OneRound(currentPlayer);
 					playedCards++;
 				}
 				nrOfPlayableCards--;
@@ -143,8 +144,8 @@ void Game::StartGame()
 				Card* drawnCard = m_wholeDeck.DrawCard();
 				currentPlayer.AddCardToHand(drawnCard);
 			}
-			/*currentPlayer.ShowHand();
-			m_wholeDeck.ShowDeck();*/
+			currentPlayer.ShowHand();
+			m_wholeDeck.ShowDeck();
 			NextPlayer();
 		}
 	}
@@ -155,16 +156,19 @@ void Game::NextPlayer()
 	m_currentPlayerIndex = (m_currentPlayerIndex + 1) % m_numberOfPlayers;
 }
 
-Player& Game::GetCurrentPlayer()
+IPlayer& Game::GetCurrentPlayer()
 {
-	return m_players[m_currentPlayerIndex];
+	return *m_players[m_currentPlayerIndex];
 }
 
 void Game::FirstRoundDealing()
 {
 	for (size_t i = 0; i < m_numberOfPlayers; i++) {
-		m_players.emplace_back("Player" + std::to_string(i + 1), "password");
-		Player& currentPlayer = m_players[i];
+
+		m_players.emplace_back(
+			std::make_unique<Player<Gambler>>("Player" + std::to_string(i + 1), "password")
+		);
+		IPlayer& currentPlayer = *m_players[i];
 		for (size_t j = 0; j < 6; j++) {
 			// Assuming Deck has a method to deal cards
 			Card* dealtCard = m_wholeDeck.DrawCard();
@@ -175,7 +179,7 @@ void Game::FirstRoundDealing()
 
 int Game::NumberOfPlayableCardsInHand()
 {
-	Player& currentPlayer = GetCurrentPlayer();
+	IPlayer& currentPlayer = GetCurrentPlayer();
 	int count = 0;
 	for (Card* card : currentPlayer.GetHand()) {
 		if (m_ascPile1.CanPlaceCard(card) || m_ascPile2.CanPlaceCard(card) ||
