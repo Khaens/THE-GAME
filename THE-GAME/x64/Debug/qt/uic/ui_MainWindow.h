@@ -36,6 +36,7 @@ public:
     QSpacerItem *verticalSpacerBottom;
     QHBoxLayout *horizontalLayoutBottom;
     QSpacerItem *bottomSpacer;
+    QPushButton *accountButton;
     QPushButton *helpButton;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -112,13 +113,25 @@ public:
 
         horizontalLayoutBottom->addItem(bottomSpacer);
 
-        helpButton = new QPushButton(centralWidget);
-        helpButton->setObjectName("helpButton");
-        QSizePolicy sizePolicy2(QSizePolicy::Policy::Minimum, QSizePolicy::Policy::Minimum);
+        accountButton = new QPushButton(centralWidget);
+        accountButton->setObjectName("accountButton");
+        QSizePolicy sizePolicy2(QSizePolicy::Policy::Fixed, QSizePolicy::Policy::Fixed);
         sizePolicy2.setHorizontalStretch(0);
         sizePolicy2.setVerticalStretch(0);
-        sizePolicy2.setHeightForWidth(helpButton->sizePolicy().hasHeightForWidth());
-        helpButton->setSizePolicy(sizePolicy2);
+        sizePolicy2.setHeightForWidth(accountButton->sizePolicy().hasHeightForWidth());
+        accountButton->setSizePolicy(sizePolicy2);
+        accountButton->setMinimumSize(QSize(50, 50));
+        accountButton->setMaximumSize(QSize(50, 50));
+
+        horizontalLayoutBottom->addWidget(accountButton);
+
+        helpButton = new QPushButton(centralWidget);
+        helpButton->setObjectName("helpButton");
+        QSizePolicy sizePolicy3(QSizePolicy::Policy::Minimum, QSizePolicy::Policy::Minimum);
+        sizePolicy3.setHorizontalStretch(0);
+        sizePolicy3.setVerticalStretch(0);
+        sizePolicy3.setHeightForWidth(helpButton->sizePolicy().hasHeightForWidth());
+        helpButton->setSizePolicy(sizePolicy3);
         helpButton->setMinimumSize(QSize(50, 50));
 
         horizontalLayoutBottom->addWidget(helpButton);
@@ -146,6 +159,7 @@ public:
         newGameButton->setText(QString());
         settingsButton->setText(QCoreApplication::translate("MainWindowClass", "SETTINGS", nullptr));
         exitGameButton->setText(QString());
+        accountButton->setText(QString());
         helpButton->setText(QString());
     } // retranslateUi
 

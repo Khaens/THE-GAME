@@ -4,8 +4,8 @@
 
 #include "Gambler.h"
 int main() {
-	Game game(3);
-	game.StartGame();
+	//Game game(3);
+	//game.StartGame();
 	crow::SimpleApp app;
 
 	CROW_ROUTE(app, "/")([]() {

@@ -11,6 +11,7 @@ MainWindow::MainWindow(QWidget* parent)
     , ui(new Ui::MainWindowClass())
     , m_helpDialog(nullptr)
     , m_settingsDialog(nullptr)
+    , m_accountDialog(nullptr)
 {
     ui->setupUi(this);
     setupMenuStyle();
@@ -18,12 +19,14 @@ MainWindow::MainWindow(QWidget* parent)
     // Creează overlay dialogs
     m_helpDialog = new HelpDialog(this);
     m_settingsDialog = new SettingsDialog(this);
+    m_accountDialog = new AccountDialog(this);
 
     // Connect buttons to slots
     connect(ui->newGameButton, &QPushButton::clicked, this, &MainWindow::onNewGameClicked);
     connect(ui->exitGameButton, &QPushButton::clicked, this, &MainWindow::onExitClicked);
     connect(ui->helpButton, &QPushButton::clicked, this, &MainWindow::onHelpClicked);
     connect(ui->settingsButton, &QPushButton::clicked, this, &MainWindow::onSettingsClicked);
+    connect(ui->accountButton, &QPushButton::clicked, this, &MainWindow::onAccountClicked);
 
     // Shortcut for fullscreen toggle (F11)
     QShortcut* fsShortcut = new QShortcut(QKeySequence(Qt::Key_F11), this);
@@ -78,14 +81,30 @@ void MainWindow::setupMenuStyle()
     }
     )";
 
+    QString accountButtonStyle = R"(
+    QPushButton {
+        border-image: url(Assets/Button_Account.png);
+    }
+    QPushButton:pressed {
+        border-image: url(Assets/Button_Account_Pressed.png);
+    }
+    )";
+
     ui->newGameButton->setStyleSheet(gameButtonStyle);
     ui->exitGameButton->setStyleSheet(exitButtonStyle);
     ui->helpButton->setStyleSheet(helpButtonStyle);
+    ui->accountButton->setStyleSheet(accountButtonStyle);
 }
 
 void MainWindow::onNewGameClicked()
 {
-    qDebug() << "New Game clicked!";
+    if (!m_accountDialog->isUserLoggedIn()) {
+        QMessageBox::warning(this, "Login Required",
+            "You need to be logged in to play!\n\nPlease click the Account button to login or register.");
+        return;
+    }
+
+    qDebug() << "New Game clicked! User:" << m_accountDialog->getCurrentUsername();
 }
 
 void MainWindow::onExitClicked()
@@ -101,6 +120,11 @@ void MainWindow::onHelpClicked()
 void MainWindow::onSettingsClicked()
 {
     m_settingsDialog->showOverlay();
+}
+
+void MainWindow::onAccountClicked()
+{
+    m_accountDialog->showOverlay();
 }
 
 void MainWindow::toggleFullScreen()
@@ -129,6 +153,10 @@ void MainWindow::resizeEvent(QResizeEvent* event)
 
     if (m_settingsDialog && m_settingsDialog->isVisible()) {
         m_settingsDialog->setGeometry(0, 0, this->width(), this->height());
+    }
+
+    if (m_accountDialog && m_accountDialog->isVisible()) {
+        m_accountDialog->setGeometry(0, 0, this->width(), this->height());
     }
 
     QMainWindow::resizeEvent(event);
