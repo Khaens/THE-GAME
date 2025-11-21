@@ -1,20 +1,60 @@
-#include "Database.h"
-#include "UserModel.h"
+﻿#include "Database.h"
+#include <functional>
+#include <random>
+#include <sstream>
 
 Database::Database(const std::string& path) : storage(initStorage(path)), dbPath(path)
 {
 	storage.sync_schema();
 }
 
-int Database::insertUser(const UserModel& user) {
-    return storage.insert(user);
+std::string Database::GenerateSalt() {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(0, 255);
+
+    std::stringstream ss;
+    for (int i = 0; i < 16; i++) {
+        ss << std::hex << std::setw(2) << std::setfill('0') << dis(gen);
+    }
+    return ss.str();
 }
 
-UserModel Database::getUserById(int id) {
+std::string Database::HashPassword(const std::string& password, const std::string& salt) {
+    std::hash<std::string> hasher;
+    size_t hash = hasher(password + salt);
+
+    std::stringstream ss;
+    ss << std::hex << hash;
+    return ss.str();
+}
+
+bool Database::VerifyPassword(const std::string& plainPassword, const std::string& hashedPassword, const std::string& salt) {
+    return HashPassword(plainPassword, salt) == hashedPassword;
+}
+
+int Database::insertUser(const UserModel& user) {
+    UserModel hashedUser = user;
+    hashedUser.m_salt = GenerateSalt();  
+    hashedUser.m_password = HashPassword(user.m_password, hashedUser.m_salt);  
+    return storage.insert(hashedUser);
+}
+
+bool Database::VerifyLogin(const std::string& username, const std::string& plainPassword) {
+    try {
+        UserModel user = GetUserByUsername(username);
+        return VerifyPassword(plainPassword, user.m_password, user.m_salt);
+    }
+    catch (std::runtime_error&) {
+        return false;  // User nu există
+    }
+}
+
+UserModel Database::GetUserById(int id) {
     return storage.get<UserModel>(id);
 }
 
-UserModel Database::getUserByUsername(const std::string& username) {
+UserModel Database::GetUserByUsername(const std::string& username) {
     using namespace sqlite_orm;
     auto users = storage.get_all<UserModel>(
         where(c(&UserModel::m_username) == username)
@@ -25,19 +65,19 @@ UserModel Database::getUserByUsername(const std::string& username) {
     return users[0];
 }
 
-std::vector<UserModel> Database::getAllUsers() {
+std::vector<UserModel> Database::GetAllUsers() {
     return storage.get_all<UserModel>();
 }
 
-void Database::updateUser(const UserModel& user) {
+void Database::UpdateUser(const UserModel& user) {
     storage.update(user);
 }
 
-void Database::deleteUser(int id) {
+void Database::DeleteUser(int id) {
     storage.remove<UserModel>(id);
 }
 
-bool Database::userExists(const std::string& username) {
+bool Database::UserExists(const std::string& username) {
     using namespace sqlite_orm;
     auto count = storage.count<UserModel>(
         where(c(&UserModel::m_username) == username)

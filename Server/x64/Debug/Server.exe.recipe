@@ -2,13 +2,13 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>D:\Github Desktop\THE-GAME\x64\Debug\Login-Register.dll</FullPath>
+      <FullPath>C:\Users\sebig\OneDrive\Documente\GitHub\THE-GAME\x64\Debug\Login-Register.dll</FullPath>
     </ProjectOutput>
     <ProjectOutput>
-      <FullPath>D:\Github Desktop\THE-GAME\x64\Debug\THE-GAME.exe</FullPath>
+      <FullPath>C:\Users\sebig\OneDrive\Documente\GitHub\THE-GAME\x64\Debug\THE-GAME.exe</FullPath>
     </ProjectOutput>
     <ProjectOutput>
-      <FullPath>D:\Github Desktop\THE-GAME\x64\Debug\Server.exe</FullPath>
+      <FullPath>C:\Users\sebig\OneDrive\Documente\GitHub\THE-GAME\x64\Debug\Server.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />
