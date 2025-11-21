@@ -10,7 +10,8 @@
 #include "PlayerServer.h"
 #include "Pile.h"
 #include "DeckServer.h"
-#include "Gambler.h"
+
+
 class Game {
 public:
 	Game(size_t numberOfPlayers);
@@ -22,6 +23,13 @@ public:
 	IPlayer& GetCurrentPlayer();
 	void FirstRoundDealing();
 	int NumberOfPlayableCardsInHand();
+	bool CanPlaceCard(const Card* card, Pile& pile);
+	bool Minimum2CardsPlayable();
+	Pile* GetPile(const std::string& pileChoice);
+	void SetHPplayerIndex();
+	Card* DrawCard();
+	bool HPused = false;
+	size_t GetDeckSize() const;
 private:
 	size_t m_numberOfPlayers;
 	size_t m_currentPlayerIndex = 0;
@@ -31,4 +39,6 @@ private:
 	Pile m_descPile1{ PileType::DESCENDING };
 	Pile m_descPile2{ PileType::DESCENDING };
 	Deck m_wholeDeck;
+	//special for HP ability
+	size_t HPplayerIndex = 0;
 };

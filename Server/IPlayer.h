@@ -1,11 +1,14 @@
 #pragma once
 #include <unordered_set>
 #include "CardServer.h"
+
+class Game;
+
 class IPlayer
 {
 public:
     virtual ~IPlayer() = default;
-    virtual void UseAbility() = 0;
+    virtual void UseAbility(Game* game) = 0;
     
     virtual void ShowHand() = 0;
     virtual const std::unordered_set<Card*>& GetHand() const = 0;

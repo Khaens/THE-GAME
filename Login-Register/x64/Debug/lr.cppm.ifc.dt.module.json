@@ -12,7 +12,7 @@
             "provides": [
                 {
                     "logical-name": "lr",
-                    "source-path": "d:\\github desktop\\the-game\\login-register\\lr.cppm",
+                    "source-path": "c:\\users\\rmama\\documents\\github\\the-game\\login-register\\lr.cppm",
                     "is-interface": true
                 }
             ],

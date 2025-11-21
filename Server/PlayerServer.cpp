@@ -1,5 +1,6 @@
 #include "PlayerServer.h"
 #include <iostream>
+#include "GameServer.h"
 template <typename Ability>
 Player<Ability>::Player(const std::string& username, const std::string& password) : User(username, password)
 {
@@ -39,9 +40,10 @@ void Player<Ability>::ShowHand()
 }
 
 template<typename Ability>
-void Player<Ability>::UseAbility()
+void Player<Ability>::UseAbility(Game* game)
 {
-	ability.UseAbility();
+	ability.UseAbility(game);
 }
 
 template class Player<Gambler>;
+template class Player<Harry_Potter>;

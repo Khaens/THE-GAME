@@ -140,6 +140,7 @@
     <ClCompile Include="DeckServer.cpp" />
     <ClCompile Include="Gambler.cpp" />
     <ClCompile Include="GameServer.cpp" />
+    <ClCompile Include="Harry_Potter.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Pile.cpp" />
     <ClCompile Include="PlayerServer.cpp" />
@@ -153,6 +154,7 @@
     <ClInclude Include="DeckServer.h" />
     <ClInclude Include="Gambler.h" />
     <ClInclude Include="GameServer.h" />
+    <ClInclude Include="Harry_Potter.h" />
     <ClInclude Include="IPlayer.h" />
     <ClInclude Include="Pile.h" />
     <ClInclude Include="PileType.h" />

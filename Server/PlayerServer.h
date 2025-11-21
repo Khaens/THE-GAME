@@ -3,6 +3,10 @@
 #include "IPlayer.h"
 #include "CardServer.h"
 #include "Gambler.h"
+#include "Harry_Potter.h"
+
+class Game;
+
 template <typename Ability>
 class Player :
 	public User, public IPlayer
@@ -20,7 +24,7 @@ public:
     const std::string& GetUsername() const override;
 
     void ShowHand() override;
-	void UseAbility() override;
+	void UseAbility(Game* game) override;
 };
 
 
