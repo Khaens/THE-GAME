@@ -10,7 +10,8 @@ inline auto initStorage(const std::string& path) {
         make_table("users",
             make_column("id", &UserModel::m_id, primary_key().autoincrement()),
             make_column("username", &UserModel::m_username, unique()),
-            make_column("password", &UserModel::m_password)),
+            make_column("password", &UserModel::m_password),
+            make_column("salt", &UserModel::m_salt)),
         make_table("achievements", 
             make_column("id", &AchievementsModel::id, primary_key().autoincrement()),
             make_column("user_id", &AchievementsModel::userId), 
@@ -31,12 +32,16 @@ private:
 
 public:
     Database(const std::string& path = "users.db");
+    std::string GenerateSalt();
+    std::string HashPassword(const std::string& password, const std::string& salt);
+    bool VerifyPassword(const std::string& plainPassword, const std::string& hashedPassword, const std::string& salt);
     int insertUser(const UserModel& user);
-    UserModel getUserById(int id);
-    UserModel getUserByUsername(const std::string& username);
-    std::vector<UserModel> getAllUsers();
-    void updateUser(const UserModel& user);
-    void deleteUser(int id);
-    bool userExists(const std::string& username);
+    bool VerifyLogin(const std::string& username, const std::string& plainPassword);
+    UserModel GetUserById(int id);
+    UserModel GetUserByUsername(const std::string& username);
+    std::vector<UserModel> GetAllUsers();
+    void UpdateUser(const UserModel& user);
+    void DeleteUser(int id);
+    bool UserExists(const std::string& username);
 };
 
