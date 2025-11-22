@@ -20,26 +20,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AccountDialog.cpp" />
-    <ClCompile Include="Card.cpp" />
-    <ClCompile Include="Deck.cpp" />
-    <ClCompile Include="Game.cpp" />
     <ClCompile Include="HelpDialog.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainWindow.cpp" />
-    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="NetworkManager.cpp" />
     <ClCompile Include="SettingsDialog.cpp" />
-    <ClCompile Include="User.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="AccountDialog.h" />
-    <ClInclude Include="Card.h" />
-    <ClInclude Include="Deck.h" />
-    <ClInclude Include="Game.h" />
     <QtMoc Include="MainWindow.h" />
     <QtMoc Include="HelpDialog.h" />
-    <ClInclude Include="Player.h" />
     <QtMoc Include="SettingsDialog.h" />
-    <ClInclude Include="User.h" />
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="MainWindow.ui" />
@@ -48,6 +39,9 @@
     <ProjectReference Include="..\Login-Register\Login-Register.vcxproj">
       <Project>{346dd210-d7b8-47c8-95e9-035762a52fb4}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="NetworkManager.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -127,6 +121,10 @@
     <Import Project="$(QtMsBuild)\Qt.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Label="Vcpkg">
+    <VcpkgXUseBuiltInApplocalDeps>false</VcpkgXUseBuiltInApplocalDeps>
+    <VcpkgEnableManifest>false</VcpkgEnableManifest>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>

@@ -3,7 +3,6 @@
 #include <QMainWindow>
 #include <QPixmap>
 #include "ui_MainWindow.h"
-#include "Game.h"
 #include "HelpDialog.h"
 #include "SettingsDialog.h"
 #include "AccountDialog.h"

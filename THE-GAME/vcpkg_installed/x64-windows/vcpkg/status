@@ -2,14 +2,14 @@ Package: vcpkg-cmake-config
 Version: 2024-05-23
 Architecture: x64-windows
 Multi-Arch: same
-Abi: f536d4605c73c466b9c52c4405f17f6a4fb5ff2de8ea1afa7afa3e5b68e7aab7
+Abi: 139d6d0097c8f56f466b96923933adc1560361fcccd78cac9907125c84a67a58
 Status: install ok installed
 
 Package: vcpkg-cmake
 Version: 2025-08-07
 Architecture: x64-windows
 Multi-Arch: same
-Abi: 9ddde0531cc2cd5afb896fdbb14f1aea8ec7ad991b7fd67f6ad78519996b590c
+Abi: c0033565917134f04fd80dd502bf05b32fcb0b65d37f99e2cd51447e699e9031
 Status: install ok installed
 
 Package: sqlite3
@@ -17,7 +17,7 @@ Version: 3.50.4
 Depends: vcpkg-cmake, vcpkg-cmake-config
 Architecture: x64-windows
 Multi-Arch: same
-Abi: 69b4ad9d475019ba15ba8ea7131ed8f10beca72306af5dc9ae2d2fef9ef8ce7d
+Abi: c5bb76c9f0426d81362c84c5f4031c6afad2c7e16f22a5e574273353c526b560
 Description: SQLite is a software library that implements a self-contained, serverless, zero-configuration, transactional SQL database engine.
 Default-Features: json1
 Status: install ok installed
@@ -34,7 +34,7 @@ Version: 1.9.1
 Depends: sqlite3, vcpkg-cmake, vcpkg-cmake-config
 Architecture: x64-windows
 Multi-Arch: same
-Abi: d2ab6a509abb03fe017c276ba81c828dc590cd01e5470638469e9fb2f88cfd8b
+Abi: 65833792852fdf261157a9414319e3411920b9f5546b52e39cd0a77a685bd73b
 Description: SQLite ORM light header only library for modern C++
 Status: install ok installed
 
