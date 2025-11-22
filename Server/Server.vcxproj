@@ -108,7 +108,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalOptions> /D _SILENCE_ALL_CXX20_DEPRECATION_WARNINGS /D_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
@@ -135,11 +135,33 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CardServer.cpp" />
     <ClCompile Include="Database.cpp" />
+    <ClCompile Include="DeckServer.cpp" />
+    <ClCompile Include="Gambler.cpp" />
+    <ClCompile Include="GameServer.cpp" />
+    <ClCompile Include="Harry_Potter.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Pile.cpp" />
+    <ClCompile Include="PlayerServer.cpp" />
+    <ClCompile Include="UserModel.cpp" />
+    <ClCompile Include="UserServer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AchievementsModel.h" />
+    <ClInclude Include="CardServer.h" />
     <ClInclude Include="Database.h" />
+    <ClInclude Include="DeckServer.h" />
+    <ClInclude Include="Gambler.h" />
+    <ClInclude Include="GameServer.h" />
+    <ClInclude Include="Harry_Potter.h" />
+    <ClInclude Include="IPlayer.h" />
+    <ClInclude Include="Pile.h" />
+    <ClInclude Include="PileType.h" />
+    <ClInclude Include="PlayerServer.h" />
+    <ClInclude Include="TurnContext.h" />
+    <ClInclude Include="UserModel.h" />
+    <ClInclude Include="UserServer.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\THE-GAME\THE-GAME.vcxproj">

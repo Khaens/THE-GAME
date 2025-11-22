@@ -1,59 +1,46 @@
 ﻿#include "HelpDialog.h"
-#include <QScrollBar>
+#include <QResizeEvent>
 
 HelpDialog::HelpDialog(QWidget* parent)
-    : QDialog(parent)
+    : QWidget(parent)
+    , m_contentContainer(nullptr)
 {
+    setWindowFlags(Qt::Widget);
+    setAttribute(Qt::WA_TranslucentBackground);
+
     setupUI();
     setupStyle();
+    hide(); 
 }
 
 void HelpDialog::setupUI()
 {
-    setWindowTitle("The Game - Rules & Help");
-    setModal(true);
-    setFixedSize(700, 600);
-
     QVBoxLayout* mainLayout = new QVBoxLayout(this);
-    mainLayout->setSpacing(10);
-    mainLayout->setContentsMargins(10, 10, 10, 10);
+    mainLayout->setContentsMargins(0, 0, 0, 0);
+
+    m_contentContainer = new QWidget(this);
+    m_contentContainer->setFixedSize(800, 600);
+
+    QVBoxLayout* containerLayout = new QVBoxLayout(m_contentContainer);
+    containerLayout->setSpacing(15);
+    containerLayout->setContentsMargins(20, 20, 20, 20);
 
     // Title
-    QLabel* titleLabel = new QLabel("HELP - THE GAME", this);
+    QLabel* titleLabel = new QLabel("HELP - THE GAME", m_contentContainer);
     titleLabel->setAlignment(Qt::AlignCenter);
-    titleLabel->setStyleSheet("font-size: 24px; font-weight: bold; color: #ffffff; margin-bottom: 10px;");
-    mainLayout->addWidget(titleLabel);
+    titleLabel->setStyleSheet("font-size: 28px; font-weight: bold; color: #f3d05a; margin-bottom: 5px;");
+    containerLayout->addWidget(titleLabel);
 
     // Rules text browser
-    QTextBrowser* rulesText = new QTextBrowser(this);
+    QTextBrowser* rulesText = new QTextBrowser(m_contentContainer);
     rulesText->setOpenExternalLinks(false);
     rulesText->setHtml(getGameRules());
-    mainLayout->addWidget(rulesText);
-
-    // Close button
-    QPushButton* closeButton = new QPushButton("Got it!", this);
-    closeButton->setFixedSize(150, 40);
-    closeButton->setCursor(Qt::PointingHandCursor);
-    connect(closeButton, &QPushButton::clicked, this, &QDialog::accept);
-
-    QHBoxLayout* buttonLayout = new QHBoxLayout();
-    buttonLayout->addStretch();
-    buttonLayout->addWidget(closeButton);
-    buttonLayout->addStretch();
-    mainLayout->addLayout(buttonLayout);
-}
-
-void HelpDialog::setupStyle()
-{
-    setStyleSheet(R"(
-        QDialog {
-            background-color: #8e273b;
-        }
-        
+    rulesText->setStyleSheet(R"(
         QTextBrowser {
             background-color: #deaf11;
-            border: 1px solid #ff2424;
-            padding: 10px;
+            border: 2px solid #654b1f;
+            border-radius: 8px;
+            padding: 15px;
             font-size: 13px;
             color: #2C3E50;
         }
@@ -61,26 +48,33 @@ void HelpDialog::setupStyle()
         QTextBrowser QScrollBar:vertical {
             border: none;
             background: #3d431a;
-            width: 10px;
+            width: 12px;
             margin: 0px;
         }
         
         QTextBrowser QScrollBar::handle:vertical {
             background: #654b1f;
-            border-radius: 5px;
+            border-radius: 6px;
             min-height: 20px;
         }
         
         QTextBrowser QScrollBar::handle:vertical:hover {
             background: #4a3f1e;
         }
-        
+    )");
+    containerLayout->addWidget(rulesText);
+
+    // Back button
+    QPushButton* backButton = new QPushButton("BACK TO MENU", m_contentContainer);
+    backButton->setFixedSize(200, 45);
+    backButton->setCursor(Qt::PointingHandCursor);
+    backButton->setStyleSheet(R"(
         QPushButton {
             background-color: #f3d05a;
-            color: white;
+            color: #2C3E50;
             border: none;
-            border-radius: 8px;
-            font-size: 14px;
+            border-radius: 10px;
+            font-size: 15px;
             font-weight: bold;
             padding: 10px;
         }
@@ -93,18 +87,47 @@ void HelpDialog::setupStyle()
             background-color: #869e22;
         }
     )");
+
+    connect(backButton, &QPushButton::clicked, this, &HelpDialog::hideOverlay);
+
+    QHBoxLayout* buttonLayout = new QHBoxLayout();
+    buttonLayout->addStretch();
+    buttonLayout->addWidget(backButton);
+    buttonLayout->addStretch();
+    containerLayout->addLayout(buttonLayout);
+
+    // Centrarea containerului
+    QHBoxLayout* centerLayout = new QHBoxLayout();
+    centerLayout->addStretch();
+    centerLayout->addWidget(m_contentContainer);
+    centerLayout->addStretch();
+
+    mainLayout->addStretch();
+    mainLayout->addLayout(centerLayout);
+    mainLayout->addStretch();
+}
+
+void HelpDialog::setupStyle()
+{
+    setStyleSheet("background-color: rgba(0, 0, 0, 150);");
+
+    m_contentContainer->setStyleSheet(
+        "background-color: #8e273b; "
+        "border: 3px solid #f3d05a; "
+        "border-radius: 15px;"
+    );
 }
 
 QString HelpDialog::getGameRules()
 {
     return R"(
         <html>
-        <body style='font-family: Arial, sans-serif; line-height: 1.25; background-color: #c34158;'>
+        <body style='font-family: Arial, sans-serif; line-height: 1.6; background-color: #deaf11;'>
             
-            <h2 style='color: #f3d05a; margin-top: 10px;'>OBJECTIVE</h2>
+            <h2 style='color: #8e273b; margin-top: 10px; border-bottom: 2px solid #654b1f; padding-bottom: 5px;'>🎯 OBJECTIVE</h2>
             <p>Work together to play all cards from the deck and your very own hands onto the four piles before running out of moves!</p>
            
-            <h2 style='color: #f3d05a;'>SETUP</h2>
+            <h2 style='color: #8e273b; border-bottom: 2px solid #654b1f; padding-bottom: 5px;'>⚙️ SETUP</h2>
             <ul>
                 <li><b>Players:</b> 2-5 players (cooperative game)</li>
                 <li><b>Starting Hand:</b> Each player receives 6 cards</li>
@@ -116,9 +139,9 @@ QString HelpDialog::getGameRules()
                 </li>
             </ul>
             
-            <h2 style='color: #f3d05a;'>HOW TO PLAY</h2>
+            <h2 style='color: #8e273b; border-bottom: 2px solid #654b1f; padding-bottom: 5px;'>🎮 HOW TO PLAY</h2>
             
-            <h3 style='color: #ffffff;'>On Your Turn:</h3>
+            <h3 style='color: #654b1f;'>On Your Turn:</h3>
             <ol>
                 <li><b>Play at least 2 cards</b> from your hand onto any of the four piles</li>
                 <li>If there are no more cards that can be drawn, only a minimum of 1 card is to be played</li>
@@ -126,7 +149,7 @@ QString HelpDialog::getGameRules()
                 <li>Pass the turn to the next player</li>
             </ol>
             
-            <h3 style='color: #ffffff;'>Card Placement Rules:</h3>
+            <h3 style='color: #654b1f;'>Card Placement Rules:</h3>
             <ul>
                 <li><b style='color: #27AE60;'>Ascending Piles:</b> Play higher numbers (e.g., 1 → 15 → 28 → 45...)</li>
                 <li><b style='color: #E67E22;'>Descending Piles:</b> Play lower numbers (e.g., 100 → 82 → 67 → 43...)</li>
@@ -139,20 +162,20 @@ QString HelpDialog::getGameRules()
                 </li>
             </ul>
             
-            <h3 style='color: #ffffff;'>Communication Rules:</h3>
+            <h3 style='color: #654b1f;'>💬 Communication Rules:</h3>
             <ul>
                 <li><b>Cannot</b> say specific card numbers</li>
                 <li><b>Can</b> give hints like "I have very high cards" or "I can help with the descending pile"</li>
                 <li><b>Can</b> discuss strategy generally</li>
             </ul>
             
-            <h2 style='color: #f3d05a;'>WINNING & LOSING</h2>
+            <h2 style='color: #8e273b; border-bottom: 2px solid #654b1f; padding-bottom: 5px;'>🏆 WINNING & LOSING</h2>
             <ul>
-                <li><b style='color: #27AE60;'>You WIN</b> if all cards from both the players' hands and the main deck are onto the decks</li>
+                <li><b style='color: #27AE60;'>You WIN</b> if all cards from both the players' hands and the main deck are onto the piles</li>
                 <li><b style='color: #C0392B;'>You LOSE</b> if a player cannot play the minimum cards required</li>
             </ul>
             
-            <h2 style='color: #f3d05a;'>TIPS FOR SUCCESS</h2>
+            <h2 style='color: #8e273b; border-bottom: 2px solid #654b1f; padding-bottom: 5px;'>💡 TIPS FOR SUCCESS</h2>
             <ul>
                 <li><b>Communicate constantly</b> - teamwork is essential!</li>
                 <li><b>Save the "backward trick"</b> for emergencies</li>
@@ -161,11 +184,30 @@ QString HelpDialog::getGameRules()
                 <li><b>Plan ahead</b> - think about what cards teammates might need</li>
             </ul>
             
-            <p style='text-align: center; margin-top: 20px; margin-bottom: 10px; font-size: 16px; color: #ffffff;'>
-                <b>Good luck, and remember - in The Game, you play together or lose together!</b>
+            <p style='text-align: center; margin-top: 25px; font-size: 16px; color: #8e273b; font-weight: bold;'>
+                Good luck, and remember - in The Game, you play together or lose together! 🎲
             </p>
             
         </body>
         </html>
     )";
+}
+
+void HelpDialog::showOverlay()
+{
+    if (parentWidget()) {
+        setGeometry(0, 0, parentWidget()->width(), parentWidget()->height());
+    }
+    raise();
+    show();
+}
+
+void HelpDialog::hideOverlay()
+{
+    hide();
+}
+
+void HelpDialog::resizeEvent(QResizeEvent* event)
+{
+    QWidget::resizeEvent(event);
 }

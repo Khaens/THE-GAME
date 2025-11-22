@@ -1,5 +1,4 @@
 ﻿#include "MainWindow.h"
-#include "HelpDialog.h"
 #include <QPixmap>
 #include <QMessageBox>
 #include <QShortcut>
@@ -10,34 +9,42 @@
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindowClass())
+    , m_helpDialog(nullptr)
+    , m_settingsDialog(nullptr)
+    , m_accountDialog(nullptr)
 {
     ui->setupUi(this);
     setupMenuStyle();
+
+    // Creează overlay dialogs
+    m_helpDialog = new HelpDialog(this);
+    m_settingsDialog = new SettingsDialog(this);
+    m_accountDialog = new AccountDialog(this);
 
     // Connect buttons to slots
     connect(ui->newGameButton, &QPushButton::clicked, this, &MainWindow::onNewGameClicked);
     connect(ui->exitGameButton, &QPushButton::clicked, this, &MainWindow::onExitClicked);
     connect(ui->helpButton, &QPushButton::clicked, this, &MainWindow::onHelpClicked);
+    connect(ui->settingsButton, &QPushButton::clicked, this, &MainWindow::onSettingsClicked);
+    connect(ui->accountButton, &QPushButton::clicked, this, &MainWindow::onAccountClicked);
 
     // Shortcut for fullscreen toggle (F11)
     QShortcut* fsShortcut = new QShortcut(QKeySequence(Qt::Key_F11), this);
     connect(fsShortcut, &QShortcut::activated, this, &MainWindow::toggleFullScreen);
 
-    // Load the title image once and cache it. We'll scale on resizeEvent.
-    QPixmap titlePixmap("Assets/TitleCard.png"); // adjust path if necessary
+    // Load the title image
+    QPixmap titlePixmap("Assets/TitleCard.png");
     if (!titlePixmap.isNull()) {
         m_titlePixmap = titlePixmap;
-        // set an initial scaled pixmap according to the current label size
         QPixmap scaled = m_titlePixmap.scaled(ui->titleLabel->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
         ui->titleLabel->setPixmap(scaled);
         ui->titleLabel->setAlignment(Qt::AlignCenter);
     }
     else {
-        qWarning() << "Failed to load Assets/TitleCard.png — check the path or use a resource (qrc)";
+        qWarning() << "Failed to load Assets/TitleCard.png";
     }
 
-    // Ensure central widget can expand — defensive; Designer already set policies
-    ui->centralWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    ui->centralWidget->setStyleSheet("background-color: #0d0a47;");
 }
 
 MainWindow::~MainWindow()
@@ -47,10 +54,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::setupMenuStyle()
 {
-    // Set background for central widget
-    ui->centralWidget->setStyleSheet("background-color: #208a3a;");
-
-    // Button styles (image-based)
     QString gameButtonStyle = R"(
     QPushButton {
         border-image: url(Assets/Button_Play.png);
@@ -78,14 +81,30 @@ void MainWindow::setupMenuStyle()
     }
     )";
 
+    QString accountButtonStyle = R"(
+    QPushButton {
+        border-image: url(Assets/Button_Account.png);
+    }
+    QPushButton:pressed {
+        border-image: url(Assets/Button_Account_Pressed.png);
+    }
+    )";
+
     ui->newGameButton->setStyleSheet(gameButtonStyle);
     ui->exitGameButton->setStyleSheet(exitButtonStyle);
     ui->helpButton->setStyleSheet(helpButtonStyle);
+    ui->accountButton->setStyleSheet(accountButtonStyle);
 }
 
 void MainWindow::onNewGameClicked()
 {
-    qDebug() << "New Game clicked!";
+    if (!m_accountDialog->isUserLoggedIn()) {
+        QMessageBox::warning(this, "Login Required",
+            "You need to be logged in to play!\n\nPlease click the Account button to login or register.");
+        return;
+    }
+
+    qDebug() << "New Game clicked! User:" << m_accountDialog->getCurrentUsername();
 }
 
 void MainWindow::onExitClicked()
@@ -95,8 +114,17 @@ void MainWindow::onExitClicked()
 
 void MainWindow::onHelpClicked()
 {
-    HelpDialog helpDialog(this);
-    helpDialog.exec();
+    m_helpDialog->showOverlay();
+}
+
+void MainWindow::onSettingsClicked()
+{
+    m_settingsDialog->showOverlay();
+}
+
+void MainWindow::onAccountClicked()
+{
+    m_accountDialog->showOverlay();
 }
 
 void MainWindow::toggleFullScreen()
@@ -109,7 +137,7 @@ void MainWindow::toggleFullScreen()
 
 void MainWindow::resizeEvent(QResizeEvent* event)
 {
-    // Rescale the cached title pixmap to the new label size, preserving aspect ratio
+    // Rescale the title pixmap
     if (!m_titlePixmap.isNull() && ui->titleLabel) {
         QSize labelSize = ui->titleLabel->size();
         if (labelSize.width() > 0 && labelSize.height() > 0) {
@@ -119,7 +147,17 @@ void MainWindow::resizeEvent(QResizeEvent* event)
         }
     }
 
-    // If later you add a QGraphicsView canvas, call fitInView here as well.
+    if (m_helpDialog && m_helpDialog->isVisible()) {
+        m_helpDialog->setGeometry(0, 0, this->width(), this->height());
+    }
+
+    if (m_settingsDialog && m_settingsDialog->isVisible()) {
+        m_settingsDialog->setGeometry(0, 0, this->width(), this->height());
+    }
+
+    if (m_accountDialog && m_accountDialog->isVisible()) {
+        m_accountDialog->setGeometry(0, 0, this->width(), this->height());
+    }
 
     QMainWindow::resizeEvent(event);
 }

@@ -1,9 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include <QMainWindow>
 #include <QPixmap>
 #include "ui_MainWindow.h"
-#include "Game.h"
+#include "HelpDialog.h"
+#include "SettingsDialog.h"
+#include "AccountDialog.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindowClass; };
@@ -18,21 +20,25 @@ public:
     ~MainWindow();
 
 protected:
-    // handle widget resizing to rescale pixmap / adapt views
     void resizeEvent(QResizeEvent* event) override;
 
 private slots:
     void onNewGameClicked();
     void onExitClicked();
     void onHelpClicked();
-
-    // toggle fullscreen (F11)
+    void onSettingsClicked();
+    void onAccountClicked();
     void toggleFullScreen();
 
 private:
     Ui::MainWindowClass* ui;
     void setupMenuStyle();
 
-    // cache original title pixmap so we can scale it on resize
+    // Overlay dialogs
+    HelpDialog* m_helpDialog;
+    SettingsDialog* m_settingsDialog;
+    AccountDialog* m_accountDialog;
+
+    // Cache pentru pixmap
     QPixmap m_titlePixmap;
 };
