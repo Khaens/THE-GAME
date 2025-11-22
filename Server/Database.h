@@ -35,7 +35,10 @@ public:
     std::string GenerateSalt();
     std::string HashPassword(const std::string& password, const std::string& salt);
     bool VerifyPassword(const std::string& plainPassword, const std::string& hashedPassword, const std::string& salt);
-    int insertUser(const UserModel& user);
+    bool UpdateUsername(int userId, const std::string& newUsername);
+    bool UpdatePassword(int userId, const std::string& oldPassword, const std::string& newPassword);
+    bool UpdatePasswordRecovery(int userId, const std::string& newPassword);
+    int InsertUser(const UserModel& user);
     bool VerifyLogin(const std::string& username, const std::string& plainPassword);
     UserModel GetUserById(int id);
     UserModel GetUserByUsername(const std::string& username);

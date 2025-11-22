@@ -2,6 +2,7 @@
 #include <functional>
 #include <random>
 #include <sstream>
+#include <iostream>
 
 Database::Database(const std::string& path) : storage(initStorage(path)), dbPath(path)
 {
@@ -33,7 +34,56 @@ bool Database::VerifyPassword(const std::string& plainPassword, const std::strin
     return HashPassword(plainPassword, salt) == hashedPassword;
 }
 
-int Database::insertUser(const UserModel& user) {
+bool Database::UpdateUsername(int userId, const std::string& newUsername) {
+    try {
+        if (UserExists(newUsername)) {
+            return false;  
+        }
+
+        UserModel user = GetUserById(userId);
+        user.m_username = newUsername;
+        UpdateUser(user);
+        return true;
+    }
+    catch (std::exception& e) {
+        std::cerr << "Error updating username: " << e.what() << std::endl;
+        return false;
+    }
+}
+
+bool Database::UpdatePassword(int userId, const std::string& oldPassword, const std::string& newPassword) {
+    try {
+        UserModel user = GetUserById(userId);
+        if (!VerifyPassword(oldPassword, user.m_password, user.m_salt)) {
+            return false; 
+        }
+
+        user.m_salt = GenerateSalt();
+        user.m_password = HashPassword(newPassword, user.m_salt);
+        UpdateUser(user);
+        return true;
+    }
+    catch (std::exception& e) {
+        std::cerr << "Error updating password: " << e.what() << std::endl;
+        return false;
+    }
+}
+
+bool Database::UpdatePasswordRecovery(int userId, const std::string& newPassword) {
+    try {
+        UserModel user = GetUserById(userId);
+        user.m_salt = GenerateSalt();
+        user.m_password = HashPassword(newPassword, user.m_salt);
+        UpdateUser(user);
+        return true;
+    }
+    catch (std::exception& e) {
+        std::cerr << "Error updating password (admin): " << e.what() << std::endl;
+        return false;
+    }
+}
+
+int Database::InsertUser(const UserModel& user) {
     UserModel hashedUser = user;
     hashedUser.m_salt = GenerateSalt();  
     hashedUser.m_password = HashPassword(user.m_password, hashedUser.m_salt);  
