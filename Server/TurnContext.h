@@ -1,5 +1,6 @@
 #pragma once
 
+//stores info about ability usages
 
 struct TurnContext {
 	int baseRequired = 2;
@@ -7,7 +8,7 @@ struct TurnContext {
 
 	size_t HPplayerIndex = -1;
 	bool HPOverrideThisTurn = false;
-	bool HPAbilityAvailable = false;
+	bool HPFlag = false;
 
 	size_t GamblerPlayerIndex = -1;
 	int GamblerUses = 0;
@@ -15,5 +16,4 @@ struct TurnContext {
 
 	bool endgame = false;
 
-	bool HPFlag = false;
 };

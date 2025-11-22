@@ -5,7 +5,6 @@ void Harry_Potter::UseAbility(TurnContext& ctx, size_t currentPIndex) // special
 {
 	ctx.HPplayerIndex = currentPIndex;
 	ctx.HPOverrideThisTurn = true;
-	ctx.HPAbilityAvailable = false;
 	ctx.HPFlag = true;
 	m_canUse = false;
 }

@@ -25,7 +25,6 @@ public:
 	void FirstRoundDealing();
 	int NumberOfPlayableCardsInHand();
 	bool CanPlaceCard(const Card* card, Pile& pile);
-	bool Minimum2CardsPlayable();
 	Pile* GetPile(const std::string& pileChoice);
 	Card* DrawCard();
 	size_t GetDeckSize() const;
