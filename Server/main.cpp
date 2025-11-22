@@ -31,7 +31,7 @@ int main() {
 
         try {
             UserModel user{-1, username, password};
-            int id = db.insertUser(user);
+            int id = db.InsertUser(user);
             
             crow::json::wvalue response;
             response["success"] = true;
