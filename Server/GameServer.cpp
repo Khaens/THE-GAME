@@ -101,14 +101,14 @@ void Game::OneRound(IPlayer& currentPlayer)
 			else if (pileChoice == "D2") chosenPile = &m_descPile2;
 			if(!chosenPile) std::cout << "That's not a valid Pile! Try again!\n";
 		}
-		if(CanPlaceCard(chosenCard, *chosenPile) || m_ctx.HPOverrideThisTurn) {
+		if(CanPlaceCard(chosenCard, *chosenPile)) {
 			cardPlaced = true;
-			chosenPile->PlaceCard(chosenCard);
-			currentPlayer.RemoveCardFromHand(chosenCard);
 			if(std::stoi(chosenCard->GetCardValue()) == std::stoi(chosenPile->GetTopCard()->GetCardValue()) + 10 ||
 			   std::stoi(chosenCard->GetCardValue()) == std::stoi(chosenPile->GetTopCard()->GetCardValue()) - 10) {
 				m_ctx.HPFlag = false;
 			}
+			chosenPile->PlaceCard(chosenCard);
+			currentPlayer.RemoveCardFromHand(chosenCard);
 		}
 		else {
 			std::cout << "Cannot place that card on the chosen pile. Try again.\n";
@@ -128,14 +128,12 @@ void Game::StartGame()
 		if(m_ctx.endgame) m_ctx.baseRequired = 1;
 		else m_ctx.baseRequired = 2;
 		m_ctx.currentRequired = m_ctx.baseRequired;
-		bool hasUsedAbility = false;
 		if (currentPlayer.CanUseAbility(m_ctx)) {
 			std::cout << "\n" << currentPlayer.GetUsername() << ", do you want to use your ability this turn? (y/n): ";
 			char useAbility;
 			std::cin >> useAbility;
 			if (std::tolower(useAbility) == 'y') {
 				currentPlayer.UseAbility(m_ctx, m_currentPlayerIndex);
-				hasUsedAbility = true;
 			}
 		}
 		if(IsGameOver(currentPlayer)) {
