@@ -159,6 +159,7 @@
     <ClInclude Include="Pile.h" />
     <ClInclude Include="PileType.h" />
     <ClInclude Include="PlayerServer.h" />
+    <ClInclude Include="TurnContext.h" />
     <ClInclude Include="UserModel.h" />
     <ClInclude Include="UserServer.h" />
   </ItemGroup>

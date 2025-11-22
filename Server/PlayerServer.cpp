@@ -25,6 +25,7 @@ Card* Player<Ability>::ChooseCard(std::string cardValue)
 {
 	return *std::find_if(m_hand.begin(), m_hand.end(),
 		[&cardValue](Card* c) { return c->GetCardValue() == cardValue; });
+
 }
 template<typename Ability>
 const std::string& Player<Ability>::GetUsername() const
@@ -40,9 +41,15 @@ void Player<Ability>::ShowHand()
 }
 
 template<typename Ability>
-void Player<Ability>::UseAbility(Game* game)
+void Player<Ability>::UseAbility(TurnContext& ctx, size_t currentPIndex)
 {
-	ability.UseAbility(game);
+	ability.UseAbility(ctx, currentPIndex);
+}
+
+template<typename Ability>
+bool Player<Ability>::CanUseAbility(TurnContext& ctx) const
+{
+	return ability.CanUseAbility(ctx);
 }
 
 template class Player<Gambler>;

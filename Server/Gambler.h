@@ -1,10 +1,13 @@
 #pragma once
 
-class Game;
+#include "TurnContext.h"
 
 class Gambler
 {
 public:
-	void UseAbility(Game* game);
+	void UseAbility(TurnContext& ctx, size_t currentPIndex);
+	bool CanUseAbility(TurnContext& ctx) const;
+private:
+	size_t m_usesLeft = 2;
 };
 

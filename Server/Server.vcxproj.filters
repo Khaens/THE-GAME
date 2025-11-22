@@ -89,5 +89,8 @@
     <ClInclude Include="Harry_Potter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="TurnContext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

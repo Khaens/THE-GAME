@@ -1,14 +1,15 @@
 #pragma once
 #include <unordered_set>
 #include "CardServer.h"
+#include "TurnContext.h"
 
-class Game;
 
 class IPlayer
 {
 public:
     virtual ~IPlayer() = default;
-    virtual void UseAbility(Game* game) = 0;
+    virtual void UseAbility(TurnContext& ctx, size_t currentPIndex) = 0;
+	virtual bool CanUseAbility(TurnContext& ctx) const = 0;
     
     virtual void ShowHand() = 0;
     virtual const std::unordered_set<Card*>& GetHand() const = 0;

@@ -5,7 +5,7 @@
 #include "Gambler.h"
 #include "Harry_Potter.h"
 
-class Game;
+#include "TurnContext.h"
 
 template <typename Ability>
 class Player :
@@ -24,7 +24,8 @@ public:
     const std::string& GetUsername() const override;
 
     void ShowHand() override;
-	void UseAbility(Game* game) override;
+	void UseAbility(TurnContext& ctx, size_t currentPIndex) override;
+    bool CanUseAbility(TurnContext& ctx) const override;
 };
 
 
