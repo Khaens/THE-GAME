@@ -4,8 +4,8 @@
 #include "GameServer.h"
 
 int main() {
-    Game g(3);
-    g.StartGame();
+    //Game g(3);
+    //g.StartGame();
 
 
 	//primeste si valideaza cereri de la client, utilizand GameServer pentru logica jocului

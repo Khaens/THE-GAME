@@ -1,6 +1,6 @@
 #pragma once
 
-enum class PileType {
+enum class PileType : std::uint8_t {
 	ASCENDING,
 	DESCENDING
 };
