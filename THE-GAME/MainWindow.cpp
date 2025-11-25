@@ -33,7 +33,7 @@ MainWindow::MainWindow(QWidget* parent)
     connect(fsShortcut, &QShortcut::activated, this, &MainWindow::toggleFullScreen);
 
     // Load the title image
-    QPixmap titlePixmap("Assets/TitleCard.png");
+    QPixmap titlePixmap("Resources/TitleCard.png");
     if (!titlePixmap.isNull()) {
         m_titlePixmap = titlePixmap;
         QPixmap scaled = m_titlePixmap.scaled(ui->titleLabel->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
@@ -41,7 +41,7 @@ MainWindow::MainWindow(QWidget* parent)
         ui->titleLabel->setAlignment(Qt::AlignCenter);
     }
     else {
-        qWarning() << "Failed to load Assets/TitleCard.png";
+        qWarning() << "Failed to load TitleCard.png";
     }
 
     ui->centralWidget->setStyleSheet("background-color: #0d0a47;");
@@ -56,37 +56,37 @@ void MainWindow::setupMenuStyle()
 {
     QString gameButtonStyle = R"(
     QPushButton {
-        border-image: url(Assets/Button_Play.png);
+        border-image: url(Resources/Button_Play.png);
     }
     QPushButton:pressed {
-        border-image: url(Assets/Button_Play_Pressed.png);
+        border-image: url(Resources/Button_Play_Pressed.png);
     }
     )";
 
     QString exitButtonStyle = R"(
     QPushButton {
-        border-image: url(Assets/Button_Exit.png);
+        border-image: url(Resources/Button_Exit.png);
     }
     QPushButton:pressed {
-        border-image: url(Assets/Button_Exit_Pressed.png);
+        border-image: url(Resources/Button_Exit_Pressed.png);
     }
     )";
 
     QString helpButtonStyle = R"(
     QPushButton {
-        border-image: url(Assets/Button_Help.png);
+        border-image: url(Resources/Button_Help.png);
     }
     QPushButton:pressed {
-        border-image: url(Assets/Button_Help_Pressed.png);
+        border-image: url(Resources/Button_Help_Pressed.png);
     }
     )";
 
     QString accountButtonStyle = R"(
     QPushButton {
-        border-image: url(Assets/Button_Account.png);
+        border-image: url(Resources/Button_Account.png);
     }
     QPushButton:pressed {
-        border-image: url(Assets/Button_Account_Pressed.png);
+        border-image: url(Resources/Button_Account_Pressed.png);
     }
     )";
 
