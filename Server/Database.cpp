@@ -1,6 +1,6 @@
 ﻿#include "Database.h"
 #include <iostream>
-#include <functional>
+#include <tuple>
 
 Database::Database(const std::string& path) : storage(initStorage(path)), dbPath(path)
 {
@@ -60,30 +60,64 @@ bool Database::UpdatePasswordRecovery(int userId, const std::string& newPassword
 }
 
 int Database::InsertUser(const UserModel& user) {
-    UserModel hashedUser = user;
-    hashedUser.SetPassword(HashPassword(user.GetPassword()));
-    return storage.insert(hashedUser);
+    try {
+        UserModel hashedUser = user;
+        hashedUser.SetPassword(HashPassword(user.GetPassword()));
+        return storage.insert(hashedUser);
+    }
+    catch (std::exception& e) {
+        std::cerr << "Error inserting user: " << e.what() << std::endl;
+        return -1;
+    }
 }
 
 bool Database::VerifyLogin(const std::string& username, const std::string& plainPassword) {
     try {
-        UserModel user = GetUserByUsername(username);
-        return HashPassword(plainPassword) == user.GetPassword();
+        auto selectStatement = storage.prepare(
+            select(&UserModel::GetPassword,
+                where(c(&UserModel::GetUsername) == username))
+        );
+
+        auto rows = storage.execute(selectStatement);
+
+        if (rows.empty()) {
+            return false;
+        }
+        return HashPassword(plainPassword) == rows[0];
     }
-    catch (std::runtime_error&) {
-        return false;  
+    catch (std::exception& e) {
+        std::cerr << "Login error: " << e.what() << std::endl;
+        return false;
     }
 }
 
 UserModel Database::GetUserByUsername(const std::string& username) {
-    using namespace sqlite_orm;
-    auto users = storage.get_all<UserModel>(
-        where(c(&UserModel::GetUsername) == username)
-    );
-    if (users.empty()) {
-        throw std::runtime_error("User not found");
+    try {
+        auto selectStatement = storage.prepare(
+            select(columns(&UserModel::GetId,
+                &UserModel::GetUsername,
+                &UserModel::GetPassword),
+                where(c(&UserModel::GetUsername) == username))
+        );
+
+        auto rows = storage.execute(selectStatement);
+
+        if (rows.empty()) {
+            throw std::runtime_error("User not found");
+        }
+
+        auto& row = rows[0];
+        UserModel user;
+        user.SetId(std::get<0>(row));
+        user.SetUsername(std::get<1>(row));
+        user.SetPassword(std::get<2>(row));
+
+        return user;
     }
-    return users[0];
+    catch (std::exception& e) {
+        std::cerr << "Error getting user: " << e.what() << std::endl;
+        throw;
+    }
 }
 
 std::vector<UserModel> Database::GetAllUsers() {
@@ -99,9 +133,17 @@ void Database::DeleteUser(int id) {
 }
 
 bool Database::UserExists(const std::string& username) {
-    using namespace sqlite_orm;
-    auto count = storage.count<UserModel>(
-        where(c(&UserModel::GetUsername) == username)
-    );
-    return count > 0;
+    try {
+        auto selectStatement = storage.prepare(
+            select(count<UserModel>(),
+                where(c(&UserModel::GetUsername) == username))
+        );
+
+        auto result = storage.execute(selectStatement);
+        return !result.empty() && result[0] > 0;
+    }
+    catch (std::exception& e) {
+        std::cerr << "Error checking user existence: " << e.what() << std::endl;
+        return false;
+    }
 }
