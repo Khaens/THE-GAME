@@ -1,9 +1,15 @@
 ﻿#include "Database.h"
 #include <iostream>
+#include <functional>
 
 Database::Database(const std::string& path) : storage(initStorage(path)), dbPath(path)
 {
     storage.sync_schema();
+}
+
+std::string HashPassword(const std::string& password) {
+    std::hash<std::string> hasher;
+    return std::to_string(hasher(password));
 }
 
 bool Database::UpdateUsername(int userId, const std::string& newUsername) {
@@ -26,11 +32,11 @@ bool Database::UpdateUsername(int userId, const std::string& newUsername) {
 bool Database::UpdatePassword(int userId, const std::string& oldPassword, const std::string& newPassword) {
     try {
         UserModel user = storage.get<UserModel>(userId);
-        if (user.GetPassword() != oldPassword) { 
+        if (HashPassword(oldPassword) != user.GetPassword()) {
             return false;
         }
 
-        user.SetPassword(newPassword); 
+        user.SetPassword(HashPassword(newPassword));
         UpdateUser(user);
         return true;
     }
@@ -43,7 +49,7 @@ bool Database::UpdatePassword(int userId, const std::string& oldPassword, const 
 bool Database::UpdatePasswordRecovery(int userId, const std::string& newPassword) {
     try {
         UserModel user = storage.get<UserModel>(userId);
-        user.SetPassword(newPassword); 
+        user.SetPassword(HashPassword(newPassword));
         UpdateUser(user);
         return true;
     }
@@ -54,13 +60,15 @@ bool Database::UpdatePasswordRecovery(int userId, const std::string& newPassword
 }
 
 int Database::InsertUser(const UserModel& user) {
-    return storage.insert(user);
+    UserModel hashedUser = user;
+    hashedUser.SetPassword(HashPassword(user.GetPassword()));
+    return storage.insert(hashedUser);
 }
 
 bool Database::VerifyLogin(const std::string& username, const std::string& plainPassword) {
     try {
         UserModel user = GetUserByUsername(username);
-        return (user.GetPassword() == plainPassword); 
+        return HashPassword(plainPassword) == user.GetPassword();
     }
     catch (std::runtime_error&) {
         return false;  
