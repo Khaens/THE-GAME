@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget* parent)
     , m_helpDialog(nullptr)
     , m_settingsDialog(nullptr)
     , m_accountDialog(nullptr)
+    , m_lobbyDialog(nullptr)
 {
     ui->setupUi(this);
     setupMenuStyle();
@@ -20,6 +21,7 @@ MainWindow::MainWindow(QWidget* parent)
     m_helpDialog = new HelpDialog(this);
     m_settingsDialog = new SettingsDialog(this);
     m_accountDialog = new AccountDialog(this);
+    m_lobbyDialog = new LobbyDialog(this);
 
     // Connect buttons to slots
     connect(ui->newGameButton, &QPushButton::clicked, this, &MainWindow::onNewGameClicked);
@@ -104,7 +106,10 @@ void MainWindow::onNewGameClicked()
         return;
     }
 
-    qDebug() << "New Game clicked! User:" << m_accountDialog->getCurrentUsername();
+    // Set user ID for lobby dialog and show it
+    // TODO: Get actual user ID from AccountDialog
+    m_lobbyDialog->setUserId(1); // Placeholder
+    m_lobbyDialog->showOverlay();
 }
 
 void MainWindow::onExitClicked()
@@ -157,6 +162,10 @@ void MainWindow::resizeEvent(QResizeEvent* event)
 
     if (m_accountDialog && m_accountDialog->isVisible()) {
         m_accountDialog->setGeometry(0, 0, this->width(), this->height());
+    }
+
+    if (m_lobbyDialog && m_lobbyDialog->isVisible()) {
+        m_lobbyDialog->setGeometry(0, 0, this->width(), this->height());
     }
 
     QMainWindow::resizeEvent(event);
