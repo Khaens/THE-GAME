@@ -36,6 +36,9 @@
     <ClCompile Include="NetworkManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LobbyDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="MainWindow.h">
@@ -48,6 +51,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="AccountDialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="LobbyDialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

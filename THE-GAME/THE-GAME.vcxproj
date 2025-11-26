@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="AccountDialog.cpp" />
     <ClCompile Include="HelpDialog.cpp" />
+    <ClCompile Include="LobbyDialog.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="NetworkManager.cpp" />
@@ -41,6 +42,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="LobbyDialog.h" />
     <ClInclude Include="NetworkManager.h" />
   </ItemGroup>
   <ItemGroup>

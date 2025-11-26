@@ -61,9 +61,15 @@ LoginResponse NetworkManager::loginUser(const std::string& username, const std::
     };
 }
 
-LobbyResponse NetworkManager::createLobby(int user_id) {
+LobbyResponse NetworkManager::createLobby(int user_id, const std::string& name, int max_players, bool isPrivate, const std::string& password){
     crow::json::wvalue payload;
     payload["user_id"] = user_id;
+    payload["name"] = name;
+    payload["max_players"] = max_players; 
+    payload["is_private"] = isPrivate;
+    if (isPrivate) {
+        payload["password"] = password;
+    }
 
     auto response = cpr::Post(
         cpr::Url{ baseUrl + "/api/lobby/create" },
