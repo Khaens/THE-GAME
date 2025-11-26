@@ -145,7 +145,6 @@
     <ClCompile Include="Pile.cpp" />
     <ClCompile Include="PlayerServer.cpp" />
     <ClCompile Include="UserModel.cpp" />
-    <ClCompile Include="UserServer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AchievementsModel.h" />
@@ -161,7 +160,6 @@
     <ClInclude Include="PlayerServer.h" />
     <ClInclude Include="TurnContext.h" />
     <ClInclude Include="UserModel.h" />
-    <ClInclude Include="UserServer.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\THE-GAME\THE-GAME.vcxproj">
