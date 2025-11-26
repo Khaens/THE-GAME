@@ -30,9 +30,6 @@
     <ClCompile Include="Pile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="UserServer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="PlayerServer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -63,9 +60,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PileType.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="UserServer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PlayerServer.h">

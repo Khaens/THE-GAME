@@ -111,10 +111,6 @@
       "RelativeMoniker": "D:0:0:{6DB65FC9-C450-41FD-90B7-33E88CA16CBC}|THE-GAME\\THE-GAME.vcxproj|solutionrelative:THE-GAME\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|D:\\Github Desktop\\THE-GAME\\Server\\UserServer.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\UserServer.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{6DB65FC9-C450-41FD-90B7-33E88CA16CBC}|THE-GAME\\THE-GAME.vcxproj|D:\\Github Desktop\\THE-GAME\\THE-GAME\\AccountDialog.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{6DB65FC9-C450-41FD-90B7-33E88CA16CBC}|THE-GAME\\THE-GAME.vcxproj|solutionrelative:THE-GAME\\AccountDialog.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
@@ -129,6 +125,10 @@
     {
       "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|D:\\Github Desktop\\THE-GAME\\Server\\AchievementsModel.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\AchievementsModel.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Github Desktop\\THE-GAME\\Server\\UserServer.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Server\\UserServer.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -154,8 +154,7 @@
               "RelativeToolTip": "THE-GAME\\LobbyDialog.cpp",
               "ViewState": "AgIAAOEAAAAAAAAAAAAAAAwAAAAUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-11-26T16:06:15.461Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-26T16:06:15.461Z"
             },
             {
               "$type": "Document",
@@ -167,8 +166,7 @@
               "RelativeToolTip": "THE-GAME\\LobbyDialog.h",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-11-26T16:04:58.37Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-26T16:04:58.37Z"
             },
             {
               "$type": "Document",
@@ -192,8 +190,7 @@
               "RelativeToolTip": "THE-GAME\\help.html",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
-              "WhenOpened": "2025-11-25T18:40:43.092Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-25T18:40:43.092Z"
             },
             {
               "$type": "Document",
@@ -241,8 +238,7 @@
               "RelativeToolTip": "THE-GAME\\NetworkManager.h",
               "ViewState": "AgIAAB4AAAAAAAAAAAAAAC4AAAAEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-11-22T11:21:50.655Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-22T11:21:50.655Z"
             },
             {
               "$type": "Document",
@@ -267,8 +263,7 @@
               "RelativeToolTip": "THE-GAME\\MainWindow.h",
               "ViewState": "AgIAABIAAAAAAAAAAAAQwC0AAAACAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-11-25T18:43:05.893Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-25T18:43:05.893Z"
             },
             {
               "$type": "Document",
@@ -280,8 +275,7 @@
               "RelativeToolTip": "THE-GAME\\MainWindow.cpp",
               "ViewState": "AgIAAJEAAAAAAAAAAAAcwKsAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-11-19T17:41:34.63Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-19T17:41:34.63Z"
             },
             {
               "$type": "Document",
@@ -293,8 +287,7 @@
               "RelativeToolTip": "THE-GAME\\HelpDialog.h",
               "ViewState": "AgIAAAkAAAAAAAAAAAAAABoAAAAPAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-11-25T19:18:05.573Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-25T19:18:05.573Z"
             },
             {
               "$type": "Document",
@@ -306,8 +299,7 @@
               "RelativeToolTip": "Server\\GameServer.h",
               "ViewState": "AgIAAAkAAAAAAAAAAAAAABoAAAAsAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-11-24T16:51:00.3Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-24T16:51:00.3Z"
             },
             {
               "$type": "Document",
@@ -319,8 +311,7 @@
               "RelativeToolTip": "Server\\GameServer.cpp",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAYAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-11-22T12:08:27.037Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-22T12:08:27.037Z"
             },
             {
               "$type": "Document",
@@ -332,8 +323,7 @@
               "RelativeToolTip": "Server\\DeckServer.h",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-11-24T16:51:45.868Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-24T16:51:45.868Z"
             },
             {
               "$type": "Document",
@@ -445,7 +435,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 27,
+              "DocumentIndex": 31,
               "Title": "UserServer.cpp",
               "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\Server\\UserServer.cpp",
               "RelativeDocumentMoniker": "Server\\UserServer.cpp",
@@ -457,7 +447,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 28,
+              "DocumentIndex": 27,
               "Title": "AccountDialog.cpp",
               "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\THE-GAME\\AccountDialog.cpp",
               "RelativeDocumentMoniker": "THE-GAME\\AccountDialog.cpp",
@@ -477,8 +467,7 @@
               "RelativeToolTip": "THE-GAME\\HelpDialog.cpp",
               "ViewState": "AgIAAEIAAAAAAAAAAAAcwEkAAAA7AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-11-21T17:47:11.153Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-21T17:47:11.153Z"
             },
             {
               "$type": "Document",
@@ -494,7 +483,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 29,
+              "DocumentIndex": 28,
               "Title": "UserModel.cpp",
               "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\Server\\UserModel.cpp",
               "RelativeDocumentMoniker": "Server\\UserModel.cpp",
@@ -518,7 +507,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 30,
+              "DocumentIndex": 29,
               "Title": "AccountDialog.h",
               "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\THE-GAME\\AccountDialog.h",
               "RelativeDocumentMoniker": "THE-GAME\\AccountDialog.h",
@@ -530,7 +519,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 31,
+              "DocumentIndex": 30,
               "Title": "AchievementsModel.h",
               "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\Server\\AchievementsModel.h",
               "RelativeDocumentMoniker": "Server\\AchievementsModel.h",
