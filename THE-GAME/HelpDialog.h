@@ -23,7 +23,10 @@ protected:
 private:
     void setupUI();
     void setupStyle();
-    QString getGameRules();
+    QString loadGameRules();
+    void finishLoadingContent();
 
     QWidget* m_contentContainer;
+    QTextBrowser* m_rulesText;
+    static QString s_cachedRules;
 };

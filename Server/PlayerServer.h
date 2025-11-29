@@ -1,15 +1,15 @@
 #pragma once
-#include "UserServer.h"
+#include "UserModel.h"
 #include "IPlayer.h"
 #include "CardServer.h"
 #include "Gambler.h"
-#include "Harry_Potter.h"
+#include "HarryPotter.h"
 
 #include "TurnContext.h"
 
 template <typename Ability>
 class Player :
-	public User, public IPlayer
+	public UserModel, public IPlayer
 {
 private:
     std::unordered_set<Card*> m_hand;

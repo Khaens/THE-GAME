@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget* parent)
     , m_helpDialog(nullptr)
     , m_settingsDialog(nullptr)
     , m_accountDialog(nullptr)
+    , m_lobbyDialog(nullptr)
 {
     ui->setupUi(this);
     setupMenuStyle();
@@ -20,6 +21,7 @@ MainWindow::MainWindow(QWidget* parent)
     m_helpDialog = new HelpDialog(this);
     m_settingsDialog = new SettingsDialog(this);
     m_accountDialog = new AccountDialog(this);
+    m_lobbyDialog = new LobbyDialog(this);
 
     // Connect buttons to slots
     connect(ui->newGameButton, &QPushButton::clicked, this, &MainWindow::onNewGameClicked);
@@ -33,7 +35,7 @@ MainWindow::MainWindow(QWidget* parent)
     connect(fsShortcut, &QShortcut::activated, this, &MainWindow::toggleFullScreen);
 
     // Load the title image
-    QPixmap titlePixmap("Assets/TitleCard.png");
+    QPixmap titlePixmap("Resources/TitleCard.png");
     if (!titlePixmap.isNull()) {
         m_titlePixmap = titlePixmap;
         QPixmap scaled = m_titlePixmap.scaled(ui->titleLabel->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
@@ -41,7 +43,7 @@ MainWindow::MainWindow(QWidget* parent)
         ui->titleLabel->setAlignment(Qt::AlignCenter);
     }
     else {
-        qWarning() << "Failed to load Assets/TitleCard.png";
+        qWarning() << "Failed to load TitleCard.png";
     }
 
     ui->centralWidget->setStyleSheet("background-color: #0d0a47;");
@@ -54,43 +56,53 @@ MainWindow::~MainWindow()
 
 void MainWindow::setupMenuStyle()
 {
-    QString gameButtonStyle = R"(
+    QString playButtonStyle = R"(
     QPushButton {
-        border-image: url(Assets/Button_Play.png);
+        border-image: url(Resources/Button_Play.png);
     }
     QPushButton:pressed {
-        border-image: url(Assets/Button_Play_Pressed.png);
+        border-image: url(Resources/Button_Play_Pressed.png);
+    }
+    )";
+
+    QString settingsButtonStyle = R"(
+    QPushButton {
+        border-image: url(Resources/Button_Settings.png);
+    }
+    QPushButton:pressed {
+        border-image: url(Resources/Button_Settings_Pressed.png);
     }
     )";
 
     QString exitButtonStyle = R"(
     QPushButton {
-        border-image: url(Assets/Button_Exit.png);
+        border-image: url(Resources/Button_Exit.png);
     }
     QPushButton:pressed {
-        border-image: url(Assets/Button_Exit_Pressed.png);
+        border-image: url(Resources/Button_Exit_Pressed.png);
     }
     )";
 
     QString helpButtonStyle = R"(
     QPushButton {
-        border-image: url(Assets/Button_Help.png);
+        border-image: url(Resources/Button_Help.png);
     }
     QPushButton:pressed {
-        border-image: url(Assets/Button_Help_Pressed.png);
+        border-image: url(Resources/Button_Help_Pressed.png);
     }
     )";
 
     QString accountButtonStyle = R"(
     QPushButton {
-        border-image: url(Assets/Button_Account.png);
+        border-image: url(Resources/Button_Account.png);
     }
     QPushButton:pressed {
-        border-image: url(Assets/Button_Account_Pressed.png);
+        border-image: url(Resources/Button_Account_Pressed.png);
     }
     )";
 
-    ui->newGameButton->setStyleSheet(gameButtonStyle);
+    ui->newGameButton->setStyleSheet(playButtonStyle);
+    ui->settingsButton->setStyleSheet(settingsButtonStyle);
     ui->exitGameButton->setStyleSheet(exitButtonStyle);
     ui->helpButton->setStyleSheet(helpButtonStyle);
     ui->accountButton->setStyleSheet(accountButtonStyle);
@@ -104,7 +116,10 @@ void MainWindow::onNewGameClicked()
         return;
     }
 
-    qDebug() << "New Game clicked! User:" << m_accountDialog->getCurrentUsername();
+    // Set user ID for lobby dialog and show it
+    // TODO: Get actual user ID from AccountDialog
+    m_lobbyDialog->setUserId(1); // Placeholder
+    m_lobbyDialog->showOverlay();
 }
 
 void MainWindow::onExitClicked()
@@ -157,6 +172,10 @@ void MainWindow::resizeEvent(QResizeEvent* event)
 
     if (m_accountDialog && m_accountDialog->isVisible()) {
         m_accountDialog->setGeometry(0, 0, this->width(), this->height());
+    }
+
+    if (m_lobbyDialog && m_lobbyDialog->isVisible()) {
+        m_lobbyDialog->setGeometry(0, 0, this->width(), this->height());
     }
 
     QMainWindow::resizeEvent(event);

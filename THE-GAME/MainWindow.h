@@ -6,6 +6,7 @@
 #include "HelpDialog.h"
 #include "SettingsDialog.h"
 #include "AccountDialog.h"
+#include "LobbyDialog.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindowClass; };
@@ -38,6 +39,7 @@ private:
     HelpDialog* m_helpDialog;
     SettingsDialog* m_settingsDialog;
     AccountDialog* m_accountDialog;
+    LobbyDialog* m_lobbyDialog;
 
     // Cache pentru pixmap
     QPixmap m_titlePixmap;

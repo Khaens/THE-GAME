@@ -1,47 +1,25 @@
 ﻿#include "Database.h"
-#include <functional>
-#include <random>
-#include <sstream>
 #include <iostream>
+#include <tuple>
 
 Database::Database(const std::string& path) : storage(initStorage(path)), dbPath(path)
 {
-	storage.sync_schema();
+    storage.sync_schema();
 }
 
-std::string Database::GenerateSalt() {
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<> dis(0, 255);
-
-    std::stringstream ss;
-    for (int i = 0; i < 16; i++) {
-        ss << std::hex << std::setw(2) << std::setfill('0') << dis(gen);
-    }
-    return ss.str();
-}
-
-std::string Database::HashPassword(const std::string& password, const std::string& salt) {
+std::string HashPassword(const std::string& password) {
     std::hash<std::string> hasher;
-    size_t hash = hasher(password + salt);
-
-    std::stringstream ss;
-    ss << std::hex << hash;
-    return ss.str();
-}
-
-bool Database::VerifyPassword(const std::string& plainPassword, const std::string& hashedPassword, const std::string& salt) {
-    return HashPassword(plainPassword, salt) == hashedPassword;
+    return std::to_string(hasher(password));
 }
 
 bool Database::UpdateUsername(int userId, const std::string& newUsername) {
     try {
         if (UserExists(newUsername)) {
-            return false;  
+            return false;
         }
 
-        UserModel user = GetUserById(userId);
-        user.m_username = newUsername;
+        UserModel user = storage.get<UserModel>(userId);
+        user.SetUsername(newUsername);
         UpdateUser(user);
         return true;
     }
@@ -53,13 +31,12 @@ bool Database::UpdateUsername(int userId, const std::string& newUsername) {
 
 bool Database::UpdatePassword(int userId, const std::string& oldPassword, const std::string& newPassword) {
     try {
-        UserModel user = GetUserById(userId);
-        if (!VerifyPassword(oldPassword, user.m_password, user.m_salt)) {
-            return false; 
+        UserModel user = storage.get<UserModel>(userId);
+        if (HashPassword(oldPassword) != user.GetPassword()) {
+            return false;
         }
 
-        user.m_salt = GenerateSalt();
-        user.m_password = HashPassword(newPassword, user.m_salt);
+        user.SetPassword(HashPassword(newPassword));
         UpdateUser(user);
         return true;
     }
@@ -71,48 +48,76 @@ bool Database::UpdatePassword(int userId, const std::string& oldPassword, const 
 
 bool Database::UpdatePasswordRecovery(int userId, const std::string& newPassword) {
     try {
-        UserModel user = GetUserById(userId);
-        user.m_salt = GenerateSalt();
-        user.m_password = HashPassword(newPassword, user.m_salt);
+        UserModel user = storage.get<UserModel>(userId);
+        user.SetPassword(HashPassword(newPassword));
         UpdateUser(user);
         return true;
     }
     catch (std::exception& e) {
-        std::cerr << "Error updating password (admin): " << e.what() << std::endl;
+        std::cerr << "Error updating password (recovery): " << e.what() << std::endl;
         return false;
     }
 }
 
 int Database::InsertUser(const UserModel& user) {
-    UserModel hashedUser = user;
-    hashedUser.m_salt = GenerateSalt();  
-    hashedUser.m_password = HashPassword(user.m_password, hashedUser.m_salt);  
-    return storage.insert(hashedUser);
+    try {
+        UserModel hashedUser = user;
+        hashedUser.SetPassword(HashPassword(user.GetPassword()));
+        return storage.insert(hashedUser);
+    }
+    catch (std::exception& e) {
+        std::cerr << "Error inserting user: " << e.what() << std::endl;
+        return -1;
+    }
 }
 
 bool Database::VerifyLogin(const std::string& username, const std::string& plainPassword) {
     try {
-        UserModel user = GetUserByUsername(username);
-        return VerifyPassword(plainPassword, user.m_password, user.m_salt);
-    }
-    catch (std::runtime_error&) {
-        return false;  // User nu există
-    }
-}
+        auto selectStatement = storage.prepare(
+            select(&UserModel::GetPassword,
+                where(c(&UserModel::GetUsername) == username))
+        );
 
-UserModel Database::GetUserById(int id) {
-    return storage.get<UserModel>(id);
+        auto rows = storage.execute(selectStatement);
+
+        if (rows.empty()) {
+            return false;
+        }
+        return HashPassword(plainPassword) == rows[0];
+    }
+    catch (std::exception& e) {
+        std::cerr << "Login error: " << e.what() << std::endl;
+        return false;
+    }
 }
 
 UserModel Database::GetUserByUsername(const std::string& username) {
-    using namespace sqlite_orm;
-    auto users = storage.get_all<UserModel>(
-        where(c(&UserModel::m_username) == username)
-    );
-    if (users.empty()) {
-        throw std::runtime_error("User not found");
+    try {
+        auto selectStatement = storage.prepare(
+            select(columns(&UserModel::GetId,
+                &UserModel::GetUsername,
+                &UserModel::GetPassword),
+                where(c(&UserModel::GetUsername) == username))
+        );
+
+        auto rows = storage.execute(selectStatement);
+
+        if (rows.empty()) {
+            throw std::runtime_error("User not found");
+        }
+
+        auto& row = rows[0];
+        UserModel user;
+        user.SetId(std::get<0>(row));
+        user.SetUsername(std::get<1>(row));
+        user.SetPassword(std::get<2>(row));
+
+        return user;
     }
-    return users[0];
+    catch (std::exception& e) {
+        std::cerr << "Error getting user: " << e.what() << std::endl;
+        throw;
+    }
 }
 
 std::vector<UserModel> Database::GetAllUsers() {
@@ -128,9 +133,17 @@ void Database::DeleteUser(int id) {
 }
 
 bool Database::UserExists(const std::string& username) {
-    using namespace sqlite_orm;
-    auto count = storage.count<UserModel>(
-        where(c(&UserModel::m_username) == username)
-    );
-    return count > 0;
+    try {
+        auto selectStatement = storage.prepare(
+            select(count<UserModel>(),
+                where(c(&UserModel::GetUsername) == username))
+        );
+
+        auto result = storage.execute(selectStatement);
+        return !result.empty() && result[0] > 0;
+    }
+    catch (std::exception& e) {
+        std::cerr << "Error checking user existence: " << e.what() << std::endl;
+        return false;
+    }
 }

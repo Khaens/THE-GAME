@@ -21,6 +21,7 @@ struct LobbyResponse {
     std::string lobby_id;
     int max_players;
     int current_players;
+    std::string error_message;
 };
 
 struct LobbyStatus {
@@ -42,8 +43,9 @@ public:
     LoginResponse loginUser(const std::string& username, const std::string& password);
 
     // Lobby endpoints
-    LobbyResponse createLobby(int user_id);
-    bool joinLobby(int user_id, const std::string& lobby_id);
+    LobbyResponse createLobby(int user_id, const std::string& name, int max_players, const std::string& password);    
+    bool joinLobby(int user_id, const std::string& code);
+
     std::optional<LobbyStatus> getLobbyStatus(const std::string& lobby_id);
 };
 

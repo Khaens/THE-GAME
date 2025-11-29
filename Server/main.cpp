@@ -62,11 +62,11 @@ int main() {
 
         try {
             UserModel user = db.GetUserByUsername(username);
-            if (user.m_password == password) {
+            if (user.GetPassword() == password) {
                 crow::json::wvalue response;
                 response["success"] = true;
-                response["user_id"] = user.m_id;
-                response["username"] = user.m_username;
+                response["user_id"] = user.GetId();
+                response["username"] = user.GetUsername();
                 return crow::response(200, response);
             }
 
