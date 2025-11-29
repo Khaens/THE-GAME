@@ -3,7 +3,7 @@
 #include "IPlayer.h"
 #include "CardServer.h"
 #include "Gambler.h"
-#include "Harry_Potter.h"
+#include "HarryPotter.h"
 
 #include "TurnContext.h"
 

@@ -66,4 +66,4 @@ bool Player<Ability>::CanUseAbility(TurnContext& ctx) const
 }
 
 template class Player<Gambler>;
-template class Player<Harry_Potter>;
+template class Player<HarryPotter>;

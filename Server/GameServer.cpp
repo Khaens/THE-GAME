@@ -1,14 +1,17 @@
 #include "GameServer.h"
 #include "Gambler.h"
-#include "Harry_Potter.h"
+#include "HarryPotter.h"
 
 
-Game::Game(size_t numberOfPlayers) : m_numberOfPlayers{ numberOfPlayers }
+Game::Game(std::vector<UserModel>& users) : m_numberOfPlayers{ users.size()}
 {
 	m_players.reserve(m_numberOfPlayers);
-	if (numberOfPlayers < 2 || numberOfPlayers > 5) {
+	if (users.size() < 2 || users.size() > 5) {
 		throw std::invalid_argument("Number of players must be between 2 and 5.");
 	}
+	
+
+
 	for (int i = 2; i < 100; i++) {
 		Card* newCard = new Card(std::to_string(i));
 		Card* newCard2 = new Card(std::to_string(i));
@@ -218,7 +221,7 @@ void Game::FirstRoundDealing()
 		);
 	}
 	m_players.push_back(
-		std::make_unique<Player<Harry_Potter>>(
+		std::make_unique<Player<HarryPotter>>(
 			"Player" + std::to_string(m_numberOfPlayers), "password"
 		)
 	);
