@@ -42,7 +42,10 @@
     <ClCompile Include="Gambler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Harry_Potter.cpp">
+    <ClCompile Include="HarryPotter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Lobby.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -80,10 +83,13 @@
     <ClInclude Include="IPlayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Harry_Potter.h">
+    <ClInclude Include="HarryPotter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TurnContext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Lobby.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

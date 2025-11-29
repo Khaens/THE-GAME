@@ -10,12 +10,11 @@
 #include "PlayerServer.h"
 #include "Pile.h"
 #include "DeckServer.h"
-
 #include "TurnContext.h"
 
 class Game {
 public:
-	Game(size_t numberOfPlayers);
+	Game(std::vector<UserModel>& users);
 	size_t WhoStartsFirst();
 	bool IsGameOver(const IPlayer& currentPlayer);
 	void OneRound(IPlayer& currentPlayer);
