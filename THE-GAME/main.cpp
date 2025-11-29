@@ -13,6 +13,8 @@ int main(int argc, char* argv[]) {
 
     // Test rapid în consolă
     
+
+
     NetworkManager netManager("http://localhost:18080");
 
     std::cout << "Testing register..." << std::endl;
@@ -23,7 +25,6 @@ int main(int argc, char* argv[]) {
     auto login = netManager.loginUser("test", "pass");
     std::cout << (login.success ? "OK" : "FAILED") << std::endl;
     
-
 
 
 	//de implementat o functie de while in timpul rularii jocului cu  o functie de polling pt lobby status 

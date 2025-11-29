@@ -5,6 +5,11 @@ UserModel::UserModel(int id, const std::string& user, const std::string& pass)
 {
 }
 
+UserModel::UserModel(const UserModel& user) : m_id(user.GetId()), m_password(user.GetPassword())
+, m_username(user.GetUsername())
+{
+}
+
 const int& UserModel::GetId() const
 {
 	return m_id;

@@ -4,8 +4,13 @@
 #include "GameServer.h"
 
 int main() {
-    //Game g(3);
-    //g.StartGame();
+    /*UserModel user(1, "user", "pass");
+    UserModel user2(2, "user2", "pass");
+    std::vector<UserModel> users = {
+        user, user2
+    };
+    Game g(users);
+    g.StartGame();*/
 
 
 	//primeste si valideaza cereri de la client, utilizand GameServer pentru logica jocului

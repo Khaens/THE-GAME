@@ -94,7 +94,7 @@
          </size>
         </property>
         <property name="text">
-         <string>SETTINGS</string>
+         <string/>
         </property>
        </widget>
       </item>

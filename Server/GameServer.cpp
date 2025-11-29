@@ -1,7 +1,7 @@
 #include "GameServer.h"
 #include "Gambler.h"
 #include "HarryPotter.h"
-
+#include "PlayerFactory.h"
 
 Game::Game(std::vector<UserModel>& users) : m_numberOfPlayers{ users.size()}
 {
@@ -10,7 +10,12 @@ Game::Game(std::vector<UserModel>& users) : m_numberOfPlayers{ users.size()}
 		throw std::invalid_argument("Number of players must be between 2 and 5.");
 	}
 	
-
+	std::vector<AbilityType> abilities = PlayerFactory::GetRandomUniqueAbilities(users.size());
+	size_t i = 0;
+	for (auto& user : users) {
+		m_players.push_back(PlayerFactory::CreateFromUser(user, abilities[i]));
+		i++;
+	}
 
 	for (int i = 2; i < 100; i++) {
 		Card* newCard = new Card(std::to_string(i));
@@ -214,17 +219,6 @@ IPlayer& Game::GetCurrentPlayer()
 
 void Game::FirstRoundDealing()
 {
-	for (size_t i = 0; i < m_numberOfPlayers - 1; i++) {
-
-		m_players.emplace_back(
-			std::make_unique<Player<Gambler>>("Player" + std::to_string(i + 1), "password")
-		);
-	}
-	m_players.push_back(
-		std::make_unique<Player<HarryPotter>>(
-			"Player" + std::to_string(m_numberOfPlayers), "password"
-		)
-	);
 	
 	for (size_t i = 0; i < m_players.size(); i++) {
 		for (size_t j = 0; j < 6; j++) {

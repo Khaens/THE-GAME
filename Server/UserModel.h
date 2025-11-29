@@ -11,6 +11,7 @@ private:
 public:
     UserModel() = default;
     UserModel(int id, const std::string& user, const std::string& pass);
+    UserModel(const UserModel& user);
     const int& GetId() const;
     const std::string& GetUsername() const;
     const std::string& GetPassword() const;
