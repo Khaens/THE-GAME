@@ -42,9 +42,7 @@ private:
     void setupStyle();
 
     void onCreateLobbyClicked();
-    void onJoinLobbyClicked(); // Noul slot
-
-    QString generateRandomPassword();
+    void onJoinLobbyClicked(); 
 
     QWidget* m_contentContainer;
    

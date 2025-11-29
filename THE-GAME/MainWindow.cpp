@@ -56,12 +56,21 @@ MainWindow::~MainWindow()
 
 void MainWindow::setupMenuStyle()
 {
-    QString gameButtonStyle = R"(
+    QString playButtonStyle = R"(
     QPushButton {
         border-image: url(Resources/Button_Play.png);
     }
     QPushButton:pressed {
         border-image: url(Resources/Button_Play_Pressed.png);
+    }
+    )";
+
+    QString settingsButtonStyle = R"(
+    QPushButton {
+        border-image: url(Resources/Button_Settings.png);
+    }
+    QPushButton:pressed {
+        border-image: url(Resources/Button_Settings_Pressed.png);
     }
     )";
 
@@ -92,7 +101,8 @@ void MainWindow::setupMenuStyle()
     }
     )";
 
-    ui->newGameButton->setStyleSheet(gameButtonStyle);
+    ui->newGameButton->setStyleSheet(playButtonStyle);
+    ui->settingsButton->setStyleSheet(settingsButtonStyle);
     ui->exitGameButton->setStyleSheet(exitButtonStyle);
     ui->helpButton->setStyleSheet(helpButtonStyle);
     ui->accountButton->setStyleSheet(accountButtonStyle);

@@ -39,6 +39,12 @@
     <ClCompile Include="LobbyDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CreateLobbyDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="JoinLobbyDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="MainWindow.h">
@@ -54,6 +60,12 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="LobbyDialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="CreateLobbyDialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="JoinLobbyDialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -411,6 +423,24 @@
       <Filter>Resource Files\Resources</Filter>
     </Image>
     <Image Include="Resources\TitleCard.png">
+      <Filter>Resource Files\Resources</Filter>
+    </Image>
+    <Image Include="Resources\Button_Settings.png">
+      <Filter>Resource Files\Resources</Filter>
+    </Image>
+    <Image Include="Resources\Button_Settings_Pressed.png">
+      <Filter>Resource Files\Resources</Filter>
+    </Image>
+    <Image Include="Resources\TextBox_1-2.png">
+      <Filter>Resource Files\Resources</Filter>
+    </Image>
+    <Image Include="Resources\TextBox_1-2_Small.png">
+      <Filter>Resource Files\Resources</Filter>
+    </Image>
+    <Image Include="Resources\TextBox_2-1.png">
+      <Filter>Resource Files\Resources</Filter>
+    </Image>
+    <Image Include="Resources\TextBox_2-1_Small.png">
       <Filter>Resource Files\Resources</Filter>
     </Image>
   </ItemGroup>

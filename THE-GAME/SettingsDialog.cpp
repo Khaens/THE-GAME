@@ -31,6 +31,7 @@ void SettingsDialog::setupUI()
 
     // Container central
     m_contentContainer = new QWidget(this);
+    m_contentContainer->setObjectName("settingsContainer");
     m_contentContainer->setFixedSize(600, 300);
 
     QVBoxLayout* containerLayout = new QVBoxLayout(m_contentContainer);
@@ -55,7 +56,7 @@ void SettingsDialog::setupUI()
     resolutionLayout->setAlignment(Qt::AlignCenter);
 
     // Left arrow button
-    m_leftArrow = new QPushButton("◀", m_contentContainer);
+    m_leftArrow = new QPushButton("<", m_contentContainer);
     m_leftArrow->setFixedSize(50, 50);
     m_leftArrow->setCursor(Qt::PointingHandCursor);
     m_leftArrow->setStyleSheet(R"(
@@ -100,7 +101,7 @@ void SettingsDialog::setupUI()
     )");
 
     // Right arrow button
-    m_rightArrow = new QPushButton("▶", m_contentContainer);
+    m_rightArrow = new QPushButton(">", m_contentContainer);
     m_rightArrow->setFixedSize(50, 50);
     m_rightArrow->setCursor(Qt::PointingHandCursor);
     m_rightArrow->setStyleSheet(R"(
@@ -210,12 +211,14 @@ void SettingsDialog::setupUI()
 
 void SettingsDialog::setupStyle()
 {
-    setStyleSheet("background-color: rgba(0, 0, 0, 150);");
+    //setStyleSheet("background-color: rgba(0, 0, 0, 150);");
 
-    m_contentContainer->setStyleSheet(
-        "background-color: #8e273b; "
-        "border: 3px solid #f3d05a; "
-        "border-radius: 15px;"
+    m_contentContainer->setStyleSheet(R"(
+        #settingsContainer{
+            background-color: transparent;
+            border-image: url(Resources/TextBox_1-2_Small.png); 
+        }
+    )"
     );
 }
 

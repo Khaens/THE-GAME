@@ -1,7 +1,8 @@
 ﻿#include "LobbyDialog.h"
+#include "CreateLobbyDialog.h" 
+#include "JoinLobbyDialog.h"
 #include <QResizeEvent>
 #include <QMessageBox>
-#include <QInputDialog>
 #include <QDebug>
 #include <QRandomGenerator>
 #include <QMap>
@@ -11,10 +12,6 @@
 #include <QLineEdit>
 #include <QDialog>
 #include <QCheckBox>
-
-// ATENȚIE: Presupunem că NetworkManager.h a fost actualizat pentru a include
-// structura LobbyResponse și funcția joinLobbyByCode.
-// Pentru a rezolva eroarea de compilare, vom folosi 'auto' și vom accesa un membru.
 
 LobbyDialog::LobbyDialog(QWidget* parent)
     : QWidget(parent)
@@ -40,6 +37,7 @@ void LobbyDialog::setupUI()
     mainLayout->setContentsMargins(0, 0, 0, 0);
 
     m_contentContainer = new QWidget(this);
+    m_contentContainer->setObjectName("lobbyContainer");
     m_contentContainer->setFixedSize(700, 300);
 
     QVBoxLayout* containerLayout = new QVBoxLayout(m_contentContainer);
@@ -101,13 +99,12 @@ void LobbyDialog::setupUI()
 
 void LobbyDialog::setupStyle()
 {
-    // Stiluri generale pentru overlay
-    setStyleSheet("background-color: rgba(0, 0, 0, 150);");
-
-    m_contentContainer->setStyleSheet(
-        "background-color: #8e273b; "
-        "border: 3px solid #f3d05a; "
-        "border-radius: 15px;"
+    m_contentContainer->setStyleSheet(R"(
+        #lobbyContainer{
+            background-color: transparent;
+            border-image: url(Resources/TextBox_1-2_Small.png); 
+        }       
+    )"
     );
 
     // Stiluri pentru butoanele de lobby
@@ -167,102 +164,39 @@ void LobbyDialog::onCreateLobbyClicked()
         return;
     }
 
-    // 1. Creare dialog customizat
-    QDialog dialog(this);
-    dialog.setWindowTitle("Create New Lobby");
-    dialog.setStyleSheet("background-color: #8e273b; color: #f3d05a;");
+    CreateLobbyDialog dialog(m_userId, this);
 
-    // Layout principal
-    QVBoxLayout* dialogLayout = new QVBoxLayout(&dialog);
-    QGridLayout* inputLayout = new QGridLayout(); // Folosim GridLayout pentru aliniere mai bună
-
-    int row = 0;
-
-    // Nume Lobby
-    QLabel* nameLabel = new QLabel("Nume Lobby:", &dialog);
-    QLineEdit* nameEdit = new QLineEdit(&dialog);
-    nameEdit->setText(QString("Lobby_") + QString::number(m_userId));
-    inputLayout->addWidget(nameLabel, row, 0);
-    inputLayout->addWidget(nameEdit, row++, 1);
-
-    // Număr Jucători (SpinBox)
-    QLabel* playersLabel = new QLabel("Max Jucători (2-5):", &dialog);
-    QSpinBox* playersSpinBox = new QSpinBox(&dialog);
-    playersSpinBox->setRange(2, 5); // Limita între 2 și 5 jucători
-    playersSpinBox->setValue(4);    // Valoare implicită 4
-    inputLayout->addWidget(playersLabel, row, 0);
-    inputLayout->addWidget(playersSpinBox, row++, 1);
-
-    // Checkbox pentru private
-    QCheckBox* privateCheckBox = new QCheckBox("Lobby Privat (Cod necesar)", &dialog);
-    inputLayout->addWidget(privateCheckBox, row++, 0, 1, 2); // Ocupă 2 coloane
-
-    dialogLayout->addLayout(inputLayout);
-
-    // Butoane OK si Cancel
-    QPushButton* okButton = new QPushButton("Creează", &dialog);
-    QPushButton* cancelButton = new QPushButton("Anulează", &dialog);
-    QHBoxLayout* buttonLayout = new QHBoxLayout();
-    buttonLayout->addWidget(okButton);
-    buttonLayout->addWidget(cancelButton);
-    dialogLayout->addLayout(buttonLayout);
-
-    QObject::connect(okButton, &QPushButton::clicked, &dialog, &QDialog::accept);
-    QObject::connect(cancelButton, &QPushButton::clicked, &dialog, &QDialog::reject);
-
-    // 2. Logica de procesare la ACCEPT
     if (dialog.exec() == QDialog::Accepted) {
-        QString lobbyName = nameEdit->text().trimmed();
-        bool isPrivate = privateCheckBox->isChecked();
-        int maxPlayers = playersSpinBox->value(); // Extragem valoarea SpinBox-ului
+        QString lobbyName = dialog.getLobbyName();
+        int maxPlayers = dialog.getMaxPlayers();
+        QString generatedPassword = dialog.getGeneratedPassword();
 
-        if (lobbyName.isEmpty()) {
-            QMessageBox::warning(this, "Input Invalid", "Numele lobby-ului nu poate fi gol.");
-            return;
-        }
-
-        // Generăm parola DOAR pe client și o trimitem la server.
-        QString generatedPassword = isPrivate ? generateRandomPassword() : "";
-
-        // Apelul la NetworkManager
-        // ATENTIE: NetworkManager.h și NetworkManager.cpp trebuie actualizate 
-        // pentru a include și maxPlayers!
         LobbyResponse lobbyResponse = m_networkManager->createLobby(
             m_userId,
             lobbyName.toStdString(),
-            maxPlayers, // <--- NOU: Max Players
-            isPrivate,
-            generatedPassword.toStdString() // Trimitem parola
+            maxPlayers,
+            generatedPassword.toStdString()
         );
 
-        // 3. Afișarea mesajului de succes
         if (lobbyResponse.success) {
-
-            // Închidem overlay-ul principal al LobbyDialog-ului
             hideOverlay();
 
-            QString successMessage = "Lobby-ul **'" + lobbyName + "'** a fost creat cu succes!\n";
-            successMessage += "Număr maxim de jucători: **" + QString::number(maxPlayers) + "**";
+            QString successMessage = "Lobby '" + lobbyName + "' created successfully!\n";
+            successMessage += "Max players: " + QString::number(maxPlayers);
+            successMessage += "\n\nLobby Code: " + generatedPassword + "\n"
+                "Share this code with friends to join.";
 
-            if (isPrivate) {
-                // Afișează codul/parola generată în MESAJUL SEPARAT
-                successMessage += "\n\n**Cod Lobby:** **" + generatedPassword + "**\n"
-                    "Folosește acest cod pentru a intra în lobby.";
-            }
-
-            QMessageBox::information(this, "Succes", successMessage);
+            QMessageBox::information(this, "Success", successMessage);
         }
         else {
             QString errorMessage = QString::fromStdString(
-                // Asigură-te că LobbyResponse are un membru 'error_message'
-                lobbyResponse.error_message.empty() ? "Eroare necunoscută la crearea lobby-ului." : lobbyResponse.error_message
+                lobbyResponse.error_message.empty() ? "Unknown error creating lobby." : lobbyResponse.error_message
             );
-            QMessageBox::warning(this, "Eroare", errorMessage);
+            QMessageBox::warning(this, "Error", errorMessage);
         }
     }
 }
 
-// --- FIX pentru logica JOIN LOBBY (single input) și eroarea NetworkManager ---
 void LobbyDialog::onJoinLobbyClicked()
 {
     if (m_userId == -1) {
@@ -270,47 +204,24 @@ void LobbyDialog::onJoinLobbyClicked()
         return;
     }
 
-    bool ok;
-    // POPUP NOU: Cere DOAR codul/parola
-    QString lobbyCodeQ = QInputDialog::getText(this, "Join Lobby",
-        "Enter the Lobby Code / Password:", QLineEdit::Normal, "", &ok);
+    JoinLobbyDialog dialog(this);
 
-    // Formatare ca în Among Us: litere mari, fără spații
-    QString lobbyCode = lobbyCodeQ.toUpper().trimmed();
+    if (dialog.exec() == QDialog::Accepted) {
+        QString lobbyCode = dialog.getLobbyCode();
+        std::string code_to_join = lobbyCode.toStdString();
 
-    if (!ok || lobbyCode.isEmpty()) {
-        return; // Anulat sau camp gol
+        bool success = m_networkManager->joinLobby(m_userId, code_to_join);
+
+        if (success) {
+            QMessageBox::information(this, "Success",
+                "Successfully joined lobby with code: " + lobbyCode);
+            hideOverlay();
+        }
+        else {
+            QMessageBox::warning(this, "Error",
+                "Failed to join lobby. Invalid code or lobby is full.");
+        }
     }
-
-    std::string code_to_join = lobbyCode.toStdString();
-
-    // Înlocuim apelul inexistent `joinLobbyWithPassword` cu `joinLobbyByCode`.
-    // Acest cod (parola) este folosit pentru a identifica și a intra în lobby.
-    // ATENTIE: NetworkManager.h trebuie sa includa o functie 'bool joinLobbyByCode(int userId, const std::string& code)'
-    bool success = m_networkManager->joinLobby(m_userId, code_to_join);
-
-    if (success) {
-        QMessageBox::information(this, "Success",
-            "Successfully joined the lobby using code: " + lobbyCode);
-        hideOverlay();
-    }
-    else {
-        QMessageBox::warning(this, "Error",
-            "Failed to join lobby. Invalid code, full, or game already started.");
-    }
-}
-
-QString LobbyDialog::generateRandomPassword()
-{
-    const QString chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    QString password;
-
-    for (int i = 0; i < 6; ++i) {
-        int index = QRandomGenerator::global()->bounded(chars.length());
-        password.append(chars[index]);
-    }
-
-    return password;
 }
 
 void LobbyDialog::resizeEvent(QResizeEvent* event)

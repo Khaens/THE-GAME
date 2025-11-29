@@ -28,7 +28,8 @@ void HelpDialog::setupUI()
     mainLayout->setContentsMargins(0, 0, 0, 0);
 
     m_contentContainer = new QWidget(this);
-    m_contentContainer->setFixedSize(800, 600);
+    m_contentContainer->setObjectName("helpContainer");
+    m_contentContainer->setFixedSize(1000, 500);
 
     QVBoxLayout* containerLayout = new QVBoxLayout(m_contentContainer);
     containerLayout->setSpacing(15);
@@ -36,15 +37,16 @@ void HelpDialog::setupUI()
 
     QLabel* titleLabel = new QLabel("HELP - THE GAME", m_contentContainer);
     titleLabel->setAlignment(Qt::AlignCenter);
-    titleLabel->setStyleSheet("font-size: 28px; font-weight: bold; color: #f3d05a; margin-bottom: 5px;");
+    titleLabel->setStyleSheet("font-size: 28px; font-weight: bold; color: #f3d05a; margin-top: 10px;");
     containerLayout->addWidget(titleLabel);
 
     m_rulesText = new QTextBrowser(m_contentContainer);
     m_rulesText->setOpenExternalLinks(false);
+    m_rulesText->setFixedSize(750, 350);
 
     m_rulesText->setStyleSheet(R"(
         QTextBrowser {
-            background-color: #deaf11;
+            background-color: transparent;
             border: 2px solid #654b1f;
             border-radius: 8px;
             padding: 15px;
@@ -69,7 +71,7 @@ void HelpDialog::setupUI()
             background: #4a3f1e;
         }
     )");
-    containerLayout->addWidget(m_rulesText);
+    containerLayout->addWidget(m_rulesText, 0, Qt::AlignCenter);
 
     QPushButton* backButton = new QPushButton("BACK TO MENU", m_contentContainer);
     backButton->setFixedSize(200, 45);
@@ -114,12 +116,12 @@ void HelpDialog::setupUI()
 
 void HelpDialog::setupStyle()
 {
-    setStyleSheet("background-color: rgba(0, 0, 0, 150);");
-
-    m_contentContainer->setStyleSheet(
-        "background-color: #8e273b; "
-        "border: 3px solid #f3d05a; "
-        "border-radius: 15px;"
+    m_contentContainer->setStyleSheet(R"(
+        #helpContainer{
+            background-color: transparent;
+            border-image: url(Resources/TextBox_1-2.png);
+        }
+    )"    
     );
 }
 

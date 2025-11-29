@@ -43,7 +43,7 @@ public:
     LoginResponse loginUser(const std::string& username, const std::string& password);
 
     // Lobby endpoints
-    LobbyResponse createLobby(int user_id, const std::string& name, int max_players, bool isPrivate, const std::string& password);    
+    LobbyResponse createLobby(int user_id, const std::string& name, int max_players, const std::string& password);    
     bool joinLobby(int user_id, const std::string& code);
 
     std::optional<LobbyStatus> getLobbyStatus(const std::string& lobby_id);

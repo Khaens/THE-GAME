@@ -24,7 +24,8 @@ void AccountDialog::setupUI()
     mainLayout->setContentsMargins(0, 0, 0, 0);
 
     m_contentContainer = new QWidget(this);
-    m_contentContainer->setFixedSize(500, 600);
+    m_contentContainer->setObjectName("accountContainer");
+    m_contentContainer->setFixedSize(400, 600);
 
     QVBoxLayout* containerLayout = new QVBoxLayout(m_contentContainer);
     containerLayout->setSpacing(20);
@@ -354,12 +355,14 @@ void AccountDialog::setupUI()
 
 void AccountDialog::setupStyle()
 {
-    setStyleSheet("background-color: rgba(0, 0, 0, 150);");
+    //setStyleSheet("background-color: rgba(0, 0, 0, 150);");
 
-    m_contentContainer->setStyleSheet(
-        "background-color: #8e273b; "
-        "border: 3px solid #f3d05a; "
-        "border-radius: 15px;"
+    m_contentContainer->setStyleSheet(R"(
+        #accountContainer{
+            background-color: transparent;
+            border-image: url(Resources/TextBox_2-1.png);
+        }
+    )"
     );
 }
 
