@@ -7,9 +7,8 @@ struct TurnContext {
 	int currentRequired = 2;
 
 	size_t HPplayerIndex = -1;
-
 	size_t GamblerPlayerIndex = -1;
+	size_t TaxEvPlayerIndex = -1;
 
 	bool endgame = false;
-
 };

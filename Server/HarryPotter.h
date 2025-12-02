@@ -18,6 +18,9 @@ public:
 	const size_t GetGamblerUses() override;
 	const bool GActive() override;
 	void SetGActive(bool state) override;
+
+	const bool IsTaxActive() override;
+	void SetTaxActive(bool state) override;
 private:
 	bool m_canUse = true;
 	bool m_active = false;

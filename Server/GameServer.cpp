@@ -64,7 +64,6 @@ size_t Game::WhoStartsFirst()
 
 bool Game::IsGameOver(const IPlayer& currentPlayer)
 {
-	int requiredCards = m_ctx.currentRequired;
 	int playableCards = NumberOfPlayableCardsInHand();
 
 
@@ -72,8 +71,8 @@ bool Game::IsGameOver(const IPlayer& currentPlayer)
 		std::cout << "No one played a +/-10 card until " << currentPlayer.GetUsername() << "'s turn. All players lose!\n";
 		return true;
 	}
-	if (playableCards < requiredCards) {
-		std::cout << currentPlayer.GetUsername() << " cannot play the required number of cards (" << requiredCards << ").\n";
+	if (playableCards < m_ctx.currentRequired) {
+		std::cout << currentPlayer.GetUsername() << " cannot play the required number of cards (" << m_ctx.currentRequired << ").\n";
 		std::cout << "Game Over! " << currentPlayer.GetUsername() << " loses!\n";
 		return true;
 	}
@@ -107,11 +106,11 @@ void Game::OneRound(IPlayer& currentPlayer)
 			else if (pileChoice == "A2") chosenPile = &m_ascPile2;
 			else if (pileChoice == "D1") chosenPile = &m_descPile1;
 			else if (pileChoice == "D2") chosenPile = &m_descPile2;
-			if(!chosenPile) std::cout << "That's not a valid Pile! Try again!\n";
+			if (!chosenPile) std::cout << "That's not a valid Pile! Try again!\n";
 		}
 		if (CanPlaceCard(chosenCard, *chosenPile)) {
 			cardPlaced = true;
-			if (m_ctx.HPplayerIndex != -1 && m_players[m_ctx.HPplayerIndex]->GetHPFlag()){
+			if (m_ctx.HPplayerIndex != -1 && m_players[m_ctx.HPplayerIndex]->GetHPFlag()) {
 				if (std::stoi(chosenCard->GetCardValue()) == std::stoi(chosenPile->GetTopCard()->GetCardValue()) + 10 ||
 					std::stoi(chosenCard->GetCardValue()) == std::stoi(chosenPile->GetTopCard()->GetCardValue()) - 10) {
 					m_players[m_ctx.HPplayerIndex]->SetHPFlag(false);
@@ -119,12 +118,13 @@ void Game::OneRound(IPlayer& currentPlayer)
 			}
 			chosenPile->PlaceCard(chosenCard);
 			currentPlayer.RemoveCardFromHand(chosenCard);
-		}
+			}
 		else {
 			std::cout << "Cannot place that card on the chosen pile. Try again.\n";
 		}
 	}
 }
+
 
 void Game::StartGame()
 {
@@ -132,12 +132,18 @@ void Game::StartGame()
 	FirstRoundDealing();
 	m_currentPlayerIndex = WhoStartsFirst();
 
-	while(true){
+	while (true) {
 		IPlayer& currentPlayer = GetCurrentPlayer();
 		if (GetDeckSize() == 0) m_ctx.endgame = true;
-		if(m_ctx.endgame) m_ctx.baseRequired = 1;
+		if (m_ctx.endgame) m_ctx.baseRequired = 1;
 		else m_ctx.baseRequired = 2;
-		m_ctx.currentRequired = m_ctx.baseRequired;
+		if (m_ctx.endgame && m_currentPlayerIndex == m_ctx.GamblerPlayerIndex) {
+			if (currentPlayer.GetHand().size() > 1 &&
+				currentPlayer.GetGamblerUses() > 0) {
+				m_ctx.currentRequired = 2;
+			}
+		}
+		else m_ctx.currentRequired = m_ctx.baseRequired;
 		if (currentPlayer.CanUseAbility(m_ctx)) {
 			std::cout << "\n" << currentPlayer.GetUsername() << ", do you want to use your ability this turn? (y/n): ";
 			char useAbility;
@@ -146,40 +152,30 @@ void Game::StartGame()
 				currentPlayer.UseAbility(m_ctx, m_currentPlayerIndex);
 			}
 		}
-		if(IsGameOver(currentPlayer)) {
+		if (IsGameOver(currentPlayer)) {
 			break;
 		}
 		ShowCtx();
 		int playedCards = 0;
-		if (m_ctx.GamblerPlayerIndex != -1 && currentPlayer.GActive()) {
+		for (int i = 0; i < m_ctx.currentRequired; i++) {
 			OneRound(currentPlayer);
-			playedCards = 1;
+			if (IsGameOver(currentPlayer)) break;
+			playedCards++;
+		}
+		if (m_ctx.GamblerPlayerIndex != -1 && currentPlayer.GActive()) {
 			currentPlayer.SetGActive(false);
 		}
-		else if (m_ctx.endgame && m_currentPlayerIndex == m_ctx.GamblerPlayerIndex) {
-			if (currentPlayer.GetHand().size() > 1 &&
-				currentPlayer.GetGamblerUses() > 0) {
-				OneRound(currentPlayer);
-			}
-			OneRound(currentPlayer);
+		else if (m_ctx.TaxEvPlayerIndex != -1 &&
+			m_currentPlayerIndex == m_ctx.TaxEvPlayerIndex &&
+			currentPlayer.IsTaxActive()) {
+			std::cout << "You don't have to play any cards this round!\n";			
 		}
-		else if (!m_ctx.endgame) {
-			OneRound(currentPlayer);
-			OneRound(currentPlayer);
-			playedCards = 2;
-		}
-		else if (m_wholeDeck.IsEmpty() || m_wholeDeck.GetSize() == 1) {
-			OneRound(currentPlayer);
-			playedCards = 1;
-		}
-
-
 		int nrOfPlayableCards = NumberOfPlayableCardsInHand();
 		if (nrOfPlayableCards == 0) {
 			std::cout << "Nu mai poti pune nici o carte. Trecem la urmatorul jucator.\n";
 			for (size_t i = 0; i < playedCards; i++) {
 				Card* drawnCard = m_wholeDeck.DrawCard();
-				if(drawnCard) currentPlayer.AddCardToHand(drawnCard);
+				if (drawnCard) currentPlayer.AddCardToHand(drawnCard);
 			}
 		}
 		else {
@@ -207,6 +203,7 @@ void Game::StartGame()
 		}
 	}
 }
+
 
 void Game::NextPlayer()
 {
@@ -285,4 +282,5 @@ void Game::ShowCtx()
 	std::cout << "currReq " << m_ctx.currentRequired << "\n";
 	std::cout << "HPPIndex " << m_ctx.HPplayerIndex << "\n";
 	std::cout << "GambPInd " << m_ctx.GamblerPlayerIndex << "\n";
+	std::cout << "TaxEvPInd" << m_ctx.TaxEvPlayerIndex << "\n";
 }

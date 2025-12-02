@@ -54,3 +54,13 @@ void Gambler::SetHPActive(bool state)
 {
 	throw std::runtime_error("Gambler called HP function");
 }
+
+const bool Gambler::IsTaxActive()
+{
+	throw std::runtime_error("Gambler called TaxEvader function");
+}
+
+void Gambler::SetTaxActive(bool state)
+{
+	throw std::runtime_error("Gambler called TaxEvader function");
+}

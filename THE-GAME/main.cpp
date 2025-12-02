@@ -15,7 +15,7 @@ int main(int argc, char* argv[]) {
     
 
 
-    /*NetworkManager netManager("http://localhost:18080");
+    NetworkManager netManager("http://localhost:18080");
 
     std::cout << "Testing register..." << std::endl;
     auto reg = netManager.registerUser("test", "pass");
@@ -23,7 +23,7 @@ int main(int argc, char* argv[]) {
 
     std::cout << "Testing login..." << std::endl;
     auto login = netManager.loginUser("test", "pass");
-    std::cout << (login.success ? "OK" : "FAILED") << std::endl;*/
+    std::cout << (login.success ? "OK" : "FAILED") << std::endl;
     
 
 

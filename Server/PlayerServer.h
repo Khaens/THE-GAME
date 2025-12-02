@@ -5,7 +5,7 @@
 #include "CardServer.h"
 #include "Gambler.h"
 #include "HarryPotter.h"
-
+#include "TaxEvader.h"
 #include "TurnContext.h"
 
 template <typename Ability>
@@ -29,6 +29,9 @@ public:
     void ShowHand() override;
 	void UseAbility(TurnContext& ctx, size_t currentPIndex) override;
     bool CanUseAbility(TurnContext& ctx) const override;
+
+    const bool IsTaxActive() override;
+    virtual void SetTaxActive(bool state) override;
 
     const bool HPActive() override;
     const bool GetHPFlag() const override;
@@ -108,6 +111,18 @@ template<typename Ability>
 bool Player<Ability>::CanUseAbility(TurnContext& ctx) const
 {
     return ability.CanUseAbility(ctx);
+}
+
+template<typename Ability>
+inline const bool Player<Ability>::IsTaxActive()
+{
+    return ability.IsTaxActive();
+}
+
+template<typename Ability>
+inline void Player<Ability>::SetTaxActive(bool state)
+{
+    ability.SetTaxActive(state);
 }
 
 template<typename Ability>

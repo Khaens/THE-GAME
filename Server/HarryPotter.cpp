@@ -52,4 +52,14 @@ void HarryPotter::SetGActive(bool state)
 	throw std::runtime_error("HP called Gambler function");
 }
 
+const bool HarryPotter::IsTaxActive()
+{
+	throw std::runtime_error("HP called TaxEvader function");
+}
+
+void HarryPotter::SetTaxActive(bool state)
+{
+	throw std::runtime_error("HP called TaxEvader function");
+}
+
 

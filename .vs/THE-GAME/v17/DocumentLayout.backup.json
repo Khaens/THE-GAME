@@ -3,22 +3,6 @@
   "WorkspaceRootPath": "C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\GameServer.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\GameServer.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\TurnContext.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\TurnContext.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\HarryPotter.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\HarryPotter.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\PlayerServer.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\PlayerServer.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{6DB65FC9-C450-41FD-90B7-33E88CA16CBC}|THE-GAME\\THE-GAME.vcxproj|C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\THE-GAME\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{6DB65FC9-C450-41FD-90B7-33E88CA16CBC}|THE-GAME\\THE-GAME.vcxproj|solutionrelative:THE-GAME\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
@@ -27,8 +11,60 @@
       "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\GameServer.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\GameServer.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\PlayerFactory.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\PlayerFactory.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\PlayerServer.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\PlayerServer.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\PlayerFactory.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\PlayerFactory.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\TaxEvader.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\TaxEvader.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\TaxEvader.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\TaxEvader.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\HarryPotter.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\HarryPotter.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\HarryPotter.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\HarryPotter.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\Gambler.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\Gambler.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\Gambler.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\Gambler.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\GameServer.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\GameServer.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\IPlayer.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\IPlayer.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\IAbility.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\IAbility.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\TurnContext.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\TurnContext.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{6DB65FC9-C450-41FD-90B7-33E88CA16CBC}|THE-GAME\\THE-GAME.vcxproj|C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\THE-GAME\\LobbyDialog.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
@@ -37,29 +73,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{6DB65FC9-C450-41FD-90B7-33E88CA16CBC}|THE-GAME\\THE-GAME.vcxproj|C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\THE-GAME\\NetworkManager.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{6DB65FC9-C450-41FD-90B7-33E88CA16CBC}|THE-GAME\\THE-GAME.vcxproj|solutionrelative:THE-GAME\\NetworkManager.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\rmama\\Documents\\GitHub\\vcpkg\\installed\\x64-windows\\include\\crow\\json.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\IPlayer.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\IPlayer.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\Gambler.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\Gambler.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\IAbility.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\IAbility.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\Gambler.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\Gambler.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\HarryPotter.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\HarryPotter.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\Lobby.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
@@ -77,7 +90,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 326,
-          "SelectedChildIndex": 13,
+          "SelectedChildIndex": 14,
           "Children": [
             {
               "$type": "Bookmark",
@@ -85,7 +98,59 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "PlayerFactory.cpp",
+              "DocumentMoniker": "C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\PlayerFactory.cpp",
+              "RelativeDocumentMoniker": "Server\\PlayerFactory.cpp",
+              "ToolTip": "C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\PlayerFactory.cpp",
+              "RelativeToolTip": "Server\\PlayerFactory.cpp",
+              "ViewState": "AgIAABgAAAAAAAAAAAAAAB0AAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-12-02T13:17:07.377Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "PlayerFactory.h",
+              "DocumentMoniker": "C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\PlayerFactory.h",
+              "RelativeDocumentMoniker": "Server\\PlayerFactory.h",
+              "ToolTip": "C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\PlayerFactory.h",
+              "RelativeToolTip": "Server\\PlayerFactory.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-12-02T13:17:04.526Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "TaxEvader.cpp",
+              "DocumentMoniker": "C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\TaxEvader.cpp",
+              "RelativeDocumentMoniker": "Server\\TaxEvader.cpp",
+              "ToolTip": "C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\TaxEvader.cpp",
+              "RelativeToolTip": "Server\\TaxEvader.cpp",
+              "ViewState": "AgIAAAQAAAAAAAAAAAAjwA4AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-12-02T12:39:04.617Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 7,
+              "Title": "TaxEvader.h",
+              "DocumentMoniker": "C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\TaxEvader.h",
+              "RelativeDocumentMoniker": "Server\\TaxEvader.h",
+              "ToolTip": "C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\TaxEvader.h",
+              "RelativeToolTip": "Server\\TaxEvader.h",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAkAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-12-02T12:34:16.164Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
               "Title": "LobbyDialog.cpp",
               "DocumentMoniker": "C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\THE-GAME\\LobbyDialog.cpp",
               "RelativeDocumentMoniker": "THE-GAME\\LobbyDialog.cpp",
@@ -93,12 +158,11 @@
               "RelativeToolTip": "THE-GAME\\LobbyDialog.cpp",
               "ViewState": "AgIAAA8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-12-02T12:15:34.45Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-02T12:15:34.45Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 17,
               "Title": "NetworkManager.h",
               "DocumentMoniker": "C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\THE-GAME\\NetworkManager.h",
               "RelativeDocumentMoniker": "THE-GAME\\NetworkManager.h",
@@ -106,70 +170,56 @@
               "RelativeToolTip": "THE-GAME\\NetworkManager.h",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-12-02T12:15:30.837Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-02T12:15:30.837Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "json.h",
-              "DocumentMoniker": "C:\\Users\\rmama\\Documents\\GitHub\\vcpkg\\installed\\x64-windows\\include\\crow\\json.h",
-              "RelativeDocumentMoniker": "..\\vcpkg\\installed\\x64-windows\\include\\crow\\json.h",
-              "ToolTip": "C:\\Users\\rmama\\Documents\\GitHub\\vcpkg\\installed\\x64-windows\\include\\crow\\json.h",
-              "RelativeToolTip": "..\\vcpkg\\installed\\x64-windows\\include\\crow\\json.h",
-              "ViewState": "AgIAAHMBAAAAAAAAAAAnwHwBAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-12-02T12:15:24.722Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 13,
               "Title": "IPlayer.h",
               "DocumentMoniker": "C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\IPlayer.h",
               "RelativeDocumentMoniker": "Server\\IPlayer.h",
               "ToolTip": "C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\IPlayer.h",
               "RelativeToolTip": "Server\\IPlayer.h",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAAAwAAAAEAAAAAAAAAA==",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAA4AAAArAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2025-12-02T11:34:14.344Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 10,
               "Title": "Gambler.cpp",
               "DocumentMoniker": "C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\Gambler.cpp",
               "RelativeDocumentMoniker": "Server\\Gambler.cpp",
               "ToolTip": "C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\Gambler.cpp",
               "RelativeToolTip": "Server\\Gambler.cpp",
-              "ViewState": "AgIAAAkAAAAAAAAAAAAjwBMAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAADMAAAAAAAAAAAAqwD0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-12-02T11:23:17.704Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 8,
               "Title": "HarryPotter.cpp",
               "DocumentMoniker": "C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\HarryPotter.cpp",
               "RelativeDocumentMoniker": "Server\\HarryPotter.cpp",
               "ToolTip": "C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\HarryPotter.cpp",
               "RelativeToolTip": "Server\\HarryPotter.cpp",
-              "ViewState": "AgIAABsAAAAAAAAAAAAnwC0AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAADAAAAAAAAAAAAAqwDcAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-12-02T11:19:20.427Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 15,
               "Title": "TurnContext.h",
               "DocumentMoniker": "C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\TurnContext.h",
               "RelativeDocumentMoniker": "Server\\TurnContext.h",
               "ToolTip": "C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\TurnContext.h",
               "RelativeToolTip": "Server\\TurnContext.h",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2025-12-02T11:18:03.65Z",
               "EditorCaption": ""
@@ -182,79 +232,79 @@
               "RelativeDocumentMoniker": "Server\\Gambler.h",
               "ToolTip": "C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\Gambler.h",
               "RelativeToolTip": "Server\\Gambler.h",
-              "ViewState": "AgIAAAcAAAAAAAAAAADwvw4AAAAIAAAAAAAAAA==",
+              "ViewState": "AgIAAAcAAAAAAAAAAADwvxgAAAAOAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2025-12-02T11:16:49.716Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 14,
               "Title": "IAbility.h",
               "DocumentMoniker": "C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\IAbility.h",
               "RelativeDocumentMoniker": "Server\\IAbility.h",
               "ToolTip": "C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\IAbility.h",
               "RelativeToolTip": "Server\\IAbility.h",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAApAAAAAAAAAA==",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAABQAAAArAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2025-12-02T11:06:06.904Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 9,
               "Title": "HarryPotter.h",
               "DocumentMoniker": "C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\HarryPotter.h",
               "RelativeDocumentMoniker": "Server\\HarryPotter.h",
               "ToolTip": "C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\HarryPotter.h",
               "RelativeToolTip": "Server\\HarryPotter.h",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAAA0AAAAnAAAAAAAAAA==",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAABYAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2025-12-02T11:05:20.71Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 0,
               "Title": "main.cpp",
               "DocumentMoniker": "C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\THE-GAME\\main.cpp",
               "RelativeDocumentMoniker": "THE-GAME\\main.cpp",
-              "ToolTip": "C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\THE-GAME\\main.cpp",
-              "RelativeToolTip": "THE-GAME\\main.cpp",
-              "ViewState": "AgIAAA8AAAAAAAAAAAAAABEAAAAGAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\THE-GAME\\main.cpp*",
+              "RelativeToolTip": "THE-GAME\\main.cpp*",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAAABYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-11-29T22:38:32.171Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 1,
               "Title": "main.cpp",
               "DocumentMoniker": "C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\main.cpp",
               "RelativeDocumentMoniker": "Server\\main.cpp",
-              "ToolTip": "C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\main.cpp",
-              "RelativeToolTip": "Server\\main.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAATAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\main.cpp*",
+              "RelativeToolTip": "Server\\main.cpp*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-11-29T22:15:39.417Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "GameServer.cpp",
               "DocumentMoniker": "C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\GameServer.cpp",
               "RelativeDocumentMoniker": "Server\\GameServer.cpp",
-              "ToolTip": "C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\GameServer.cpp*",
-              "RelativeToolTip": "Server\\GameServer.cpp*",
-              "ViewState": "AgIAAHsAAAAAAAAAAAAAAIEAAAABAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\GameServer.cpp",
+              "RelativeToolTip": "Server\\GameServer.cpp",
+              "ViewState": "AgIAAKUAAAAAAAAAAAAAAL4AAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-11-29T20:43:43.063Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 19,
               "Title": "UserModel.cpp",
               "DocumentMoniker": "C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\UserModel.cpp",
               "RelativeDocumentMoniker": "Server\\UserModel.cpp",
@@ -266,33 +316,33 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "PlayerServer.h",
               "DocumentMoniker": "C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\PlayerServer.h",
               "RelativeDocumentMoniker": "Server\\PlayerServer.h",
               "ToolTip": "C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\PlayerServer.h",
               "RelativeToolTip": "Server\\PlayerServer.h",
-              "ViewState": "AgIAAAQAAAAAAAAAAAAnwBAAAAALAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAYAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2025-11-29T20:43:57.208Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 12,
               "Title": "GameServer.h",
               "DocumentMoniker": "C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\GameServer.h",
               "RelativeDocumentMoniker": "Server\\GameServer.h",
               "ToolTip": "C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\GameServer.h",
               "RelativeToolTip": "Server\\GameServer.h",
-              "ViewState": "AgIAAAwAAAAAAAAAAAAAABEAAAAZAAAAAAAAAA==",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAAABMAAAAlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2025-11-29T20:43:23.659Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 18,
               "Title": "Lobby.h",
               "DocumentMoniker": "C:\\Users\\rmama\\Documents\\GitHub\\THE-GAME\\Server\\Lobby.h",
               "RelativeDocumentMoniker": "Server\\Lobby.h",

@@ -16,11 +16,13 @@ public:
 	const bool GActive() override;
 	const size_t GetGamblerUses() override;
 
-
 	const bool HPActive() override;
 	const bool GetHPFlag() const override;
 	void SetHPFlag(bool state) override;
 	void SetHPActive(bool state) override;
+
+	const bool IsTaxActive() override;
+	void SetTaxActive(bool state) override;
 private:
 	size_t m_usesLeft = 3;
 	size_t m_uses = 0;

@@ -5,6 +5,7 @@
 
 template class Player<Gambler>;
 template class Player<HarryPotter>;
+template class Player<TaxEvader>;
 
 std::unique_ptr<IPlayer> PlayerFactory::CreateFromUser(const UserModel& user, AbilityType type)
 {
@@ -15,6 +16,9 @@ std::unique_ptr<IPlayer> PlayerFactory::CreateFromUser(const UserModel& user, Ab
     case AbilityType::Gambler: {
         return std::make_unique<Player<Gambler>>(user);
     }
+    case AbilityType::TaxEvader : {
+        return std::make_unique<Player<TaxEvader>>(user);
+    }
     default: return nullptr;
     }
 }
@@ -23,7 +27,8 @@ std::vector<AbilityType> PlayerFactory::GetRandomUniqueAbilities(size_t playerCo
 {
     std::vector<AbilityType> abilities = {
         AbilityType::Gambler,
-        AbilityType::HarryPotter
+        AbilityType::HarryPotter,
+        AbilityType::TaxEvader
     };
 
     if (playerCount > abilities.size())
