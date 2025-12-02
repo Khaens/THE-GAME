@@ -98,5 +98,8 @@
     <ClInclude Include="PlayerFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="IAbility.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -11,6 +11,15 @@ public:
     virtual void UseAbility(TurnContext& ctx, size_t currentPIndex) = 0;
 	virtual bool CanUseAbility(TurnContext& ctx) const = 0;
     
+	virtual const bool HPActive() = 0;
+	virtual const bool GetHPFlag() const = 0;
+	virtual void SetHPFlag(bool state) = 0;
+	virtual void SetHPActive(bool state) = 0;
+
+	virtual const size_t GetGamblerUses() = 0;
+	virtual const bool GActive() = 0;
+	virtual void SetGActive(bool state) = 0;
+
     virtual void ShowHand() = 0;
     virtual const std::unordered_set<Card*>& GetHand() const = 0;
 	virtual void AddCardToHand(Card* card) = 0;

@@ -15,7 +15,7 @@ private:
 	UserModel m_lobbyCreator;
 	Database* m_db;
 	LobbyStatus m_status = LobbyStatus::Waiting;
-	static std::string GenerateRandomId(size_t length = 8);
+	static std::string GenerateRandomId(size_t length = 6);
 public:
 	Lobby(Database* db);
 	void JoinLobby(std::string playerName);

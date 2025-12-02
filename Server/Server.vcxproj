@@ -156,6 +156,7 @@
     <ClInclude Include="Gambler.h" />
     <ClInclude Include="GameServer.h" />
     <ClInclude Include="HarryPotter.h" />
+    <ClInclude Include="IAbility.h" />
     <ClInclude Include="IPlayer.h" />
     <ClInclude Include="Lobby.h" />
     <ClInclude Include="Pile.h" />

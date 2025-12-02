@@ -68,7 +68,7 @@ bool Game::IsGameOver(const IPlayer& currentPlayer)
 	int playableCards = NumberOfPlayableCardsInHand();
 
 
-	if(m_ctx.HPFlag && m_currentPlayerIndex == m_ctx.HPplayerIndex) {
+	if(m_currentPlayerIndex == m_ctx.HPplayerIndex && currentPlayer.GetHPFlag()) {
 		std::cout << "No one played a +/-10 card until " << currentPlayer.GetUsername() << "'s turn. All players lose!\n";
 		return true;
 	}
@@ -109,11 +109,13 @@ void Game::OneRound(IPlayer& currentPlayer)
 			else if (pileChoice == "D2") chosenPile = &m_descPile2;
 			if(!chosenPile) std::cout << "That's not a valid Pile! Try again!\n";
 		}
-		if(CanPlaceCard(chosenCard, *chosenPile)) {
+		if (CanPlaceCard(chosenCard, *chosenPile)) {
 			cardPlaced = true;
-			if(std::stoi(chosenCard->GetCardValue()) == std::stoi(chosenPile->GetTopCard()->GetCardValue()) + 10 ||
-			   std::stoi(chosenCard->GetCardValue()) == std::stoi(chosenPile->GetTopCard()->GetCardValue()) - 10) {
-				m_ctx.HPFlag = false;
+			if (m_ctx.HPplayerIndex != -1 && m_players[m_ctx.HPplayerIndex]->GetHPFlag()){
+				if (std::stoi(chosenCard->GetCardValue()) == std::stoi(chosenPile->GetTopCard()->GetCardValue()) + 10 ||
+					std::stoi(chosenCard->GetCardValue()) == std::stoi(chosenPile->GetTopCard()->GetCardValue()) - 10) {
+					m_players[m_ctx.HPplayerIndex]->SetHPFlag(false);
+				}
 			}
 			chosenPile->PlaceCard(chosenCard);
 			currentPlayer.RemoveCardFromHand(chosenCard);
@@ -149,16 +151,15 @@ void Game::StartGame()
 		}
 		ShowCtx();
 		int playedCards = 0;
-		if (m_ctx.GamblerOverrideThisTurn) {
+		if (m_ctx.GamblerPlayerIndex != -1 && currentPlayer.GActive()) {
 			OneRound(currentPlayer);
 			playedCards = 1;
-			m_ctx.GamblerOverrideThisTurn = false;
+			currentPlayer.SetGActive(false);
 		}
 		else if (m_ctx.endgame && m_currentPlayerIndex == m_ctx.GamblerPlayerIndex) {
 			if (currentPlayer.GetHand().size() > 1 &&
-				m_ctx.GamblerUses > 0) {
+				currentPlayer.GetGamblerUses() > 0) {
 				OneRound(currentPlayer);
-				m_ctx.GamblerUses--;
 			}
 			OneRound(currentPlayer);
 		}
@@ -235,7 +236,7 @@ int Game::NumberOfPlayableCardsInHand()
 	for (Card* card : currentPlayer.GetHand()) {
 		if ((CanPlaceCard(card, m_ascPile1) || CanPlaceCard(card, m_ascPile2) ||
 			CanPlaceCard(card, m_descPile1) || CanPlaceCard(card, m_descPile2)) ||
-			m_ctx.HPOverrideThisTurn) {
+			(m_ctx.HPplayerIndex != -1 && m_players[m_ctx.HPplayerIndex]->HPActive())) {
 			count++;
 		}
 	}
@@ -246,7 +247,8 @@ bool Game::CanPlaceCard(const Card* card, Pile& pile)
 {
 	int top = std::stoi(pile.GetTopCard()->GetCardValue());
 	int value = std::stoi(card->GetCardValue());
-	if (m_ctx.HPOverrideThisTurn) return true;
+	if (m_ctx.HPplayerIndex != -1
+		&& m_players[m_ctx.HPplayerIndex]->HPActive()) return true;
 
 	if (pile.GetPileType()  == PileType::ASCENDING)
 		return (value > top) || (value == top - 10);
@@ -282,9 +284,5 @@ void Game::ShowCtx()
 	std::cout << "baseReq " << m_ctx.baseRequired << "\n";
 	std::cout << "currReq " << m_ctx.currentRequired << "\n";
 	std::cout << "HPPIndex " << m_ctx.HPplayerIndex << "\n";
-	std::cout << "HPOverride " << m_ctx.HPOverrideThisTurn << "\n";
 	std::cout << "GambPInd " << m_ctx.GamblerPlayerIndex << "\n";
-	std::cout << "GambOv " << m_ctx.GamblerOverrideThisTurn << "\n";
-	std::cout << "GambUses " << m_ctx.GamblerUses << "\n";
-	std::cout << "HPflag " << m_ctx.HPFlag << "\n";
 }
