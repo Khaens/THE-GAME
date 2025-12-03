@@ -1,6 +1,7 @@
 ﻿#include "LobbyDialog.h"
 #include "CreateLobbyDialog.h" 
 #include "JoinLobbyDialog.h"
+#include "LobbyRoomDialog.h"
 #include <QResizeEvent>
 #include <QMessageBox>
 #include <QDebug>
@@ -180,7 +181,20 @@ void LobbyDialog::onCreateLobbyClicked()
 
         if (lobbyResponse.success) {
             hideOverlay();
-            // Maybe transition to a lobby waiting room here?
+
+            // NEW: Show LobbyRoomDialog
+            QString lobbyId = QString::fromStdString(lobbyResponse.lobby_id);
+            LobbyRoomDialog* lobbyRoom = new LobbyRoomDialog(
+                m_userId,
+                lobbyId,
+                lobbyName,
+                generatedPassword,
+                true,  // isHost = true for creator
+                parentWidget()
+            );
+
+            lobbyRoom->exec();
+            delete lobbyRoom;
         }
         else {
             QString errorMessage = QString::fromStdString(
@@ -210,6 +224,21 @@ void LobbyDialog::onJoinLobbyClicked()
             QMessageBox::information(this, "Success",
                 "Successfully joined lobby with code: " + lobbyCode);
             hideOverlay();
+
+            // NEW: Show LobbyRoomDialog
+            // Note: We need to get lobby name from server response
+            // For now, we'll use the code as name
+            LobbyRoomDialog* lobbyRoom = new LobbyRoomDialog(
+                m_userId,
+                QString::fromStdString(code_to_join), // Use code as ID temporarily
+                "Joined Lobby", // TODO: Get actual lobby name from server
+                lobbyCode,
+                false,  // isHost = false for joiner
+                parentWidget()
+            );
+
+            lobbyRoom->exec();
+            delete lobbyRoom;
         }
         else {
             QMessageBox::warning(this, "Error",

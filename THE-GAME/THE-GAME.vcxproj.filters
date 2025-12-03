@@ -45,6 +45,9 @@
     <ClCompile Include="JoinLobbyDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LobbyRoomDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="MainWindow.h">
@@ -66,6 +69,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="JoinLobbyDialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="LobbyRoomDialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

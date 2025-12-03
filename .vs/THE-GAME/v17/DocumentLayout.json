@@ -3,6 +3,14 @@
   "WorkspaceRootPath": "D:\\Github Desktop\\THE-GAME\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{6DB65FC9-C450-41FD-90B7-33E88CA16CBC}|THE-GAME\\THE-GAME.vcxproj|D:\\Github Desktop\\THE-GAME\\THE-GAME\\LobbyRoomDialog.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{6DB65FC9-C450-41FD-90B7-33E88CA16CBC}|THE-GAME\\THE-GAME.vcxproj|solutionrelative:THE-GAME\\LobbyRoomDialog.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6DB65FC9-C450-41FD-90B7-33E88CA16CBC}|THE-GAME\\THE-GAME.vcxproj|D:\\Github Desktop\\THE-GAME\\THE-GAME\\LobbyRoomDialog.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{6DB65FC9-C450-41FD-90B7-33E88CA16CBC}|THE-GAME\\THE-GAME.vcxproj|solutionrelative:THE-GAME\\LobbyRoomDialog.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{6DB65FC9-C450-41FD-90B7-33E88CA16CBC}|THE-GAME\\THE-GAME.vcxproj|D:\\Github Desktop\\THE-GAME\\THE-GAME\\CreateLobbyDialog.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{6DB65FC9-C450-41FD-90B7-33E88CA16CBC}|THE-GAME\\THE-GAME.vcxproj|solutionrelative:THE-GAME\\CreateLobbyDialog.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
@@ -99,32 +107,45 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "LobbyRoomDialog.cpp",
+              "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\THE-GAME\\LobbyRoomDialog.cpp",
+              "RelativeDocumentMoniker": "THE-GAME\\LobbyRoomDialog.cpp",
+              "ToolTip": "D:\\Github Desktop\\THE-GAME\\THE-GAME\\LobbyRoomDialog.cpp",
+              "RelativeToolTip": "THE-GAME\\LobbyRoomDialog.cpp",
+              "ViewState": "AgIAAMwBAAAAAAAAAAAuwFMCAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-12-03T19:07:07.285Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "LobbyRoomDialog.h",
+              "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\THE-GAME\\LobbyRoomDialog.h",
+              "RelativeDocumentMoniker": "THE-GAME\\LobbyRoomDialog.h",
+              "ToolTip": "D:\\Github Desktop\\THE-GAME\\THE-GAME\\LobbyRoomDialog.h",
+              "RelativeToolTip": "THE-GAME\\LobbyRoomDialog.h",
+              "ViewState": "AgIAABcAAAAAAAAAAAAuwEUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-12-03T19:06:51.67Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
               "Title": "CreateLobbyDialog.cpp",
               "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\THE-GAME\\CreateLobbyDialog.cpp",
               "RelativeDocumentMoniker": "THE-GAME\\CreateLobbyDialog.cpp",
               "ToolTip": "D:\\Github Desktop\\THE-GAME\\THE-GAME\\CreateLobbyDialog.cpp",
               "RelativeToolTip": "THE-GAME\\CreateLobbyDialog.cpp",
-              "ViewState": "AgIAAKUAAAAAAAAAAAAAALwAAAAbAAAAAAAAAA==",
+              "ViewState": "AgIAADUBAAAAAAAAAAAAALwAAAAbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-12-03T16:13:02.869Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "CreateLobbyDialog.h",
-              "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\THE-GAME\\CreateLobbyDialog.h",
-              "RelativeDocumentMoniker": "THE-GAME\\CreateLobbyDialog.h",
-              "ToolTip": "D:\\Github Desktop\\THE-GAME\\THE-GAME\\CreateLobbyDialog.h",
-              "RelativeToolTip": "THE-GAME\\CreateLobbyDialog.h",
-              "ViewState": "AgIAABgAAAAAAAAAAAAAADEAAAACAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-12-03T16:12:21.864Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 13,
               "Title": "HarryPotter.cpp",
               "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\Server\\HarryPotter.cpp",
               "RelativeDocumentMoniker": "Server\\HarryPotter.cpp",
@@ -136,7 +157,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 19,
               "Title": "TurnContext.h",
               "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\Server\\TurnContext.h",
               "RelativeDocumentMoniker": "Server\\TurnContext.h",
@@ -148,7 +169,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 16,
               "Title": "Gambler.h",
               "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\Server\\Gambler.h",
               "RelativeDocumentMoniker": "Server\\Gambler.h",
@@ -160,7 +181,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 18,
               "Title": "IAbility.h",
               "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\Server\\IAbility.h",
               "RelativeDocumentMoniker": "Server\\IAbility.h",
@@ -172,7 +193,32 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 3,
+              "Title": "LobbyDialog.cpp",
+              "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\THE-GAME\\LobbyDialog.cpp",
+              "RelativeDocumentMoniker": "THE-GAME\\LobbyDialog.cpp",
+              "ToolTip": "D:\\Github Desktop\\THE-GAME\\THE-GAME\\LobbyDialog.cpp",
+              "RelativeToolTip": "THE-GAME\\LobbyDialog.cpp",
+              "ViewState": "AgIAABIAAAAAAAAAAAAAAA4AAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-12-02T12:15:34.45Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "CreateLobbyDialog.h",
+              "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\THE-GAME\\CreateLobbyDialog.h",
+              "RelativeDocumentMoniker": "THE-GAME\\CreateLobbyDialog.h",
+              "ToolTip": "D:\\Github Desktop\\THE-GAME\\THE-GAME\\CreateLobbyDialog.h",
+              "RelativeToolTip": "THE-GAME\\CreateLobbyDialog.h",
+              "ViewState": "AgIAABgAAAAAAAAAAAAAADEAAAACAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-12-03T16:12:21.864Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
               "Title": "HarryPotter.h",
               "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\Server\\HarryPotter.h",
               "RelativeDocumentMoniker": "Server\\HarryPotter.h",
@@ -184,7 +230,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 5,
               "Title": "GameServer.cpp",
               "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\Server\\GameServer.cpp",
               "RelativeDocumentMoniker": "Server\\GameServer.cpp",
@@ -192,25 +238,11 @@
               "RelativeToolTip": "Server\\GameServer.cpp",
               "ViewState": "AgIAAM8AAAAAAAAAAAAAANMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-11-29T20:43:43.063Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-29T20:43:43.063Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "LobbyDialog.cpp",
-              "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\THE-GAME\\LobbyDialog.cpp",
-              "RelativeDocumentMoniker": "THE-GAME\\LobbyDialog.cpp",
-              "ToolTip": "D:\\Github Desktop\\THE-GAME\\THE-GAME\\LobbyDialog.cpp",
-              "RelativeToolTip": "THE-GAME\\LobbyDialog.cpp",
-              "ViewState": "AgIAACUAAAAAAAAAAAAuwKYAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-12-02T12:15:34.45Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 15,
               "Title": "Gambler.cpp",
               "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\Server\\Gambler.cpp",
               "RelativeDocumentMoniker": "Server\\Gambler.cpp",
@@ -222,7 +254,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 12,
               "Title": "TaxEvader.h",
               "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\Server\\TaxEvader.h",
               "RelativeDocumentMoniker": "Server\\TaxEvader.h",
@@ -234,7 +266,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 11,
               "Title": "TaxEvader.cpp",
               "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\Server\\TaxEvader.cpp",
               "RelativeDocumentMoniker": "Server\\TaxEvader.cpp",
@@ -246,7 +278,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 10,
               "Title": "PlayerFactory.h",
               "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\Server\\PlayerFactory.h",
               "RelativeDocumentMoniker": "Server\\PlayerFactory.h",
@@ -258,7 +290,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 8,
               "Title": "PlayerFactory.cpp",
               "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\Server\\PlayerFactory.cpp",
               "RelativeDocumentMoniker": "Server\\PlayerFactory.cpp",
@@ -270,7 +302,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 7,
               "Title": "main.cpp",
               "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\THE-GAME\\main.cpp",
               "RelativeDocumentMoniker": "THE-GAME\\main.cpp",
@@ -282,7 +314,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 6,
               "Title": "main.cpp",
               "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\Server\\main.cpp",
               "RelativeDocumentMoniker": "Server\\main.cpp",
@@ -294,7 +326,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 21,
               "Title": "UserModel.cpp",
               "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\Server\\UserModel.cpp",
               "RelativeDocumentMoniker": "Server\\UserModel.cpp",
@@ -306,7 +338,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 9,
               "Title": "PlayerServer.h",
               "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\Server\\PlayerServer.h",
               "RelativeDocumentMoniker": "Server\\PlayerServer.h",
@@ -318,7 +350,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 17,
               "Title": "GameServer.h",
               "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\Server\\GameServer.h",
               "RelativeDocumentMoniker": "Server\\GameServer.h",
@@ -330,7 +362,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 20,
               "Title": "Lobby.h",
               "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\Server\\Lobby.h",
               "RelativeDocumentMoniker": "Server\\Lobby.h",

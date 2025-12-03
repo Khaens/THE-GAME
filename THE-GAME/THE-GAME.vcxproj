@@ -24,6 +24,7 @@
     <ClCompile Include="HelpDialog.cpp" />
     <ClCompile Include="JoinLobbyDialog.cpp" />
     <ClCompile Include="LobbyDialog.cpp" />
+    <ClCompile Include="LobbyRoomDialog.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="NetworkManager.cpp" />
@@ -47,6 +48,7 @@
     <QtMoc Include="LobbyDialog.h" />
     <QtMoc Include="CreateLobbyDialog.h" />
     <QtMoc Include="JoinLobbyDialog.h" />
+    <QtMoc Include="LobbyRoomDialog.h" />
     <ClInclude Include="NetworkManager.h" />
   </ItemGroup>
   <ItemGroup>
