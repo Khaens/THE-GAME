@@ -166,7 +166,7 @@ void LobbyDialog::onCreateLobbyClicked()
 
     CreateLobbyDialog dialog(m_userId, this);
 
-    if (dialog.exec() == QDialog::Accepted) {
+    if (dialog.exec() == QDialog::Accepted && dialog.wasLobbyCreated()) {
         QString lobbyName = dialog.getLobbyName();
         int maxPlayers = dialog.getMaxPlayers();
         QString generatedPassword = dialog.getGeneratedPassword();
@@ -180,13 +180,7 @@ void LobbyDialog::onCreateLobbyClicked()
 
         if (lobbyResponse.success) {
             hideOverlay();
-
-            QString successMessage = "Lobby '" + lobbyName + "' created successfully!\n";
-            successMessage += "Max players: " + QString::number(maxPlayers);
-            successMessage += "\n\nLobby Code: " + generatedPassword + "\n"
-                "Share this code with friends to join.";
-
-            QMessageBox::information(this, "Success", successMessage);
+            // Maybe transition to a lobby waiting room here?
         }
         else {
             QString errorMessage = QString::fromStdString(
