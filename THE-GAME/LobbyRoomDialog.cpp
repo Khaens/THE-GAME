@@ -1,4 +1,5 @@
 ﻿#include "LobbyRoomDialog.h"
+#include "GameWindow.h"
 #include <QClipboard>
 #include <QApplication>
 #include <QListWidgetItem>
@@ -420,10 +421,9 @@ void LobbyRoomDialog::onLeaveClicked()
 void LobbyRoomDialog::onStartGameClicked()
 {
     if (!m_isHost && m_countdownSeconds > 0) {
-        return; // Only host can start manually before countdown ends
+        return;
     }
 
-    // Check if we have at least 2 players
     if (m_players.size() < 2) {
         QMessageBox::warning(this, "Not Enough Players",
             "Need at least 2 players to start the game.");
@@ -432,7 +432,6 @@ void LobbyRoomDialog::onStartGameClicked()
 
     QMessageBox::StandardButton reply = QMessageBox::Yes;
 
-    // Only show confirmation if host is starting manually
     if (m_isHost && m_countdownSeconds > 0) {
         reply = QMessageBox::question(this, "Start Game",
             "Are you sure you want to start the game now?",
@@ -443,10 +442,8 @@ void LobbyRoomDialog::onStartGameClicked()
         stopRefreshTimer();
         stopCountdownTimer();
 
-        // TODO: Send start game request to server
-        // bool success = m_networkManager->startGame(m_lobbyId.toStdString());
-
-        accept(); // Close dialog and start game
+        emit gameStarted(); // EMIT SIGNAL INSTEAD
+        accept(); // Close lobby dialog
     }
 }
 

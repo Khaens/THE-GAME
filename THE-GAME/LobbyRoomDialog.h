@@ -29,6 +29,9 @@ public:
     void updatePlayerList(const QVector<PlayerInfo>& players);
     void setLobbyInfo(const QString& name, const QString& code);
 
+signals:
+    void gameStarted();
+
 private slots:
     void onLeaveClicked();
     void onStartGameClicked();

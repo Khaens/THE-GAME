@@ -182,16 +182,18 @@ void LobbyDialog::onCreateLobbyClicked()
         if (lobbyResponse.success) {
             hideOverlay();
 
-            // NEW: Show LobbyRoomDialog
-            QString lobbyId = QString::fromStdString(lobbyResponse.lobby_id);
+            // Create and show LobbyRoomDialog
             LobbyRoomDialog* lobbyRoom = new LobbyRoomDialog(
                 m_userId,
-                lobbyId,
+                QString::fromStdString(lobbyResponse.lobby_id),
                 lobbyName,
                 generatedPassword,
                 true,  // isHost = true for creator
                 parentWidget()
             );
+
+            // CONNECT THE SIGNAL
+            connect(lobbyRoom, &LobbyRoomDialog::gameStarted, this, &LobbyDialog::onGameStarted);
 
             lobbyRoom->exec();
             delete lobbyRoom;
@@ -225,9 +227,7 @@ void LobbyDialog::onJoinLobbyClicked()
                 "Successfully joined lobby with code: " + lobbyCode);
             hideOverlay();
 
-            // NEW: Show LobbyRoomDialog
-            // Note: We need to get lobby name from server response
-            // For now, we'll use the code as name
+            // Create and show LobbyRoomDialog
             LobbyRoomDialog* lobbyRoom = new LobbyRoomDialog(
                 m_userId,
                 QString::fromStdString(code_to_join), // Use code as ID temporarily
@@ -237,6 +237,9 @@ void LobbyDialog::onJoinLobbyClicked()
                 parentWidget()
             );
 
+            // CONNECT THE SIGNAL
+            connect(lobbyRoom, &LobbyRoomDialog::gameStarted, this, &LobbyDialog::onGameStarted);
+
             lobbyRoom->exec();
             delete lobbyRoom;
         }
@@ -245,6 +248,13 @@ void LobbyDialog::onJoinLobbyClicked()
                 "Failed to join lobby. Invalid code or lobby is full.");
         }
     }
+}
+
+// NEW METHOD: Handle game started signal
+void LobbyDialog::onGameStarted()
+{
+    // Forward the signal to MainWindow
+    emit gameStartedFromLobby(); // You'll need to add this signal to LobbyDialog
 }
 
 void LobbyDialog::resizeEvent(QResizeEvent* event)

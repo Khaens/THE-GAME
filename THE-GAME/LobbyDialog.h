@@ -34,15 +34,15 @@ public:
     void hideOverlay();
     void setUserId(int userId) { m_userId = userId; }
 
+signals:
+    void gameStartedFromLobby();
+
 protected:
     void resizeEvent(QResizeEvent* event) override;
 
 private:
     void setupUI();
     void setupStyle();
-
-    void onCreateLobbyClicked();
-    void onJoinLobbyClicked(); 
 
     QWidget* m_contentContainer;
    
@@ -52,4 +52,9 @@ private:
     int m_userId;
     NetworkManager* m_networkManager;
     QMap<QString, QString> m_lobbyPasswords;
+   
+private slots:
+    void onCreateLobbyClicked();
+    void onJoinLobbyClicked();
+    void onGameStarted();
 };

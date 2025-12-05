@@ -7,6 +7,7 @@
 #include "SettingsDialog.h"
 #include "AccountDialog.h"
 #include "LobbyDialog.h"
+#include "GameWindow.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindowClass; };
@@ -30,6 +31,7 @@ private slots:
     void onSettingsClicked();
     void onAccountClicked();
     void toggleFullScreen();
+    void showGameOverlay();  // Renamed from showGameWindow
 
 private:
     Ui::MainWindowClass* ui;
@@ -40,7 +42,7 @@ private:
     SettingsDialog* m_settingsDialog;
     AccountDialog* m_accountDialog;
     LobbyDialog* m_lobbyDialog;
+    GameWindow* m_gameWindow;  // Now an overlay
 
-    // Cache pentru pixmap
     QPixmap m_titlePixmap;
 };

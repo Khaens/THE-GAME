@@ -48,6 +48,9 @@
     <ClCompile Include="LobbyRoomDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GameWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="MainWindow.h">
@@ -74,9 +77,13 @@
     <QtMoc Include="LobbyRoomDialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="GameWindow.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="MainWindow.ui" />
+    <QtUic Include="GameWindow.ui" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NetworkManager.h">
