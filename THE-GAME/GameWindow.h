@@ -24,5 +24,4 @@ private slots:
 
 private:
     Ui::Form* ui;
-    void setupUI();
 };  

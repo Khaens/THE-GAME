@@ -19,27 +19,6 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>390</x>
-     <y>160</y>
-     <width>381</width>
-     <height>241</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>42</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>TEST TEXT</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignmentFlag::AlignCenter</set>
-   </property>
-  </widget>
   <widget class="QWidget" name="formBackground" native="true">
    <property name="geometry">
     <rect>
@@ -55,6 +34,20 @@
      <height>600</height>
     </size>
    </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QLabel" name="label">
+      <property name="font">
+       <font>
+        <pointsize>40</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>TEST TEXT</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
   </widget>
  </widget>
  <resources/>
