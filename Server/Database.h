@@ -13,12 +13,12 @@ inline auto initStorage(const std::string& path) {
             make_column("username", &UserModel::GetUsername, &UserModel::SetUsername, unique()),
             make_column("password", &UserModel::GetPassword, &UserModel::SetPassword)),
         make_table("achievements",
-            make_column("id", &AchievementsModel::id, primary_key().autoincrement()),
-            make_column("user_id", &AchievementsModel::userId),
-            make_column("wins", &AchievementsModel::wins),
-            make_column("losses", &AchievementsModel::losses),
-            make_column("win_rate", &AchievementsModel::winRate),
-            foreign_key(&AchievementsModel::userId).references(&UserModel::GetId))
+            make_column("id", &AchievementsModel::GetId, &AchievementsModel::SetId, primary_key().autoincrement()),
+            make_column("user_id", &AchievementsModel::GetUserId, &AchievementsModel::SetUserId),
+            make_column("all_on_red", &AchievementsModel::GetAllOnRed, &AchievementsModel::SetAllOnRed),
+            make_column("harry_potter", &AchievementsModel::GetHarryPotter, &AchievementsModel::SetHarryPotter),
+            make_column("serious_player", &AchievementsModel::GetSeriousPlayer, &AchievementsModel::SetSeriousPlayer),
+            foreign_key(&AchievementsModel::GetUserId).references(&UserModel::GetId))
     );
 }
 

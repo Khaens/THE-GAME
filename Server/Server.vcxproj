@@ -135,6 +135,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AchievementsModel.cpp" />
     <ClCompile Include="CardServer.cpp" />
     <ClCompile Include="Database.cpp" />
     <ClCompile Include="DeckServer.cpp" />
