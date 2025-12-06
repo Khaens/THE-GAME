@@ -5,6 +5,21 @@
 Database::Database(const std::string& path) : storage(initStorage(path)), dbPath(path)
 {
     storage.sync_schema();
+
+    try {
+        auto users = storage.get_all<UserModel>();
+        for (const auto& user : users) {
+            if (!AchievementsExistForUser(user.GetId())) {
+                AchievementsModel achievements(user.GetId());
+                InsertAchievements(achievements);
+                std::cout << "Created achievements for user: "
+                    << user.GetUsername() << " (ID: " << user.GetId() << ")" << std::endl;
+            }
+        }
+    }
+    catch (std::exception& e) {
+        std::cerr << "Error creating achievements for existing users: " << e.what() << std::endl;
+    }
 }
 
 static std::string HashPassword(const std::string& password) {
@@ -63,7 +78,12 @@ int Database::InsertUser(const UserModel& user) {
     try {
         UserModel hashedUser = user;
         hashedUser.SetPassword(HashPassword(user.GetPassword()));
-        return storage.insert(hashedUser);
+        int userId = storage.insert(hashedUser);
+
+        AchievementsModel achievements(userId);
+        InsertAchievements(achievements);
+
+        return userId;
     }
     catch (std::exception& e) {
         std::cerr << "Error inserting user: " << e.what() << std::endl;
@@ -83,9 +103,8 @@ bool Database::VerifyLogin(const std::string& username, const std::string& plain
         if (rows.empty()) {
             return false;
         }
-		//For debugging purposes
-		std::string test = HashPassword(plainPassword);
-		std::cout << "Stored hash: " << rows[0] << ", Computed hash: " << test << std::endl;
+        std::string test = HashPassword(plainPassword);
+        std::cout << "Stored hash: " << rows[0] << ", Computed hash: " << test << std::endl;
         return HashPassword(plainPassword) == rows[0];
     }
     catch (std::exception& e) {
@@ -147,6 +166,61 @@ bool Database::UserExists(const std::string& username) {
     }
     catch (std::exception& e) {
         std::cerr << "Error checking user existence: " << e.what() << std::endl;
+        return false;
+    }
+}
+
+int Database::InsertAchievements(const AchievementsModel& achievements) {
+    try {
+        return storage.insert(achievements);
+    }
+    catch (std::exception& e) {
+        std::cerr << "Error inserting achievements: " << e.what() << std::endl;
+        return -1;
+    }
+}
+
+AchievementsModel Database::GetAchievementsByUserId(int userId) {
+    try {
+        auto achievements = storage.get_all<AchievementsModel>(
+            where(c(&AchievementsModel::GetUserId) == userId)
+        );
+
+        if (achievements.empty()) {
+            AchievementsModel newAchievements(userId);
+            int id = InsertAchievements(newAchievements);
+            newAchievements.SetId(id);
+
+            std::cout << "Created achievements for user id: " << userId << std::endl;
+
+            return newAchievements;
+        }
+
+        return achievements[0];
+    }
+    catch (std::exception& e) {
+        std::cerr << "Error getting achievements: " << e.what() << std::endl;
+        throw;
+    }
+}
+
+void Database::UpdateAchievements(const AchievementsModel& achievements) {
+    storage.update(achievements);
+}
+
+void Database::DeleteAchievements(int id) {
+    storage.remove<AchievementsModel>(id);
+}
+
+bool Database::AchievementsExistForUser(int userId) {
+    try {
+        auto count = storage.count<AchievementsModel>(
+            where(c(&AchievementsModel::GetUserId) == userId)
+        );
+        return count > 0;
+    }
+    catch (std::exception& e) {
+        std::cerr << "Error checking achievements existence: " << e.what() << std::endl;
         return false;
     }
 }

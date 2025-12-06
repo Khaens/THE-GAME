@@ -42,5 +42,11 @@ public:
     void UpdateUser(const UserModel& user);
     void DeleteUser(int id);
     bool UserExists(const std::string& username);
+
+    int InsertAchievements(const AchievementsModel& achievements);
+    AchievementsModel GetAchievementsByUserId(int userId);
+    void UpdateAchievements(const AchievementsModel& achievements);
+    void DeleteAchievements(int id);
+    bool AchievementsExistForUser(int userId);
 };
 
