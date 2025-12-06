@@ -1,4 +1,5 @@
 ﻿#include "AccountDialog.h"
+#include "NetworkManager.h"
 #include <QResizeEvent>
 #include <QMessageBox>
 #include <QPainter>
@@ -9,6 +10,8 @@ AccountDialog::AccountDialog(QWidget* parent)
     , m_contentContainer(nullptr)
     , m_stackedWidget(nullptr)
     , m_isLoggedIn(false)
+    , m_currentUserId(-1)
+    , m_networkManager(nullptr)
 {
     setWindowFlags(Qt::Widget);
     setAttribute(Qt::WA_TranslucentBackground);
@@ -66,9 +69,10 @@ void AccountDialog::setupUI()
     )");
     loginLayout->addWidget(m_loginUsernameInput);
 
-    m_loginEmailInput = new QLineEdit();
-    m_loginEmailInput->setPlaceholderText("Email");
-    m_loginEmailInput->setStyleSheet(R"(
+    m_loginPasswordInput = new QLineEdit();
+    m_loginPasswordInput->setPlaceholderText("Password");
+    m_loginPasswordInput->setEchoMode(QLineEdit::Password);
+    m_loginPasswordInput->setStyleSheet(R"(
         QLineEdit {
             background-color: #deaf11;
             border: 2px solid #654b1f;
@@ -81,7 +85,7 @@ void AccountDialog::setupUI()
             border: 2px solid #f3d05a;
         }
     )");
-    loginLayout->addWidget(m_loginEmailInput);
+    loginLayout->addWidget(m_loginPasswordInput);
 
     m_loginButton = new QPushButton("LOGIN");
     m_loginButton->setFixedHeight(45);
@@ -161,9 +165,10 @@ void AccountDialog::setupUI()
     )");
     registerLayout->addWidget(m_registerUsernameInput);
 
-    m_registerEmailInput = new QLineEdit();
-    m_registerEmailInput->setPlaceholderText("Email");
-    m_registerEmailInput->setStyleSheet(R"(
+    m_registerPasswordInput = new QLineEdit();
+    m_registerPasswordInput->setPlaceholderText("Password");
+    m_registerPasswordInput->setEchoMode(QLineEdit::Password);
+    m_registerPasswordInput->setStyleSheet(R"(
         QLineEdit {
             background-color: #deaf11;
             border: 2px solid #654b1f;
@@ -176,7 +181,7 @@ void AccountDialog::setupUI()
             border: 2px solid #f3d05a;
         }
     )");
-    registerLayout->addWidget(m_registerEmailInput);
+    registerLayout->addWidget(m_registerPasswordInput);
 
     //m_registerPasswordInput = new QLineEdit();
     //m_registerPasswordInput->setPlaceholderText("Password");
@@ -271,11 +276,12 @@ void AccountDialog::setupUI()
     m_profileUsername->setStyleSheet("font-size: 24px; font-weight: bold; color: #f3d05a;");
     profileLayout->addWidget(m_profileUsername);
 
-    // Email
-    m_profileEmail = new QLabel("email@example.com");
-    m_profileEmail->setAlignment(Qt::AlignCenter);
-    m_profileEmail->setStyleSheet("font-size: 14px; color: #ffffff;");
-    profileLayout->addWidget(m_profileEmail);
+    // User ID label
+    QLabel* userIdLabel = new QLabel("User ID: -");
+    userIdLabel->setObjectName("userIdLabel");
+    userIdLabel->setAlignment(Qt::AlignCenter);
+    userIdLabel->setStyleSheet("font-size: 14px; color: #ffffff;");
+    profileLayout->addWidget(userIdLabel);
 
     profileLayout->addSpacing(30);
 
@@ -400,65 +406,99 @@ void AccountDialog::showRegisterPage()
 void AccountDialog::showProfilePage()
 {
     m_profileUsername->setText(m_currentUsername);
-    m_profileEmail->setText(m_currentEmail);
+    QLabel* userIdLabel = m_profilePage->findChild<QLabel*>("userIdLabel");
+    if (userIdLabel) {
+        userIdLabel->setText(QString("User ID: %1").arg(m_currentUserId));
+    }
     m_stackedWidget->setCurrentWidget(m_profilePage);
+}
+
+void AccountDialog::setNetworkManager(std::shared_ptr<NetworkManager> networkManager)
+{
+    m_networkManager = networkManager;
 }
 
 void AccountDialog::onLoginClicked()
 {
     QString username = m_loginUsernameInput->text().trimmed();
-    QString email = m_loginEmailInput->text().trimmed();
+    QString password = m_loginPasswordInput->text();
 
-    if (username.isEmpty() || email.isEmpty()) {
+    if (username.isEmpty() || password.isEmpty()) {
         QMessageBox::warning(this, "Login Failed", "Please fill in all fields.");
         return;
     }
 
-	// Verificare in database (simulata)
-    m_isLoggedIn = true;
-    m_currentUsername = username;
-    m_currentEmail = email;
+    if (!m_networkManager) {
+        QMessageBox::critical(this, "Error", "Network manager not initialized.");
+        return;
+    }
 
-    QMessageBox::information(this, "Login Successful", "Welcome back, " + username + "!");
-    showProfilePage();
+    LoginResponse response = m_networkManager->loginUser(
+        username.toStdString(),
+        password.toStdString()
+    );
+
+    if (response.success) {
+        m_isLoggedIn = true;
+        m_currentUsername = QString::fromStdString(response.username);
+        m_currentUserId = response.user_id;
+
+        QMessageBox::information(this, "Login Successful", "Welcome back, " + m_currentUsername + "!");
+        m_loginPasswordInput->clear();
+        showProfilePage();
+    } else {
+        QMessageBox::warning(this, "Login Failed", QString::fromStdString(response.error));
+    }
 }
 
 void AccountDialog::onRegisterClicked()
 {
     QString username = m_registerUsernameInput->text().trimmed();
-    QString email = m_registerEmailInput->text().trimmed();
-    //QString password = m_registerPasswordInput->text();
+    QString password = m_registerPasswordInput->text();
 
-    if (username.isEmpty() || email.isEmpty() /* || password.isEmpty() */ ) {
+    if (username.isEmpty() || password.isEmpty()) {
         QMessageBox::warning(this, "Registration Failed", "Please fill in all fields.");
         return;
     }
 
-    //if (password.length() < 6) {
-    //    QMessageBox::warning(this, "Registration Failed", "Password must be at least 6 characters.");
-    //    return;
-    //}
+    if (password.length() < 4) {
+        QMessageBox::warning(this, "Registration Failed", "Password must be at least 4 characters.");
+        return;
+    }
 
-    // TODO: Salvare în database
-    m_isLoggedIn = true;
-    m_currentUsername = username;
-    m_currentEmail = email;
+    if (!m_networkManager) {
+        QMessageBox::critical(this, "Error", "Network manager not initialized.");
+        return;
+    }
 
-    QMessageBox::information(this, "Registration Successful", "Account created for " + username + "!");
-    showProfilePage();
+    RegisterResponse response = m_networkManager->registerUser(
+        username.toStdString(),
+        password.toStdString()
+    );
+
+    if (response.success) {
+        m_isLoggedIn = true;
+        m_currentUsername = username;
+        m_currentUserId = response.user_id;
+
+        QMessageBox::information(this, "Registration Successful", "Account created for " + username + "!");
+        m_registerPasswordInput->clear();
+        showProfilePage();
+    } else {
+        QMessageBox::warning(this, "Registration Failed", QString::fromStdString(response.error));
+    }
 }
 
 void AccountDialog::onLogoutClicked()
 {
     m_isLoggedIn = false;
     m_currentUsername.clear();
-    m_currentEmail.clear();
+    m_currentUserId = -1;
 
     m_loginUsernameInput->clear();
-    m_loginEmailInput->clear();
+    m_loginPasswordInput->clear();
     m_registerUsernameInput->clear();
-    m_registerEmailInput->clear();
-    //m_registerPasswordInput->clear();
+    m_registerPasswordInput->clear();
 
     QMessageBox::information(this, "Logged Out", "You have been logged out successfully.");
     showLoginPage();

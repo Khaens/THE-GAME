@@ -7,6 +7,9 @@
 #include <QPushButton>
 #include <QLineEdit>
 #include <QStackedWidget>
+#include <memory>
+
+class NetworkManager;
 
 class AccountDialog : public QWidget
 {
@@ -20,6 +23,8 @@ public:
     void hideOverlay();
     bool isUserLoggedIn() const { return m_isLoggedIn; }
     QString getCurrentUsername() const { return m_currentUsername; }
+    int getCurrentUserId() const { return m_currentUserId; }
+    void setNetworkManager(std::shared_ptr<NetworkManager> networkManager);
 
 protected:
     void resizeEvent(QResizeEvent* event) override;
@@ -38,15 +43,14 @@ private:
     // Login Page
     QWidget* m_loginPage;
     QLineEdit* m_loginUsernameInput;
-    QLineEdit* m_loginEmailInput;
+    QLineEdit* m_loginPasswordInput;
     QPushButton* m_loginButton;
     QPushButton* m_goToRegisterButton;
 
     // Register Page
     QWidget* m_registerPage;
     QLineEdit* m_registerUsernameInput;
-    QLineEdit* m_registerEmailInput;
-    //QLineEdit* m_registerPasswordInput;
+    QLineEdit* m_registerPasswordInput;
     QPushButton* m_registerButton;
     QPushButton* m_goToLoginButton;
 
@@ -54,13 +58,15 @@ private:
     QWidget* m_profilePage;
     QLabel* m_profilePicture;
     QLabel* m_profileUsername;
-    QLabel* m_profileEmail;
     QPushButton* m_logoutButton;
 
     // Session data
     bool m_isLoggedIn;
     QString m_currentUsername;
-    QString m_currentEmail;
+    int m_currentUserId;
+
+    // Network
+    std::shared_ptr<NetworkManager> m_networkManager;
 
 private slots:
     void onLoginClicked();

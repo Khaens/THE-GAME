@@ -5,7 +5,7 @@
 #include <mutex>
 
 int main() {
-    UserModel user(1, "user", "pass");
+    /*UserModel user(1, "user", "pass");
     UserModel user2(2, "user2", "pass");
     UserModel user3(3, "user3", "pass");
 	UserModel user4(4, "user4", "pass");
@@ -13,7 +13,7 @@ int main() {
         user, user2, user3, user4
     };
     Game g(users);
-    g.StartGame();
+    g.StartGame();*/
 
 
 	//primeste si valideaza cereri de la client, utilizand GameServer pentru logica jocului

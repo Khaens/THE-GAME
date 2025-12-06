@@ -18,10 +18,14 @@ MainWindow::MainWindow(QWidget* parent)
     ui->setupUi(this);
     setupMenuStyle();
 
+    // Create network manager
+    m_networkManager = std::make_shared<NetworkManager>("http://localhost:18080");
+
     // Creează overlay dialogs
     m_helpDialog = new HelpDialog(this);
     m_settingsDialog = new SettingsDialog(this);
     m_accountDialog = new AccountDialog(this);
+    m_accountDialog->setNetworkManager(m_networkManager);
     m_lobbyDialog = new LobbyDialog(this);
     m_gameWindow = new GameWindow(this);
 
@@ -124,8 +128,7 @@ void MainWindow::onNewGameClicked()
     }
 
     // Set user ID for lobby dialog and show it
-    // TODO: Get actual user ID from AccountDialog
-    m_lobbyDialog->setUserId(1); // Placeholder
+    m_lobbyDialog->setUserId(m_accountDialog->getCurrentUserId());
     m_lobbyDialog->showOverlay();
 }
 
