@@ -72,7 +72,7 @@ int main() {
 
         try {
             UserModel user = db.GetUserByUsername(username);
-            if (db.VerifyLogin(username, password)) {
+            if (db.VerifyLogin(username,password)) {
                 crow::json::wvalue response;
                 response["success"] = true;
                 response["user_id"] = user.GetId();
@@ -143,8 +143,13 @@ int main() {
 
     CROW_ROUTE(app, "/api/lobby/<string>/start")
         .methods(crow::HTTPMethod::POST)
-        ([](const std::string& lobby_id) {
-
+        ([](const std::string& start) {
+		auto body = crow::json::load(start);
+		//TODO: Implementează logica de start joc
+        if (!body) {
+            return crow::response(400, "Invalid JSON");
+        }
+		std::string lobby_id = body["lobby_id"].s();
 			});
 
 
