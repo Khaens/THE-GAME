@@ -24,6 +24,7 @@ int main(int argc, char* argv[]) {
     std::cout << "Testing login..." << std::endl;
     auto login = netManager.loginUser("test", "pass");
     std::cout << (login.success ? "OK" : "FAILED") << std::endl;
+	std::cout << login.error << std::endl;
     
 
 

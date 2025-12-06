@@ -31,6 +31,8 @@ int main() {
 
         std::string username = body["username"].s();
         std::string password = body["password"].s();
+		std::cout << "Register attempt for user: " << username << std::endl;
+		std::cout << "Password: " << password << std::endl;
 
         if (db.UserExists(username)) {
             crow::json::wvalue response;
@@ -65,10 +67,12 @@ int main() {
 
         std::string username = body["username"].s();
         std::string password = body["password"].s();
+		std::cout << "Login attempt for user: " << username << std::endl;
+		std::cout << "Password: " << password << std::endl;
 
         try {
             UserModel user = db.GetUserByUsername(username);
-            if (user.GetPassword() == password) {
+            if (db.VerifyLogin(username, password)) {
                 crow::json::wvalue response;
                 response["success"] = true;
                 response["user_id"] = user.GetId();
@@ -125,7 +129,8 @@ int main() {
         return crow::response(200, response);
             });
 
-    CROW_ROUTE(app, "/api/lobby/<string>/status")
+	CROW_ROUTE(app, "/api/lobby/<string>/status")
+        .methods(crow::HTTPMethod::GET)
         ([](const std::string& lobby_id) {
         // TODO: Implementează logica de status lobby
         crow::json::wvalue response;
@@ -135,6 +140,13 @@ int main() {
         response["game_started"] = false;
         return crow::response(200, response);
             });
+
+    CROW_ROUTE(app, "/api/lobby/<string>/start")
+        .methods(crow::HTTPMethod::POST)
+        ([](const std::string& lobby_id) {
+
+			});
+
 
 	CROW_ROUTE(app, "/")([]() {
 		return crow::response(200, "THE GAME Server is running!");
