@@ -2,6 +2,7 @@
 #include "Database.h"
 #include <string>
 #include "GameServer.h"
+#include <mutex>
 
 int main() {
     /*UserModel user(1, "user", "pass");
@@ -151,6 +152,17 @@ int main() {
         }
 		std::string lobby_id = body["lobby_id"].s();
 			});
+
+    CROW_WEBSOCKET_ROUTE(app, "/ws/game")
+        .onopen([](crow::websocket::connection& conn) {
+            std::cout << "WebSocket connection opened" << std::endl;
+        })
+        .onclose([](crow::websocket::connection& conn, const std::string& reason) {
+            std::cout << "WebSocket connection closed: " << reason << std::endl;
+        })
+        .onmessage([](crow::websocket::connection& conn, const std::string& data, bool is_binary) {
+        std::cout << "Received WebSocket message: " << data << std::endl;
+		});
 
 
 	CROW_ROUTE(app, "/")([]() {

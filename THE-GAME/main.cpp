@@ -17,7 +17,7 @@ int main(int argc, char* argv[]) {
 
     NetworkManager netManager("http://localhost:18080");
 
-
+	//De refactorizat logica aceasta in logica existente de GUI, pastrand functionalitatea
 
 	bool lobbyCreated = false;
 	bool gameStarted = false;
