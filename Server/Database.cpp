@@ -7,7 +7,7 @@ Database::Database(const std::string& path) : storage(initStorage(path)), dbPath
     storage.sync_schema();
 }
 
-std::string HashPassword(const std::string& password) {
+static std::string HashPassword(const std::string& password) {
     std::hash<std::string> hasher;
     return std::to_string(hasher(password));
 }
@@ -83,6 +83,9 @@ bool Database::VerifyLogin(const std::string& username, const std::string& plain
         if (rows.empty()) {
             return false;
         }
+		//For debugging purposes
+		std::string test = HashPassword(plainPassword);
+		std::cout << "Stored hash: " << rows[0] << ", Computed hash: " << test << std::endl;
         return HashPassword(plainPassword) == rows[0];
     }
     catch (std::exception& e) {

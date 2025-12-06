@@ -2,12 +2,14 @@
 #include "Database.h"
 #include <string>
 #include "GameServer.h"
+#include <mutex>
 
 int main() {
     /*UserModel user(1, "user", "pass");
     UserModel user2(2, "user2", "pass");
+    UserModel user3(3, "user3", "pass");
     std::vector<UserModel> users = {
-        user, user2
+        user, user2, user3
     };
     Game g(users);
     g.StartGame();*/
@@ -30,6 +32,8 @@ int main() {
 
         std::string username = body["username"].s();
         std::string password = body["password"].s();
+		std::cout << "Register attempt for user: " << username << std::endl;
+		std::cout << "Password: " << password << std::endl;
 
         if (db.UserExists(username)) {
             crow::json::wvalue response;
@@ -64,10 +68,12 @@ int main() {
 
         std::string username = body["username"].s();
         std::string password = body["password"].s();
+		std::cout << "Login attempt for user: " << username << std::endl;
+		std::cout << "Password: " << password << std::endl;
 
         try {
             UserModel user = db.GetUserByUsername(username);
-            if (user.GetPassword() == password) {
+            if (db.VerifyLogin(username,password)) {
                 crow::json::wvalue response;
                 response["success"] = true;
                 response["user_id"] = user.GetId();
@@ -124,7 +130,8 @@ int main() {
         return crow::response(200, response);
             });
 
-    CROW_ROUTE(app, "/api/lobby/<string>/status")
+	CROW_ROUTE(app, "/api/lobby/<string>/status")
+        .methods(crow::HTTPMethod::GET)
         ([](const std::string& lobby_id) {
         // TODO: Implementează logica de status lobby
         crow::json::wvalue response;
@@ -134,6 +141,29 @@ int main() {
         response["game_started"] = false;
         return crow::response(200, response);
             });
+
+    CROW_ROUTE(app, "/api/lobby/<string>/start")
+        .methods(crow::HTTPMethod::POST)
+        ([](const std::string& start) {
+		auto body = crow::json::load(start);
+		//TODO: Implementează logica de start joc
+        if (!body) {
+            return crow::response(400, "Invalid JSON");
+        }
+		std::string lobby_id = body["lobby_id"].s();
+			});
+
+    CROW_WEBSOCKET_ROUTE(app, "/ws/game")
+        .onopen([&](crow::websocket::connection& conn) {
+            std::cout << "WebSocket connection opened" << std::endl;
+        })
+        .onclose([&](crow::websocket::connection& conn, const std::string& reason, uint16_t) {
+            std::cout << "WebSocket connection closed: " << reason << std::endl;
+        })
+        .onmessage([&](crow::websocket::connection& conn, const std::string& data, bool is_binary) {
+        std::cout << "Received WebSocket message: " << data << std::endl;
+		});
+
 
 	CROW_ROUTE(app, "/")([]() {
 		return crow::response(200, "THE GAME Server is running!");

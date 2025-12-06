@@ -1,10 +1,11 @@
 #pragma once
+#include <iostream>
 #include "UserModel.h"
 #include "IPlayer.h"
 #include "CardServer.h"
 #include "Gambler.h"
 #include "HarryPotter.h"
-
+#include "TaxEvader.h"
 #include "TurnContext.h"
 
 template <typename Ability>
@@ -13,7 +14,7 @@ class Player :
 {
 private:
     std::unordered_set<Card*> m_hand;
-	Ability ability;
+    Ability ability;
 public:
     Player() = default;
     Player(const UserModel& user);
@@ -28,10 +29,20 @@ public:
     void ShowHand() override;
 	void UseAbility(TurnContext& ctx, size_t currentPIndex) override;
     bool CanUseAbility(TurnContext& ctx) const override;
+
+    const bool IsTaxActive() override;
+    virtual void SetTaxActive(bool state) override;
+
+    const bool HPActive() override;
+    const bool GetHPFlag() const override;
+    void SetHPFlag(bool state) override;
+    void SetHPActive(bool state) override;
+
+    const size_t GetGamblerUses() override;
+    const bool GActive() override;
+    void SetGActive(bool state) override;
 };
 
-#include "PlayerServer.h"
-#include <iostream>
 
 template <typename Ability>
 Player<Ability>::Player(const UserModel& user)
@@ -100,4 +111,58 @@ template<typename Ability>
 bool Player<Ability>::CanUseAbility(TurnContext& ctx) const
 {
     return ability.CanUseAbility(ctx);
+}
+
+template<typename Ability>
+inline const bool Player<Ability>::IsTaxActive()
+{
+    return ability.IsTaxActive();
+}
+
+template<typename Ability>
+inline void Player<Ability>::SetTaxActive(bool state)
+{
+    ability.SetTaxActive(state);
+}
+
+template<typename Ability>
+inline const bool Player<Ability>::HPActive()
+{
+    return ability.HPActive();
+}
+
+template<typename Ability>
+inline const bool Player<Ability>::GetHPFlag() const
+{
+    return ability.GetHPFlag();
+}
+
+template<typename Ability>
+inline void Player<Ability>::SetHPFlag(bool state)
+{
+    ability.SetHPFlag(state);
+}
+
+template<typename Ability>
+inline void Player<Ability>::SetHPActive(bool state)
+{
+    ability.SetHPActive(state);
+}
+
+template<typename Ability>
+inline const size_t Player<Ability>::GetGamblerUses()
+{
+    return ability.GetGamblerUses();
+}
+
+template<typename Ability>
+inline const bool Player<Ability>::GActive()
+{
+    return ability.GActive();
+}
+
+template<typename Ability>
+inline void Player<Ability>::SetGActive(bool state)
+{
+    ability.SetGActive(state);
 }

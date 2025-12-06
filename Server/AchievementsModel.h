@@ -1,14 +1,28 @@
 #pragma once
-#include <cstdint>
+#include <string>
 
-struct AchievementsModel
+class AchievementsModel
 {
-    int id = 0;        
+private:
+    int id = 0;
     int userId = 0;
-    unsigned int wins;
-    unsigned int losses;
-    std::uint8_t winRate;
+    bool allOnRed = false;
+    bool harryPotter = false;
+    bool seriousPlayer = false;
 
-	AchievementsModel() = default;
+public:
+    AchievementsModel() = default;
+    AchievementsModel(int userId);
+
+    int GetId() const;
+    int GetUserId() const;
+    bool GetAllOnRed() const;
+    bool GetHarryPotter() const;
+    bool GetSeriousPlayer() const;
+
+    void SetId(int newId);
+    void SetUserId(int newUserId);
+    void SetAllOnRed(bool value);
+    void SetHarryPotter(bool value);
+    void SetSeriousPlayer(bool value);
 };
-

@@ -135,6 +135,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AchievementsModel.cpp" />
     <ClCompile Include="CardServer.cpp" />
     <ClCompile Include="Database.cpp" />
     <ClCompile Include="DeckServer.cpp" />
@@ -145,6 +146,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Pile.cpp" />
     <ClCompile Include="PlayerFactory.cpp" />
+    <ClCompile Include="TaxEvader.cpp" />
     <ClCompile Include="UserModel.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -156,12 +158,14 @@
     <ClInclude Include="Gambler.h" />
     <ClInclude Include="GameServer.h" />
     <ClInclude Include="HarryPotter.h" />
+    <ClInclude Include="IAbility.h" />
     <ClInclude Include="IPlayer.h" />
     <ClInclude Include="Lobby.h" />
     <ClInclude Include="Pile.h" />
     <ClInclude Include="PileType.h" />
     <ClInclude Include="PlayerFactory.h" />
     <ClInclude Include="PlayerServer.h" />
+    <ClInclude Include="TaxEvader.h" />
     <ClInclude Include="TurnContext.h" />
     <ClInclude Include="UserModel.h" />
   </ItemGroup>

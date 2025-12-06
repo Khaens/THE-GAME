@@ -17,13 +17,50 @@ int main(int argc, char* argv[]) {
 
     NetworkManager netManager("http://localhost:18080");
 
-    std::cout << "Testing register..." << std::endl;
-    auto reg = netManager.registerUser("test", "pass");
-    std::cout << (reg.success ? "OK" : "FAILED") << std::endl;
+	//De refactorizat logica aceasta in logica existente de GUI, pastrand functionalitatea
 
-    std::cout << "Testing login..." << std::endl;
-    auto login = netManager.loginUser("test", "pass");
-    std::cout << (login.success ? "OK" : "FAILED") << std::endl;
+	bool lobbyCreated = false;
+	bool gameStarted = false;
+
+	while (!lobbyCreated) {
+		std::cout << "Register or Login? r/l" << std::endl;
+		char choice;
+		std::cin >> choice;
+		if (choice == 'r') {
+			std::cout << "Registering: Username: " << std::endl;
+			std::string username, password;
+			std::cin >>  username;
+			std::cout << "Password: " << std::endl;
+			std::cin >> password;
+			auto reg = netManager.registerUser(username, password);
+			std::cout << (reg.success ? "Registration OK" : "Registration FAILED") << std::endl;
+			if (!reg.success) {
+				std::cout << "Error: " << reg.error << std::endl;
+			}
+			continue;
+		}
+		std::cout << "Logging In: Username: " << std::endl;
+		std::string username, password;
+		std::cin >> username;
+		std::cout << "Password: " << std::endl;
+		std::cin >> password;
+		auto login = netManager.loginUser(username, password);
+		std::cout << (login.success ? "Login OK" : "Login FAILED") << std::endl;
+		std::cout << "Exit login loop? y/n" << std::endl;
+		char c;
+		std::cin >> c;
+		if (c == 'y') {
+			lobbyCreated = true;
+		}
+	}
+
+	while (lobbyCreated) {
+		//TODO
+	}
+
+	while (gameStarted) {
+		//TODO
+	}
     
 
 

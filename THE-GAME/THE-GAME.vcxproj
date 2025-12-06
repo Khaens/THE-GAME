@@ -21,9 +21,11 @@
   <ItemGroup>
     <ClCompile Include="AccountDialog.cpp" />
     <ClCompile Include="CreateLobbyDialog.cpp" />
+    <ClCompile Include="GameWindow.cpp" />
     <ClCompile Include="HelpDialog.cpp" />
     <ClCompile Include="JoinLobbyDialog.cpp" />
     <ClCompile Include="LobbyDialog.cpp" />
+    <ClCompile Include="LobbyRoomDialog.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="NetworkManager.cpp" />
@@ -36,6 +38,7 @@
     <QtMoc Include="SettingsDialog.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtUic Include="GameWindow.ui" />
     <QtUic Include="MainWindow.ui" />
   </ItemGroup>
   <ItemGroup>
@@ -47,6 +50,8 @@
     <QtMoc Include="LobbyDialog.h" />
     <QtMoc Include="CreateLobbyDialog.h" />
     <QtMoc Include="JoinLobbyDialog.h" />
+    <QtMoc Include="LobbyRoomDialog.h" />
+    <QtMoc Include="GameWindow.h" />
     <ClInclude Include="NetworkManager.h" />
   </ItemGroup>
   <ItemGroup>

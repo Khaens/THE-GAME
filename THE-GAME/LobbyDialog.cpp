@@ -1,6 +1,7 @@
 ﻿#include "LobbyDialog.h"
 #include "CreateLobbyDialog.h" 
 #include "JoinLobbyDialog.h"
+#include "LobbyRoomDialog.h"
 #include <QResizeEvent>
 #include <QMessageBox>
 #include <QDebug>
@@ -166,7 +167,7 @@ void LobbyDialog::onCreateLobbyClicked()
 
     CreateLobbyDialog dialog(m_userId, this);
 
-    if (dialog.exec() == QDialog::Accepted) {
+    if (dialog.exec() == QDialog::Accepted && dialog.wasLobbyCreated()) {
         QString lobbyName = dialog.getLobbyName();
         int maxPlayers = dialog.getMaxPlayers();
         QString generatedPassword = dialog.getGeneratedPassword();
@@ -181,12 +182,21 @@ void LobbyDialog::onCreateLobbyClicked()
         if (lobbyResponse.success) {
             hideOverlay();
 
-            QString successMessage = "Lobby '" + lobbyName + "' created successfully!\n";
-            successMessage += "Max players: " + QString::number(maxPlayers);
-            successMessage += "\n\nLobby Code: " + generatedPassword + "\n"
-                "Share this code with friends to join.";
+            // Create and show LobbyRoomDialog
+            LobbyRoomDialog* lobbyRoom = new LobbyRoomDialog(
+                m_userId,
+                QString::fromStdString(lobbyResponse.lobby_id),
+                lobbyName,
+                generatedPassword,
+                true,  // isHost = true for creator
+                parentWidget()
+            );
 
-            QMessageBox::information(this, "Success", successMessage);
+            // CONNECT THE SIGNAL
+            connect(lobbyRoom, &LobbyRoomDialog::gameStarted, this, &LobbyDialog::onGameStarted);
+
+            lobbyRoom->exec();
+            delete lobbyRoom;
         }
         else {
             QString errorMessage = QString::fromStdString(
@@ -216,12 +226,35 @@ void LobbyDialog::onJoinLobbyClicked()
             QMessageBox::information(this, "Success",
                 "Successfully joined lobby with code: " + lobbyCode);
             hideOverlay();
+
+            // Create and show LobbyRoomDialog
+            LobbyRoomDialog* lobbyRoom = new LobbyRoomDialog(
+                m_userId,
+                QString::fromStdString(code_to_join), // Use code as ID temporarily
+                "Joined Lobby", // TODO: Get actual lobby name from server
+                lobbyCode,
+                false,  // isHost = false for joiner
+                parentWidget()
+            );
+
+            // CONNECT THE SIGNAL
+            connect(lobbyRoom, &LobbyRoomDialog::gameStarted, this, &LobbyDialog::onGameStarted);
+
+            lobbyRoom->exec();
+            delete lobbyRoom;
         }
         else {
             QMessageBox::warning(this, "Error",
                 "Failed to join lobby. Invalid code or lobby is full.");
         }
     }
+}
+
+// NEW METHOD: Handle game started signal
+void LobbyDialog::onGameStarted()
+{
+    // Forward the signal to MainWindow
+    emit gameStartedFromLobby(); // You'll need to add this signal to LobbyDialog
 }
 
 void LobbyDialog::resizeEvent(QResizeEvent* event)

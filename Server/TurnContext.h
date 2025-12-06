@@ -7,13 +7,8 @@ struct TurnContext {
 	int currentRequired = 2;
 
 	size_t HPplayerIndex = -1;
-	bool HPOverrideThisTurn = false;
-	bool HPFlag = false;
-
 	size_t GamblerPlayerIndex = -1;
-	int GamblerUses = 0;
-	bool GamblerOverrideThisTurn = false;
+	size_t TaxEvPlayerIndex = -1;
 
 	bool endgame = false;
-
 };
