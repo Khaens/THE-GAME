@@ -146,6 +146,8 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Pile.cpp" />
     <ClCompile Include="PlayerFactory.cpp" />
+    <ClCompile Include="Round.cpp" />
+    <ClCompile Include="Soothsayer.cpp" />
     <ClCompile Include="TaxEvader.cpp" />
     <ClCompile Include="UserModel.cpp" />
   </ItemGroup>
@@ -165,6 +167,8 @@
     <ClInclude Include="PileType.h" />
     <ClInclude Include="PlayerFactory.h" />
     <ClInclude Include="PlayerServer.h" />
+    <ClInclude Include="Round.h" />
+    <ClInclude Include="Soothsayer.h" />
     <ClInclude Include="TaxEvader.h" />
     <ClInclude Include="TurnContext.h" />
     <ClInclude Include="UserModel.h" />

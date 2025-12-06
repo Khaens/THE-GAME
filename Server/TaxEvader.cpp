@@ -63,3 +63,13 @@ void TaxEvader::SetGActive(bool state)
 {
     throw std::runtime_error("TaxEvader called Gambler function");
 }
+
+const bool TaxEvader::IsSoothActive()
+{
+    throw std::runtime_error("TaxEvader called Soothsayer function");
+}
+
+void TaxEvader::SetSoothState(bool state)
+{
+    throw std::runtime_error("TaxEvader called Soothsayer function");
+}

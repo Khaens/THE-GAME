@@ -4,7 +4,7 @@
 
 void Gambler::UseAbility(TurnContext& ctx, size_t currentPIndex) //special round rules for said ability
 {
-	if(m_usesLeft > 0 && !ctx.endgame) {
+	if (m_usesLeft > 0 && !ctx.endgame) {
 		m_usesLeft--;
 		ctx.GamblerPlayerIndex = currentPIndex;
 		ctx.currentRequired = ctx.baseRequired - 1;
@@ -30,7 +30,7 @@ const bool Gambler::GActive()
 
 const size_t Gambler::GetGamblerUses()
 {
-	if(m_uses > 0) m_uses--;
+	if (m_uses > 0) m_uses--;
 	return m_uses > 0 ? m_uses + 1 : m_uses;
 }
 
@@ -63,4 +63,14 @@ const bool Gambler::IsTaxActive()
 void Gambler::SetTaxActive(bool state)
 {
 	throw std::runtime_error("Gambler called TaxEvader function");
+}
+
+const bool Gambler::IsSoothActive()
+{
+	throw std::runtime_error("Gambler called Soothsayer function");
+}
+
+void Gambler::SetSoothState(bool state)
+{
+	throw std::runtime_error("Gambler called Soothsayer function");
 }

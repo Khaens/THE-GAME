@@ -1,13 +1,14 @@
 #pragma once
 #include "IPlayer.h"
 #include "AbilityType.h"
-#include "HarryPotter.h"
 #include "Gambler.h"
+#include "HarryPotter.h"
+#include "TaxEvader.h"
+#include "Soothsayer.h"
 #include "UserModel.h"
 #include "PlayerServer.h"
 #include "TurnContext.h"
 
-#include <memory>
 
 
 

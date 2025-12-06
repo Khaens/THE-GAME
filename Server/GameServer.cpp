@@ -1,15 +1,13 @@
 #include "GameServer.h"
-#include "Gambler.h"
-#include "HarryPotter.h"
 #include "PlayerFactory.h"
 
-Game::Game(std::vector<UserModel>& users) : m_numberOfPlayers{ users.size()}
+Game::Game(std::vector<UserModel>& users) : m_numberOfPlayers{ users.size() }
 {
 	m_players.reserve(m_numberOfPlayers);
 	if (users.size() < 2 || users.size() > 5) {
 		throw std::invalid_argument("Number of players must be between 2 and 5.");
 	}
-	
+
 	std::vector<AbilityType> abilities = PlayerFactory::GetRandomUniqueAbilities(users.size());
 	size_t i = 0;
 	for (auto& user : users) {
@@ -23,6 +21,14 @@ Game::Game(std::vector<UserModel>& users) : m_numberOfPlayers{ users.size()}
 		m_wholeDeck.InsertCard(newCard);
 		m_wholeDeck.InsertCard(newCard2);
 	}
+	Pile* ascPile1 = new Pile{ PileType::ASCENDING };
+	Pile* ascPile2 = new Pile{ PileType::ASCENDING };
+	Pile* descPile1 = new Pile{ PileType::DESCENDING };
+	Pile* descPile2 = new Pile{ PileType::DESCENDING };
+	m_piles.push_back(ascPile1);
+	m_piles.push_back(ascPile2);
+	m_piles.push_back(descPile1);
+	m_piles.push_back(descPile2);
 }
 
 size_t Game::WhoStartsFirst()
@@ -64,10 +70,10 @@ size_t Game::WhoStartsFirst()
 
 bool Game::IsGameOver(const IPlayer& currentPlayer)
 {
-	int playableCards = NumberOfPlayableCardsInHand();
+	int playableCards = Round::NrOfPlayableCardsInHand(*this, m_ctx);
 
 
-	if(m_currentPlayerIndex == m_ctx.HPplayerIndex && currentPlayer.GetHPFlag()) {
+	if (m_currentPlayerIndex == m_ctx.HPplayerIndex && currentPlayer.GetHPFlag()) {
 		std::cout << "No one played a +/-10 card until " << currentPlayer.GetUsername() << "'s turn. All players lose!\n";
 		return true;
 	}
@@ -78,58 +84,15 @@ bool Game::IsGameOver(const IPlayer& currentPlayer)
 	}
 
 
-	
-	return false;
-}
 
-void Game::OneRound(IPlayer& currentPlayer)
-{
-	std::cout << "A1: " << m_ascPile1.GetTopCard()->GetCardValue() << " | "
-		<< "A2: " << m_ascPile2.GetTopCard()->GetCardValue() << " | "
-		<< "D1: " << m_descPile1.GetTopCard()->GetCardValue() << " | "
-		<< "D2: " << m_descPile2.GetTopCard()->GetCardValue() << "\n";
-	std::cout << "Your hand:\n";
-	currentPlayer.ShowHand();
-	bool cardPlaced = false;
-	while (!cardPlaced) {
-		Card* chosenCard = nullptr;
-		std::cout << "Pick a card to play from your hand.\n";
-		std::string chosenCardValue;
-		std::cin >> chosenCardValue;
-		chosenCard = currentPlayer.ChooseCard(chosenCardValue);
-		Pile* chosenPile = nullptr;
-		while (!chosenPile) {
-			std::cout << "Choose a pile to place the card on (A1/A2 for Ascending, D1/D2 for Descending): ";
-			std::string pileChoice;
-			std::cin >> pileChoice;
-			if (pileChoice == "A1") chosenPile = &m_ascPile1;
-			else if (pileChoice == "A2") chosenPile = &m_ascPile2;
-			else if (pileChoice == "D1") chosenPile = &m_descPile1;
-			else if (pileChoice == "D2") chosenPile = &m_descPile2;
-			if (!chosenPile) std::cout << "That's not a valid Pile! Try again!\n";
-		}
-		if (CanPlaceCard(chosenCard, *chosenPile)) {
-			cardPlaced = true;
-			if (m_ctx.HPplayerIndex != -1 && m_players[m_ctx.HPplayerIndex]->GetHPFlag()) {
-				if (std::stoi(chosenCard->GetCardValue()) == std::stoi(chosenPile->GetTopCard()->GetCardValue()) + 10 ||
-					std::stoi(chosenCard->GetCardValue()) == std::stoi(chosenPile->GetTopCard()->GetCardValue()) - 10) {
-					m_players[m_ctx.HPplayerIndex]->SetHPFlag(false);
-				}
-			}
-			chosenPile->PlaceCard(chosenCard);
-			currentPlayer.RemoveCardFromHand(chosenCard);
-			}
-		else {
-			std::cout << "Cannot place that card on the chosen pile. Try again.\n";
-		}
-	}
+	return false;
 }
 
 
 void Game::StartGame()
 {
 	m_wholeDeck.ShuffleDeck();
-	FirstRoundDealing();
+	Round::FirstRoundDealing(*this);
 	m_currentPlayerIndex = WhoStartsFirst();
 
 	while (true) {
@@ -143,6 +106,11 @@ void Game::StartGame()
 				m_ctx.currentRequired = 2;
 			}
 		}
+		else if (m_ctx.TaxEvPlayerIndex != -1 && m_players[m_ctx.TaxEvPlayerIndex]->IsTaxActive() &&
+			m_currentPlayerIndex == (m_ctx.TaxEvPlayerIndex + 1) % m_numberOfPlayers) {
+			m_ctx.currentRequired = m_ctx.baseRequired * 2;
+			m_players[m_ctx.TaxEvPlayerIndex]->SetTaxActive(false);
+		}
 		else m_ctx.currentRequired = m_ctx.baseRequired;
 		if (currentPlayer.CanUseAbility(m_ctx)) {
 			std::cout << "\n" << currentPlayer.GetUsername() << ", do you want to use your ability this turn? (y/n): ";
@@ -150,6 +118,13 @@ void Game::StartGame()
 			std::cin >> useAbility;
 			if (std::tolower(useAbility) == 'y') {
 				currentPlayer.UseAbility(m_ctx, m_currentPlayerIndex);
+				if (m_ctx.SoothPlayerIndex != -1) {
+					std::cout << "Other player's cards: \n";
+					for (size_t i = 0; i < m_numberOfPlayers; i++) {
+						std::cout << m_players[i]->GetUsername() << ": ";
+						m_players[i]->ShowHand();
+					}
+				}
 			}
 		}
 		if (IsGameOver(currentPlayer)) {
@@ -158,19 +133,19 @@ void Game::StartGame()
 		ShowCtx();
 		int playedCards = 0;
 		for (int i = 0; i < m_ctx.currentRequired; i++) {
-			OneRound(currentPlayer);
+			Round::OneRound(*this, m_ctx);
 			if (IsGameOver(currentPlayer)) break;
 			playedCards++;
 		}
-		if (m_ctx.GamblerPlayerIndex != -1 && currentPlayer.GActive()) {
+		if (m_currentPlayerIndex == m_ctx.GamblerPlayerIndex &&
+			m_players[m_ctx.GamblerPlayerIndex]->GActive()) {
 			currentPlayer.SetGActive(false);
 		}
-		else if (m_ctx.TaxEvPlayerIndex != -1 &&
-			m_currentPlayerIndex == m_ctx.TaxEvPlayerIndex &&
-			currentPlayer.IsTaxActive()) {
-			std::cout << "You don't have to play any cards this round!\n";			
+		else if (m_currentPlayerIndex == m_ctx.TaxEvPlayerIndex
+			&& currentPlayer.IsTaxActive()) {
+			std::cout << "You don't have to play any cards this round!\n";
 		}
-		int nrOfPlayableCards = NumberOfPlayableCardsInHand();
+		int nrOfPlayableCards = Round::NrOfPlayableCardsInHand(*this, m_ctx);
 		if (nrOfPlayableCards == 0) {
 			std::cout << "Nu mai poti pune nici o carte. Trecem la urmatorul jucator.\n";
 			for (size_t i = 0; i < playedCards; i++) {
@@ -188,10 +163,10 @@ void Game::StartGame()
 					break;
 				}
 				else if (optiune == 'y') {
-					OneRound(currentPlayer);
+					Round::OneRound(*this, m_ctx);
 					playedCards++;
 				}
-				nrOfPlayableCards--;
+				nrOfPlayableCards = Round::NrOfPlayableCardsInHand(*this, m_ctx);
 			}
 			for (size_t i = 0; i < playedCards; i++) {
 				Card* drawnCard = m_wholeDeck.DrawCard();
@@ -215,55 +190,6 @@ IPlayer& Game::GetCurrentPlayer()
 	return *m_players[m_currentPlayerIndex];
 }
 
-void Game::FirstRoundDealing()
-{
-	
-	for (size_t i = 0; i < m_players.size(); i++) {
-		for (size_t j = 0; j < 6; j++) {
-			Card* dealtCard = m_wholeDeck.DrawCard();
-			m_players[i]->AddCardToHand(dealtCard);
-		}
-	}
-}
-
-int Game::NumberOfPlayableCardsInHand()
-{
-	IPlayer& currentPlayer = GetCurrentPlayer();
-	int count = 0;
-	for (Card* card : currentPlayer.GetHand()) {
-		if ((CanPlaceCard(card, m_ascPile1) || CanPlaceCard(card, m_ascPile2) ||
-			CanPlaceCard(card, m_descPile1) || CanPlaceCard(card, m_descPile2)) ||
-			(m_ctx.HPplayerIndex != -1 && m_players[m_ctx.HPplayerIndex]->HPActive())) {
-			count++;
-		}
-	}
-	return count;
-}
-
-bool Game::CanPlaceCard(const Card* card, Pile& pile)
-{
-	int top = std::stoi(pile.GetTopCard()->GetCardValue());
-	int value = std::stoi(card->GetCardValue());
-	if (m_ctx.HPplayerIndex != -1
-		&& m_players[m_ctx.HPplayerIndex]->HPActive()) return true;
-
-	if (pile.GetPileType()  == PileType::ASCENDING)
-		return (value > top) || (value == top - 10);
-	else
-		return (value < top) || (value == top + 10);
-}
-
-
-
-
-Pile* Game::GetPile(const std::string& pileChoice)
-{
-	if(pileChoice == "A1") return &m_ascPile1;
-	else if (pileChoice == "A2") return &m_ascPile2;
-	else if (pileChoice == "D1") return &m_descPile1;
-	else if (pileChoice == "D2") return &m_descPile2;
-	return nullptr;
-}
 
 
 Card* Game::DrawCard()
@@ -274,6 +200,21 @@ Card* Game::DrawCard()
 size_t Game::GetDeckSize() const
 {
 	return m_wholeDeck.GetSize();
+}
+
+const std::vector<std::unique_ptr<IPlayer>>& Game::GetPlayers()
+{
+	return m_players;
+}
+
+std::vector<Pile*> Game::GetPiles()
+{
+	return m_piles;
+}
+
+Deck& Game::GetDeck()
+{
+	return m_wholeDeck;
 }
 
 void Game::ShowCtx()

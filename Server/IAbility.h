@@ -16,7 +16,10 @@ public:
 	virtual const size_t GetGamblerUses() = 0;
 	virtual const bool GActive() = 0;
 	virtual void SetGActive(bool state) = 0;
-	
+
 	virtual const bool IsTaxActive() = 0;
 	virtual void SetTaxActive(bool state) = 0;
+
+	virtual const bool IsSoothActive() = 0;
+	virtual void SetSoothState(bool state) = 0;
 };

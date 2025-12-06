@@ -7,7 +7,7 @@
 class HarryPotter : public IAbility
 {
 public:
-	void UseAbility(TurnContext& ctx,size_t CurrentPIndex) override;
+	void UseAbility(TurnContext& ctx, size_t CurrentPIndex) override;
 	bool CanUseAbility(TurnContext& ctx) const override;
 
 	const bool HPActive() override;
@@ -21,6 +21,9 @@ public:
 
 	const bool IsTaxActive() override;
 	void SetTaxActive(bool state) override;
+
+	const bool IsSoothActive() override;
+	void SetSoothState(bool state) override;
 private:
 	bool m_canUse = true;
 	bool m_active = false;

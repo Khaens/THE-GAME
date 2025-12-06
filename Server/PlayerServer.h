@@ -113,6 +113,7 @@ bool Player<Ability>::CanUseAbility(TurnContext& ctx) const
     return ability.CanUseAbility(ctx);
 }
 
+
 template<typename Ability>
 inline const bool Player<Ability>::IsTaxActive()
 {

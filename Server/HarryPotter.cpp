@@ -62,4 +62,14 @@ void HarryPotter::SetTaxActive(bool state)
 	throw std::runtime_error("HP called TaxEvader function");
 }
 
+const bool HarryPotter::IsSoothActive()
+{
+	throw std::runtime_error("HP called Soothsayer function");
+}
+
+void HarryPotter::SetSoothState(bool state)
+{
+	throw std::runtime_error("HP called Soothsayer function");
+}
+
 
