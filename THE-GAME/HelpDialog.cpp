@@ -29,81 +29,89 @@ void HelpDialog::setupUI()
 
     m_contentContainer = new QWidget(this);
     m_contentContainer->setObjectName("helpContainer");
-    m_contentContainer->setFixedSize(1000, 500);
+    m_contentContainer->setFixedSize(1125, 750);
 
     QVBoxLayout* containerLayout = new QVBoxLayout(m_contentContainer);
-    containerLayout->setSpacing(15);
-    containerLayout->setContentsMargins(20, 20, 20, 20);
+    containerLayout->setSpacing(10);  // Reduced spacing between elements
+    containerLayout->setContentsMargins(40, 40, 40, 40);  // More balanced margins
 
     QLabel* titleLabel = new QLabel("HELP - THE GAME", m_contentContainer);
     titleLabel->setAlignment(Qt::AlignCenter);
-    titleLabel->setStyleSheet("font-size: 28px; font-weight: bold; color: #f3d05a; margin-top: 10px;");
+    titleLabel->setStyleSheet(R"(
+        font-size: 50px; 
+        font-weight: bold; 
+        font-family: "Knight Warrior";
+        color: #edc40c; 
+        margin-top: 0px;
+        margin-bottom: 10px;
+    )"
+    );
     containerLayout->addWidget(titleLabel);
 
     m_rulesText = new QTextBrowser(m_contentContainer);
     m_rulesText->setOpenExternalLinks(false);
-    m_rulesText->setFixedSize(750, 350);
+    m_rulesText->setFixedSize(750, 500);  // Increased width to use more space
 
     m_rulesText->setStyleSheet(R"(
         QTextBrowser {
-            background-color: transparent;
-            border: 2px solid #654b1f;
-            border-radius: 8px;
-            padding: 15px;
-            font-size: 13px;
-            color: #2C3E50;
+            border-image: url(Resources/TextBox_1-2.png);
+            padding: 50px;
+            color: white;
+            font-family: "Jersey 15";
+            font-size: 20px;
         }
-        
         QTextBrowser QScrollBar:vertical {
             border: none;
-            background: #3d431a;
+            border-radius: 6px;
+            background: #edc40c;
             width: 12px;
             margin: 0px;
         }
         
         QTextBrowser QScrollBar::handle:vertical {
-            background: #654b1f;
+            background: #d1ad08;
             border-radius: 6px;
             min-height: 20px;
         }
         
         QTextBrowser QScrollBar::handle:vertical:hover {
-            background: #4a3f1e;
+            background: #e0ba09;
         }
     )");
     containerLayout->addWidget(m_rulesText, 0, Qt::AlignCenter);
 
+    containerLayout->addSpacing(10);  // Small fixed space before button
+
     QPushButton* backButton = new QPushButton("BACK TO MENU", m_contentContainer);
-    backButton->setFixedSize(200, 45);
+    backButton->setFixedSize(220, 55);
     backButton->setCursor(Qt::PointingHandCursor);
     backButton->setStyleSheet(R"(
         QPushButton {
-            background-color: #f3d05a;
-            color: #2C3E50;
-            border: none;
-            border-radius: 10px;
-            font-size: 15px;
-            font-weight: bold;
-            padding: 10px;
+            border-image: url(Resources/Button.png);
+            font-family: 'Knight Warrior';
+            font-size: 25px;
+            color: white;
+            letter-spacing: 1px;
+            font-weight: bold; 
+            padding-bottom: 2px; 
         }
-        
-        QPushButton:hover {
-            background-color: #e3b310;
-        }
-        
         QPushButton:pressed {
-            background-color: #869e22;
+            border-image: url(Resources/Button_Pressed.png);
+            padding-top: 2px;
+            padding-left: 2px;
         }
     )");
 
     connect(backButton, &QPushButton::clicked, this, &HelpDialog::hideOverlay);
 
     QHBoxLayout* buttonLayout = new QHBoxLayout();
+    buttonLayout->setContentsMargins(0, 0, 0, 0);
     buttonLayout->addStretch();
     buttonLayout->addWidget(backButton);
     buttonLayout->addStretch();
     containerLayout->addLayout(buttonLayout);
 
+    // Center the container
     QHBoxLayout* centerLayout = new QHBoxLayout();
     centerLayout->addStretch();
     centerLayout->addWidget(m_contentContainer);

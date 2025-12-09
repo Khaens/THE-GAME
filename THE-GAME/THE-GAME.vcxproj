@@ -55,8 +55,8 @@
     <ClInclude Include="NetworkManager.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="help.css" />
     <None Include="help.html" />
+    <None Include="help_styles.css" />
     <None Include="Resources\Resource_Legend" />
   </ItemGroup>
   <ItemGroup>
@@ -160,6 +160,7 @@
     <Image Include="Resources\97.png" />
     <Image Include="Resources\98.png" />
     <Image Include="Resources\99.png" />
+    <Image Include="Resources\Button.png" />
     <Image Include="Resources\Button_Account.png" />
     <Image Include="Resources\Button_Account_Pressed.png" />
     <Image Include="Resources\Button_Chat.png" />
@@ -170,6 +171,7 @@
     <Image Include="Resources\Button_Help_Pressed.png" />
     <Image Include="Resources\Button_Play.png" />
     <Image Include="Resources\Button_Play_Pressed.png" />
+    <Image Include="Resources\Button_Pressed.png" />
     <Image Include="Resources\Button_Settings.png" />
     <Image Include="Resources\Button_Settings_Pressed.png" />
     <Image Include="Resources\Card_Back.png" />
@@ -178,6 +180,10 @@
     <Image Include="Resources\TextBox_2-1.png" />
     <Image Include="Resources\TextBox_2-1_Small.png" />
     <Image Include="Resources\TitleCard.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="Fonts\Jersey15-Regular.ttf" />
+    <Font Include="Fonts\KnightWarrior-w16n8.otf" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

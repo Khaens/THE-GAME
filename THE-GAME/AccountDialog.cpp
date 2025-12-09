@@ -36,7 +36,14 @@ void AccountDialog::setupUI()
 
     QLabel* titleLabel = new QLabel("ACCOUNT", m_contentContainer);
     titleLabel->setAlignment(Qt::AlignCenter);
-    titleLabel->setStyleSheet("font-size: 28px; font-weight: bold; color: #f3d05a; margin-bottom: 10px;");
+    titleLabel->setStyleSheet(R"(
+        font-size: 45px; 
+        font-weight: bold;
+        font-family: "Knight Warrior"; 
+        color: #f3d05a; 
+        margin-top: 20px;
+    )"
+    );
     containerLayout->addWidget(titleLabel);
 
     // Stacked Widget pentru pagini diferite
@@ -49,7 +56,13 @@ void AccountDialog::setupUI()
 
     QLabel* loginTitle = new QLabel("Login to Your Account");
     loginTitle->setAlignment(Qt::AlignCenter);
-    loginTitle->setStyleSheet("font-size: 18px; font-weight: bold; color: #ffffff;");
+    loginTitle->setStyleSheet(R"(
+        font-size: 22px; 
+        font-weight: bold; 
+        font-family: "Jersey 15";
+        color: #ffffff;
+    )"
+    );
     loginLayout->addWidget(loginTitle);
 
     m_loginUsernameInput = new QLineEdit();
@@ -60,7 +73,8 @@ void AccountDialog::setupUI()
             border: 2px solid #654b1f;
             border-radius: 8px;
             padding: 12px;
-            font-size: 14px;
+            font-size: 16px;
+            font-family: "Jersey 15";
             color: #2C3E50;
         }
         QLineEdit:focus {
@@ -78,7 +92,8 @@ void AccountDialog::setupUI()
             border: 2px solid #654b1f;
             border-radius: 8px;
             padding: 12px;
-            font-size: 14px;
+            font-size: 16px;
+            font-family: "Jersey 15";
             color: #2C3E50;
         }
         QLineEdit:focus {
@@ -96,11 +111,9 @@ void AccountDialog::setupUI()
             color: #2C3E50;
             border: none;
             border-radius: 10px;
-            font-size: 15px;
-            font-weight: bold;
-        }
-        QPushButton:hover {
-            background-color: #e3b310;
+            font-family: "Knight Warrior";
+            font-size: 30px;
+            letter-spacing: 1px;
         }
         QPushButton:pressed {
             background-color: #869e22;
@@ -113,7 +126,12 @@ void AccountDialog::setupUI()
 
     QLabel* registerPrompt = new QLabel("Don't have an account?");
     registerPrompt->setAlignment(Qt::AlignCenter);
-    registerPrompt->setStyleSheet("color: #ffffff; font-size: 13px;");
+    registerPrompt->setStyleSheet(R"(
+        color: #ffffff; 
+        font-size: 18px;
+        font-family: "Jersey 15";
+    )"
+    );
     loginLayout->addWidget(registerPrompt);
 
     m_goToRegisterButton = new QPushButton("Create Account");
@@ -125,8 +143,9 @@ void AccountDialog::setupUI()
             color: #f3d05a;
             border: 2px solid #f3d05a;
             border-radius: 8px;
-            font-size: 14px;
+            font-size: 22px;
             font-weight: bold;
+            font-family: "Jersey 15";
         }
         QPushButton:hover {
             background-color: rgba(243, 208, 90, 0.1);
@@ -145,7 +164,13 @@ void AccountDialog::setupUI()
 
     QLabel* registerTitle = new QLabel("Create New Account");
     registerTitle->setAlignment(Qt::AlignCenter);
-    registerTitle->setStyleSheet("font-size: 18px; font-weight: bold; color: #ffffff;");
+    registerTitle->setStyleSheet(R"(
+        font-size: 22px; 
+        font-weight: bold; 
+        font-family: "Jersey 15";
+        color: #ffffff;
+    )"
+    );
     registerLayout->addWidget(registerTitle);
 
     m_registerUsernameInput = new QLineEdit();
@@ -156,7 +181,8 @@ void AccountDialog::setupUI()
             border: 2px solid #654b1f;
             border-radius: 8px;
             padding: 12px;
-            font-size: 14px;
+            font-size: 16px;
+            font-family: "Jersey 15";
             color: #2C3E50;
         }
         QLineEdit:focus {
@@ -174,7 +200,8 @@ void AccountDialog::setupUI()
             border: 2px solid #654b1f;
             border-radius: 8px;
             padding: 12px;
-            font-size: 14px;
+            font-size: 16px;
+            font-family: "Jersey 15";
             color: #2C3E50;
         }
         QLineEdit:focus {
@@ -182,24 +209,6 @@ void AccountDialog::setupUI()
         }
     )");
     registerLayout->addWidget(m_registerPasswordInput);
-
-    //m_registerPasswordInput = new QLineEdit();
-    //m_registerPasswordInput->setPlaceholderText("Password");
-    //m_registerPasswordInput->setEchoMode(QLineEdit::Password);
-    //m_registerPasswordInput->setStyleSheet(R"(
-    //    QLineEdit {
-    //        background-color: #deaf11;
-    //        border: 2px solid #654b1f;
-    //        border-radius: 8px;
-    //        padding: 12px;
-    //        font-size: 14px;
-    //        color: #2C3E50;
-    //    }
-    //    QLineEdit:focus {
-    //      border: 2px solid #f3d05a;
-    //    }
-    //)");
-    //registerLayout->addWidget(m_registerPasswordInput);
 
     m_registerButton = new QPushButton("REGISTER");
     m_registerButton->setFixedHeight(45);
@@ -210,11 +219,9 @@ void AccountDialog::setupUI()
             color: #2C3E50;
             border: none;
             border-radius: 10px;
-            font-size: 15px;
-            font-weight: bold;
-        }
-        QPushButton:hover {
-            background-color: #e3b310;
+            font-family: "Knight Warrior";
+            font-size: 30px;
+            letter-spacing: 1px;
         }
         QPushButton:pressed {
             background-color: #869e22;
@@ -227,7 +234,12 @@ void AccountDialog::setupUI()
 
     QLabel* loginPrompt = new QLabel("Already have an account?");
     loginPrompt->setAlignment(Qt::AlignCenter);
-    loginPrompt->setStyleSheet("color: #ffffff; font-size: 13px;");
+    loginPrompt->setStyleSheet(R"(
+        color: #ffffff; 
+        font-size: 18px;
+        font-family: "Jersey 15";
+    )"
+    );
     registerLayout->addWidget(loginPrompt);
 
     m_goToLoginButton = new QPushButton("Back to Login");
@@ -239,8 +251,9 @@ void AccountDialog::setupUI()
             color: #f3d05a;
             border: 2px solid #f3d05a;
             border-radius: 8px;
-            font-size: 14px;
+            font-size: 22px;
             font-weight: bold;
+            font-family: "Jersey 15";
         }
         QPushButton:hover {
             background-color: rgba(243, 208, 90, 0.1);
@@ -273,14 +286,25 @@ void AccountDialog::setupUI()
     // Username
     m_profileUsername = new QLabel("Username");
     m_profileUsername->setAlignment(Qt::AlignCenter);
-    m_profileUsername->setStyleSheet("font-size: 24px; font-weight: bold; color: #f3d05a;");
+    m_profileUsername->setStyleSheet(R"(
+        font-size: 30px; 
+        font-weight: bold;
+        font-family: "Jersey 15"; 
+        color: #f3d05a;
+    )"
+    );
     profileLayout->addWidget(m_profileUsername);
 
     // User ID label
     QLabel* userIdLabel = new QLabel("User ID: -");
     userIdLabel->setObjectName("userIdLabel");
     userIdLabel->setAlignment(Qt::AlignCenter);
-    userIdLabel->setStyleSheet("font-size: 14px; color: #ffffff;");
+    userIdLabel->setStyleSheet(R"(
+        font-size: 18px;
+        font-family: "Jersey 15";
+        color: #ffffff;
+    )"
+    );
     profileLayout->addWidget(userIdLabel);
 
     profileLayout->addSpacing(30);
@@ -303,8 +327,9 @@ void AccountDialog::setupUI()
             color: #ffffff;
             border: none;
             border-radius: 10px;
-            font-size: 15px;
+            font-size: 30px;
             font-weight: bold;
+            font-family: "Knight Warrior";
         }
         QPushButton:hover {
             background-color: #a93226;
@@ -322,22 +347,22 @@ void AccountDialog::setupUI()
 
     // Close button
     QPushButton* closeButton = new QPushButton("CLOSE", m_contentContainer);
-    closeButton->setFixedSize(140, 45);
+    closeButton->setFixedSize(110, 55);
     closeButton->setCursor(Qt::PointingHandCursor);
     closeButton->setStyleSheet(R"(
         QPushButton {
-            background-color: #f3d05a;
-            color: #2C3E50;
-            border: none;
-            border-radius: 10px;
-            font-size: 15px;
-            font-weight: bold;
-        }
-        QPushButton:hover {
-            background-color: #e3b310;
+            border-image: url(Resources/Button.png);
+            font-family: 'Knight Warrior';
+            font-size: 35px;
+            color: white;
+            letter-spacing: 1px;
+            font-weight: bold; 
+            padding-bottom: 2px; 
         }
         QPushButton:pressed {
-            background-color: #869e22;
+            border-image: url(Resources/Button_Pressed.png);
+            padding-top: 2px;
+            padding-left: 2px;
         }
     )");
     connect(closeButton, &QPushButton::clicked, this, &AccountDialog::hideOverlay);
