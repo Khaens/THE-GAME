@@ -21,14 +21,10 @@ Game::Game(std::vector<UserModel>& users) : m_numberOfPlayers{ users.size() }
 		m_wholeDeck.InsertCard(newCard);
 		m_wholeDeck.InsertCard(newCard2);
 	}
-	Pile* ascPile1 = new Pile{ PileType::ASCENDING };
-	Pile* ascPile2 = new Pile{ PileType::ASCENDING };
-	Pile* descPile1 = new Pile{ PileType::DESCENDING };
-	Pile* descPile2 = new Pile{ PileType::DESCENDING };
-	m_piles.push_back(ascPile1);
-	m_piles.push_back(ascPile2);
-	m_piles.push_back(descPile1);
-	m_piles.push_back(descPile2);
+	m_piles[m_pileIndex++] = new Pile{ PileType::ASCENDING };
+	m_piles[m_pileIndex++] = new Pile{ PileType::ASCENDING };
+	m_piles[m_pileIndex++] = new Pile{ PileType::DESCENDING };
+	m_piles[m_pileIndex++] = new Pile{ PileType::DESCENDING };
 }
 
 size_t Game::WhoStartsFirst()
@@ -190,8 +186,6 @@ IPlayer& Game::GetCurrentPlayer()
 	return *m_players[m_currentPlayerIndex];
 }
 
-
-
 Card* Game::DrawCard()
 {
 	return m_wholeDeck.DrawCard();
@@ -207,9 +201,9 @@ const std::vector<std::unique_ptr<IPlayer>>& Game::GetPlayers()
 	return m_players;
 }
 
-std::vector<Pile*> Game::GetPiles()
+std::array<Pile*, PILES_AMOUNT> Game::GetPiles()
 {
-	return m_piles;
+	return std::array<Pile*, PILES_AMOUNT>();
 }
 
 Deck& Game::GetDeck()

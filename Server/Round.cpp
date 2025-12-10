@@ -1,10 +1,9 @@
 #include "Round.h"
-#include "GameServer.h"
 
 void Round::OneRound(Game& game, TurnContext& m_ctx)
 {
 	IPlayer& currentPlayer = game.GetCurrentPlayer();
-	std::vector<Pile*> piles = game.GetPiles();
+	std::array<Pile*, PILES_AMOUNT> piles = game.GetPiles();
 	std::cout << "A1: " << piles[0]->GetTopCard()->GetCardValue() << " | "
 		<< "A2: " << piles[1]->GetTopCard()->GetCardValue() << " | "
 		<< "D1: " << piles[2]->GetTopCard()->GetCardValue() << " | "
@@ -68,7 +67,7 @@ bool Round::CanPlaceCard(Game& game, const Card* card, Pile* pile, TurnContext& 
 		return (value < top) || (value == top + 10);
 }
 
-Pile* Round::GetPile(const std::string& pileChoice, std::vector<Pile*> piles)
+Pile* Round::GetPile(const std::string& pileChoice, std::array<Pile*, PILES_AMOUNT> piles)
 {
 	if (pileChoice == "A1") return piles[0];
 	else if (pileChoice == "A2") return piles[1];
@@ -80,7 +79,7 @@ Pile* Round::GetPile(const std::string& pileChoice, std::vector<Pile*> piles)
 int Round::NrOfPlayableCardsInHand(Game& game, TurnContext& m_ctx)
 {
 	IPlayer& currentPlayer = game.GetCurrentPlayer();
-	std::vector<Pile*> piles = game.GetPiles();
+	std::array<Pile*, PILES_AMOUNT> piles = game.GetPiles();
 	const auto& m_players = game.GetPlayers();
 
 	int count = 0;

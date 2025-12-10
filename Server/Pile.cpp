@@ -22,7 +22,6 @@ const Card* Pile::GetTopCard()
 }
 
 
-
 PileType Pile::GetPileType() const
 {
     return m_type;

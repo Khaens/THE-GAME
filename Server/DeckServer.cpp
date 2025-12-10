@@ -1,14 +1,24 @@
 #include "DeckServer.h"
 
+Deck::Deck() 
+{
+	m_initialCards.fill(nullptr);
+}
+
 Deck::~Deck()
 {
-	for (Card* card : m_initialCards)
-		delete card;
+	for (size_t i = 0; i < m_currentDeckSize; i++) {
+		delete m_initialCards[i];
+	}
 }
 
 void Deck::InsertCard(Card* insertedCard)
 {
-	m_initialCards.push_back(insertedCard);
+	if (m_currentDeckSize >= DECK_SIZE) {
+		return;
+	}
+
+	m_initialCards[m_currentDeckSize++] = insertedCard;
 }
 
 void Deck::ShuffleDeck()
@@ -21,8 +31,9 @@ void Deck::ShuffleDeck()
 Card* Deck::DrawCard()
 {
 	if (!m_initialCards.empty()) {
-		Card* drawnCard = m_initialCards.back();
-		m_initialCards.pop_back();
+		m_currentDeckSize--;
+		Card* drawnCard = m_initialCards[m_currentDeckSize];
+		m_initialCards[m_currentDeckSize] = nullptr;
 		return drawnCard;
 	}
 	else {
@@ -32,12 +43,12 @@ Card* Deck::DrawCard()
 
 bool Deck::IsEmpty() const
 {
-	return m_initialCards.empty();
+	return m_currentDeckSize == 0;
 }
 
 size_t Deck::GetSize() const
 {
-	return m_initialCards.size();
+	return m_currentDeckSize;
 }
 
 void Deck::ShowDeck() const
