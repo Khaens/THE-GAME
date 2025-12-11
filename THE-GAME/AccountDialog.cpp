@@ -111,7 +111,7 @@ void AccountDialog::setupUI()
             color: #2C3E50;
             border: none;
             border-radius: 10px;
-            font-family: "Knight Warrior";
+            font-family: "Jersey 15";
             font-size: 30px;
             letter-spacing: 1px;
         }
@@ -219,7 +219,7 @@ void AccountDialog::setupUI()
             color: #2C3E50;
             border: none;
             border-radius: 10px;
-            font-family: "Knight Warrior";
+            font-family: "Jersey 15";
             font-size: 30px;
             letter-spacing: 1px;
         }
@@ -287,7 +287,7 @@ void AccountDialog::setupUI()
     m_profileUsername = new QLabel("Username");
     m_profileUsername->setAlignment(Qt::AlignCenter);
     m_profileUsername->setStyleSheet(R"(
-        font-size: 30px; 
+        font-size: 40px; 
         font-weight: bold;
         font-family: "Jersey 15"; 
         color: #f3d05a;
@@ -352,8 +352,8 @@ void AccountDialog::setupUI()
     closeButton->setStyleSheet(R"(
         QPushButton {
             border-image: url(Resources/Button.png);
-            font-family: 'Knight Warrior';
-            font-size: 35px;
+            font-family: 'Jersey 15';
+            font-size: 40px;
             color: white;
             letter-spacing: 1px;
             font-weight: bold; 

@@ -465,6 +465,36 @@
     <Image Include="Resources\Button_Pressed.png">
       <Filter>Resource Files\Resources</Filter>
     </Image>
+    <Image Include="Resources\BannerTableMC.png">
+      <Filter>Resource Files\Resources</Filter>
+    </Image>
+    <Image Include="Resources\BeerMeter1TableMC.png">
+      <Filter>Resource Files\Resources</Filter>
+    </Image>
+    <Image Include="Resources\BeerMeter2TableMC.png">
+      <Filter>Resource Files\Resources</Filter>
+    </Image>
+    <Image Include="Resources\BeerMeter3TableMC.png">
+      <Filter>Resource Files\Resources</Filter>
+    </Image>
+    <Image Include="Resources\BeerMeter4TableMC.png">
+      <Filter>Resource Files\Resources</Filter>
+    </Image>
+    <Image Include="Resources\BeerMeter5TableMC.png">
+      <Filter>Resource Files\Resources</Filter>
+    </Image>
+    <Image Include="Resources\BeerMeterFullTableMC.png">
+      <Filter>Resource Files\Resources</Filter>
+    </Image>
+    <Image Include="Resources\BeerTableMC.png">
+      <Filter>Resource Files\Resources</Filter>
+    </Image>
+    <Image Include="Resources\FullTableMC.png">
+      <Filter>Resource Files\Resources</Filter>
+    </Image>
+    <Image Include="Resources\TableMC.png">
+      <Filter>Resource Files\Resources</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Font Include="Fonts\Jersey15-Regular.ttf">

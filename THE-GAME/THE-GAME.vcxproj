@@ -160,6 +160,14 @@
     <Image Include="Resources\97.png" />
     <Image Include="Resources\98.png" />
     <Image Include="Resources\99.png" />
+    <Image Include="Resources\BannerTableMC.png" />
+    <Image Include="Resources\BeerMeter1TableMC.png" />
+    <Image Include="Resources\BeerMeter2TableMC.png" />
+    <Image Include="Resources\BeerMeter3TableMC.png" />
+    <Image Include="Resources\BeerMeter4TableMC.png" />
+    <Image Include="Resources\BeerMeter5TableMC.png" />
+    <Image Include="Resources\BeerMeterFullTableMC.png" />
+    <Image Include="Resources\BeerTableMC.png" />
     <Image Include="Resources\Button.png" />
     <Image Include="Resources\Button_Account.png" />
     <Image Include="Resources\Button_Account_Pressed.png" />
@@ -175,6 +183,8 @@
     <Image Include="Resources\Button_Settings.png" />
     <Image Include="Resources\Button_Settings_Pressed.png" />
     <Image Include="Resources\Card_Back.png" />
+    <Image Include="Resources\FullTableMC.png" />
+    <Image Include="Resources\TableMC.png" />
     <Image Include="Resources\TextBox_1-2.png" />
     <Image Include="Resources\TextBox_1-2_Small.png" />
     <Image Include="Resources\TextBox_2-1.png" />

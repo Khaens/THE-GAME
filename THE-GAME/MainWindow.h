@@ -25,6 +25,7 @@ public:
 
 protected:
     void resizeEvent(QResizeEvent* event) override;
+    void paintEvent(QPaintEvent* event) override;
 
 private slots:
     void onNewGameClicked();
@@ -33,11 +34,12 @@ private slots:
     void onSettingsClicked();
     void onAccountClicked();
     void toggleFullScreen();
-    void showGameOverlay();  // Renamed from showGameWindow
+    void showGameOverlay();
 
 private:
     Ui::MainWindowClass* ui;
     void setupMenuStyle();
+	void loadBackgroundImage();
 
     // Overlay dialogs
     HelpDialog* m_helpDialog;
@@ -47,6 +49,8 @@ private:
     GameWindow* m_gameWindow;  // Now an overlay
 
     QPixmap m_titlePixmap;
+    QPixmap m_backgroundPixmap;     
+    QPixmap m_scaledBackground;
 
     // Network
     std::shared_ptr<NetworkManager> m_networkManager;

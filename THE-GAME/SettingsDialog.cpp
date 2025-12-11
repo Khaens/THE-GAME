@@ -161,8 +161,8 @@ void SettingsDialog::setupUI()
     applyButton->setStyleSheet(R"(
         QPushButton {
             border-image: url(Resources/Button.png);
-            font-family: 'Knight Warrior';
-            font-size: 35px;
+            font-family: 'Jersey 15';
+            font-size: 40px;
             color: white;
             letter-spacing: 1px;
             font-weight: bold; 
@@ -182,8 +182,8 @@ void SettingsDialog::setupUI()
     closeButton->setStyleSheet(R"(
         QPushButton {
             border-image: url(Resources/Button.png);
-            font-family: 'Knight Warrior';
-            font-size: 35px;
+            font-family: 'Jersey 15';
+            font-size: 40px;
             color: white;
             letter-spacing: 1px;
             font-weight: bold; 

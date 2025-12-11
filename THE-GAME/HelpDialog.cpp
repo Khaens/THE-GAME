@@ -82,14 +82,14 @@ void HelpDialog::setupUI()
 
     containerLayout->addSpacing(10);  // Small fixed space before button
 
-    QPushButton* backButton = new QPushButton("BACK TO MENU", m_contentContainer);
-    backButton->setFixedSize(220, 55);
+    QPushButton* backButton = new QPushButton("BACK", m_contentContainer);
+    backButton->setFixedSize(110, 55);
     backButton->setCursor(Qt::PointingHandCursor);
     backButton->setStyleSheet(R"(
         QPushButton {
             border-image: url(Resources/Button.png);
-            font-family: 'Knight Warrior';
-            font-size: 25px;
+            font-family: 'Jersey 15';
+            font-size: 40px;
             color: white;
             letter-spacing: 1px;
             font-weight: bold; 
