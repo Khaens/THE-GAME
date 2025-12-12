@@ -36,9 +36,6 @@
     <ClCompile Include="UserModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Gambler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="HarryPotter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -55,6 +52,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Round.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerServer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -86,16 +86,10 @@
     <ClInclude Include="AchievementsModel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Gambler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="IPlayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="HarryPotter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TurnContext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Lobby.h">
@@ -105,9 +99,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PlayerFactory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IAbility.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TaxEvader.h">

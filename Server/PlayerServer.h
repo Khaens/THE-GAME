@@ -6,6 +6,8 @@
 #include "Gambler.h"
 #include "HarryPotter.h"
 #include "TaxEvader.h"
+#include "Soothsayer.h"
+#include "Peasant.h"
 #include "TurnContext.h"
 
 template <typename Ability>
@@ -44,6 +46,9 @@ public:
     const size_t GetGamblerUses() override;
     const bool GActive() override;
     void SetGActive(bool state) override;
+
+    void SetSoothState(bool state) override;
+	virtual bool IsSoothActive() override;
 };
 
 
@@ -181,4 +186,16 @@ template<typename Ability>
 inline void Player<Ability>::SetGActive(bool state)
 {
     ability.SetGActive(state);
+}
+
+template<typename Ability>
+inline void Player<Ability>::SetSoothState(bool state)
+{
+	ability.SetSoothState(state);
+}
+
+template<typename Ability>
+inline bool Player<Ability>::IsSoothActive()
+{
+	return ability.IsSoothActive();
 }

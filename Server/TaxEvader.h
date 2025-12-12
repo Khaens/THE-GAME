@@ -1,7 +1,7 @@
 #pragma once
 #include "IAbility.h"
 
-class TaxEvader :IAbility
+class TaxEvader : IAbility
 {
 public:
 	void UseAbility(TurnContext& ctx, size_t CurrentPIndex) override;

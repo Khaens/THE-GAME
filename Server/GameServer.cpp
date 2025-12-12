@@ -102,12 +102,16 @@ void Game::StartGame()
 			std::cin >> useAbility;
 			if (std::tolower(useAbility) == 'y') {
 				currentPlayer.UseAbility(m_ctx, m_currentPlayerIndex);
-				if (m_ctx.SoothPlayerIndex != -1) {
+				if (m_ctx.SoothPlayerIndex == currentPlayer.GetPlayerIndex() &&
+					currentPlayer.IsSoothActive()) {
 					std::cout << "Other player's cards: \n";
 					for (size_t i = 0; i < m_numberOfPlayers; i++) {
-						std::cout << m_players[i]->GetUsername() << ": ";
-						if(i != currentPlayer.GetPlayerIndex())m_players[i]->ShowHand();
+						if (i != currentPlayer.GetPlayerIndex()) {
+							std::cout << m_players[i]->GetUsername() << ": ";
+							m_players[i]->ShowHand();
+						}
 					}
+					currentPlayer.SetSoothState(false);
 				}
 			}
 		}

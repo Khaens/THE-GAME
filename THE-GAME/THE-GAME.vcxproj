@@ -42,11 +42,6 @@
     <QtUic Include="MainWindow.ui" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Login-Register\Login-Register.vcxproj">
-      <Project>{346dd210-d7b8-47c8-95e9-035762a52fb4}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <QtMoc Include="LobbyDialog.h" />
     <QtMoc Include="CreateLobbyDialog.h" />
     <QtMoc Include="JoinLobbyDialog.h" />

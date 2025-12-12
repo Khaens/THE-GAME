@@ -15,12 +15,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Server\Soothsayer.h">
+    <ClInclude Include="Soothsayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Server\Soothsayer.cpp">
+    <ClCompile Include="Soothsayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

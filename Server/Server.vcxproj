@@ -110,10 +110,13 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions> /D _SILENCE_ALL_CXX20_DEPRECATION_WARNINGS /D_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(SolutionDir)IAbility\;$(SolutionDir)Gambler\;$(SolutionDir)Soothsayer\;$(SolutionDir)Peasant\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)IAbility\$(Platform)\$(Configuration)\;$(SolutionDir)Gambler\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>IAbility.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -126,12 +129,15 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions> /D _SILENCE_ALL_CXX20_DEPRECATION_WARNINGS /D_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(SolutionDir)IAbility\;$(SolutionDir)Gambler\;$(SolutionDir)Soothsayer\;$(SolutionDir)Peasant\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)IAbility\$(Platform)\$(Configuration)\;$(SolutionDir)Gambler\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>IAbility.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -139,13 +145,13 @@
     <ClCompile Include="CardServer.cpp" />
     <ClCompile Include="Database.cpp" />
     <ClCompile Include="DeckServer.cpp" />
-    <ClCompile Include="Gambler.cpp" />
     <ClCompile Include="GameServer.cpp" />
     <ClCompile Include="HarryPotter.cpp" />
     <ClCompile Include="Lobby.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Pile.cpp" />
     <ClCompile Include="PlayerFactory.cpp" />
+    <ClCompile Include="PlayerServer.cpp" />
     <ClCompile Include="Round.cpp" />
     <ClCompile Include="TaxEvader.cpp" />
     <ClCompile Include="UserModel.cpp" />
@@ -156,10 +162,8 @@
     <ClInclude Include="CardServer.h" />
     <ClInclude Include="Database.h" />
     <ClInclude Include="DeckServer.h" />
-    <ClInclude Include="Gambler.h" />
     <ClInclude Include="GameServer.h" />
     <ClInclude Include="HarryPotter.h" />
-    <ClInclude Include="IAbility.h" />
     <ClInclude Include="IPlayer.h" />
     <ClInclude Include="Lobby.h" />
     <ClInclude Include="Pile.h" />
@@ -168,10 +172,15 @@
     <ClInclude Include="PlayerServer.h" />
     <ClInclude Include="Round.h" />
     <ClInclude Include="TaxEvader.h" />
-    <ClInclude Include="TurnContext.h" />
     <ClInclude Include="UserModel.h" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Gambler\Gambler.vcxproj">
+      <Project>{aaba00f3-687a-43a3-bcf4-4277b1c77102}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Peasant\Peasant.vcxproj">
+      <Project>{8abf7418-af25-4782-8c94-a8becfc15812}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Soothsayer\Soothsayer.vcxproj">
       <Project>{6cb26b1b-b6b1-4928-920c-ce94d3b375a1}</Project>
     </ProjectReference>
