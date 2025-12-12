@@ -110,7 +110,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions> /D _SILENCE_ALL_CXX20_DEPRECATION_WARNINGS /D_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>$(SolutionDir)IAbility\;$(SolutionDir)Gambler\;$(SolutionDir)Soothsayer\;$(SolutionDir)Peasant\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)HarryPotter\;$(SolutionDir)TaxEvader\;$(SolutionDir)IAbility\;$(SolutionDir)Gambler\;$(SolutionDir)Soothsayer\;$(SolutionDir)Peasant\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -146,14 +146,12 @@
     <ClCompile Include="Database.cpp" />
     <ClCompile Include="DeckServer.cpp" />
     <ClCompile Include="GameServer.cpp" />
-    <ClCompile Include="HarryPotter.cpp" />
     <ClCompile Include="Lobby.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Pile.cpp" />
     <ClCompile Include="PlayerFactory.cpp" />
     <ClCompile Include="PlayerServer.cpp" />
     <ClCompile Include="Round.cpp" />
-    <ClCompile Include="TaxEvader.cpp" />
     <ClCompile Include="UserModel.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -163,7 +161,6 @@
     <ClInclude Include="Database.h" />
     <ClInclude Include="DeckServer.h" />
     <ClInclude Include="GameServer.h" />
-    <ClInclude Include="HarryPotter.h" />
     <ClInclude Include="IPlayer.h" />
     <ClInclude Include="Lobby.h" />
     <ClInclude Include="Pile.h" />
@@ -171,18 +168,23 @@
     <ClInclude Include="PlayerFactory.h" />
     <ClInclude Include="PlayerServer.h" />
     <ClInclude Include="Round.h" />
-    <ClInclude Include="TaxEvader.h" />
     <ClInclude Include="UserModel.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Gambler\Gambler.vcxproj">
       <Project>{aaba00f3-687a-43a3-bcf4-4277b1c77102}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\HarryPotter\HarryPotter.vcxproj">
+      <Project>{7cc77733-58a8-46b9-95fd-181f9920fe69}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Peasant\Peasant.vcxproj">
       <Project>{8abf7418-af25-4782-8c94-a8becfc15812}</Project>
     </ProjectReference>
     <ProjectReference Include="..\Soothsayer\Soothsayer.vcxproj">
       <Project>{6cb26b1b-b6b1-4928-920c-ce94d3b375a1}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\TaxEvader\TaxEvader.vcxproj">
+      <Project>{e2743207-a335-49b2-9dd7-812a2edc5b89}</Project>
     </ProjectReference>
     <ProjectReference Include="..\THE-GAME\THE-GAME.vcxproj">
       <Project>{6db65fc9-c450-41fd-90b7-33e88ca16cbc}</Project>

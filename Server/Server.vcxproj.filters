@@ -36,16 +36,10 @@
     <ClCompile Include="UserModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="HarryPotter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Lobby.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PlayerFactory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TaxEvader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="AchievementsModel.cpp">
@@ -89,9 +83,6 @@
     <ClInclude Include="IPlayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="HarryPotter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Lobby.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -99,9 +90,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PlayerFactory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TaxEvader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Round.h">

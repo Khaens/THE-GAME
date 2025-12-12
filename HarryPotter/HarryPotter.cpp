@@ -1,5 +1,5 @@
 #include "HarryPotter.h"
-#include "GameServer.h"
+#include <stdexcept>
 
 void HarryPotter::UseAbility(TurnContext& ctx, size_t currentPIndex) // special round rules for said ability
 {
