@@ -1,7 +1,7 @@
 #pragma once
 #include "IAbility.h"
 #include <cstdint>
-class Soothsayer :
+class __declspec(dllexport) Soothsayer :
     public IAbility
 {
 public:

@@ -15,6 +15,7 @@ class Player :
 private:
     std::unordered_set<Card*> m_hand;
     Ability ability;
+    size_t m_playerIndex = 10;
 public:
     Player() = default;
     Player(const UserModel& user);
@@ -25,6 +26,8 @@ public:
     const std::unordered_set<Card*>& GetHand() const override;
     Card* ChooseCard(std::string cardValue) override;
     const std::string& GetUsername() const override;
+    void SetPlayerIndex(size_t index) override;
+	size_t GetPlayerIndex() const override;
 
     void ShowHand() override;
 	void UseAbility(TurnContext& ctx, size_t currentPIndex) override;
@@ -90,6 +93,18 @@ template<typename Ability>
 const std::string& Player<Ability>::GetUsername() const
 {
     return UserModel::GetUsername();
+}
+
+template<typename Ability>
+inline void Player<Ability>::SetPlayerIndex(size_t index)
+{
+	m_playerIndex = index;
+}
+
+template<typename Ability>
+inline size_t Player<Ability>::GetPlayerIndex() const
+{
+    return m_playerIndex;
 }
 
 template <typename Ability>

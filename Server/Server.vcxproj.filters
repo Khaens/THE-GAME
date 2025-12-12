@@ -57,9 +57,6 @@
     <ClCompile Include="Round.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Soothsayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Database.h">
@@ -117,9 +114,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Round.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Soothsayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

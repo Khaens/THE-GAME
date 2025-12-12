@@ -32,8 +32,8 @@ std::vector<AbilityType> PlayerFactory::GetRandomUniqueAbilities(size_t playerCo
 {
     std::vector<AbilityType> abilities = {
         AbilityType::Gambler,
-        AbilityType::HarryPotter,
-        AbilityType::TaxEvader,
+        //AbilityType::HarryPotter,
+        //AbilityType::TaxEvader,
         AbilityType::Soothsayer
     };
 

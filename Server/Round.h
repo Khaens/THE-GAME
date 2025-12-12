@@ -18,5 +18,6 @@ public:
 	static bool CanPlaceCard(Game& game, const Card* card, Pile* pile, TurnContext& m_ctx);
 	static Pile* GetPile(const std::string& pileChoice, std::array<Pile*, PILES_AMOUNT> piles);
 	static int NrOfPlayableCardsInHand(Game& game, TurnContext& m_ctx);
+	static void UpdateContext(Game& game, TurnContext& m_ctx, IPlayer& currentPlayer);
 };
 

@@ -92,3 +92,22 @@ int Round::NrOfPlayableCardsInHand(Game& game, TurnContext& m_ctx)
 	}
 	return count;
 }
+
+void Round::UpdateContext(Game& game, TurnContext& m_ctx, IPlayer& currentPlayer)
+{
+	if (game.GetDeckSize() == 0) m_ctx.endgame = true;
+	if (m_ctx.endgame) m_ctx.baseRequired = 1;
+	else m_ctx.baseRequired = 2;
+	if (m_ctx.endgame && currentPlayer.GetPlayerIndex() == m_ctx.GamblerPlayerIndex) {
+		if (currentPlayer.GetHand().size() > 1 &&
+			currentPlayer.GetGamblerUses() > 0) {
+			m_ctx.currentRequired = 2;
+		}
+	}
+	else if (m_ctx.TaxEvPlayerIndex != -1 && game.GetPlayers()[m_ctx.TaxEvPlayerIndex]->IsTaxActive() &&
+		currentPlayer.GetPlayerIndex() == (m_ctx.TaxEvPlayerIndex + 1) % game.GetPlayers().size()) {
+		m_ctx.currentRequired = m_ctx.baseRequired * 2;
+		game.GetPlayers()[m_ctx.TaxEvPlayerIndex]->SetTaxActive(false);
+	}
+	else m_ctx.currentRequired = m_ctx.baseRequired;
+}

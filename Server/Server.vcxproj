@@ -147,7 +147,6 @@
     <ClCompile Include="Pile.cpp" />
     <ClCompile Include="PlayerFactory.cpp" />
     <ClCompile Include="Round.cpp" />
-    <ClCompile Include="Soothsayer.cpp" />
     <ClCompile Include="TaxEvader.cpp" />
     <ClCompile Include="UserModel.cpp" />
   </ItemGroup>
@@ -168,12 +167,14 @@
     <ClInclude Include="PlayerFactory.h" />
     <ClInclude Include="PlayerServer.h" />
     <ClInclude Include="Round.h" />
-    <ClInclude Include="Soothsayer.h" />
     <ClInclude Include="TaxEvader.h" />
     <ClInclude Include="TurnContext.h" />
     <ClInclude Include="UserModel.h" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Soothsayer\Soothsayer.vcxproj">
+      <Project>{6cb26b1b-b6b1-4928-920c-ce94d3b375a1}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\THE-GAME\THE-GAME.vcxproj">
       <Project>{6db65fc9-c450-41fd-90b7-33e88ca16cbc}</Project>
     </ProjectReference>
