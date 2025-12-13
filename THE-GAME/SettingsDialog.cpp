@@ -238,8 +238,6 @@ void SettingsDialog::populateResolutions()
     m_resolutions.clear();
 
     // Add standard resolutions
-    m_resolutions.append({ "1024 x 768", 1024, 768, false });
-    m_resolutions.append({ "1280 x 720", 1280, 720, false });
     m_resolutions.append({ "1366 x 768", 1366, 768, false });
 
     // Add fullscreen option

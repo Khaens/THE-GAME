@@ -83,24 +83,51 @@ void AccountDialog::setupUI()
     )");
     loginLayout->addWidget(m_loginUsernameInput);
 
+    // Container for Password and Eye
+    QWidget* passwordContainer = new QWidget();
+    passwordContainer->setObjectName("passwordContainer");
+    passwordContainer->setStyleSheet(R"(
+        #passwordContainer {
+            background-color: #deaf11;
+            border: 2px solid #654b1f;
+            border-radius: 8px;
+        }
+    )");
+    
+    QHBoxLayout* passwordLayout = new QHBoxLayout(passwordContainer);
+    passwordLayout->setContentsMargins(0, 0, 15, 0); // small right margin for the eye
+    passwordLayout->setSpacing(0);
+
     m_loginPasswordInput = new QLineEdit();
     m_loginPasswordInput->setPlaceholderText("Password");
     m_loginPasswordInput->setEchoMode(QLineEdit::Password);
     m_loginPasswordInput->setStyleSheet(R"(
         QLineEdit {
-            background-color: #deaf11;
-            border: 2px solid #654b1f;
-            border-radius: 8px;
+            background-color: transparent;
+            border: none;
             padding: 12px;
             font-size: 16px;
             font-family: "Jersey 15";
             color: #2C3E50;
         }
-        QLineEdit:focus {
-            border: 2px solid #f3d05a;
+    )");
+    
+    m_loginVisibilityButton = new QPushButton();
+    m_loginVisibilityButton->setFixedSize(24, 24);
+    m_loginVisibilityButton->setCursor(Qt::PointingHandCursor);
+    m_loginVisibilityButton->setStyleSheet(R"(
+        QPushButton {
+            border: none;
+            background-color: transparent;
+            border-image: url(Resources/ClosedEye.png);
         }
     )");
-    loginLayout->addWidget(m_loginPasswordInput);
+    connect(m_loginVisibilityButton, &QPushButton::clicked, this, &AccountDialog::onToggleLoginPasswordVisibility);
+
+    passwordLayout->addWidget(m_loginPasswordInput);
+    passwordLayout->addWidget(m_loginVisibilityButton);
+    
+    loginLayout->addWidget(passwordContainer);
 
     m_loginButton = new QPushButton("LOGIN");
     m_loginButton->setFixedHeight(45);
@@ -191,24 +218,51 @@ void AccountDialog::setupUI()
     )");
     registerLayout->addWidget(m_registerUsernameInput);
 
+    // Container for Password and Eye (Register)
+    QWidget* regPasswordContainer = new QWidget();
+    regPasswordContainer->setObjectName("regPasswordContainer");
+    regPasswordContainer->setStyleSheet(R"(
+        #regPasswordContainer {
+            background-color: #deaf11;
+            border: 2px solid #654b1f;
+            border-radius: 8px;
+        }
+    )");
+    
+    QHBoxLayout* regPasswordLayout = new QHBoxLayout(regPasswordContainer);
+    regPasswordLayout->setContentsMargins(0, 0, 15, 0); 
+    regPasswordLayout->setSpacing(0);
+
     m_registerPasswordInput = new QLineEdit();
     m_registerPasswordInput->setPlaceholderText("Password");
     m_registerPasswordInput->setEchoMode(QLineEdit::Password);
     m_registerPasswordInput->setStyleSheet(R"(
         QLineEdit {
-            background-color: #deaf11;
-            border: 2px solid #654b1f;
-            border-radius: 8px;
+            background-color: transparent;
+            border: none;
             padding: 12px;
             font-size: 16px;
             font-family: "Jersey 15";
             color: #2C3E50;
         }
-        QLineEdit:focus {
-            border: 2px solid #f3d05a;
+    )");
+    
+    m_registerVisibilityButton = new QPushButton();
+    m_registerVisibilityButton->setFixedSize(24, 24);
+    m_registerVisibilityButton->setCursor(Qt::PointingHandCursor);
+    m_registerVisibilityButton->setStyleSheet(R"(
+        QPushButton {
+            border: none;
+            background-color: transparent;
+            border-image: url(Resources/ClosedEye.png);
         }
     )");
-    registerLayout->addWidget(m_registerPasswordInput);
+    connect(m_registerVisibilityButton, &QPushButton::clicked, this, &AccountDialog::onToggleRegisterPasswordVisibility);
+
+    regPasswordLayout->addWidget(m_registerPasswordInput);
+    regPasswordLayout->addWidget(m_registerVisibilityButton);
+
+    registerLayout->addWidget(regPasswordContainer);
 
     m_registerButton = new QPushButton("REGISTER");
     m_registerButton->setFixedHeight(45);
@@ -537,6 +591,52 @@ void AccountDialog::onGoToRegisterClicked()
 void AccountDialog::onGoToLoginClicked()
 {
     showLoginPage();
+}
+
+void AccountDialog::onToggleLoginPasswordVisibility()
+{
+    if (m_loginPasswordInput->echoMode() == QLineEdit::Password) {
+        m_loginPasswordInput->setEchoMode(QLineEdit::Normal);
+        m_loginVisibilityButton->setStyleSheet(R"(
+            QPushButton {
+                border: none;
+                background-color: transparent;
+                border-image: url(Resources/OpenEye.png);
+            }
+        )");
+    } else {
+        m_loginPasswordInput->setEchoMode(QLineEdit::Password);
+        m_loginVisibilityButton->setStyleSheet(R"(
+            QPushButton {
+                border: none;
+                background-color: transparent;
+                border-image: url(Resources/ClosedEye.png);
+            }
+        )");
+    }
+}
+
+void AccountDialog::onToggleRegisterPasswordVisibility()
+{
+    if (m_registerPasswordInput->echoMode() == QLineEdit::Password) {
+        m_registerPasswordInput->setEchoMode(QLineEdit::Normal);
+        m_registerVisibilityButton->setStyleSheet(R"(
+            QPushButton {
+                border: none;
+                background-color: transparent;
+                border-image: url(Resources/OpenEye.png);
+            }
+        )");
+    } else {
+        m_registerPasswordInput->setEchoMode(QLineEdit::Password);
+        m_registerVisibilityButton->setStyleSheet(R"(
+            QPushButton {
+                border: none;
+                background-color: transparent;
+                border-image: url(Resources/ClosedEye.png);
+            }
+        )");
+    }
 }
 
 void AccountDialog::resizeEvent(QResizeEvent* event)

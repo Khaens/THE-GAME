@@ -495,6 +495,18 @@
     <Image Include="Resources\TableMC.png">
       <Filter>Resource Files\Resources</Filter>
     </Image>
+    <Image Include="..\..\..\Facultate &amp; VS\Projects\Anul 2\MC++\THE-GAME\THE-GAME\Resources\BannerTableMC.png">
+      <Filter>Resource Files\Resources</Filter>
+    </Image>
+    <Image Include="..\..\..\Facultate &amp; VS\Projects\Anul 2\MC++\THE-GAME\THE-GAME\Resources\BeerMeter1TableMC.png">
+      <Filter>Resource Files\Resources</Filter>
+    </Image>
+    <Image Include="..\..\..\Facultate &amp; VS\Projects\Anul 2\MC++\THE-GAME\THE-GAME\Resources\ClosedEye.png">
+      <Filter>Resource Files\Resources</Filter>
+    </Image>
+    <Image Include="..\..\..\Facultate &amp; VS\Projects\Anul 2\MC++\THE-GAME\THE-GAME\Resources\OpenEye.png">
+      <Filter>Resource Files\Resources</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Font Include="Fonts\Jersey15-Regular.ttf">

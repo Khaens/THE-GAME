@@ -64,7 +64,16 @@ MainWindow::MainWindow(QWidget* parent)
 
 MainWindow::~MainWindow()
 {
+    // Let Qt's parent-child system handle deletion (base class ~QWidget will delete these)
+    // We nullify strict pointers here to prevent access in resizeEvent during destruction
+    m_helpDialog = nullptr;
+    m_settingsDialog = nullptr;
+    m_accountDialog = nullptr;
+    m_lobbyDialog = nullptr;
+    m_gameWindow = nullptr;
+    
     delete ui;
+    ui = nullptr;
 }
 
 void MainWindow::loadBackgroundImage()

@@ -44,6 +44,7 @@ private:
     QWidget* m_loginPage;
     QLineEdit* m_loginUsernameInput;
     QLineEdit* m_loginPasswordInput;
+    QPushButton* m_loginVisibilityButton;
     QPushButton* m_loginButton;
     QPushButton* m_goToRegisterButton;
 
@@ -51,6 +52,7 @@ private:
     QWidget* m_registerPage;
     QLineEdit* m_registerUsernameInput;
     QLineEdit* m_registerPasswordInput;
+    QPushButton* m_registerVisibilityButton;
     QPushButton* m_registerButton;
     QPushButton* m_goToLoginButton;
 
@@ -74,4 +76,6 @@ private slots:
     void onLogoutClicked();
     void onGoToRegisterClicked();
     void onGoToLoginClicked();
+    void onToggleLoginPasswordVisibility();
+    void onToggleRegisterPasswordVisibility();
 };

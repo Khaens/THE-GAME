@@ -8,8 +8,7 @@ class GameWindow : public QWidget
 
 public:
     explicit GameWindow(QWidget* parent = nullptr);
-    ~GameWindow() = default;
-
+    ~GameWindow();
     void showOverlay();
     void hideOverlay();
 
