@@ -16,6 +16,9 @@
     <Filter Include="Resource Files\Resources">
       <UniqueIdentifier>{f9e23eb0-4dbc-453b-bcd8-402a45d83132}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Fonts">
+      <UniqueIdentifier>{c7e02a89-132d-45cd-937b-b3b4165a5665}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -94,11 +97,11 @@
     <None Include="help.html">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="help.css">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="Resources\Resource_Legend">
       <Filter>Resource Files\Resources</Filter>
+    </None>
+    <None Include="help_styles.css">
+      <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -456,5 +459,49 @@
     <Image Include="Resources\TextBox_2-1_Small.png">
       <Filter>Resource Files\Resources</Filter>
     </Image>
+    <Image Include="Resources\Button.png">
+      <Filter>Resource Files\Resources</Filter>
+    </Image>
+    <Image Include="Resources\Button_Pressed.png">
+      <Filter>Resource Files\Resources</Filter>
+    </Image>
+    <Image Include="Resources\BannerTableMC.png">
+      <Filter>Resource Files\Resources</Filter>
+    </Image>
+    <Image Include="Resources\BeerMeter1TableMC.png">
+      <Filter>Resource Files\Resources</Filter>
+    </Image>
+    <Image Include="Resources\BeerMeter2TableMC.png">
+      <Filter>Resource Files\Resources</Filter>
+    </Image>
+    <Image Include="Resources\BeerMeter3TableMC.png">
+      <Filter>Resource Files\Resources</Filter>
+    </Image>
+    <Image Include="Resources\BeerMeter4TableMC.png">
+      <Filter>Resource Files\Resources</Filter>
+    </Image>
+    <Image Include="Resources\BeerMeter5TableMC.png">
+      <Filter>Resource Files\Resources</Filter>
+    </Image>
+    <Image Include="Resources\BeerMeterFullTableMC.png">
+      <Filter>Resource Files\Resources</Filter>
+    </Image>
+    <Image Include="Resources\BeerTableMC.png">
+      <Filter>Resource Files\Resources</Filter>
+    </Image>
+    <Image Include="Resources\FullTableMC.png">
+      <Filter>Resource Files\Resources</Filter>
+    </Image>
+    <Image Include="Resources\TableMC.png">
+      <Filter>Resource Files\Resources</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="Fonts\Jersey15-Regular.ttf">
+      <Filter>Resource Files\Fonts</Filter>
+    </Font>
+    <Font Include="Fonts\KnightWarrior-w16n8.otf">
+      <Filter>Resource Files\Fonts</Filter>
+    </Font>
   </ItemGroup>
 </Project>

@@ -11,7 +11,9 @@ Game::Game(std::vector<UserModel>& users) : m_numberOfPlayers{ users.size() }
 	std::vector<AbilityType> abilities = PlayerFactory::GetRandomUniqueAbilities(users.size());
 	size_t i = 0;
 	for (auto& user : users) {
-		m_players.push_back(PlayerFactory::CreateFromUser(user, abilities[i]));
+		std::unique_ptr<IPlayer> player = PlayerFactory::CreateFromUser(user, abilities[i]);
+		player->SetPlayerIndex(i);
+		m_players.push_back(std::move(player));
 		i++;
 	}
 
@@ -21,14 +23,10 @@ Game::Game(std::vector<UserModel>& users) : m_numberOfPlayers{ users.size() }
 		m_wholeDeck.InsertCard(newCard);
 		m_wholeDeck.InsertCard(newCard2);
 	}
-	Pile* ascPile1 = new Pile{ PileType::ASCENDING };
-	Pile* ascPile2 = new Pile{ PileType::ASCENDING };
-	Pile* descPile1 = new Pile{ PileType::DESCENDING };
-	Pile* descPile2 = new Pile{ PileType::DESCENDING };
-	m_piles.push_back(ascPile1);
-	m_piles.push_back(ascPile2);
-	m_piles.push_back(descPile1);
-	m_piles.push_back(descPile2);
+	m_piles[m_pileIndex++] = new Pile{ PileType::ASCENDING };
+	m_piles[m_pileIndex++] = new Pile{ PileType::ASCENDING };
+	m_piles[m_pileIndex++] = new Pile{ PileType::DESCENDING };
+	m_piles[m_pileIndex++] = new Pile{ PileType::DESCENDING };
 }
 
 size_t Game::WhoStartsFirst()
@@ -97,33 +95,23 @@ void Game::StartGame()
 
 	while (true) {
 		IPlayer& currentPlayer = GetCurrentPlayer();
-		if (GetDeckSize() == 0) m_ctx.endgame = true;
-		if (m_ctx.endgame) m_ctx.baseRequired = 1;
-		else m_ctx.baseRequired = 2;
-		if (m_ctx.endgame && m_currentPlayerIndex == m_ctx.GamblerPlayerIndex) {
-			if (currentPlayer.GetHand().size() > 1 &&
-				currentPlayer.GetGamblerUses() > 0) {
-				m_ctx.currentRequired = 2;
-			}
-		}
-		else if (m_ctx.TaxEvPlayerIndex != -1 && m_players[m_ctx.TaxEvPlayerIndex]->IsTaxActive() &&
-			m_currentPlayerIndex == (m_ctx.TaxEvPlayerIndex + 1) % m_numberOfPlayers) {
-			m_ctx.currentRequired = m_ctx.baseRequired * 2;
-			m_players[m_ctx.TaxEvPlayerIndex]->SetTaxActive(false);
-		}
-		else m_ctx.currentRequired = m_ctx.baseRequired;
+		Round::UpdateContext(*this, m_ctx, currentPlayer);
 		if (currentPlayer.CanUseAbility(m_ctx)) {
 			std::cout << "\n" << currentPlayer.GetUsername() << ", do you want to use your ability this turn? (y/n): ";
 			char useAbility;
 			std::cin >> useAbility;
 			if (std::tolower(useAbility) == 'y') {
 				currentPlayer.UseAbility(m_ctx, m_currentPlayerIndex);
-				if (m_ctx.SoothPlayerIndex != -1) {
+				if (m_ctx.SoothPlayerIndex == currentPlayer.GetPlayerIndex() &&
+					currentPlayer.IsSoothActive()) {
 					std::cout << "Other player's cards: \n";
 					for (size_t i = 0; i < m_numberOfPlayers; i++) {
-						std::cout << m_players[i]->GetUsername() << ": ";
-						m_players[i]->ShowHand();
+						if (i != currentPlayer.GetPlayerIndex()) {
+							std::cout << m_players[i]->GetUsername() << ": ";
+							m_players[i]->ShowHand();
+						}
 					}
+					currentPlayer.SetSoothState(false);
 				}
 			}
 		}
@@ -190,8 +178,6 @@ IPlayer& Game::GetCurrentPlayer()
 	return *m_players[m_currentPlayerIndex];
 }
 
-
-
 Card* Game::DrawCard()
 {
 	return m_wholeDeck.DrawCard();
@@ -207,7 +193,7 @@ const std::vector<std::unique_ptr<IPlayer>>& Game::GetPlayers()
 	return m_players;
 }
 
-std::vector<Pile*> Game::GetPiles()
+std::array<Pile*, PILES_AMOUNT> Game::GetPiles()
 {
 	return m_piles;
 }

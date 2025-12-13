@@ -5,15 +5,16 @@
 #include <mutex>
 
 int main() {
-    /*UserModel user(1, "user", "pass");
+    UserModel user(1, "user", "pass");
     UserModel user2(2, "user2", "pass");
     UserModel user3(3, "user3", "pass");
 	UserModel user4(4, "user4", "pass");
+	UserModel user5(5, "user5", "pass");
     std::vector<UserModel> users = {
-        user, user2, user3, user4
+        user, user2, user3, user4, user5
     };
     Game g(users);
-    g.StartGame();*/
+    g.StartGame();
 
 
 	//primeste si valideaza cereri de la client, utilizand GameServer pentru logica jocului

@@ -1,16 +1,18 @@
 #pragma once
 #include "CardServer.h"
-#include <vector>
+#include <array>
 #include <random>
 #include <iostream>
 
 class Deck
 {
 private:
-	std::vector<Card*> m_initialCards;
+	constexpr static size_t DECK_SIZE = 196;
+	std::array<Card*, DECK_SIZE> m_initialCards;
+	size_t m_currentDeckSize = 0;
 
 public:
-	Deck() = default;
+	Deck();
 	~Deck();
 	void InsertCard(Card* insertedCard);
 	void ShuffleDeck();

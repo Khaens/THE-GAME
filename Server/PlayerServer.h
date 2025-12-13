@@ -6,6 +6,8 @@
 #include "Gambler.h"
 #include "HarryPotter.h"
 #include "TaxEvader.h"
+#include "Soothsayer.h"
+#include "Peasant.h"
 #include "TurnContext.h"
 
 template <typename Ability>
@@ -15,6 +17,7 @@ class Player :
 private:
     std::unordered_set<Card*> m_hand;
     Ability ability;
+    size_t m_playerIndex = 10;
 public:
     Player() = default;
     Player(const UserModel& user);
@@ -25,6 +28,8 @@ public:
     const std::unordered_set<Card*>& GetHand() const override;
     Card* ChooseCard(std::string cardValue) override;
     const std::string& GetUsername() const override;
+    void SetPlayerIndex(size_t index) override;
+	size_t GetPlayerIndex() const override;
 
     void ShowHand() override;
 	void UseAbility(TurnContext& ctx, size_t currentPIndex) override;
@@ -41,6 +46,9 @@ public:
     const size_t GetGamblerUses() override;
     const bool GActive() override;
     void SetGActive(bool state) override;
+
+    void SetSoothState(bool state) override;
+	virtual bool IsSoothActive() override;
 };
 
 
@@ -90,6 +98,18 @@ template<typename Ability>
 const std::string& Player<Ability>::GetUsername() const
 {
     return UserModel::GetUsername();
+}
+
+template<typename Ability>
+inline void Player<Ability>::SetPlayerIndex(size_t index)
+{
+	m_playerIndex = index;
+}
+
+template<typename Ability>
+inline size_t Player<Ability>::GetPlayerIndex() const
+{
+    return m_playerIndex;
 }
 
 template <typename Ability>
@@ -166,4 +186,16 @@ template<typename Ability>
 inline void Player<Ability>::SetGActive(bool state)
 {
     ability.SetGActive(state);
+}
+
+template<typename Ability>
+inline void Player<Ability>::SetSoothState(bool state)
+{
+	ability.SetSoothState(state);
+}
+
+template<typename Ability>
+inline bool Player<Ability>::IsSoothActive()
+{
+	return ability.IsSoothActive();
 }

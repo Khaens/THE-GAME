@@ -41,13 +41,26 @@ void SettingsDialog::setupUI()
     // Title
     QLabel* titleLabel = new QLabel("SETTINGS", m_contentContainer);
     titleLabel->setAlignment(Qt::AlignCenter);
-    titleLabel->setStyleSheet("font-size: 28px; font-weight: bold; color: #f3d05a; margin-bottom: 10px;");
+    titleLabel->setStyleSheet(R"(
+        font-size: 35px; 
+        font-weight: bold; 
+        font-family: "Knight Warrior";
+        color: #f3d05a; 
+        margin-top: 10px;
+    )"
+    );
     containerLayout->addWidget(titleLabel);
 
     // Resolution section label
     QLabel* resolutionSectionLabel = new QLabel("Resolution:", m_contentContainer);
     resolutionSectionLabel->setAlignment(Qt::AlignCenter);
-    resolutionSectionLabel->setStyleSheet("font-size: 16px; font-weight: bold; color: #ffffff;");
+    resolutionSectionLabel->setStyleSheet(R"(
+        font-size: 22px; 
+        font-weight: bold; 
+        font-family: "Jersey 15";
+        color: #ffffff;
+    )"
+    );
     containerLayout->addWidget(resolutionSectionLabel);
 
     // Resolution selector (arrow buttons + label)
@@ -95,8 +108,9 @@ void SettingsDialog::setupUI()
             border: 2px solid #654b1f;
             border-radius: 10px;
             padding: 10px;
-            font-size: 18px;
-            font-weight: bold;
+            font-size: 25px;
+            font-weight: bold; 
+            font-family: "Jersey 15";
         }
     )");
 
@@ -142,49 +156,43 @@ void SettingsDialog::setupUI()
     QHBoxLayout* buttonLayout = new QHBoxLayout();
 
     QPushButton* applyButton = new QPushButton("APPLY", m_contentContainer);
-    applyButton->setFixedSize(140, 45);
+    applyButton->setFixedSize(110, 55);
     applyButton->setCursor(Qt::PointingHandCursor);
     applyButton->setStyleSheet(R"(
         QPushButton {
-            background-color: #f3d05a;
-            color: #2C3E50;
-            border: none;
-            border-radius: 10px;
-            font-size: 15px;
-            font-weight: bold;
-            padding: 10px;
+            border-image: url(Resources/Button.png);
+            font-family: 'Jersey 15';
+            font-size: 40px;
+            color: white;
+            letter-spacing: 1px;
+            font-weight: bold; 
+            padding-bottom: 2px; 
         }
-        
-        QPushButton:hover {
-            background-color: #e3b310;
-        }
-        
         QPushButton:pressed {
-            background-color: #869e22;
+            border-image: url(Resources/Button_Pressed.png);
+            padding-top: 2px;
+            padding-left: 2px;
         }
     )");
     connect(applyButton, &QPushButton::clicked, this, &SettingsDialog::onApplyResolution);
 
     QPushButton* closeButton = new QPushButton("CLOSE", m_contentContainer);
-    closeButton->setFixedSize(140, 45);
+    closeButton->setFixedSize(110, 55);
     closeButton->setCursor(Qt::PointingHandCursor);
     closeButton->setStyleSheet(R"(
         QPushButton {
-            background-color: #f3d05a;
-            color: #2C3E50;
-            border: none;
-            border-radius: 10px;
-            font-size: 15px;
-            font-weight: bold;
-            padding: 10px;
+            border-image: url(Resources/Button.png);
+            font-family: 'Jersey 15';
+            font-size: 40px;
+            color: white;
+            letter-spacing: 1px;
+            font-weight: bold; 
+            padding-bottom: 2px; 
         }
-        
-        QPushButton:hover {
-            background-color: #e3b310;
-        }
-        
         QPushButton:pressed {
-            background-color: #869e22;
+            border-image: url(Resources/Button_Pressed.png);
+            padding-top: 2px;
+            padding-left: 2px;
         }
     )");
     connect(closeButton, &QPushButton::clicked, this, &SettingsDialog::hideOverlay);

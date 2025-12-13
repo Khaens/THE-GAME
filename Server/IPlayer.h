@@ -29,6 +29,12 @@ public:
 	virtual void RemoveCardFromHand(Card* card) = 0;
 	virtual Card* ChooseCard(std::string cardValue) = 0;
 	virtual const std::string& GetUsername() const = 0;
+
+	virtual bool IsSoothActive() = 0;
+	virtual void SetSoothState(bool state) = 0;
+
+	virtual void SetPlayerIndex(size_t index) = 0;
+	virtual size_t GetPlayerIndex() const = 0;
 };
 
 

@@ -42,11 +42,6 @@
     <QtUic Include="MainWindow.ui" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Login-Register\Login-Register.vcxproj">
-      <Project>{346dd210-d7b8-47c8-95e9-035762a52fb4}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <QtMoc Include="LobbyDialog.h" />
     <QtMoc Include="CreateLobbyDialog.h" />
     <QtMoc Include="JoinLobbyDialog.h" />
@@ -55,8 +50,8 @@
     <ClInclude Include="NetworkManager.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="help.css" />
     <None Include="help.html" />
+    <None Include="help_styles.css" />
     <None Include="Resources\Resource_Legend" />
   </ItemGroup>
   <ItemGroup>
@@ -160,6 +155,15 @@
     <Image Include="Resources\97.png" />
     <Image Include="Resources\98.png" />
     <Image Include="Resources\99.png" />
+    <Image Include="Resources\BannerTableMC.png" />
+    <Image Include="Resources\BeerMeter1TableMC.png" />
+    <Image Include="Resources\BeerMeter2TableMC.png" />
+    <Image Include="Resources\BeerMeter3TableMC.png" />
+    <Image Include="Resources\BeerMeter4TableMC.png" />
+    <Image Include="Resources\BeerMeter5TableMC.png" />
+    <Image Include="Resources\BeerMeterFullTableMC.png" />
+    <Image Include="Resources\BeerTableMC.png" />
+    <Image Include="Resources\Button.png" />
     <Image Include="Resources\Button_Account.png" />
     <Image Include="Resources\Button_Account_Pressed.png" />
     <Image Include="Resources\Button_Chat.png" />
@@ -170,14 +174,21 @@
     <Image Include="Resources\Button_Help_Pressed.png" />
     <Image Include="Resources\Button_Play.png" />
     <Image Include="Resources\Button_Play_Pressed.png" />
+    <Image Include="Resources\Button_Pressed.png" />
     <Image Include="Resources\Button_Settings.png" />
     <Image Include="Resources\Button_Settings_Pressed.png" />
     <Image Include="Resources\Card_Back.png" />
+    <Image Include="Resources\FullTableMC.png" />
+    <Image Include="Resources\TableMC.png" />
     <Image Include="Resources\TextBox_1-2.png" />
     <Image Include="Resources\TextBox_1-2_Small.png" />
     <Image Include="Resources\TextBox_2-1.png" />
     <Image Include="Resources\TextBox_2-1_Small.png" />
     <Image Include="Resources\TitleCard.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="Fonts\Jersey15-Regular.ttf" />
+    <Font Include="Fonts\KnightWarrior-w16n8.otf" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

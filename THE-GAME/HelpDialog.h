@@ -23,6 +23,7 @@ protected:
 private:
     void setupUI();
     void setupStyle();
+    void loadHelpResources();
     QString loadGameRules();
     void finishLoadingContent();
 

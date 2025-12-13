@@ -18,10 +18,15 @@ signals:
 
 protected:
     void resizeEvent(QResizeEvent* event) override;
+    void paintEvent(QPaintEvent* event) override;
 
 private slots:
     void onBackButtonClicked();
 
 private:
     Ui::Form* ui;
+	void loadGameImage();
+
+    QPixmap m_backgroundPixmap;
+    QPixmap m_scaledBackground;
 };  
