@@ -17,10 +17,19 @@ inline auto initStorage(const std::string& path) {
             make_column("user_id", &AchievementsModel::GetUserId, &AchievementsModel::SetUserId),
             make_column("all_on_red", &AchievementsModel::GetAllOnRed, &AchievementsModel::SetAllOnRed),
             make_column("harry_potter", &AchievementsModel::GetHarryPotter, &AchievementsModel::SetHarryPotter),
+            make_column("soothsayer", &AchievementsModel::GetSoothsayer, &AchievementsModel::SetSoothsayer),
+            make_column("tax_evader", &AchievementsModel::GetTaxEvader, &AchievementsModel::SetTaxEvader),
             make_column("serious_player", &AchievementsModel::GetSeriousPlayer, &AchievementsModel::SetSeriousPlayer),
+            make_column("jack_of_all_trades", &AchievementsModel::GetJack, &AchievementsModel::SetJack),
+            make_column("zero_effort", &AchievementsModel::GetZeroEffort, &AchievementsModel::SetZeroEffort),
+            make_column("vanilla_victory", &AchievementsModel::GetVanillaW, &AchievementsModel::SetVanillaW),
+            make_column("high_risk_high_reward", &AchievementsModel::GetHighRisk, &AchievementsModel::SetHighRisk),
+            make_column("perfect_game", &AchievementsModel::GetPerfectGame, &AchievementsModel::SetPerfectGame),
+            make_column("ghost_win", &AchievementsModel::GetGhost, &AchievementsModel::SetGhost),
             foreign_key(&AchievementsModel::GetUserId).references(&UserModel::GetId))
     );
 }
+
 
 using Storage = decltype(initStorage(""));
 
@@ -48,5 +57,6 @@ public:
     void UpdateAchievements(const AchievementsModel& achievements);
     void DeleteAchievements(int id);
     bool AchievementsExistForUser(int userId);
+    std::vector<std::string> GetUnlockedAchievement(int userId);
 };
 

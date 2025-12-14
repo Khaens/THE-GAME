@@ -8,7 +8,16 @@ private:
     int userId = 0;
     bool allOnRed = false;
     bool harryPotter = false;
+    bool soothsayer = false;
+    bool taxEvader = false;
     bool seriousPlayer = false;
+    bool jack = false;
+    bool zeroEffort = false;
+    bool vanillaW = false;
+    bool highRisk = false;
+    bool perfectGame = false;
+    bool ghost = false;
+
 
 public:
     AchievementsModel() = default;
@@ -18,11 +27,27 @@ public:
     int GetUserId() const;
     bool GetAllOnRed() const;
     bool GetHarryPotter() const;
+    bool GetSoothsayer() const;
+    bool GetTaxEvader() const;
     bool GetSeriousPlayer() const;
+    bool GetJack() const;
+    bool GetZeroEffort() const;
+    bool GetVanillaW() const;
+    bool GetHighRisk() const;
+    bool GetPerfectGame() const;
+    bool GetGhost() const;
 
     void SetId(int newId);
     void SetUserId(int newUserId);
     void SetAllOnRed(bool value);
     void SetHarryPotter(bool value);
+    void SetSoothsayer(bool value);
+    void SetTaxEvader(bool value);
     void SetSeriousPlayer(bool value);
+    void SetJack(bool value);
+    void SetZeroEffort(bool value);
+    void SetVanillaW(bool value);
+    void SetHighRisk(bool value);
+    void SetPerfectGame(bool value);
+    void SetGhost(bool value);
 };

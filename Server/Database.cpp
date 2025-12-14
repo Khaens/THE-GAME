@@ -224,3 +224,52 @@ bool Database::AchievementsExistForUser(int userId) {
         return false;
     }
 }
+
+typedef bool (AchievementsModel::* AchievementGetter)() const;
+
+static const std::unordered_map<std::string, std::string> ACHIEVEMENT_DESCRIPTIONS = {
+    {"allOnRed", "ALL ON RED: You played as the Gambler and always placed at least 2 cards in every endgame round."},
+    {"harryPotter", "HARRY POTTER: Played a game with the Harry Potter ability"},
+    {"soothsayer", "SOOTHSAYER: Played a game with the Soothsayer ability"},
+    {"taxEvader", "TAX EVADER: Played a game with the Tax Evader ability"},
+    {"seriousPlayer", "SERIOUS PLAYER: You've won 5 games. Keep it up!"},
+    {"jack", "MASTER OF ALL TRADES: Played at least one game with all class achievements. You are a truly versatile player!"},
+    {"zeroEffort", "ZERO EFFORT: Won after using the Tax Evader ability at least 3 times. Laziness is the key to success."},
+    {"vanillaW", "VANILLA VICTORY: Your team won without using any special abilities. Pure skill!"},
+    {"highRisk", "HIGH-RISK, HIGH-REWARD: You played as the Gambler and always placed maximum 2 cards in every endgame round."},
+    {"perfectGame", "PERFECT GAME: Won the game and always played cards with a maximum difference of 3 points between them throughout the entire match."},
+    {"ghost", "THE GHOST: Won the game before the endgame phase."}
+};
+
+static const std::unordered_map<std::string, AchievementGetter> ACHIEVEMENT_GETTERS = {
+    {"allOnRed", &AchievementsModel::GetAllOnRed},
+    {"harryPotter", &AchievementsModel::GetHarryPotter},
+    {"soothsayer", &AchievementsModel::GetSoothsayer},
+    {"taxEvader", &AchievementsModel::GetTaxEvader},
+    {"seriousPlayer", &AchievementsModel::GetSeriousPlayer},
+    {"jack", &AchievementsModel::GetJack},
+    {"zeroEffort", &AchievementsModel::GetZeroEffort},
+    {"vanillaW", &AchievementsModel::GetVanillaW},
+    {"highRisk", &AchievementsModel::GetHighRisk},
+    {"perfectGame", &AchievementsModel::GetPerfectGame},
+    {"ghost", &AchievementsModel::GetGhost}
+};
+
+std::vector<std::string> Database::GetUnlockedAchievement(int userId)
+{
+    std::vector<std::string> achievedDescriptions;
+
+    if (!AchievementsExistForUser(userId)) {
+        return achievedDescriptions;
+    }
+
+    AchievementsModel achievements = GetAchievementsByUserId(userId);
+
+    for (const auto& [key, getter] : ACHIEVEMENT_GETTERS) {
+        if ((achievements.*getter)()) {
+            achievedDescriptions.push_back(ACHIEVEMENT_DESCRIPTIONS.at(key));
+        }
+    }
+
+    return achievedDescriptions;
+}

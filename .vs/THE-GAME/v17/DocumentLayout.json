@@ -1,113 +1,129 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "D:\\Github Desktop\\THE-GAME\\",
+  "WorkspaceRootPath": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{6DB65FC9-C450-41FD-90B7-33E88CA16CBC}|THE-GAME\\THE-GAME.vcxproj|D:\\Github Desktop\\THE-GAME\\THE-GAME\\GameWindow.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{6DB65FC9-C450-41FD-90B7-33E88CA16CBC}|THE-GAME\\THE-GAME.vcxproj|solutionrelative:THE-GAME\\GameWindow.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\Database.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\Database.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|D:\\Github Desktop\\THE-GAME\\Server\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\AchievementsModel.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\AchievementsModel.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{6DB65FC9-C450-41FD-90B7-33E88CA16CBC}|THE-GAME\\THE-GAME.vcxproj|D:\\Github Desktop\\THE-GAME\\THE-GAME\\AccountDialog.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{6DB65FC9-C450-41FD-90B7-33E88CA16CBC}|THE-GAME\\THE-GAME.vcxproj|solutionrelative:THE-GAME\\AccountDialog.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\Database.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\Database.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{6DB65FC9-C450-41FD-90B7-33E88CA16CBC}|THE-GAME\\THE-GAME.vcxproj|D:\\Github Desktop\\THE-GAME\\THE-GAME\\SettingsDialog.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{6DB65FC9-C450-41FD-90B7-33E88CA16CBC}|THE-GAME\\THE-GAME.vcxproj|solutionrelative:THE-GAME\\SettingsDialog.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\AchievementsModel.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\AchievementsModel.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E2743207-A335-49B2-9DD7-812A2EDC5B89}|TaxEvader\\TaxEvader.vcxproj|D:\\Github Desktop\\THE-GAME\\TaxEvader\\TaxEvader.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{E2743207-A335-49B2-9DD7-812A2EDC5B89}|TaxEvader\\TaxEvader.vcxproj|C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\TaxEvader\\TaxEvader.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{E2743207-A335-49B2-9DD7-812A2EDC5B89}|TaxEvader\\TaxEvader.vcxproj|solutionrelative:TaxEvader\\TaxEvader.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E2743207-A335-49B2-9DD7-812A2EDC5B89}|TaxEvader\\TaxEvader.vcxproj|D:\\Github Desktop\\THE-GAME\\TaxEvader\\TaxEvader.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{6DB65FC9-C450-41FD-90B7-33E88CA16CBC}|THE-GAME\\THE-GAME.vcxproj|C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\THE-GAME\\GameWindow.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{6DB65FC9-C450-41FD-90B7-33E88CA16CBC}|THE-GAME\\THE-GAME.vcxproj|solutionrelative:THE-GAME\\GameWindow.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6DB65FC9-C450-41FD-90B7-33E88CA16CBC}|THE-GAME\\THE-GAME.vcxproj|C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\THE-GAME\\AccountDialog.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{6DB65FC9-C450-41FD-90B7-33E88CA16CBC}|THE-GAME\\THE-GAME.vcxproj|solutionrelative:THE-GAME\\AccountDialog.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6DB65FC9-C450-41FD-90B7-33E88CA16CBC}|THE-GAME\\THE-GAME.vcxproj|C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\THE-GAME\\SettingsDialog.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{6DB65FC9-C450-41FD-90B7-33E88CA16CBC}|THE-GAME\\THE-GAME.vcxproj|solutionrelative:THE-GAME\\SettingsDialog.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E2743207-A335-49B2-9DD7-812A2EDC5B89}|TaxEvader\\TaxEvader.vcxproj|C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\TaxEvader\\TaxEvader.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{E2743207-A335-49B2-9DD7-812A2EDC5B89}|TaxEvader\\TaxEvader.vcxproj|solutionrelative:TaxEvader\\TaxEvader.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{0D18B6B4-2C83-4CC4-ADEF-51F6A0EB297E}|IAbility\\IAbility.vcxproj|D:\\Github Desktop\\THE-GAME\\IAbility\\IAbility.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{0D18B6B4-2C83-4CC4-ADEF-51F6A0EB297E}|IAbility\\IAbility.vcxproj|C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\IAbility\\IAbility.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{0D18B6B4-2C83-4CC4-ADEF-51F6A0EB297E}|IAbility\\IAbility.vcxproj|solutionrelative:IAbility\\IAbility.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{0D18B6B4-2C83-4CC4-ADEF-51F6A0EB297E}|IAbility\\IAbility.vcxproj|D:\\Github Desktop\\THE-GAME\\IAbility\\IAbility.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{0D18B6B4-2C83-4CC4-ADEF-51F6A0EB297E}|IAbility\\IAbility.vcxproj|C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\IAbility\\IAbility.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{0D18B6B4-2C83-4CC4-ADEF-51F6A0EB297E}|IAbility\\IAbility.vcxproj|solutionrelative:IAbility\\IAbility.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{7CC77733-58A8-46B9-95FD-181F9920FE69}|HarryPotter\\HarryPotter.vcxproj|D:\\Github Desktop\\THE-GAME\\HarryPotter\\HarryPotter.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{7CC77733-58A8-46B9-95FD-181F9920FE69}|HarryPotter\\HarryPotter.vcxproj|C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\HarryPotter\\HarryPotter.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{7CC77733-58A8-46B9-95FD-181F9920FE69}|HarryPotter\\HarryPotter.vcxproj|solutionrelative:HarryPotter\\HarryPotter.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{7CC77733-58A8-46B9-95FD-181F9920FE69}|HarryPotter\\HarryPotter.vcxproj|D:\\Github Desktop\\THE-GAME\\HarryPotter\\HarryPotter.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{7CC77733-58A8-46B9-95FD-181F9920FE69}|HarryPotter\\HarryPotter.vcxproj|C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\HarryPotter\\HarryPotter.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{7CC77733-58A8-46B9-95FD-181F9920FE69}|HarryPotter\\HarryPotter.vcxproj|solutionrelative:HarryPotter\\HarryPotter.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{AABA00F3-687A-43A3-BCF4-4277B1C77102}|Gambler\\Gambler.vcxproj|D:\\Github Desktop\\THE-GAME\\Gambler\\Gambler.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{AABA00F3-687A-43A3-BCF4-4277B1C77102}|Gambler\\Gambler.vcxproj|C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Gambler\\Gambler.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{AABA00F3-687A-43A3-BCF4-4277B1C77102}|Gambler\\Gambler.vcxproj|solutionrelative:Gambler\\Gambler.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|D:\\Github Desktop\\THE-GAME\\Server\\GameServer.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\GameServer.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\GameServer.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{0D18B6B4-2C83-4CC4-ADEF-51F6A0EB297E}|IAbility\\IAbility.vcxproj|D:\\Github Desktop\\THE-GAME\\IAbility\\TurnContext.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{0D18B6B4-2C83-4CC4-ADEF-51F6A0EB297E}|IAbility\\IAbility.vcxproj|C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\IAbility\\TurnContext.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{0D18B6B4-2C83-4CC4-ADEF-51F6A0EB297E}|IAbility\\IAbility.vcxproj|solutionrelative:IAbility\\TurnContext.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|D:\\Github Desktop\\THE-GAME\\Server\\PlayerServer.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\PlayerServer.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\PlayerServer.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|D:\\Github Desktop\\THE-GAME\\Server\\PlayerServer.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\PlayerServer.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\PlayerServer.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{AABA00F3-687A-43A3-BCF4-4277B1C77102}|Gambler\\Gambler.vcxproj|D:\\Github Desktop\\THE-GAME\\Gambler\\Gambler.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{AABA00F3-687A-43A3-BCF4-4277B1C77102}|Gambler\\Gambler.vcxproj|C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Gambler\\Gambler.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{AABA00F3-687A-43A3-BCF4-4277B1C77102}|Gambler\\Gambler.vcxproj|solutionrelative:Gambler\\Gambler.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{6CB26B1B-B6B1-4928-920C-CE94D3B375A1}|Soothsayer\\Soothsayer.vcxproj|D:\\Github Desktop\\THE-GAME\\Soothsayer\\Soothsayer.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{6CB26B1B-B6B1-4928-920C-CE94D3B375A1}|Soothsayer\\Soothsayer.vcxproj|C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Soothsayer\\Soothsayer.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{6CB26B1B-B6B1-4928-920C-CE94D3B375A1}|Soothsayer\\Soothsayer.vcxproj|solutionrelative:Soothsayer\\Soothsayer.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{6CB26B1B-B6B1-4928-920C-CE94D3B375A1}|Soothsayer\\Soothsayer.vcxproj|D:\\Github Desktop\\THE-GAME\\Soothsayer\\Soothsayer.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{6CB26B1B-B6B1-4928-920C-CE94D3B375A1}|Soothsayer\\Soothsayer.vcxproj|C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Soothsayer\\Soothsayer.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{6CB26B1B-B6B1-4928-920C-CE94D3B375A1}|Soothsayer\\Soothsayer.vcxproj|solutionrelative:Soothsayer\\Soothsayer.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8ABF7418-AF25-4782-8C94-A8BECFC15812}|Peasant\\Peasant.vcxproj|D:\\Github Desktop\\THE-GAME\\Peasant\\Peasant.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{8ABF7418-AF25-4782-8C94-A8BECFC15812}|Peasant\\Peasant.vcxproj|C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Peasant\\Peasant.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{8ABF7418-AF25-4782-8C94-A8BECFC15812}|Peasant\\Peasant.vcxproj|solutionrelative:Peasant\\Peasant.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{0D18B6B4-2C83-4CC4-ADEF-51F6A0EB297E}|IAbility\\IAbility.vcxproj|D:\\Github Desktop\\THE-GAME\\IAbility\\TurnContext.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{0D18B6B4-2C83-4CC4-ADEF-51F6A0EB297E}|IAbility\\IAbility.vcxproj|C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\IAbility\\TurnContext.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{0D18B6B4-2C83-4CC4-ADEF-51F6A0EB297E}|IAbility\\IAbility.vcxproj|solutionrelative:IAbility\\TurnContext.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|D:\\Github Desktop\\THE-GAME\\Server\\GameServer.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\GameServer.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\GameServer.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|D:\\Github Desktop\\THE-GAME\\Server\\IPlayer.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\IPlayer.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\IPlayer.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|D:\\Github Desktop\\THE-GAME\\Server\\PlayerFactory.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\PlayerFactory.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\PlayerFactory.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|D:\\Github Desktop\\THE-GAME\\Server\\PlayerFactory.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\PlayerFactory.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\PlayerFactory.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|D:\\Github Desktop\\THE-GAME\\Server\\Pile.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\Pile.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\Pile.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|D:\\Github Desktop\\THE-GAME\\Server\\Round.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\Round.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\Round.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|D:\\Github Desktop\\THE-GAME\\Server\\Round.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\Round.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\Round.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
@@ -124,38 +140,92 @@
           "SelectedChildIndex": 2,
           "Children": [
             {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "AccountDialog.cpp",
-              "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\THE-GAME\\AccountDialog.cpp",
-              "RelativeDocumentMoniker": "THE-GAME\\AccountDialog.cpp",
-              "ToolTip": "D:\\Github Desktop\\THE-GAME\\THE-GAME\\AccountDialog.cpp",
-              "RelativeToolTip": "THE-GAME\\AccountDialog.cpp",
-              "ViewState": "AgIAAEUAAAAAAAAAAAAAAGEAAAAuAAAAAAAAAA==",
+              "Title": "Database.cpp",
+              "DocumentMoniker": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\Database.cpp",
+              "RelativeDocumentMoniker": "Server\\Database.cpp",
+              "ToolTip": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\Database.cpp",
+              "RelativeToolTip": "Server\\Database.cpp",
+              "ViewState": "AgIAAOoAAAAAAAAAAAAiwBMBAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-12-13T23:37:47.165Z",
+              "WhenOpened": "2025-12-14T10:39:34.905Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "Database.h",
+              "DocumentMoniker": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\Database.h",
+              "RelativeDocumentMoniker": "Server\\Database.h",
+              "ToolTip": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\Database.h",
+              "RelativeToolTip": "Server\\Database.h",
+              "ViewState": "AgIAADIAAAAAAAAAAAAAADsAAAAyAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-12-14T10:38:33.923Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "AchievementsModel.cpp",
+              "DocumentMoniker": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\AchievementsModel.cpp",
+              "RelativeDocumentMoniker": "Server\\AchievementsModel.cpp",
+              "ToolTip": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\AchievementsModel.cpp",
+              "RelativeToolTip": "Server\\AchievementsModel.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-12-14T10:39:13.604Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AchievementsModel.h",
+              "DocumentMoniker": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\AchievementsModel.h",
+              "RelativeDocumentMoniker": "Server\\AchievementsModel.h",
+              "ToolTip": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\AchievementsModel.h",
+              "RelativeToolTip": "Server\\AchievementsModel.h",
+              "ViewState": "AgIAACEAAAAAAAAAAAAAADUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-12-14T10:38:38.705Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "AccountDialog.cpp",
+              "DocumentMoniker": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\THE-GAME\\AccountDialog.cpp",
+              "RelativeDocumentMoniker": "THE-GAME\\AccountDialog.cpp",
+              "ToolTip": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\THE-GAME\\AccountDialog.cpp",
+              "RelativeToolTip": "THE-GAME\\AccountDialog.cpp",
+              "ViewState": "AgIAAEUAAAAAAAAAAAAAAGEAAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-12-13T23:37:47.165Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
               "Title": "GameWindow.cpp",
-              "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\THE-GAME\\GameWindow.cpp",
+              "DocumentMoniker": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\THE-GAME\\GameWindow.cpp",
               "RelativeDocumentMoniker": "THE-GAME\\GameWindow.cpp",
-              "ToolTip": "D:\\Github Desktop\\THE-GAME\\THE-GAME\\GameWindow.cpp",
+              "ToolTip": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\THE-GAME\\GameWindow.cpp",
               "RelativeToolTip": "THE-GAME\\GameWindow.cpp",
               "ViewState": "AgIAAFQAAAAAAAAAAAAAAF0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-12-13T23:34:21.073Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-13T23:34:21.073Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
               "Title": "TaxEvader.cpp",
-              "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\TaxEvader\\TaxEvader.cpp",
+              "DocumentMoniker": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\TaxEvader\\TaxEvader.cpp",
               "RelativeDocumentMoniker": "TaxEvader\\TaxEvader.cpp",
-              "ToolTip": "D:\\Github Desktop\\THE-GAME\\TaxEvader\\TaxEvader.cpp",
+              "ToolTip": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\TaxEvader\\TaxEvader.cpp",
               "RelativeToolTip": "TaxEvader\\TaxEvader.cpp",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
@@ -164,24 +234,23 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 9,
               "Title": "TaxEvader.h",
-              "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\TaxEvader\\TaxEvader.h",
+              "DocumentMoniker": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\TaxEvader\\TaxEvader.h",
               "RelativeDocumentMoniker": "TaxEvader\\TaxEvader.h",
-              "ToolTip": "D:\\Github Desktop\\THE-GAME\\TaxEvader\\TaxEvader.h",
+              "ToolTip": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\TaxEvader\\TaxEvader.h",
               "RelativeToolTip": "TaxEvader\\TaxEvader.h",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAnAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-12-12T17:26:13.771Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-12T17:26:13.771Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 12,
               "Title": "HarryPotter.h",
-              "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\HarryPotter\\HarryPotter.h",
+              "DocumentMoniker": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\HarryPotter\\HarryPotter.h",
               "RelativeDocumentMoniker": "HarryPotter\\HarryPotter.h",
-              "ToolTip": "D:\\Github Desktop\\THE-GAME\\HarryPotter\\HarryPotter.h",
+              "ToolTip": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\HarryPotter\\HarryPotter.h",
               "RelativeToolTip": "HarryPotter\\HarryPotter.h",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAgAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
@@ -189,11 +258,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 13,
               "Title": "HarryPotter.cpp",
-              "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\HarryPotter\\HarryPotter.cpp",
+              "DocumentMoniker": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\HarryPotter\\HarryPotter.cpp",
               "RelativeDocumentMoniker": "HarryPotter\\HarryPotter.cpp",
-              "ToolTip": "D:\\Github Desktop\\THE-GAME\\HarryPotter\\HarryPotter.cpp",
+              "ToolTip": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\HarryPotter\\HarryPotter.cpp",
               "RelativeToolTip": "HarryPotter\\HarryPotter.cpp",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
@@ -201,11 +270,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 18,
               "Title": "PlayerServer.cpp",
-              "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\Server\\PlayerServer.cpp",
+              "DocumentMoniker": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\PlayerServer.cpp",
               "RelativeDocumentMoniker": "Server\\PlayerServer.cpp",
-              "ToolTip": "D:\\Github Desktop\\THE-GAME\\Server\\PlayerServer.cpp",
+              "ToolTip": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\PlayerServer.cpp",
               "RelativeToolTip": "Server\\PlayerServer.cpp",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAZAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
@@ -213,11 +282,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 20,
               "Title": "Soothsayer.cpp",
-              "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\Soothsayer\\Soothsayer.cpp",
+              "DocumentMoniker": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Soothsayer\\Soothsayer.cpp",
               "RelativeDocumentMoniker": "Soothsayer\\Soothsayer.cpp",
-              "ToolTip": "D:\\Github Desktop\\THE-GAME\\Soothsayer\\Soothsayer.cpp",
+              "ToolTip": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Soothsayer\\Soothsayer.cpp",
               "RelativeToolTip": "Soothsayer\\Soothsayer.cpp",
               "ViewState": "AgIAAAoAAAAAAAAAAAAAAEUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
@@ -225,37 +294,35 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 6,
               "Title": "main.cpp",
-              "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\Server\\main.cpp",
+              "DocumentMoniker": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\main.cpp",
               "RelativeDocumentMoniker": "Server\\main.cpp",
-              "ToolTip": "D:\\Github Desktop\\THE-GAME\\Server\\main.cpp",
+              "ToolTip": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\main.cpp",
               "RelativeToolTip": "Server\\main.cpp",
               "ViewState": "AgIAABgAAAAAAAAAAAAAAAoAAAAlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-12-12T14:21:34.225Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-12T14:21:34.225Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 8,
               "Title": "SettingsDialog.cpp",
-              "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\THE-GAME\\SettingsDialog.cpp",
+              "DocumentMoniker": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\THE-GAME\\SettingsDialog.cpp",
               "RelativeDocumentMoniker": "THE-GAME\\SettingsDialog.cpp",
-              "ToolTip": "D:\\Github Desktop\\THE-GAME\\THE-GAME\\SettingsDialog.cpp",
+              "ToolTip": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\THE-GAME\\SettingsDialog.cpp",
               "RelativeToolTip": "THE-GAME\\SettingsDialog.cpp",
               "ViewState": "AgIAAM8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-12-13T23:37:38.65Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-13T23:37:38.65Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 21,
               "Title": "Soothsayer.h",
-              "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\Soothsayer\\Soothsayer.h",
+              "DocumentMoniker": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Soothsayer\\Soothsayer.h",
               "RelativeDocumentMoniker": "Soothsayer\\Soothsayer.h",
-              "ToolTip": "D:\\Github Desktop\\THE-GAME\\Soothsayer\\Soothsayer.h",
+              "ToolTip": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Soothsayer\\Soothsayer.h",
               "RelativeToolTip": "Soothsayer\\Soothsayer.h",
               "ViewState": "AgIAAAoAAAAAAAAAAAAAAB4AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
@@ -263,11 +330,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 19,
               "Title": "Gambler.cpp",
-              "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\Gambler\\Gambler.cpp",
+              "DocumentMoniker": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Gambler\\Gambler.cpp",
               "RelativeDocumentMoniker": "Gambler\\Gambler.cpp",
-              "ToolTip": "D:\\Github Desktop\\THE-GAME\\Gambler\\Gambler.cpp",
+              "ToolTip": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Gambler\\Gambler.cpp",
               "RelativeToolTip": "Gambler\\Gambler.cpp",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
@@ -275,11 +342,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 23,
               "Title": "TurnContext.cpp",
-              "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\IAbility\\TurnContext.cpp",
+              "DocumentMoniker": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\IAbility\\TurnContext.cpp",
               "RelativeDocumentMoniker": "IAbility\\TurnContext.cpp",
-              "ToolTip": "D:\\Github Desktop\\THE-GAME\\IAbility\\TurnContext.cpp",
+              "ToolTip": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\IAbility\\TurnContext.cpp",
               "RelativeToolTip": "IAbility\\TurnContext.cpp",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAYAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
@@ -287,11 +354,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 16,
               "Title": "TurnContext.h",
-              "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\IAbility\\TurnContext.h",
+              "DocumentMoniker": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\IAbility\\TurnContext.h",
               "RelativeDocumentMoniker": "IAbility\\TurnContext.h",
-              "ToolTip": "D:\\Github Desktop\\THE-GAME\\IAbility\\TurnContext.h",
+              "ToolTip": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\IAbility\\TurnContext.h",
               "RelativeToolTip": "IAbility\\TurnContext.h",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
@@ -299,11 +366,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 11,
               "Title": "IAbility.cpp",
-              "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\IAbility\\IAbility.cpp",
+              "DocumentMoniker": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\IAbility\\IAbility.cpp",
               "RelativeDocumentMoniker": "IAbility\\IAbility.cpp",
-              "ToolTip": "D:\\Github Desktop\\THE-GAME\\IAbility\\IAbility.cpp",
+              "ToolTip": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\IAbility\\IAbility.cpp",
               "RelativeToolTip": "IAbility\\IAbility.cpp",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
@@ -311,11 +378,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 14,
               "Title": "Gambler.h",
-              "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\Gambler\\Gambler.h",
+              "DocumentMoniker": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Gambler\\Gambler.h",
               "RelativeDocumentMoniker": "Gambler\\Gambler.h",
-              "ToolTip": "D:\\Github Desktop\\THE-GAME\\Gambler\\Gambler.h",
+              "ToolTip": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Gambler\\Gambler.h",
               "RelativeToolTip": "Gambler\\Gambler.h",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAGAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
@@ -323,11 +390,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 22,
               "Title": "Peasant.h",
-              "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\Peasant\\Peasant.h",
+              "DocumentMoniker": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Peasant\\Peasant.h",
               "RelativeDocumentMoniker": "Peasant\\Peasant.h",
-              "ToolTip": "D:\\Github Desktop\\THE-GAME\\Peasant\\Peasant.h",
+              "ToolTip": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Peasant\\Peasant.h",
               "RelativeToolTip": "Peasant\\Peasant.h",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
@@ -335,11 +402,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 10,
               "Title": "IAbility.h",
-              "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\IAbility\\IAbility.h",
+              "DocumentMoniker": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\IAbility\\IAbility.h",
               "RelativeDocumentMoniker": "IAbility\\IAbility.h",
-              "ToolTip": "D:\\Github Desktop\\THE-GAME\\IAbility\\IAbility.h",
+              "ToolTip": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\IAbility\\IAbility.h",
               "RelativeToolTip": "IAbility\\IAbility.h",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAkAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
@@ -347,11 +414,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 23,
+              "DocumentIndex": 27,
               "Title": "PlayerFactory.cpp",
-              "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\Server\\PlayerFactory.cpp",
+              "DocumentMoniker": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\PlayerFactory.cpp",
               "RelativeDocumentMoniker": "Server\\PlayerFactory.cpp",
-              "ToolTip": "D:\\Github Desktop\\THE-GAME\\Server\\PlayerFactory.cpp",
+              "ToolTip": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\PlayerFactory.cpp",
               "RelativeToolTip": "Server\\PlayerFactory.cpp",
               "ViewState": "AgIAAAkAAAAAAAAAAAAAACcAAAAfAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
@@ -359,21 +426,23 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 27,
+              "DocumentIndex": 31,
               "Title": "deque",
               "DocumentMoniker": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\include\\deque",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\..\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\include\\deque",
               "ToolTip": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\include\\deque",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\..\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\include\\deque",
               "ViewState": "AgIAAMADAAAAAAAAAAAYwMoDAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
               "WhenOpened": "2025-12-12T14:39:46.021Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 22,
+              "DocumentIndex": 26,
               "Title": "PlayerFactory.h",
-              "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\Server\\PlayerFactory.h",
+              "DocumentMoniker": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\PlayerFactory.h",
               "RelativeDocumentMoniker": "Server\\PlayerFactory.h",
-              "ToolTip": "D:\\Github Desktop\\THE-GAME\\Server\\PlayerFactory.h",
+              "ToolTip": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\PlayerFactory.h",
               "RelativeToolTip": "Server\\PlayerFactory.h",
               "ViewState": "AgIAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
@@ -381,11 +450,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 24,
+              "DocumentIndex": 28,
               "Title": "Pile.cpp",
-              "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\Server\\Pile.cpp",
+              "DocumentMoniker": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\Pile.cpp",
               "RelativeDocumentMoniker": "Server\\Pile.cpp",
-              "ToolTip": "D:\\Github Desktop\\THE-GAME\\Server\\Pile.cpp",
+              "ToolTip": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\Pile.cpp",
               "RelativeToolTip": "Server\\Pile.cpp",
               "ViewState": "AgIAAAoAAAAAAAAAAAAYwBQAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
@@ -393,11 +462,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 17,
               "Title": "PlayerServer.h",
-              "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\Server\\PlayerServer.h",
+              "DocumentMoniker": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\PlayerServer.h",
               "RelativeDocumentMoniker": "Server\\PlayerServer.h",
-              "ToolTip": "D:\\Github Desktop\\THE-GAME\\Server\\PlayerServer.h",
+              "ToolTip": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\PlayerServer.h",
               "RelativeToolTip": "Server\\PlayerServer.h",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
@@ -405,11 +474,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 25,
               "Title": "IPlayer.h",
-              "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\Server\\IPlayer.h",
+              "DocumentMoniker": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\IPlayer.h",
               "RelativeDocumentMoniker": "Server\\IPlayer.h",
-              "ToolTip": "D:\\Github Desktop\\THE-GAME\\Server\\IPlayer.h",
+              "ToolTip": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\IPlayer.h",
               "RelativeToolTip": "Server\\IPlayer.h",
               "ViewState": "AgIAAAYAAAAAAAAAAAAAACEAAAAsAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
@@ -417,11 +486,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 25,
+              "DocumentIndex": 29,
               "Title": "Round.cpp",
-              "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\Server\\Round.cpp",
+              "DocumentMoniker": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\Round.cpp",
               "RelativeDocumentMoniker": "Server\\Round.cpp",
-              "ToolTip": "D:\\Github Desktop\\THE-GAME\\Server\\Round.cpp",
+              "ToolTip": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\Round.cpp",
               "RelativeToolTip": "Server\\Round.cpp",
               "ViewState": "AgIAACYAAAAAAAAAAAAYwDMAAAAqAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
@@ -429,11 +498,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 26,
+              "DocumentIndex": 30,
               "Title": "Round.h",
-              "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\Server\\Round.h",
+              "DocumentMoniker": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\Round.h",
               "RelativeDocumentMoniker": "Server\\Round.h",
-              "ToolTip": "D:\\Github Desktop\\THE-GAME\\Server\\Round.h",
+              "ToolTip": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\Round.h",
               "RelativeToolTip": "Server\\Round.h",
               "ViewState": "AgIAAAkAAAAAAAAAAAAAABQAAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
@@ -441,11 +510,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 15,
               "Title": "GameServer.cpp",
-              "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\Server\\GameServer.cpp",
+              "DocumentMoniker": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\GameServer.cpp",
               "RelativeDocumentMoniker": "Server\\GameServer.cpp",
-              "ToolTip": "D:\\Github Desktop\\THE-GAME\\Server\\GameServer.cpp",
+              "ToolTip": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\GameServer.cpp",
               "RelativeToolTip": "Server\\GameServer.cpp",
               "ViewState": "AgIAAGIAAAAAAAAAAAAYwGkAAAAlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
@@ -453,11 +522,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 24,
               "Title": "GameServer.h",
-              "DocumentMoniker": "D:\\Github Desktop\\THE-GAME\\Server\\GameServer.h",
+              "DocumentMoniker": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\GameServer.h",
               "RelativeDocumentMoniker": "Server\\GameServer.h",
-              "ToolTip": "D:\\Github Desktop\\THE-GAME\\Server\\GameServer.h",
+              "ToolTip": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\GameServer.h",
               "RelativeToolTip": "Server\\GameServer.h",
               "ViewState": "AgIAAAwAAAAAAAAAAAAAACYAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
