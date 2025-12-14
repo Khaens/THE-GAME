@@ -29,7 +29,7 @@ private:
 public:
 	Game(std::vector<UserModel>& users);
 	size_t WhoStartsFirst();
-	bool IsGameOver(const IPlayer& currentPlayer);
+	bool IsGameOver(IPlayer& currentPlayer);
 	void StartGame();
 	void NextPlayer();
 

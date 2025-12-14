@@ -18,6 +18,7 @@ private:
     std::unordered_set<Card*> m_hand;
     Ability ability;
     size_t m_playerIndex = 10;
+    bool m_finished = false;
 public:
     Player() = default;
     Player(const UserModel& user);
@@ -30,6 +31,8 @@ public:
     const std::string& GetUsername() const override;
     void SetPlayerIndex(size_t index) override;
 	size_t GetPlayerIndex() const override;
+    void SetFinished(bool state) override;
+    bool IsFinished() const override;
 
     void ShowHand() override;
 	void UseAbility(TurnContext& ctx, size_t currentPIndex) override;
@@ -110,6 +113,18 @@ template<typename Ability>
 inline size_t Player<Ability>::GetPlayerIndex() const
 {
     return m_playerIndex;
+}
+
+template<typename Ability>
+inline void Player<Ability>::SetFinished(bool state)
+{
+	m_finished = state;
+}
+
+template<typename Ability>
+inline bool Player<Ability>::IsFinished() const
+{
+    return m_finished;
 }
 
 template <typename Ability>

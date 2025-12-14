@@ -111,3 +111,42 @@ void Round::UpdateContext(Game& game, TurnContext& m_ctx, IPlayer& currentPlayer
 	}
 	else m_ctx.currentRequired = m_ctx.baseRequired;
 }
+
+bool Round::IsGameWon(Game& game, IPlayer& currentPlayer)
+{
+	if (currentPlayer.GetHand().size() == 0) currentPlayer.SetFinished(true);
+	bool gameWon = false;
+	for (size_t i = 0; i < game.GetPlayers().size(); i++) {
+		if (!game.GetPlayers()[i]->IsFinished()) {
+			gameWon = false;
+		}
+	}
+	while (!currentPlayer.IsFinished()) {
+		game.NextPlayer();
+		currentPlayer = game.GetCurrentPlayer();
+	}
+	return gameWon;
+}
+
+void Round::AbilityUse(Game& game, TurnContext& m_ctx, IPlayer& currentPlayer)
+{
+	if (currentPlayer.CanUseAbility(m_ctx)) {
+		std::cout << "\n" << currentPlayer.GetUsername() << ", do you want to use your ability this turn? (y/n): ";
+		char useAbility;
+		std::cin >> useAbility;
+		if (std::tolower(useAbility) == 'y') {
+			currentPlayer.UseAbility(m_ctx, currentPlayer.GetPlayerIndex());
+			if (m_ctx.SoothPlayerIndex == currentPlayer.GetPlayerIndex() &&
+				currentPlayer.IsSoothActive()) {
+				std::cout << "Other player's cards: \n";
+				for (size_t i = 0; i < game.GetPlayers().size(); i++) {
+					if (i != currentPlayer.GetPlayerIndex()) {
+						std::cout << game.GetPlayers()[i]->GetUsername() << ": ";
+						game.GetPlayers()[i]->ShowHand();
+					}
+				}
+				currentPlayer.SetSoothState(false);
+			}
+		}
+	}
+}

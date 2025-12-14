@@ -10,6 +10,8 @@ public:
     virtual ~IPlayer() = default;
     virtual void UseAbility(TurnContext& ctx, size_t currentPIndex) = 0;
 	virtual bool CanUseAbility(TurnContext& ctx) const = 0;
+	virtual bool IsFinished() const = 0;
+	virtual void SetFinished(bool state) = 0;
     
 	virtual const bool IsTaxActive() = 0;
 	virtual void SetTaxActive(bool state) = 0;

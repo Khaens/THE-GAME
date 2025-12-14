@@ -66,10 +66,11 @@ size_t Game::WhoStartsFirst()
 	return randomChoice - 1;
 }
 
-bool Game::IsGameOver(const IPlayer& currentPlayer)
+bool Game::IsGameOver(IPlayer& currentPlayer)
 {
 	int playableCards = Round::NrOfPlayableCardsInHand(*this, m_ctx);
 
+	if (currentPlayer.IsFinished()) return false;
 
 	if (m_currentPlayerIndex == m_ctx.HPplayerIndex && currentPlayer.GetHPFlag()) {
 		std::cout << "No one played a +/-10 card until " << currentPlayer.GetUsername() << "'s turn. All players lose!\n";
@@ -80,8 +81,6 @@ bool Game::IsGameOver(const IPlayer& currentPlayer)
 		std::cout << "Game Over! " << currentPlayer.GetUsername() << " loses!\n";
 		return true;
 	}
-
-
 
 	return false;
 }
@@ -96,25 +95,11 @@ void Game::StartGame()
 	while (true) {
 		IPlayer& currentPlayer = GetCurrentPlayer();
 		Round::UpdateContext(*this, m_ctx, currentPlayer);
-		if (currentPlayer.CanUseAbility(m_ctx)) {
-			std::cout << "\n" << currentPlayer.GetUsername() << ", do you want to use your ability this turn? (y/n): ";
-			char useAbility;
-			std::cin >> useAbility;
-			if (std::tolower(useAbility) == 'y') {
-				currentPlayer.UseAbility(m_ctx, m_currentPlayerIndex);
-				if (m_ctx.SoothPlayerIndex == currentPlayer.GetPlayerIndex() &&
-					currentPlayer.IsSoothActive()) {
-					std::cout << "Other player's cards: \n";
-					for (size_t i = 0; i < m_numberOfPlayers; i++) {
-						if (i != currentPlayer.GetPlayerIndex()) {
-							std::cout << m_players[i]->GetUsername() << ": ";
-							m_players[i]->ShowHand();
-						}
-					}
-					currentPlayer.SetSoothState(false);
-				}
-			}
+		if(Round::IsGameWon(*this, currentPlayer)) {
+			std::cout << "Players have won the game!\n";
+			break;
 		}
+		Round::AbilityUse(*this, m_ctx, currentPlayer);
 		if (IsGameOver(currentPlayer)) {
 			break;
 		}
@@ -125,11 +110,11 @@ void Game::StartGame()
 			if (IsGameOver(currentPlayer)) break;
 			playedCards++;
 		}
-		if (m_currentPlayerIndex == m_ctx.GamblerPlayerIndex &&
+		if (currentPlayer.GetPlayerIndex() == m_ctx.GamblerPlayerIndex &&
 			m_players[m_ctx.GamblerPlayerIndex]->GActive()) {
 			currentPlayer.SetGActive(false);
 		}
-		else if (m_currentPlayerIndex == m_ctx.TaxEvPlayerIndex
+		else if (currentPlayer.GetPlayerIndex() == m_ctx.TaxEvPlayerIndex
 			&& currentPlayer.IsTaxActive()) {
 			std::cout << "You don't have to play any cards this round!\n";
 		}
