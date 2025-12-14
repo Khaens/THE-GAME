@@ -6,6 +6,7 @@
 #include <QMessageBox>
 #include <QRandomGenerator>
 #include <QFont>
+#include <QPointer>
 
 LobbyRoomDialog::LobbyRoomDialog(int userId, const QString& lobbyId,
     const QString& lobbyName, const QString& lobbyCode,
@@ -35,7 +36,24 @@ LobbyRoomDialog::LobbyRoomDialog(int userId, const QString& lobbyId,
     setupUI();
     setupStyle();
     setupConnections();
-    startRefreshTimer();
+    
+    // Connect to lobby WebSocket for real-time updates
+    connect(m_networkManager, &NetworkManager::lobbyConnected, this, [this]() {
+        qDebug() << "Connected to lobby WebSocket";
+        // Fetch initial player list
+        fetchLobbyPlayers();
+    });
+    
+    connect(m_networkManager, &NetworkManager::lobbyMessageReceived, this, 
+        &LobbyRoomDialog::handleLobbyWebSocketMessage);
+    
+    // Connect to lobby WebSocket
+    m_networkManager->connectToLobby(m_lobbyId.toStdString());
+    
+    // Also fetch initial status
+    fetchLobbyStatus();
+    fetchLobbyPlayers();
+    
     startCountdownTimer();  // Start the 60-second countdown
 }
 
@@ -308,7 +326,8 @@ void LobbyRoomDialog::startRefreshTimer()
         m_refreshTimer = new QTimer(this);
         connect(m_refreshTimer, &QTimer::timeout, this, &LobbyRoomDialog::refreshLobbyStatus);
     }
-    m_refreshTimer->start(2000); // Refresh every 2 seconds
+    // Use longer interval since we have WebSocket for real-time updates
+    m_refreshTimer->start(5000); // Refresh every 5 seconds (just as backup)
 }
 
 void LobbyRoomDialog::stopRefreshTimer()
@@ -411,6 +430,9 @@ void LobbyRoomDialog::onLeaveClicked()
 {
     stopRefreshTimer();
     stopCountdownTimer();
+    
+    // Disconnect from lobby WebSocket
+    m_networkManager->disconnectFromLobby();
 
     // TODO: Send leave request to server
     // m_networkManager->leaveLobby(m_userId, m_lobbyId.toStdString());
@@ -441,9 +463,15 @@ void LobbyRoomDialog::onStartGameClicked()
     if (reply == QMessageBox::Yes) {
         stopRefreshTimer();
         stopCountdownTimer();
-
-        emit gameStarted(); // EMIT SIGNAL INSTEAD
-        accept(); // Close lobby dialog
+        
+        // Start game on server
+        if (m_networkManager->startGame(m_lobbyId.toStdString())) {
+            m_networkManager->disconnectFromLobby();
+            emit gameStarted(); // EMIT SIGNAL INSTEAD
+            accept(); // Close lobby dialog
+        } else {
+            QMessageBox::warning(this, "Error", "Failed to start game. Please try again.");
+        }
     }
 }
 
@@ -466,25 +494,32 @@ void LobbyRoomDialog::onCopyCodeClicked()
         }
     )");
 
-    QTimer::singleShot(1500, [this, originalText]() {
-        m_copyCodeButton->setText(originalText);
-        m_copyCodeButton->setStyleSheet(R"(
-            QPushButton {
-                background-color: #654b1f;
-                color: #f3d05a;
-                border: 2px solid #8e273b;
-                border-radius: 8px;
-                font-size: 14px;
-                font-weight: bold;
-            }
-            QPushButton:hover {
-                background-color: #4a3f1e;
-                border: 2px solid #f3d05a;
-            }
-            QPushButton:pressed {
-                background-color: #3d431a;
-            }
-        )");
+    // Use QPointer to safely check if dialog still exists
+    QPointer<LobbyRoomDialog> dialogPtr(this);
+    QPointer<QPushButton> buttonPtr(m_copyCodeButton);
+    
+    QTimer::singleShot(1500, [dialogPtr, buttonPtr, originalText]() {
+        // Check if dialog and button still exist before accessing
+        if (dialogPtr && buttonPtr) {
+            buttonPtr->setText(originalText);
+            buttonPtr->setStyleSheet(R"(
+                QPushButton {
+                    background-color: #654b1f;
+                    color: #f3d05a;
+                    border: 2px solid #8e273b;
+                    border-radius: 8px;
+                    font-size: 14px;
+                    font-weight: bold;
+                }
+                QPushButton:hover {
+                    background-color: #4a3f1e;
+                    border: 2px solid #f3d05a;
+                }
+                QPushButton:pressed {
+                    background-color: #3d431a;
+                }
+            )");
+        }
         });
 }
 
@@ -502,6 +537,34 @@ void LobbyRoomDialog::fetchLobbyStatus()
     }
 }
 
+void LobbyRoomDialog::fetchLobbyPlayers()
+{
+    auto players = m_networkManager->getLobbyPlayers(m_lobbyId.toStdString());
+    
+    m_players.clear();
+    for (const auto& player : players) {
+        PlayerInfo info;
+        info.userId = player.user_id;
+        info.username = QString::fromStdString(player.username);
+        info.isHost = player.is_host;
+        m_players.append(info);
+    }
+    
+    // Update player count label
+    if (m_playerCountLabel) {
+        m_playerCountLabel->setText(QString("Players: %1/%2")
+            .arg(m_players.size())
+            .arg(4)); // TODO: Get max_players from status
+    }
+    
+    // Update START GAME button state
+    if (m_isHost) {
+        m_startGameButton->setEnabled(m_players.size() >= 2);
+    }
+    
+    updatePlayerList(m_players);
+}
+
 void LobbyRoomDialog::handleLobbyUpdate(const LobbyStatus& status)
 {
     // Update player count label
@@ -511,41 +574,82 @@ void LobbyRoomDialog::handleLobbyUpdate(const LobbyStatus& status)
             .arg(status.max_players));
     }
 
-    // Update player list (for demo, create dummy data)
-    if (m_players.isEmpty() || m_players.size() != status.current_players) {
-        m_players.clear();
-
-        // Add current user
-        PlayerInfo user;
-        user.userId = m_userId;
-        user.username = QString("Player_%1").arg(m_userId);
-        user.isHost = m_isHost;
-        m_players.append(user);
-
-        // Add other players
-        for (int i = 1; i < status.current_players; i++) {
-            PlayerInfo player;
-            player.userId = m_userId + i;
-            player.username = QString("Player_%1").arg(m_userId + i);
-            player.isHost = false;
-            m_players.append(player);
-        }
-
-        // Update START GAME button state
-        if (m_isHost) {
-            m_startGameButton->setEnabled(m_players.size() >= 2);
-        }
-    }
-
-    updatePlayerList(m_players);
+    // Fetch updated player list when status changes
+    fetchLobbyPlayers();
 
     // Check if game has started
     if (status.game_started) {
         stopRefreshTimer();
         stopCountdownTimer();
+        m_networkManager->disconnectFromLobby();
         QMessageBox::information(this, "Game Starting",
             "Game is starting! Transitioning to game screen...");
         accept();
+    }
+}
+
+void LobbyRoomDialog::handleLobbyWebSocketMessage(const QJsonObject& message)
+{
+    QString type = message["type"].toString();
+    
+    if (type == "player_joined") {
+        qDebug() << "Player joined via WebSocket";
+        int user_id = message["user_id"].toInt();
+        QString username = message["username"].toString();
+        int current_players = message["current_players"].toInt();
+        int max_players = message["max_players"].toInt();
+        
+        // Update player count
+        if (m_playerCountLabel) {
+            m_playerCountLabel->setText(QString("Players: %1/%2")
+                .arg(current_players)
+                .arg(max_players));
+        }
+        
+        // Fetch updated player list to get all players with correct info
+        fetchLobbyPlayers();
+        
+        // Also update status
+        fetchLobbyStatus();
+    }
+    else if (type == "lobby_state") {
+        // Initial state received
+        int current_players = message["current_players"].toInt();
+        int max_players = message["max_players"].toInt();
+        bool game_started = message["game_started"].toBool();
+        
+        if (m_playerCountLabel) {
+            m_playerCountLabel->setText(QString("Players: %1/%2")
+                .arg(current_players)
+                .arg(max_players));
+        }
+        
+        if (game_started) {
+            stopRefreshTimer();
+            stopCountdownTimer();
+            m_networkManager->disconnectFromLobby();
+            QMessageBox::information(this, "Game Starting",
+                "Game is starting! Transitioning to game screen...");
+            accept();
+        } else {
+            fetchLobbyPlayers();
+        }
+    }
+    else if (type == "game_started") {
+        stopRefreshTimer();
+        stopCountdownTimer();
+        m_networkManager->disconnectFromLobby();
+        QMessageBox::information(this, "Game Starting",
+            "Game is starting! Transitioning to game screen...");
+        accept();
+    }
+    else if (type == "lobby_closed") {
+        stopRefreshTimer();
+        stopCountdownTimer();
+        m_networkManager->disconnectFromLobby();
+        QMessageBox::warning(this, "Lobby Closed",
+            "This lobby has been closed because a new lobby was created.");
+        reject();
     }
 }
 

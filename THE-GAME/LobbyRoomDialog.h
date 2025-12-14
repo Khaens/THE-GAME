@@ -49,7 +49,9 @@ private:
     void stopCountdownTimer();   // NEW: Stop the countdown
 
     void fetchLobbyStatus();
+    void fetchLobbyPlayers();
     void handleLobbyUpdate(const LobbyStatus& status);
+    void handleLobbyWebSocketMessage(const QJsonObject& message);
 
     // UI Elements
     QWidget* m_contentContainer;

@@ -40,7 +40,9 @@ class NetworkManager : public QObject {
 
 private:
     std::string baseUrl;
-    QWebSocket m_webSocket;
+    QWebSocket m_webSocket;  // For game WebSocket
+    QWebSocket m_lobbyWebSocket;  // For lobby updates WebSocket
+    std::string m_currentLobbyId;  // Store lobby_id for subscription
 
 public:
     explicit NetworkManager(const std::string& serverUrl = "http://localhost:18080", QObject* parent = nullptr);
@@ -54,19 +56,41 @@ public:
     bool joinLobby(int user_id, const std::string& code);
     std::optional<LobbyStatus> getLobbyStatus(const std::string& lobby_id);
     bool startGame(const std::string& lobby_id);
+    
+    // Get list of players in lobby
+    struct PlayerInfo {
+        int user_id;
+        std::string username;
+        bool is_host;
+    };
+    std::vector<PlayerInfo> getLobbyPlayers(const std::string& lobby_id);
 
     // Game WebSocket
     void connectToGame(const std::string& lobby_id, int user_id);
     void sendGameAction(const QJsonObject& action);
 
+    // Lobby WebSocket
+    void connectToLobby(const std::string& lobby_id);
+    void disconnectFromLobby();
+
 signals:
     void gameConnected();
     void gameDisconnected();
     void gameMessageReceived(const QJsonObject& message);
+    
+    // Lobby WebSocket signals
+    void lobbyConnected();
+    void lobbyDisconnected();
+    void lobbyMessageReceived(const QJsonObject& message);
 
 private slots:
     void onConnected();
     void onTextMessageReceived(const QString& message);
     void onDisconnected();
+    
+    // Lobby WebSocket slots
+    void onLobbyConnected();
+    void onLobbyTextMessageReceived(const QString& message);
+    void onLobbyDisconnected();
 };
 
