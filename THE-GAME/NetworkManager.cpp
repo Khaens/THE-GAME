@@ -1,8 +1,12 @@
 #include "NetworkManager.h"
 #include <crow/json.h>
 
-NetworkManager::NetworkManager(const std::string& serverUrl)
-    : baseUrl(serverUrl) {
+NetworkManager::NetworkManager(const std::string& serverUrl, QObject* parent)
+    : QObject(parent), baseUrl(serverUrl) {
+    
+    connect(&m_webSocket, &QWebSocket::connected, this, &NetworkManager::onConnected);
+    connect(&m_webSocket, &QWebSocket::disconnected, this, &NetworkManager::onDisconnected);
+    connect(&m_webSocket, &QWebSocket::textMessageReceived, this, &NetworkManager::onTextMessageReceived);
 }
 
 RegisterResponse NetworkManager::registerUser(const std::string& username, const std::string& password) {
@@ -116,4 +120,55 @@ std::optional<LobbyStatus> NetworkManager::getLobbyStatus(const std::string& lob
     }
 
     return std::nullopt;
+}
+
+bool NetworkManager::startGame(const std::string& lobby_id) {
+    crow::json::wvalue payload;
+    
+    auto response = cpr::Post(
+        cpr::Url{ baseUrl + "/api/lobby/" + lobby_id + "/start" },
+        cpr::Body{ payload.dump() },
+        cpr::Header{ {"Content-Type", "application/json"} }
+    );
+
+    return response.status_code == 200;
+}
+
+void NetworkManager::connectToGame(const std::string& lobby_id, int user_id) {
+    QString urlStr = QString::fromStdString(baseUrl);
+    // Simple conversion from http to ws
+    if (urlStr.startsWith("http")) {
+        urlStr.replace("http", "ws");
+    } else {
+        urlStr.prepend("ws://");
+    }
+    urlStr += "/ws/game";
+    
+    qDebug() << "Connecting to Game WebSocket: " << urlStr;
+    m_webSocket.open(QUrl(urlStr));
+}
+
+void NetworkManager::sendGameAction(const QJsonObject& action) {
+    if (m_webSocket.isValid()) {
+        QJsonDocument doc(action);
+        m_webSocket.sendTextMessage(QString::fromUtf8(doc.toJson(QJsonDocument::Compact)));
+    }
+}
+
+void NetworkManager::onConnected() {
+    qDebug() << "WebSocket Connected!";
+    emit gameConnected();
+}
+
+void NetworkManager::onTextMessageReceived(const QString& message) {
+    qDebug() << "Message Received: " << message;
+    QJsonDocument doc = QJsonDocument::fromJson(message.toUtf8());
+    if (!doc.isNull() && doc.isObject()) {
+        emit gameMessageReceived(doc.object());
+    }
+}
+
+void NetworkManager::onDisconnected() {
+    qDebug() << "WebSocket Disconnected";
+    emit gameDisconnected();
 }

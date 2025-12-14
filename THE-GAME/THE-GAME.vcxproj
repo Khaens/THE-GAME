@@ -47,7 +47,7 @@
     <QtMoc Include="JoinLobbyDialog.h" />
     <QtMoc Include="LobbyRoomDialog.h" />
     <QtMoc Include="GameWindow.h" />
-    <ClInclude Include="NetworkManager.h" />
+    <QtMoc Include="NetworkManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="help.html" />
@@ -233,19 +233,19 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <Import Project="$(QtMsBuild)\qt_defaults.props" Condition="Exists('$(QtMsBuild)\qt_defaults.props')" />
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <QtModules>core;gui;widgets</QtModules>
+    <QtModules>core;gui;widgets;websockets</QtModules>
     <QtInstall>6.9.3_msvc2022_64</QtInstall>
   </PropertyGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <QtModules>core;gui;widgets</QtModules>
+    <QtModules>core;gui;widgets;websockets</QtModules>
     <QtInstall>6.9.3_msvc2022_64</QtInstall>
   </PropertyGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <QtModules>core;gui;widgets</QtModules>
+    <QtModules>core;gui;widgets;websockets</QtModules>
     <QtInstall>6.9.3_msvc2022_64</QtInstall>
   </PropertyGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <QtModules>core;gui;widgets</QtModules>
+    <QtModules>core;gui;widgets;websockets</QtModules>
     <QtInstall>6.9.3_msvc2022_64</QtInstall>
   </PropertyGroup>
   <Target Name="QtMsBuildNotFound" BeforeTargets="CustomBuild;ClCompile" Condition="!Exists('$(QtMsBuild)\qt.targets') OR !Exists('$(QtMsBuild)\Qt.props')">

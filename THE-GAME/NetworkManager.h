@@ -2,6 +2,10 @@
 #include <string>
 #include <optional>
 #include <cpr/cpr.h>
+#include <QObject>
+#include <QWebSocket>
+#include <QJsonObject>
+#include <QJsonDocument>
 
 struct LoginResponse {
     bool success;
@@ -31,12 +35,15 @@ struct LobbyStatus {
     bool game_started;
 };
 
-class NetworkManager {
+class NetworkManager : public QObject {
+    Q_OBJECT
+
 private:
     std::string baseUrl;
+    QWebSocket m_webSocket;
 
 public:
-    NetworkManager(const std::string& serverUrl = "http://localhost:18080");
+    explicit NetworkManager(const std::string& serverUrl = "http://localhost:18080", QObject* parent = nullptr);
 
     // Auth endpoints
     RegisterResponse registerUser(const std::string& username, const std::string& password);
@@ -45,7 +52,21 @@ public:
     // Lobby endpoints
     LobbyResponse createLobby(int user_id, const std::string& name, int max_players, const std::string& password);    
     bool joinLobby(int user_id, const std::string& code);
-
     std::optional<LobbyStatus> getLobbyStatus(const std::string& lobby_id);
+    bool startGame(const std::string& lobby_id);
+
+    // Game WebSocket
+    void connectToGame(const std::string& lobby_id, int user_id);
+    void sendGameAction(const QJsonObject& action);
+
+signals:
+    void gameConnected();
+    void gameDisconnected();
+    void gameMessageReceived(const QJsonObject& message);
+
+private slots:
+    void onConnected();
+    void onTextMessageReceived(const QString& message);
+    void onDisconnected();
 };
 
