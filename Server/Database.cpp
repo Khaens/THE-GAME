@@ -151,7 +151,17 @@ void Database::UpdateUser(const UserModel& user) {
 }
 
 void Database::DeleteUser(int id) {
-    storage.remove<UserModel>(id);
+    try {
+        AchievementsModel achievements = GetAchievementsByUserId(id);
+
+        storage.remove<AchievementsModel>(achievements.GetId());
+        storage.remove<UserModel>(id);
+
+        std::cout << "User " << id << " and associated achievements deleted." << std::endl;
+    }
+    catch (std::exception& e) {
+        std::cerr << "Error deleting user and associated data: " << e.what() << std::endl;
+    }
 }
 
 bool Database::UserExists(const std::string& username) {
@@ -206,10 +216,6 @@ AchievementsModel Database::GetAchievementsByUserId(int userId) {
 
 void Database::UpdateAchievements(const AchievementsModel& achievements) {
     storage.update(achievements);
-}
-
-void Database::DeleteAchievements(int id) {
-    storage.remove<AchievementsModel>(id);
 }
 
 bool Database::AchievementsExistForUser(int userId) {

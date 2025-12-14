@@ -26,7 +26,7 @@ inline auto initStorage(const std::string& path) {
             make_column("high_risk_high_reward", &AchievementsModel::GetHighRisk, &AchievementsModel::SetHighRisk),
             make_column("perfect_game", &AchievementsModel::GetPerfectGame, &AchievementsModel::SetPerfectGame),
             make_column("ghost_win", &AchievementsModel::GetGhost, &AchievementsModel::SetGhost),
-            foreign_key(&AchievementsModel::GetUserId).references(&UserModel::GetId))
+            foreign_key(&AchievementsModel::GetUserId).references(&UserModel::GetId).on_delete.cascade())
     );
 }
 
@@ -55,7 +55,6 @@ public:
     int InsertAchievements(const AchievementsModel& achievements);
     AchievementsModel GetAchievementsByUserId(int userId);
     void UpdateAchievements(const AchievementsModel& achievements);
-    void DeleteAchievements(int id);
     bool AchievementsExistForUser(int userId);
     std::vector<std::string> GetUnlockedAchievement(int userId);
 };
