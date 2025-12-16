@@ -10,15 +10,16 @@
 
 LobbyRoomDialog::LobbyRoomDialog(int userId, const QString& lobbyId,
     const QString& lobbyName, const QString& lobbyCode,
-    bool isHost, QWidget* parent)
+    bool isHost, NetworkManager* networkManager, QWidget* parent)
     : QDialog(parent)
     , m_userId(userId)
     , m_lobbyId(lobbyId)
     , m_lobbyName(lobbyName)
     , m_lobbyCode(lobbyCode)
     , m_isHost(isHost)
+    , m_maxPlayers(4)
     , m_contentContainer(nullptr)
-    , m_networkManager(nullptr)
+    , m_networkManager(networkManager)
     , m_refreshTimer(nullptr)
     , m_countdownTimer(nullptr)
     , m_countdownSeconds(60)  // Start at 60 seconds
@@ -30,8 +31,7 @@ LobbyRoomDialog::LobbyRoomDialog(int userId, const QString& lobbyId,
     setAttribute(Qt::WA_TranslucentBackground);
     setModal(true);
 
-    // Initialize network manager
-    m_networkManager = new NetworkManager("http://localhost:18080");
+    // NetworkManager is now passed in, no need to create new one
 
     setupUI();
     setupStyle();
@@ -554,7 +554,7 @@ void LobbyRoomDialog::fetchLobbyPlayers()
     if (m_playerCountLabel) {
         m_playerCountLabel->setText(QString("Players: %1/%2")
             .arg(m_players.size())
-            .arg(4)); // TODO: Get max_players from status
+            .arg(m_maxPlayers));
     }
     
     // Update START GAME button state
@@ -567,6 +567,9 @@ void LobbyRoomDialog::fetchLobbyPlayers()
 
 void LobbyRoomDialog::handleLobbyUpdate(const LobbyStatus& status)
 {
+    // Store max_players for later use
+    m_maxPlayers = status.max_players;
+
     // Update player count label
     if (m_playerCountLabel) {
         m_playerCountLabel->setText(QString("Players: %1/%2")

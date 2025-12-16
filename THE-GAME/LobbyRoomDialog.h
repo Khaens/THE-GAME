@@ -23,7 +23,7 @@ class LobbyRoomDialog : public QDialog
 public:
     explicit LobbyRoomDialog(int userId, const QString& lobbyId,
         const QString& lobbyName, const QString& lobbyCode,
-        bool isHost, QWidget* parent = nullptr);
+        bool isHost, NetworkManager* networkManager, QWidget* parent = nullptr);
     ~LobbyRoomDialog() = default;
 
     void updatePlayerList(const QVector<PlayerInfo>& players);
@@ -72,6 +72,7 @@ private:
     QString m_lobbyName;
     QString m_lobbyCode;
     bool m_isHost;
+    int m_maxPlayers;
 
     // Timers
     NetworkManager* m_networkManager;

@@ -127,6 +127,12 @@ void AccountDialog::setupUI()
     passwordLayout->addWidget(m_loginPasswordInput);
     passwordLayout->addWidget(m_loginVisibilityButton);
     
+    // Enter key triggers login
+    connect(m_loginPasswordInput, &QLineEdit::returnPressed, this, &AccountDialog::onLoginClicked);
+    connect(m_loginUsernameInput, &QLineEdit::returnPressed, [this]() {
+        m_loginPasswordInput->setFocus();
+    });
+    
     loginLayout->addWidget(passwordContainer);
 
     m_loginButton = new QPushButton("LOGIN");
@@ -263,6 +269,12 @@ void AccountDialog::setupUI()
     regPasswordLayout->addWidget(m_registerVisibilityButton);
 
     registerLayout->addWidget(regPasswordContainer);
+
+    // Enter key triggers register
+    connect(m_registerPasswordInput, &QLineEdit::returnPressed, this, &AccountDialog::onRegisterClicked);
+    connect(m_registerUsernameInput, &QLineEdit::returnPressed, [this]() {
+        m_registerPasswordInput->setFocus();
+    });
 
     m_registerButton = new QPushButton("REGISTER");
     m_registerButton->setFixedHeight(45);

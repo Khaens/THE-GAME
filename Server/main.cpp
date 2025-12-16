@@ -3,6 +3,7 @@
 #include <string>
 #include "GameServer.h"
 #include <mutex>
+#include <random>
 
 // --- LOBBY LOGIC (Global Scope) ---
 struct Lobby {
@@ -30,8 +31,14 @@ static std::mutex lobby_ws_mutex;
 // Helper to generate random 6-char ID
 std::string generateLobbyId() {
     static const char alphanum[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    static std::random_device rd;  // Hardware entropy source
+    static std::mt19937 gen(rd()); // Mersenne Twister generator
+    static std::uniform_int_distribution<> dis(0, sizeof(alphanum) - 2);
+    
     std::string s(6, ' ');
-    for (int i = 0; i < 6; ++i) s[i] = alphanum[rand() % (sizeof(alphanum) - 1)];
+    for (int i = 0; i < 6; ++i) {
+        s[i] = alphanum[dis(gen)];
+    }
     return s;
 }
 
@@ -436,7 +443,7 @@ int main() {
 
 
 
-	app.port(18080).multithreaded().run();
+	app.bindaddr("0.0.0.0").port(18080).multithreaded().run();
 
 	return 0;
 }
