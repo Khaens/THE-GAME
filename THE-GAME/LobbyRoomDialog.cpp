@@ -400,8 +400,9 @@ void LobbyRoomDialog::updateCountdown()
     if (m_countdownSeconds <= 0) {
         stopCountdownTimer();
 
-        // Only auto-start if we have at least 2 players
-        if (m_players.size() >= 2) {
+        // Only auto-start if we have at least 1 players (Temporary)
+        // ORIGINAL: if (m_players.size() >= 2) {
+        if (m_players.size() >= 1) {
             onStartGameClicked();
         }
         else {
@@ -446,9 +447,11 @@ void LobbyRoomDialog::onStartGameClicked()
         return;
     }
 
-    if (m_players.size() < 2) {
+    // TEMPORARY: Allow 1 player for testing
+    // ORIGINAL: if (m_players.size() < 2) {
+    if (m_players.size() < 1) { 
         QMessageBox::warning(this, "Not Enough Players",
-            "Need at least 2 players to start the game.");
+            "Need at least 1 player to start the game."); // ORIGINAL: "Need at least 2 players to start the game."
         return;
     }
 
@@ -465,6 +468,9 @@ void LobbyRoomDialog::onStartGameClicked()
         stopCountdownTimer();
         
         // Start game on server
+        // Try to start on server, but if it fails (e.g. not enough players), 
+        // proceed client-side anyway for testing purposes.
+        /* ORIGINAL:
         if (m_networkManager->startGame(m_lobbyId.toStdString())) {
             m_networkManager->disconnectFromLobby();
             emit gameStarted(); // EMIT SIGNAL INSTEAD
@@ -472,6 +478,17 @@ void LobbyRoomDialog::onStartGameClicked()
         } else {
             QMessageBox::warning(this, "Error", "Failed to start game. Please try again.");
         }
+        */
+        
+        bool serverStarted = m_networkManager->startGame(m_lobbyId.toStdString());
+        
+        if (!serverStarted) {
+             qDebug() << "Server failed to start game (likely due to player count), forcing client-side start for testing.";
+        }
+
+        m_networkManager->disconnectFromLobby();
+        emit gameStarted(); // EMIT SIGNAL INSTEAD
+        accept(); // Close lobby dialog
     }
 }
 
@@ -559,7 +576,8 @@ void LobbyRoomDialog::fetchLobbyPlayers()
     
     // Update START GAME button state
     if (m_isHost) {
-        m_startGameButton->setEnabled(m_players.size() >= 2);
+        // ORIGINAL: m_startGameButton->setEnabled(m_players.size() >= 2);
+        m_startGameButton->setEnabled(m_players.size() >= 1); // TEMPORARY: Allow 1 player
     }
     
     updatePlayerList(m_players);
