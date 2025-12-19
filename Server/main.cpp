@@ -1,12 +1,12 @@
 ﻿#include <crow.h>
 #include "Database.h"
 #include <string>
-#include "GameServer.h"
+#include "Lobby.h"
 #include <mutex>
 #include <random>
 
 // --- LOBBY LOGIC (Global Scope) ---
-struct Lobby {
+struct LobbyData {
     std::string id;
     std::string name;
     int owner_id;
@@ -17,7 +17,7 @@ struct Lobby {
 };
 
 // Global storage to avoid lambda capture issues
-static std::unordered_map<std::string, Lobby> lobbies;
+static std::unordered_map<std::string, LobbyData> lobbies;
 static std::mutex lobby_mutex;
 
 // Global map to store websocket connections per lobby (for game)
@@ -59,7 +59,7 @@ int main() {
 	//trimite update-uri catre client
 
 	crow::SimpleApp app;
-	Database db("users.db");
+	Database* db = new Database("users.db");
 
 	// ----------------------------- AUTHENTICATION ENDPOINTS --------------------------
 
@@ -76,7 +76,7 @@ int main() {
 		std::cout << "Register attempt for user: " << username << std::endl;
 		std::cout << "Password: " << password << std::endl;
 
-        if (db.UserExists(username)) {
+        if (db->UserExists(username)) {
             crow::json::wvalue response;
             response["success"] = false;
             response["error"] = "User already exists";
@@ -85,7 +85,7 @@ int main() {
 
         try {
             UserModel user{-1, username, password};
-            int id = db.InsertUser(user);
+            int id = db->InsertUser(user);
             
             crow::json::wvalue response;
             response["success"] = true;
@@ -113,8 +113,8 @@ int main() {
 		std::cout << "Password: " << password << std::endl;
 
         try {
-            UserModel user = db.GetUserByUsername(username);
-            if (db.VerifyLogin(username,password)) {
+            UserModel user = db->GetUserByUsername(username);
+            if (db->VerifyLogin(username,password)) {
                 crow::json::wvalue response;
                 response["success"] = true;
                 response["user_id"] = user.GetId();
@@ -154,7 +154,7 @@ int main() {
         
         // Create new lobby
         std::string id = generateLobbyId();
-        Lobby new_lobby;
+        LobbyData new_lobby;
         new_lobby.id = id;
         new_lobby.name = name;
         new_lobby.owner_id = user_id;
@@ -191,7 +191,7 @@ int main() {
              return crow::response(404, response);
         }
 
-        Lobby& lobby = lobbies[lobby_id];
+        LobbyData& lobby = lobbies[lobby_id];
         if (lobby.players.size() >= lobby.max_players) {
              crow::json::wvalue response;
              response["success"] = false;
@@ -218,7 +218,7 @@ int main() {
             // Get username from database
             std::string username = "Player_" + std::to_string(user_id);
             try {
-                std::vector<UserModel> all_users = db.GetAllUsers();
+                std::vector<UserModel> all_users = db->GetAllUsers();
                 for (const auto& user : all_users) {
                     if (user.GetId() == user_id) {
                         username = user.GetUsername();
@@ -255,7 +255,7 @@ int main() {
             return crow::response(404, "Lobby not found");
         }
 
-        const Lobby& lobby = lobbies[lobby_id];
+        const LobbyData& lobby = lobbies[lobby_id];
 
         crow::json::wvalue response;
         response["lobby_id"] = lobby.id;
@@ -275,7 +275,7 @@ int main() {
             return crow::response(404, "Lobby not found");
         }
 
-        const Lobby& lobby = lobbies[lobby_id];
+        const LobbyData& lobby = lobbies[lobby_id];
 
         crow::json::wvalue response;
         response["lobby_id"] = lobby.id;
@@ -288,7 +288,7 @@ int main() {
             try {
                 // Get user by ID - we need to add this method or use a workaround
                 // For now, we'll get all users and find the one we need
-                std::vector<UserModel> all_users = db.GetAllUsers();
+                std::vector<UserModel> all_users = db->GetAllUsers();
                 for (const auto& user : all_users) {
                     if (user.GetId() == user_id) {
                         username = user.GetUsername();
@@ -356,7 +356,7 @@ int main() {
             return crow::response(404, response);
         }
 
-        Lobby& lobby = lobbies[lobby_id];
+        LobbyData& lobby = lobbies[lobby_id];
 
         // Check if user is in the lobby
         auto it = std::find(lobby.players.begin(), lobby.players.end(), user_id);
@@ -405,7 +405,7 @@ int main() {
             // Get username for notification
             std::string username = "Player_" + std::to_string(user_id);
             try {
-                std::vector<UserModel> all_users = db.GetAllUsers();
+                std::vector<UserModel> all_users = db->GetAllUsers();
                 for (const auto& user : all_users) {
                     if (user.GetId() == user_id) {
                         username = user.GetUsername();
@@ -481,7 +481,7 @@ int main() {
                          // Send current lobby state
                          std::lock_guard<std::mutex> lobby_lock(lobby_mutex);
                          if (lobbies.find(lid) != lobbies.end()) {
-                             const Lobby& lobby = lobbies[lid];
+                             const LobbyData& lobby = lobbies[lid];
                              crow::json::wvalue update;
                              update["type"] = "lobby_state";
                              update["lobby_id"] = lid;
@@ -526,7 +526,10 @@ int main() {
              }
 		});
 
-    
+	Lobby lobby(db);
+	lobby.Start();
+	Game game();
+
 
 
 	CROW_ROUTE(app, "/")([]() {
