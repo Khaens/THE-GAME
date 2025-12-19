@@ -47,6 +47,7 @@ public:
     int InsertUser(const UserModel& user);
     bool VerifyLogin(const std::string& username, const std::string& plainPassword);
     UserModel GetUserByUsername(const std::string& username);
+    UserModel GetUserById(int userId);
     std::vector<UserModel> GetAllUsers();
     void UpdateUser(const UserModel& user);
     void DeleteUser(int id);

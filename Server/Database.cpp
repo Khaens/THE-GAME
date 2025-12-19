@@ -142,6 +142,16 @@ UserModel Database::GetUserByUsername(const std::string& username) {
     }
 }
 
+UserModel Database::GetUserById(int userId) {
+    try {
+        return storage.get<UserModel>(userId);
+    }
+    catch (std::exception& e) {
+        std::cerr << "Error getting user by id: " << e.what() << std::endl;
+        throw;
+    }
+}
+
 std::vector<UserModel> Database::GetAllUsers() {
     return storage.get_all<UserModel>();
 }

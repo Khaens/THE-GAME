@@ -6,18 +6,8 @@
 #include <random>
 
 // --- LOBBY LOGIC (Global Scope) ---
-struct LobbyData {
-    std::string id;
-    std::string name;
-    int owner_id;
-    int max_players;
-    std::vector<int> players;
-    bool started = false;
-    std::string password;
-};
-
-// Global storage to avoid lambda capture issues
-static std::unordered_map<std::string, LobbyData> lobbies;
+// Global storage using pointer to Lobby class
+static std::unordered_map<std::string, std::unique_ptr<Lobby>> lobbies;
 static std::mutex lobby_mutex;
 
 // Global map to store websocket connections per lobby (for game)
@@ -28,18 +18,6 @@ static std::mutex ws_mutex;
 static std::unordered_map<std::string, std::vector<crow::websocket::connection*>> lobby_update_connections;
 static std::mutex lobby_ws_mutex;
 
-std::string generateLobbyId() {
-    static const char alphanum[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    static std::random_device rd;  // Hardware entropy source
-    static std::mt19937 gen(rd()); // Mersenne Twister generator
-    static std::uniform_int_distribution<> dis(0, sizeof(alphanum) - 2);
-    
-    std::string s(6, ' ');
-    for (int i = 0; i < 6; ++i) {
-        s[i] = alphanum[dis(gen)];
-    }
-    return s;
-}
 
 int main() {
     /*UserModel user(1, "user", "pass");
@@ -139,7 +117,7 @@ int main() {
 
     CROW_ROUTE(app, "/api/lobby/create")
         .methods(crow::HTTPMethod::POST)
-        ([](const crow::request& req) {
+        ([&db](const crow::request& req) {
         auto body = crow::json::load(req.body);
         if (!body) {
             return crow::response(400, "Invalid JSON");
@@ -152,17 +130,20 @@ int main() {
 
         std::lock_guard<std::mutex> lock(lobby_mutex);
         
-        // Create new lobby
-        std::string id = generateLobbyId();
-        LobbyData new_lobby;
-        new_lobby.id = id;
-        new_lobby.name = name;
-        new_lobby.owner_id = user_id;
-        new_lobby.max_players = max_players;
-        new_lobby.password = password;
-        new_lobby.players.push_back(user_id);
-
-        lobbies[id] = new_lobby;
+        // Create new lobby using the Lobby class
+        auto new_lobby = std::make_unique<Lobby>(db, name, max_players, password);
+        
+        try {
+            new_lobby->JoinLobby(user_id);  // Creator joins the lobby
+        } catch (const std::exception& e) {
+            crow::json::wvalue response;
+            response["success"] = false;
+            response["error_message"] = e.what();
+            return crow::response(400, response);
+        }
+        
+        std::string id = new_lobby->GetId();
+        lobbies[id] = std::move(new_lobby);
 
         crow::json::wvalue response;
         response["success"] = true;
@@ -191,77 +172,77 @@ int main() {
              return crow::response(404, response);
         }
 
-        LobbyData& lobby = lobbies[lobby_id];
-        if (lobby.players.size() >= lobby.max_players) {
-             crow::json::wvalue response;
-             response["success"] = false;
-             response["error_message"] = "Lobby is full";
-             return crow::response(409, response);
-        }
-
-        // Check if already in
-        bool already_in = false;
-        for(int pid : lobby.players) if(pid == user_id) already_in = true;
+        Lobby& lobby = *lobbies[lobby_id];
         
-        if(!already_in) {
-            lobby.players.push_back(user_id);
-            
-            // Notify all connected clients in this lobby about the new player
-            std::lock_guard<std::mutex> ws_lock(lobby_ws_mutex);
-            crow::json::wvalue update;
-            update["type"] = "player_joined";
-            update["lobby_id"] = lobby.id;
-            update["user_id"] = user_id;
-            update["current_players"] = (int)lobby.players.size();
-            update["max_players"] = lobby.max_players;
-            
-            // Get username from database
-            std::string username = "Player_" + std::to_string(user_id);
-            try {
-                std::vector<UserModel> all_users = db->GetAllUsers();
-                for (const auto& user : all_users) {
-                    if (user.GetId() == user_id) {
-                        username = user.GetUsername();
-                        break;
-                    }
-                }
-            } catch (...) {
-                // Use default username if we can't get it
-            }
-            update["username"] = username;
-            
-            std::string update_msg = update.dump();
-            for (auto* conn : lobby_update_connections[lobby_id]) {
-                if (conn) {
-                    conn->send_text(update_msg);
-                }
+        // Check if already in lobby
+        if (lobby.IsUserInLobby(user_id)) {
+            crow::json::wvalue response;
+            response["success"] = true;
+            response["lobby_id"] = lobby.GetId();
+            response["max_players"] = lobby.GetMaxPlayers();
+            response["current_players"] = lobby.GetCurrentPlayers();
+            return crow::response(200, response);
+        }
+        
+        try {
+            lobby.JoinLobby(user_id);
+        } catch (const std::exception& e) {
+            crow::json::wvalue response;
+            response["success"] = false;
+            response["error_message"] = e.what();
+            return crow::response(409, response);
+        }
+        
+        // Notify all connected clients in this lobby about the new player
+        std::lock_guard<std::mutex> ws_lock(lobby_ws_mutex);
+        crow::json::wvalue update;
+        update["type"] = "player_joined";
+        update["lobby_id"] = lobby.GetId();
+        update["user_id"] = user_id;
+        update["current_players"] = lobby.GetCurrentPlayers();
+        update["max_players"] = lobby.GetMaxPlayers();
+        
+        // Get username from database
+        std::string username = "Player_" + std::to_string(user_id);
+        try {
+            UserModel user = db->GetUserById(user_id);
+            username = user.GetUsername();
+        } catch (...) {
+            // Use default username if we can't get it
+        }
+        update["username"] = username;
+        
+        std::string update_msg = update.dump();
+        for (auto* conn : lobby_update_connections[lobby_id]) {
+            if (conn) {
+                conn->send_text(update_msg);
             }
         }
 
         crow::json::wvalue response;
         response["success"] = true;
-        response["lobby_id"] = lobby.id;
-        response["max_players"] = lobby.max_players;
-        response["current_players"] = (int)lobby.players.size();
+        response["lobby_id"] = lobby.GetId();
+        response["max_players"] = lobby.GetMaxPlayers();
+        response["current_players"] = lobby.GetCurrentPlayers();
         return crow::response(200, response);
     });
 
 	CROW_ROUTE(app, "/api/lobby/<string>/status")
         .methods(crow::HTTPMethod::GET)
-        ([&db](const std::string& lobby_id) {
+        ([](const std::string& lobby_id) {
         
         std::lock_guard<std::mutex> lock(lobby_mutex);
         if (lobbies.find(lobby_id) == lobbies.end()) {
             return crow::response(404, "Lobby not found");
         }
 
-        const LobbyData& lobby = lobbies[lobby_id];
+        const Lobby& lobby = *lobbies[lobby_id];
 
         crow::json::wvalue response;
-        response["lobby_id"] = lobby.id;
-        response["current_players"] = (int)lobby.players.size(); 
-        response["max_players"] = lobby.max_players;
-        response["game_started"] = lobby.started;
+        response["lobby_id"] = lobby.GetId();
+        response["current_players"] = lobby.GetCurrentPlayers(); 
+        response["max_players"] = lobby.GetMaxPlayers();
+        response["game_started"] = lobby.IsStarted();
         return crow::response(200, response);
     });
 
@@ -275,33 +256,17 @@ int main() {
             return crow::response(404, "Lobby not found");
         }
 
-        const LobbyData& lobby = lobbies[lobby_id];
+        const Lobby& lobby = *lobbies[lobby_id];
 
         crow::json::wvalue response;
-        response["lobby_id"] = lobby.id;
+        response["lobby_id"] = lobby.GetId();
         
         // Build players array with usernames
-        // Use a vector of indices and build the array directly
         int player_index = 0;
-        for (int user_id : lobby.players) {
-            std::string username = "Player_" + std::to_string(user_id);
-            try {
-                // Get user by ID - we need to add this method or use a workaround
-                // For now, we'll get all users and find the one we need
-                std::vector<UserModel> all_users = db->GetAllUsers();
-                for (const auto& user : all_users) {
-                    if (user.GetId() == user_id) {
-                        username = user.GetUsername();
-                        break;
-                    }
-                }
-            } catch (...) {
-                // Use default username if we can't get it
-            }
-            
-            response["players"][player_index]["user_id"] = user_id;
-            response["players"][player_index]["username"] = username;
-            response["players"][player_index]["is_host"] = (user_id == lobby.owner_id);
+        for (const auto& user : lobby.GetUsers()) {
+            response["players"][player_index]["user_id"] = user.GetId();
+            response["players"][player_index]["username"] = user.GetUsername();
+            response["players"][player_index]["is_host"] = lobby.IsOwner(user.GetId());
             player_index++;
         }
         return crow::response(200, response);
@@ -309,15 +274,24 @@ int main() {
 
     CROW_ROUTE(app, "/api/lobby/<string>/start")
         .methods(crow::HTTPMethod::POST)
-        ([&db](const crow::request& req, const std::string& lobby_id) {
+        ([](const crow::request& req, const std::string& lobby_id) {
 		
         std::lock_guard<std::mutex> lock(lobby_mutex);
         if (lobbies.find(lobby_id) == lobbies.end()) {
             return crow::response(404, "Lobby not found");
         }
 
-        lobbies[lobby_id].started = true;
-        std::cout << "Lobby " << lobby_id << " started!" << std::endl;
+        Lobby& lobby = *lobbies[lobby_id];
+        
+        try {
+            lobby.Start();  // This creates the Game and starts it
+            std::cout << "Lobby " << lobby_id << " started!" << std::endl;
+        } catch (const std::exception& e) {
+            crow::json::wvalue response;
+            response["success"] = false;
+            response["error_message"] = e.what();
+            return crow::response(400, response);
+        }
         
         // Notify all connected clients that game has started
         std::lock_guard<std::mutex> ws_lock(lobby_ws_mutex);
@@ -356,11 +330,10 @@ int main() {
             return crow::response(404, response);
         }
 
-        LobbyData& lobby = lobbies[lobby_id];
+        Lobby& lobby = *lobbies[lobby_id];
 
         // Check if user is in the lobby
-        auto it = std::find(lobby.players.begin(), lobby.players.end(), user_id);
-        if (it == lobby.players.end()) {
+        if (!lobby.IsUserInLobby(user_id)) {
             crow::json::wvalue response;
             response["success"] = false;
             response["error_message"] = "User not in lobby";
@@ -368,7 +341,7 @@ int main() {
         }
 
         // Check if user is the host
-        if (user_id == lobby.owner_id) {
+        if (lobby.IsOwner(user_id)) {
             // Host is leaving - delete the lobby and notify everyone
             std::lock_guard<std::mutex> ws_lock(lobby_ws_mutex);
             
@@ -397,7 +370,7 @@ int main() {
         }
         else {
             // Regular player leaving - just remove them
-            lobby.players.erase(it);
+            lobby.LeaveLobby(user_id);
             
             // Notify others
             std::lock_guard<std::mutex> ws_lock(lobby_ws_mutex);
@@ -405,13 +378,8 @@ int main() {
             // Get username for notification
             std::string username = "Player_" + std::to_string(user_id);
             try {
-                std::vector<UserModel> all_users = db->GetAllUsers();
-                for (const auto& user : all_users) {
-                    if (user.GetId() == user_id) {
-                        username = user.GetUsername();
-                        break;
-                    }
-                }
+                UserModel user = db->GetUserById(user_id);
+                username = user.GetUsername();
             } catch (...) {}
             
             crow::json::wvalue update;
@@ -419,8 +387,8 @@ int main() {
             update["lobby_id"] = lobby_id;
             update["user_id"] = user_id;
             update["username"] = username;
-            update["current_players"] = (int)lobby.players.size();
-            update["max_players"] = lobby.max_players;
+            update["current_players"] = lobby.GetCurrentPlayers();
+            update["max_players"] = lobby.GetMaxPlayers();
             std::string update_msg = update.dump();
             
             for (auto* conn : lobby_update_connections[lobby_id]) {
@@ -434,7 +402,7 @@ int main() {
             crow::json::wvalue response;
             response["success"] = true;
             response["lobby_deleted"] = false;
-            response["current_players"] = (int)lobby.players.size();
+            response["current_players"] = lobby.GetCurrentPlayers();
             return crow::response(200, response);
         }
     });
@@ -481,13 +449,13 @@ int main() {
                          // Send current lobby state
                          std::lock_guard<std::mutex> lobby_lock(lobby_mutex);
                          if (lobbies.find(lid) != lobbies.end()) {
-                             const LobbyData& lobby = lobbies[lid];
+                             const Lobby& lobby = *lobbies[lid];
                              crow::json::wvalue update;
                              update["type"] = "lobby_state";
                              update["lobby_id"] = lid;
-                             update["current_players"] = (int)lobby.players.size();
-                             update["max_players"] = lobby.max_players;
-                             update["game_started"] = lobby.started;
+                             update["current_players"] = lobby.GetCurrentPlayers();
+                             update["max_players"] = lobby.GetMaxPlayers();
+                             update["game_started"] = lobby.IsStarted();
                              conn.send_text(update.dump());
                          }
                      }
@@ -525,12 +493,6 @@ int main() {
                  }
              }
 		});
-
-	Lobby lobby(db);
-	lobby.Start();
-	Game game();
-
-
 
 	CROW_ROUTE(app, "/")([]() {
 		return crow::response(200, "THE GAME Server is running!");
