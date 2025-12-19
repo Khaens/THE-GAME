@@ -2,7 +2,7 @@
 
 void Peasant::UseAbility(TurnContext& ctx, size_t currentPIndex)
 {
-	std::cout << "I am a Peasant and I have no ability to use.\n";
+	ctx.PeasantAbilityUse = true;
 }
 
 bool Peasant::CanUseAbility(TurnContext& ctx) const

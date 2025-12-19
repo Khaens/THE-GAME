@@ -1,46 +1,5 @@
 #include "Round.h"
 
-void Round::OneRound(Game& game, TurnContext& m_ctx)
-{
-	IPlayer& currentPlayer = game.GetCurrentPlayer();
-	std::array<Pile*, PILES_AMOUNT> piles = game.GetPiles();
-	std::cout << "A1: " << piles[0]->GetTopCard()->GetCardValue() << " | "
-		<< "A2: " << piles[1]->GetTopCard()->GetCardValue() << " | "
-		<< "D1: " << piles[2]->GetTopCard()->GetCardValue() << " | "
-		<< "D2: " << piles[3]->GetTopCard()->GetCardValue() << "\n";
-	std::cout << "Your hand:\n";
-	currentPlayer.ShowHand();
-	bool cardPlaced = false;
-	while (!cardPlaced) {
-		Card* chosenCard = nullptr;
-		std::cout << "Pick a card to play from your hand.\n";
-		std::string chosenCardValue;
-		std::cin >> chosenCardValue;
-		chosenCard = currentPlayer.ChooseCard(chosenCardValue);
-		Pile* chosenPile = nullptr;
-		while (!chosenPile) {
-			std::cout << "Choose a pile to place the card on (A1/A2 for Ascending, D1/D2 for Descending): ";
-			std::string pileChoice;
-			std::cin >> pileChoice;
-			chosenPile = GetPile(pileChoice, piles);
-			if (!chosenPile) std::cout << "That's not a valid Pile! Try again!\n";
-		}
-		if (CanPlaceCard(game, chosenCard, chosenPile, m_ctx)) {
-			cardPlaced = true;
-			if (m_ctx.HPplayerIndex != -1 && game.GetPlayers()[m_ctx.HPplayerIndex]->HPActive()) {
-				if (std::stoi(chosenCard->GetCardValue()) == std::stoi(chosenPile->GetTopCard()->GetCardValue()) + 10 ||
-					std::stoi(chosenCard->GetCardValue()) == std::stoi(chosenPile->GetTopCard()->GetCardValue()) - 10) {
-					game.GetPlayers()[m_ctx.HPplayerIndex]->SetHPFlag(false);
-				}
-			}
-			chosenPile->PlaceCard(chosenCard);
-			currentPlayer.RemoveCardFromHand(chosenCard);
-		}
-		else {
-			std::cout << "Cannot place that card on the chosen pile. Try again.\n";
-		}
-	}
-}
 
 void Round::FirstRoundDealing(Game& game)
 {
@@ -67,12 +26,12 @@ bool Round::CanPlaceCard(Game& game, const Card* card, Pile* pile, TurnContext& 
 		return (value < top) || (value == top + 10);
 }
 
-Pile* Round::GetPile(const std::string& pileChoice, std::array<Pile*, PILES_AMOUNT> piles)
+Pile* Round::GetPile(int pileChoice, std::array<Pile*, PILES_AMOUNT> piles)
 {
-	if (pileChoice == "A1") return piles[0];
-	else if (pileChoice == "A2") return piles[1];
-	else if (pileChoice == "D1") return piles[2];
-	else if (pileChoice == "D2") return piles[3];
+	if (pileChoice == 1) return piles[0];
+	else if (pileChoice == 2) return piles[1];
+	else if (pileChoice == 3) return piles[2];
+	else if (pileChoice == 4) return piles[3];
 	return nullptr;
 }
 
@@ -126,27 +85,4 @@ bool Round::IsGameWon(Game& game, IPlayer& currentPlayer)
 		currentPlayer = game.GetCurrentPlayer();
 	}
 	return gameWon;
-}
-
-void Round::AbilityUse(Game& game, TurnContext& m_ctx, IPlayer& currentPlayer)
-{
-	if (currentPlayer.CanUseAbility(m_ctx)) {
-		std::cout << "\n" << currentPlayer.GetUsername() << ", do you want to use your ability this turn? (y/n): ";
-		char useAbility;
-		std::cin >> useAbility;
-		if (std::tolower(useAbility) == 'y') {
-			currentPlayer.UseAbility(m_ctx, currentPlayer.GetPlayerIndex());
-			if (m_ctx.SoothPlayerIndex == currentPlayer.GetPlayerIndex() &&
-				currentPlayer.IsSoothActive()) {
-				std::cout << "Other player's cards: \n";
-				for (size_t i = 0; i < game.GetPlayers().size(); i++) {
-					if (i != currentPlayer.GetPlayerIndex()) {
-						std::cout << game.GetPlayers()[i]->GetUsername() << ": ";
-						game.GetPlayers()[i]->ShowHand();
-					}
-				}
-				currentPlayer.SetSoothState(false);
-			}
-		}
-	}
 }

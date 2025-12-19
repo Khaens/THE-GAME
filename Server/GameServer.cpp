@@ -73,21 +73,32 @@ void Game::NextPlayer()
 	m_currentPlayerIndex = (m_currentPlayerIndex + 1) % m_numberOfPlayers;
 }
 
-Info Game::PlaceCard(size_t playerIndex, Card* card, Pile* chosenPile)
+Info Game::PlaceCard(size_t playerIndex, int card, int pile)
 {
 	if(playerIndex != m_currentPlayerIndex) {
 		return Info::NOT_CURRENT_PLAYER_TURN;
 	}
-	if(Round::CanPlaceCard(*this, card, chosenPile, m_ctx)) {
+	Card* chosenCard = m_players[playerIndex]->GetCardFromHand(card);
+	if(!chosenCard) {
+		return Info::CARD_NOT_PLAYABLE;
+	}
+
+	Pile* chosenPile = Round::GetPile(pile, m_piles);
+
+	if (!chosenPile) {
+		return Info::PILE_NOT_FOUND;
+	}
+
+	if(Round::CanPlaceCard(*this, chosenCard, chosenPile, m_ctx)) {
 		if (m_ctx.HPplayerIndex != -1 && m_players[m_ctx.HPplayerIndex]->HPActive()) {
-			if (std::stoi(card->GetCardValue()) == std::stoi(chosenPile->GetTopCard()->GetCardValue()) + 10 ||
-				std::stoi(card->GetCardValue()) == std::stoi(chosenPile->GetTopCard()->GetCardValue()) - 10) {
+			if (std::stoi(chosenCard->GetCardValue()) == std::stoi(chosenPile->GetTopCard()->GetCardValue()) + 10 ||
+				std::stoi(chosenCard->GetCardValue()) == std::stoi(chosenPile->GetTopCard()->GetCardValue()) - 10) {
 				m_players[m_ctx.HPplayerIndex]->SetHPFlag(false);
 			}
 		}
-		chosenPile->PlaceCard(card);
+		chosenPile->PlaceCard(chosenCard);
 		m_ctx.placedCardsThisTurn++;
-		m_players[playerIndex]->RemoveCardFromHand(card);
+		m_players[playerIndex]->RemoveCardFromHand(chosenCard);
 		if(IsGameOver(GetCurrentPlayer())) {
 			return Info::GAME_LOST;
 		}
@@ -130,7 +141,7 @@ Info Game::EndTurn(size_t playerIndex)
 	return Info::TURN_ENDED;
 }
 
-Info Game::UseAbility(size_t playerIndex)
+Info Game::UseAbility(size_t playerIndex) // Sothsayer Ability logic to be implemented
 {
 	if(m_currentPlayerIndex != playerIndex) {
 		return Info::NOT_CURRENT_PLAYER_TURN;
@@ -141,6 +152,10 @@ Info Game::UseAbility(size_t playerIndex)
 		if (currentPlayer.GetPlayerIndex() == m_ctx.TaxEvPlayerIndex
 				&& currentPlayer.IsTaxActive()) {
 			return Info::TAX_ABILITY_USED;
+		}
+		if(m_ctx.PeasantAbilityUse) {
+			m_ctx.PeasantAbilityUse = false;
+			return Info::PEASANT_ABILITY_USED;
 		}
 		return Info::ABILITY_USED;
 	}

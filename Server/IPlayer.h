@@ -12,6 +12,7 @@ public:
 	virtual bool CanUseAbility(TurnContext& ctx) const = 0;
 	virtual bool IsFinished() const = 0;
 	virtual void SetFinished(bool state) = 0;
+	virtual Card* GetCardFromHand(int cardValue) const = 0;
     
 	virtual const bool IsTaxActive() = 0;
 	virtual void SetTaxActive(bool state) = 0;

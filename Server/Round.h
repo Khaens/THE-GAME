@@ -16,10 +16,9 @@ public:
 	static void OneRound(Game& game, TurnContext& m_ctx);
 	static void FirstRoundDealing(Game& game);
 	static bool CanPlaceCard(Game& game, const Card* card, Pile* pile, TurnContext& m_ctx);
-	static Pile* GetPile(const std::string& pileChoice, std::array<Pile*, PILES_AMOUNT> piles);
+	static Pile* GetPile(int pileChoice, std::array<Pile*, PILES_AMOUNT> piles);
 	static int NrOfPlayableCardsInHand(Game& game, TurnContext& m_ctx);
 	static void UpdateContext(Game& game, TurnContext& m_ctx, IPlayer& currentPlayer);
 	static bool IsGameWon(Game& game, IPlayer& currentPlayer);
-	static void AbilityUse(Game& game, TurnContext& m_ctx, IPlayer& currentPlayer);
 };
 
