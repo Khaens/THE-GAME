@@ -31,38 +31,11 @@ Game::Game(std::vector<UserModel>& users) : m_numberOfPlayers{ users.size() }
 
 size_t Game::WhoStartsFirst()
 {
-	std::cout << "\nTake a look at your cards... Who wants to start the game? You have 1 minute to decide.\n";
-	std::cout << "Pick a number 1 - " << m_numberOfPlayers << ": ";
-
-	std::packaged_task<size_t()> task([]() {
-		size_t choice;
-		std::cin >> choice;
-		return choice;
-		});
-
-	auto future = task.get_future();
-	std::thread(std::move(task)).detach();
-
-	if (future.wait_for(std::chrono::seconds(60)) == std::future_status::ready) {
-		size_t choice = future.get();
-		if (choice >= 1 && choice <= m_numberOfPlayers) {
-			std::cout << "Player " << choice << " will start The Game!\n";
-			return choice - 1;
-		}
-		else {
-			std::cout << "Invalid number! We will now pick randomly...\n";
-		}
-	}
-	else {
-		std::cout << "Uh oh... Time's up! Picking randomly...\n";
-	}
-
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	std::uniform_int_distribution<size_t> dist(1, m_numberOfPlayers);
 
 	size_t randomChoice = dist(gen);
-	std::cout << "Player " << randomChoice << " will start The Game!\n";
 	return randomChoice - 1;
 }
 
@@ -76,7 +49,7 @@ bool Game::IsGameOver(IPlayer& currentPlayer)
 		std::cout << "No one played a +/-10 card until " << currentPlayer.GetUsername() << "'s turn. All players lose!\n";
 		return true;
 	}
-	if (playableCards < m_ctx.currentRequired) {
+	if (playableCards + m_ctx.placedCardsThisTurn < m_ctx.currentRequired) {
 		std::cout << currentPlayer.GetUsername() << " cannot play the required number of cards (" << m_ctx.currentRequired << ").\n";
 		std::cout << "Game Over! " << currentPlayer.GetUsername() << " loses!\n";
 		return true;
@@ -86,76 +59,94 @@ bool Game::IsGameOver(IPlayer& currentPlayer)
 }
 
 
+
 void Game::StartGame()
 {
 	m_wholeDeck.ShuffleDeck();
 	Round::FirstRoundDealing(*this);
 	m_currentPlayerIndex = WhoStartsFirst();
-
-	while (true) {
-		IPlayer& currentPlayer = GetCurrentPlayer();
-		Round::UpdateContext(*this, m_ctx, currentPlayer);
-		if(Round::IsGameWon(*this, currentPlayer)) {
-			std::cout << "Players have won the game!\n";
-			break;
-		}
-		Round::AbilityUse(*this, m_ctx, currentPlayer);
-		if (IsGameOver(currentPlayer)) {
-			break;
-		}
-		ShowCtx();
-		int playedCards = 0;
-		for (int i = 0; i < m_ctx.currentRequired; i++) {
-			Round::OneRound(*this, m_ctx);
-			if (IsGameOver(currentPlayer)) break;
-			playedCards++;
-		}
-		if (currentPlayer.GetPlayerIndex() == m_ctx.GamblerPlayerIndex &&
-			m_players[m_ctx.GamblerPlayerIndex]->GActive()) {
-			currentPlayer.SetGActive(false);
-		}
-		else if (currentPlayer.GetPlayerIndex() == m_ctx.TaxEvPlayerIndex
-			&& currentPlayer.IsTaxActive()) {
-			std::cout << "You don't have to play any cards this round!\n";
-		}
-		int nrOfPlayableCards = Round::NrOfPlayableCardsInHand(*this, m_ctx);
-		if (nrOfPlayableCards == 0) {
-			std::cout << "Nu mai poti pune nici o carte. Trecem la urmatorul jucator.\n";
-			for (size_t i = 0; i < playedCards; i++) {
-				Card* drawnCard = m_wholeDeck.DrawCard();
-				if (drawnCard) currentPlayer.AddCardToHand(drawnCard);
-			}
-		}
-		else {
-			while (nrOfPlayableCards > 0) {
-				std::cout << "Mai poti pune " << nrOfPlayableCards << " carti.\n";
-				std::cout << "Doresti sa continui? (y/n): ";
-				char optiune;
-				std::cin >> optiune;
-				if (optiune == 'n') {
-					break;
-				}
-				else if (optiune == 'y') {
-					Round::OneRound(*this, m_ctx);
-					playedCards++;
-				}
-				nrOfPlayableCards = Round::NrOfPlayableCardsInHand(*this, m_ctx);
-			}
-			for (size_t i = 0; i < playedCards; i++) {
-				Card* drawnCard = m_wholeDeck.DrawCard();
-				if (drawnCard) currentPlayer.AddCardToHand(drawnCard);
-			}
-			/*currentPlayer.ShowHand();
-			m_wholeDeck.ShowDeck();*/
-			NextPlayer();
-		}
-	}
 }
 
 
 void Game::NextPlayer()
 {
 	m_currentPlayerIndex = (m_currentPlayerIndex + 1) % m_numberOfPlayers;
+}
+
+Info Game::PlaceCard(size_t playerIndex, Card* card, Pile* chosenPile)
+{
+	if(playerIndex != m_currentPlayerIndex) {
+		return Info::NOT_CURRENT_PLAYER_TURN;
+	}
+	if(Round::CanPlaceCard(*this, card, chosenPile, m_ctx)) {
+		if (m_ctx.HPplayerIndex != -1 && m_players[m_ctx.HPplayerIndex]->HPActive()) {
+			if (std::stoi(card->GetCardValue()) == std::stoi(chosenPile->GetTopCard()->GetCardValue()) + 10 ||
+				std::stoi(card->GetCardValue()) == std::stoi(chosenPile->GetTopCard()->GetCardValue()) - 10) {
+				m_players[m_ctx.HPplayerIndex]->SetHPFlag(false);
+			}
+		}
+		chosenPile->PlaceCard(card);
+		m_ctx.placedCardsThisTurn++;
+		m_players[playerIndex]->RemoveCardFromHand(card);
+		if(IsGameOver(GetCurrentPlayer())) {
+			return Info::GAME_LOST;
+		}
+		return Info::CARD_PLACED;
+	}
+	else {
+		return Info::CARD_NOT_PLAYABLE;
+	}
+}
+
+Info Game::EndTurn(size_t playerIndex)
+{
+	if(m_ctx.placedCardsThisTurn < m_ctx.currentRequired) {
+		return Info::NOT_ENOUGH_PLAYED_CARDS;
+	}
+	if (playerIndex != m_currentPlayerIndex) {
+		std::cout << "It's not your turn!\n";
+		return Info::NOT_CURRENT_PLAYER_TURN;
+	}
+	int cardsToDraw = m_ctx.placedCardsThisTurn;
+	for(int i = 0; i < cardsToDraw; i++) {
+		Card* drawnCard = m_wholeDeck.DrawCard();
+		if(drawnCard) {
+			m_players[playerIndex]->AddCardToHand(drawnCard);
+		}
+	}
+	if (playerIndex == m_ctx.GamblerPlayerIndex &&
+		m_players[m_ctx.GamblerPlayerIndex]->GActive()) {
+		GetCurrentPlayer().SetGActive(false);
+	}
+	NextPlayer();
+	Round::UpdateContext(*this, m_ctx, GetCurrentPlayer());
+	m_ctx.placedCardsThisTurn = 0;
+	if(IsGameOver(GetCurrentPlayer())) {
+		return Info::GAME_LOST;
+	}
+	if (Round::IsGameWon(*this, GetCurrentPlayer())) {
+		return Info::GAME_WON;
+	}
+	return Info::TURN_ENDED;
+}
+
+Info Game::UseAbility(size_t playerIndex)
+{
+	if(m_currentPlayerIndex != playerIndex) {
+		return Info::NOT_CURRENT_PLAYER_TURN;
+	}
+	IPlayer& currentPlayer = GetCurrentPlayer();
+	if(currentPlayer.CanUseAbility(m_ctx)) {
+		currentPlayer.UseAbility(m_ctx, playerIndex);
+		if (currentPlayer.GetPlayerIndex() == m_ctx.TaxEvPlayerIndex
+				&& currentPlayer.IsTaxActive()) {
+			return Info::TAX_ABILITY_USED;
+		}
+		return Info::ABILITY_USED;
+	}
+	else {
+		return Info::ABILITY_NOT_AVAILABLE;
+	}
 }
 
 IPlayer& Game::GetCurrentPlayer()

@@ -2,6 +2,20 @@
 
 constexpr size_t PILES_AMOUNT = 4;
 
+enum class Info {
+	CARD_NOT_PLAYABLE,
+	NOT_CURRENT_PLAYER_TURN,
+	ABILITY_NOT_AVAILABLE,
+	NOT_ENOUGH_PLAYED_CARDS,
+	TAX_ABILITY_USED,
+	GAME_WON,
+	GAME_LOST,
+	TURN_ENDED,
+	ABILITY_USED,
+	CARD_PLACED
+};
+
+
 #include <iostream>
 #include <thread>
 #include <vector>
@@ -32,6 +46,11 @@ public:
 	bool IsGameOver(IPlayer& currentPlayer);
 	void StartGame();
 	void NextPlayer();
+
+	Info PlaceCard(size_t playerIndex, Card* card, Pile* chosenPile);
+	Info UseAbility(size_t playerIndex);
+	Info EndTurn(size_t playerIndex);
+
 
 	Card* DrawCard();
 
