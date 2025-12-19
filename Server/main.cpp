@@ -28,7 +28,6 @@ static std::mutex ws_mutex;
 static std::unordered_map<std::string, std::vector<crow::websocket::connection*>> lobby_update_connections;
 static std::mutex lobby_ws_mutex;
 
-// Helper to generate random 6-char ID
 std::string generateLobbyId() {
     static const char alphanum[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     static std::random_device rd;  // Hardware entropy source
@@ -61,6 +60,8 @@ int main() {
 
 	crow::SimpleApp app;
 	Database db("users.db");
+
+	// ----------------------------- AUTHENTICATION ENDPOINTS --------------------------
 
     CROW_ROUTE(app, "/api/register")
         .methods(crow::HTTPMethod::POST)
@@ -134,6 +135,8 @@ int main() {
         }
             });
 
+	// ----------------------------- LOBBY ENDPOINTS --------------------------
+
     CROW_ROUTE(app, "/api/lobby/create")
         .methods(crow::HTTPMethod::POST)
         ([](const crow::request& req) {
@@ -148,24 +151,6 @@ int main() {
         std::string password = body.has("password") ? (std::string)body["password"].s() : std::string("");
 
         std::lock_guard<std::mutex> lock(lobby_mutex);
-        
-        // Clear all existing lobbies (only one lobby at a time)
-        std::lock_guard<std::mutex> ws_lock(lobby_ws_mutex);
-        for (auto& [old_id, old_lobby] : lobbies) {
-            // Notify all connected clients that lobby is closing
-            crow::json::wvalue close_update;
-            close_update["type"] = "lobby_closed";
-            close_update["lobby_id"] = old_id;
-            std::string close_msg = close_update.dump();
-            for (auto* conn : lobby_update_connections[old_id]) {
-                if (conn) {
-                    conn->send_text(close_msg);
-                }
-            }
-            // Clear connections for old lobby
-            lobby_update_connections[old_id].clear();
-        }
-        lobbies.clear();
         
         // Create new lobby
         std::string id = generateLobbyId();
@@ -351,6 +336,111 @@ int main() {
         return crow::response(200, response);
     });
 
+    // Leave a lobby (or delete it if host leaves)
+    CROW_ROUTE(app, "/api/lobby/leave")
+        .methods(crow::HTTPMethod::POST)
+        ([&db](const crow::request& req) {
+        auto body = crow::json::load(req.body);
+        if (!body) {
+            return crow::response(400, "Invalid JSON");
+        }
+
+        int user_id = body["user_id"].i();
+        std::string lobby_id = body["lobby_id"].s();
+
+        std::lock_guard<std::mutex> lock(lobby_mutex);
+        if (lobbies.find(lobby_id) == lobbies.end()) {
+            crow::json::wvalue response;
+            response["success"] = false;
+            response["error_message"] = "Lobby not found";
+            return crow::response(404, response);
+        }
+
+        Lobby& lobby = lobbies[lobby_id];
+
+        // Check if user is in the lobby
+        auto it = std::find(lobby.players.begin(), lobby.players.end(), user_id);
+        if (it == lobby.players.end()) {
+            crow::json::wvalue response;
+            response["success"] = false;
+            response["error_message"] = "User not in lobby";
+            return crow::response(400, response);
+        }
+
+        // Check if user is the host
+        if (user_id == lobby.owner_id) {
+            // Host is leaving - delete the lobby and notify everyone
+            std::lock_guard<std::mutex> ws_lock(lobby_ws_mutex);
+            
+            crow::json::wvalue update;
+            update["type"] = "lobby_closed";
+            update["lobby_id"] = lobby_id;
+            update["reason"] = "Host left the lobby";
+            std::string update_msg = update.dump();
+            
+            for (auto* conn : lobby_update_connections[lobby_id]) {
+                if (conn) {
+                    conn->send_text(update_msg);
+                }
+            }
+            
+            // Clean up connections and lobby
+            lobby_update_connections[lobby_id].clear();
+            lobbies.erase(lobby_id);
+            
+            std::cout << "Lobby " << lobby_id << " deleted (host left)" << std::endl;
+            
+            crow::json::wvalue response;
+            response["success"] = true;
+            response["lobby_deleted"] = true;
+            return crow::response(200, response);
+        }
+        else {
+            // Regular player leaving - just remove them
+            lobby.players.erase(it);
+            
+            // Notify others
+            std::lock_guard<std::mutex> ws_lock(lobby_ws_mutex);
+            
+            // Get username for notification
+            std::string username = "Player_" + std::to_string(user_id);
+            try {
+                std::vector<UserModel> all_users = db.GetAllUsers();
+                for (const auto& user : all_users) {
+                    if (user.GetId() == user_id) {
+                        username = user.GetUsername();
+                        break;
+                    }
+                }
+            } catch (...) {}
+            
+            crow::json::wvalue update;
+            update["type"] = "player_left";
+            update["lobby_id"] = lobby_id;
+            update["user_id"] = user_id;
+            update["username"] = username;
+            update["current_players"] = (int)lobby.players.size();
+            update["max_players"] = lobby.max_players;
+            std::string update_msg = update.dump();
+            
+            for (auto* conn : lobby_update_connections[lobby_id]) {
+                if (conn) {
+                    conn->send_text(update_msg);
+                }
+            }
+            
+            std::cout << "Player " << user_id << " left lobby " << lobby_id << std::endl;
+            
+            crow::json::wvalue response;
+            response["success"] = true;
+            response["lobby_deleted"] = false;
+            response["current_players"] = (int)lobby.players.size();
+            return crow::response(200, response);
+        }
+    });
+
+	// ----------------------------- WEBSOCKET ENDPOINTS --------------------------
+
     // WebSocket for lobby updates (player joins/leaves)
     CROW_WEBSOCKET_ROUTE(app, "/ws/lobby")
         .onopen([](crow::websocket::connection& conn) {
@@ -435,6 +525,8 @@ int main() {
                  }
              }
 		});
+
+    
 
 
 	CROW_ROUTE(app, "/")([]() {
