@@ -140,6 +140,20 @@ bool NetworkManager::startGame(const std::string& lobby_id) {
     return response.status_code == 200;
 }
 
+bool NetworkManager::leaveLobby(int user_id, const std::string& lobby_id) {
+    crow::json::wvalue payload;
+    payload["user_id"] = user_id;
+    payload["lobby_id"] = lobby_id;
+    
+    auto response = cpr::Post(
+        cpr::Url{ baseUrl + "/api/lobby/leave" },
+        cpr::Body{ payload.dump() },
+        cpr::Header{ {"Content-Type", "application/json"} }
+    );
+
+    return response.status_code == 200;
+}
+
 std::vector<NetworkManager::PlayerInfo> NetworkManager::getLobbyPlayers(const std::string& lobby_id) {
     auto response = cpr::Get(
         cpr::Url{ baseUrl + "/api/lobby/" + lobby_id + "/players" }

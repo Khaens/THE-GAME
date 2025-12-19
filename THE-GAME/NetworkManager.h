@@ -56,6 +56,7 @@ public:
     bool joinLobby(int user_id, const std::string& code);
     std::optional<LobbyStatus> getLobbyStatus(const std::string& lobby_id);
     bool startGame(const std::string& lobby_id);
+    bool leaveLobby(int user_id, const std::string& lobby_id);
     
     // Get list of players in lobby
     struct PlayerInfo {

@@ -435,8 +435,8 @@ void LobbyRoomDialog::onLeaveClicked()
     // Disconnect from lobby WebSocket
     m_networkManager->disconnectFromLobby();
 
-    // TODO: Send leave request to server
-    // m_networkManager->leaveLobby(m_userId, m_lobbyId.toStdString());
+    // Send leave request to server
+    m_networkManager->leaveLobby(m_userId, m_lobbyId.toStdString());
 
     reject(); // Close the dialog
 }
@@ -664,12 +664,29 @@ void LobbyRoomDialog::handleLobbyWebSocketMessage(const QJsonObject& message)
             "Game is starting! Transitioning to game screen...");
         accept();
     }
+    else if (type == "player_left") {
+        qDebug() << "Player left via WebSocket";
+        QString username = message["username"].toString();
+        int current_players = message["current_players"].toInt();
+        int max_players = message["max_players"].toInt();
+        
+        // Update player count
+        if (m_playerCountLabel) {
+            m_playerCountLabel->setText(QString("Players: %1/%2")
+                .arg(current_players)
+                .arg(max_players));
+        }
+        
+        // Fetch updated player list
+        fetchLobbyPlayers();
+    }
     else if (type == "lobby_closed") {
         stopRefreshTimer();
         stopCountdownTimer();
         m_networkManager->disconnectFromLobby();
+        QString reason = message["reason"].toString();
         QMessageBox::warning(this, "Lobby Closed",
-            "This lobby has been closed because a new lobby was created.");
+            QString("Lobby has been closed: %1").arg(reason));
         reject();
     }
 }
