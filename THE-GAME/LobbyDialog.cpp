@@ -25,7 +25,7 @@ LobbyDialog::LobbyDialog(QWidget* parent)
     setWindowFlags(Qt::Widget);
     setAttribute(Qt::WA_TranslucentBackground);
 
-    m_networkManager = new NetworkManager("http://localhost:18080");
+    // NetworkManager will be set via setNetworkManager()
 
     setupUI();
     setupStyle();
@@ -170,25 +170,28 @@ void LobbyDialog::onCreateLobbyClicked()
     if (dialog.exec() == QDialog::Accepted && dialog.wasLobbyCreated()) {
         QString lobbyName = dialog.getLobbyName();
         int maxPlayers = dialog.getMaxPlayers();
-        QString generatedPassword = dialog.getGeneratedPassword();
 
         LobbyResponse lobbyResponse = m_networkManager->createLobby(
             m_userId,
             lobbyName.toStdString(),
             maxPlayers,
-            generatedPassword.toStdString()
+            ""  // Password no longer used - server generates lobby ID
         );
 
         if (lobbyResponse.success) {
             hideOverlay();
 
-            // Create and show LobbyRoomDialog
+            QString serverLobbyId = QString::fromStdString(lobbyResponse.lobby_id);
+            qDebug() << "Lobby created successfully! Lobby ID:" << serverLobbyId;
+
+            // Create and show LobbyRoomDialog - use SERVER's lobby_id as the code
             LobbyRoomDialog* lobbyRoom = new LobbyRoomDialog(
                 m_userId,
-                QString::fromStdString(lobbyResponse.lobby_id),
+                serverLobbyId,  // lobby_id from server
                 lobbyName,
-                generatedPassword,
+                serverLobbyId,  // Use server's ID as the shareable code
                 true,  // isHost = true for creator
+                m_networkManager,
                 parentWidget()
             );
 
@@ -230,10 +233,11 @@ void LobbyDialog::onJoinLobbyClicked()
             // Create and show LobbyRoomDialog
             LobbyRoomDialog* lobbyRoom = new LobbyRoomDialog(
                 m_userId,
-                QString::fromStdString(code_to_join), // Use code as ID temporarily
-                "Joined Lobby", // TODO: Get actual lobby name from server
+                QString::fromStdString(code_to_join), // Use code as ID
+                "Joined Lobby", // Lobby name not available from join response
                 lobbyCode,
                 false,  // isHost = false for joiner
+                m_networkManager,
                 parentWidget()
             );
 

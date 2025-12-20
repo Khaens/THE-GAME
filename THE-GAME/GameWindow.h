@@ -18,14 +18,17 @@ signals:
 protected:
     void resizeEvent(QResizeEvent* event) override;
     void paintEvent(QPaintEvent* event) override;
+    bool eventFilter(QObject* obj, QEvent* event) override;
 
 private slots:
     void onBackButtonClicked();
 
 private:
     Ui::Form* ui;
-	void loadGameImage();
+    void loadGameImage();
 
     QPixmap m_backgroundPixmap;
     QPixmap m_scaledBackground;
-};  
+
+    void resizeUI();
+};

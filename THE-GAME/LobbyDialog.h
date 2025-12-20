@@ -33,6 +33,7 @@ public:
     void showOverlay();
     void hideOverlay();
     void setUserId(int userId) { m_userId = userId; }
+    void setNetworkManager(NetworkManager* nm) { m_networkManager = nm; }
 
 signals:
     void gameStartedFromLobby();

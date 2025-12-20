@@ -10,15 +10,16 @@
 
 LobbyRoomDialog::LobbyRoomDialog(int userId, const QString& lobbyId,
     const QString& lobbyName, const QString& lobbyCode,
-    bool isHost, QWidget* parent)
+    bool isHost, NetworkManager* networkManager, QWidget* parent)
     : QDialog(parent)
     , m_userId(userId)
     , m_lobbyId(lobbyId)
     , m_lobbyName(lobbyName)
     , m_lobbyCode(lobbyCode)
     , m_isHost(isHost)
+    , m_maxPlayers(4)
     , m_contentContainer(nullptr)
-    , m_networkManager(nullptr)
+    , m_networkManager(networkManager)
     , m_refreshTimer(nullptr)
     , m_countdownTimer(nullptr)
     , m_countdownSeconds(60)  // Start at 60 seconds
@@ -30,8 +31,7 @@ LobbyRoomDialog::LobbyRoomDialog(int userId, const QString& lobbyId,
     setAttribute(Qt::WA_TranslucentBackground);
     setModal(true);
 
-    // Initialize network manager
-    m_networkManager = new NetworkManager("http://localhost:18080");
+    // NetworkManager is now passed in, no need to create new one
 
     setupUI();
     setupStyle();
@@ -400,8 +400,9 @@ void LobbyRoomDialog::updateCountdown()
     if (m_countdownSeconds <= 0) {
         stopCountdownTimer();
 
-        // Only auto-start if we have at least 2 players
-        if (m_players.size() >= 2) {
+        // Only auto-start if we have at least 1 players (Temporary)
+        // ORIGINAL: if (m_players.size() >= 2) {
+        if (m_players.size() >= 1) {
             onStartGameClicked();
         }
         else {
@@ -434,8 +435,8 @@ void LobbyRoomDialog::onLeaveClicked()
     // Disconnect from lobby WebSocket
     m_networkManager->disconnectFromLobby();
 
-    // TODO: Send leave request to server
-    // m_networkManager->leaveLobby(m_userId, m_lobbyId.toStdString());
+    // Send leave request to server
+    m_networkManager->leaveLobby(m_userId, m_lobbyId.toStdString());
 
     reject(); // Close the dialog
 }
@@ -446,9 +447,11 @@ void LobbyRoomDialog::onStartGameClicked()
         return;
     }
 
-    if (m_players.size() < 2) {
+    // TEMPORARY: Allow 1 player for testing
+    // ORIGINAL: if (m_players.size() < 2) {
+    if (m_players.size() < 1) { 
         QMessageBox::warning(this, "Not Enough Players",
-            "Need at least 2 players to start the game.");
+            "Need at least 1 player to start the game."); // ORIGINAL: "Need at least 2 players to start the game."
         return;
     }
 
@@ -465,6 +468,9 @@ void LobbyRoomDialog::onStartGameClicked()
         stopCountdownTimer();
         
         // Start game on server
+        // Try to start on server, but if it fails (e.g. not enough players), 
+        // proceed client-side anyway for testing purposes.
+        /* ORIGINAL:
         if (m_networkManager->startGame(m_lobbyId.toStdString())) {
             m_networkManager->disconnectFromLobby();
             emit gameStarted(); // EMIT SIGNAL INSTEAD
@@ -472,6 +478,17 @@ void LobbyRoomDialog::onStartGameClicked()
         } else {
             QMessageBox::warning(this, "Error", "Failed to start game. Please try again.");
         }
+        */
+        
+        bool serverStarted = m_networkManager->startGame(m_lobbyId.toStdString());
+        
+        if (!serverStarted) {
+             qDebug() << "Server failed to start game (likely due to player count), forcing client-side start for testing.";
+        }
+
+        m_networkManager->disconnectFromLobby();
+        emit gameStarted(); // EMIT SIGNAL INSTEAD
+        accept(); // Close lobby dialog
     }
 }
 
@@ -554,12 +571,13 @@ void LobbyRoomDialog::fetchLobbyPlayers()
     if (m_playerCountLabel) {
         m_playerCountLabel->setText(QString("Players: %1/%2")
             .arg(m_players.size())
-            .arg(4)); // TODO: Get max_players from status
+            .arg(m_maxPlayers));
     }
     
     // Update START GAME button state
     if (m_isHost) {
-        m_startGameButton->setEnabled(m_players.size() >= 2);
+        // ORIGINAL: m_startGameButton->setEnabled(m_players.size() >= 2);
+        m_startGameButton->setEnabled(m_players.size() >= 1); // TEMPORARY: Allow 1 player
     }
     
     updatePlayerList(m_players);
@@ -567,6 +585,9 @@ void LobbyRoomDialog::fetchLobbyPlayers()
 
 void LobbyRoomDialog::handleLobbyUpdate(const LobbyStatus& status)
 {
+    // Store max_players for later use
+    m_maxPlayers = status.max_players;
+
     // Update player count label
     if (m_playerCountLabel) {
         m_playerCountLabel->setText(QString("Players: %1/%2")
@@ -643,12 +664,29 @@ void LobbyRoomDialog::handleLobbyWebSocketMessage(const QJsonObject& message)
             "Game is starting! Transitioning to game screen...");
         accept();
     }
+    else if (type == "player_left") {
+        qDebug() << "Player left via WebSocket";
+        QString username = message["username"].toString();
+        int current_players = message["current_players"].toInt();
+        int max_players = message["max_players"].toInt();
+        
+        // Update player count
+        if (m_playerCountLabel) {
+            m_playerCountLabel->setText(QString("Players: %1/%2")
+                .arg(current_players)
+                .arg(max_players));
+        }
+        
+        // Fetch updated player list
+        fetchLobbyPlayers();
+    }
     else if (type == "lobby_closed") {
         stopRefreshTimer();
         stopCountdownTimer();
         m_networkManager->disconnectFromLobby();
+        QString reason = message["reason"].toString();
         QMessageBox::warning(this, "Lobby Closed",
-            "This lobby has been closed because a new lobby was created.");
+            QString("Lobby has been closed: %1").arg(reason));
         reject();
     }
 }

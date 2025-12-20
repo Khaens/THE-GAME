@@ -194,6 +194,9 @@
     <Font Include="Fonts\Jersey15-Regular.ttf" />
     <Font Include="Fonts\KnightWarrior-w16n8.otf" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="NetworkConfig.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>

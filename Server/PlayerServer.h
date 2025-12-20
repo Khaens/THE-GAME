@@ -33,6 +33,7 @@ public:
 	size_t GetPlayerIndex() const override;
     void SetFinished(bool state) override;
     bool IsFinished() const override;
+    Card* GetCardFromHand(int cardValue) const override;
 
     void ShowHand() override;
 	void UseAbility(TurnContext& ctx, size_t currentPIndex) override;
@@ -121,10 +122,22 @@ inline void Player<Ability>::SetFinished(bool state)
 	m_finished = state;
 }
 
+
 template<typename Ability>
 inline bool Player<Ability>::IsFinished() const
 {
     return m_finished;
+}
+
+template<typename Ability>
+inline Card* Player<Ability>::GetCardFromHand(int cardValue) const
+{
+    for (auto card : m_hand) {
+        if (std::stoi(card->GetCardValue()) == cardValue) {
+            return card;
+        }
+    }
+    return nullptr;
 }
 
 template <typename Ability>

@@ -15,5 +15,9 @@ struct ABILITY_API TurnContext {
 	size_t TaxEvPlayerIndex = -1;
 	size_t SoothPlayerIndex = -1;
 
+	size_t placedCardsThisTurn = 0;
+
+	bool PeasantAbilityUse = false;
+
 	bool endgame = false;
 };

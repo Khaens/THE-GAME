@@ -1,4 +1,5 @@
 ﻿#include "MainWindow.h"
+#include "NetworkConfig.h"
 #include <QPixmap>
 #include <QMessageBox>
 #include <QShortcut>
@@ -26,7 +27,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     setupMenuStyle();
 
-	m_networkManager = std::make_shared<NetworkManager>("http://localhost:18080");
+	m_networkManager = std::make_shared<NetworkManager>(SERVER_URL);
 
     // Create overlay dialogs
     m_helpDialog = new HelpDialog(this);
@@ -36,6 +37,7 @@ MainWindow::MainWindow(QWidget* parent)
     m_gameWindow = new GameWindow(this);
 
     m_accountDialog->setNetworkManager(m_networkManager);
+    m_lobbyDialog->setNetworkManager(m_networkManager.get());
 
     // Connect buttons
 	connect(m_lobbyDialog, &LobbyDialog::gameStartedFromLobby, this, &MainWindow::showGameOverlay);
@@ -48,6 +50,14 @@ MainWindow::MainWindow(QWidget* parent)
     // Fullscreen shortcut
     QShortcut* fsShortcut = new QShortcut(QKeySequence(Qt::Key_F11), this);
     connect(fsShortcut, &QShortcut::activated, this, &MainWindow::toggleFullScreen);
+
+    // ESC to exit fullscreen
+    QShortcut* escShortcut = new QShortcut(QKeySequence(Qt::Key_Escape), this);
+    connect(escShortcut, &QShortcut::activated, this, [this]() {
+        if (isFullScreen()) {
+            showNormal();
+        }
+    });
 
     // Load title image
     QPixmap titlePixmap("Resources/TitleCard.png");
