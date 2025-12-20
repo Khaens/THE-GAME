@@ -1,0 +1,25 @@
+#pragma once
+
+class StatisticsModel
+{
+private:
+	int id = 0;
+	int userId = 0;
+	int gamesWon = 0;
+	float winRate = 0.0f;
+
+public:
+	StatisticsModel() = default;
+	StatisticsModel(int userId);
+	int GetId() const;
+	int GetUserId() const;
+	int GetGamesWon() const;
+	float GetWinRate() const;
+
+	void SetId(int newId);
+	void SetUserId(int newUserId);
+	void SetGamesWon(int newGamesWon);
+	void SetWinRate(float newWinRate);
+
+};
+
