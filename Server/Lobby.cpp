@@ -24,7 +24,7 @@ LobbyStatus Lobby::GetStatus()
 void Lobby::Start()
 {
     if (m_Users.size() >= 2) m_status = LobbyStatus::Started;
-    Game game(m_Users);
+    Game game(m_Users, *m_db);
     game.StartGame();
 }
 

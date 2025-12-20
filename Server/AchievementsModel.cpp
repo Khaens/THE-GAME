@@ -11,6 +11,7 @@ bool AchievementsModel::GetHarryPotter() const { return harryPotter; }
 bool AchievementsModel::GetSoothsayer() const { return soothsayer; }
 bool AchievementsModel::GetTaxEvader() const { return taxEvader; }
 bool AchievementsModel::GetSeriousPlayer() const { return seriousPlayer; }
+bool AchievementsModel::GetTalentedPlayer() const { return talentedPlayer; }
 bool AchievementsModel::GetJack() const { return jack; }
 bool AchievementsModel::GetZeroEffort() const { return zeroEffort; }
 bool AchievementsModel::GetVanillaW() const { return vanillaW; }
@@ -25,6 +26,7 @@ void AchievementsModel::SetHarryPotter(bool value) { harryPotter = value; }
 void AchievementsModel::SetSoothsayer(bool value) { soothsayer = value; }
 void AchievementsModel::SetTaxEvader(bool value) { taxEvader = value; }
 void AchievementsModel::SetSeriousPlayer(bool value) { seriousPlayer = value; }
+void AchievementsModel::SetTalentedPlayer(bool value) { talentedPlayer = value; }
 void AchievementsModel::SetJack(bool value) { jack = value; }
 void AchievementsModel::SetZeroEffort(bool value) { zeroEffort = value; }
 void AchievementsModel::SetVanillaW(bool value) { vanillaW = value; }

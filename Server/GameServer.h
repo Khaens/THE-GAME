@@ -16,6 +16,7 @@ constexpr size_t PILES_AMOUNT = 4;
 #include "TurnContext.h"
 #include "Round.h"
 #include "GameStatistics.h"
+#include "Database.h"
 
 class Game {
 private:
@@ -26,14 +27,17 @@ private:
 	std::array<Pile*, PILES_AMOUNT> m_piles;
 	Deck m_wholeDeck;
 	TurnContext m_ctx;
+	Database& m_database;
 
 public:
 	std::unordered_map<int, GameStatistics> m_gameStats;
-	Game(std::vector<UserModel>& users);
+	Game(std::vector<UserModel>& users, Database& db);
 	size_t WhoStartsFirst();
 	bool IsGameOver(IPlayer& currentPlayer);
 	void StartGame();
 	void NextPlayer();
+
+	void CheckAndUnlockAchievements();
 
 	Card* DrawCard();
 
