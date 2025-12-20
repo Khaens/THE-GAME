@@ -2,6 +2,7 @@
 
 void Peasant::UseAbility(TurnContext& ctx, size_t currentPIndex)
 {
+	ctx.PeasantPlayerIndex = currentPIndex;
 	std::cout << "I am a Peasant and I have no ability to use.\n";
 }
 

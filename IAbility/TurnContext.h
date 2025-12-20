@@ -14,6 +14,7 @@ struct ABILITY_API TurnContext {
 	size_t GamblerPlayerIndex = -1;
 	size_t TaxEvPlayerIndex = -1;
 	size_t SoothPlayerIndex = -1;
+	size_t PeasantPlayerIndex = -1;
 
 	bool endgame = false;
 };

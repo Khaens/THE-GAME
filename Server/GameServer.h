@@ -1,7 +1,7 @@
 #pragma once
 
 constexpr size_t PILES_AMOUNT = 4;
-
+#include <unordered_map>
 #include <iostream>
 #include <thread>
 #include <vector>
@@ -15,6 +15,7 @@ constexpr size_t PILES_AMOUNT = 4;
 #include "DeckServer.h"
 #include "TurnContext.h"
 #include "Round.h"
+#include "GameStatistics.h"
 
 class Game {
 private:
@@ -27,6 +28,7 @@ private:
 	TurnContext m_ctx;
 
 public:
+	std::unordered_map<int, GameStatistics> m_gameStats;
 	Game(std::vector<UserModel>& users);
 	size_t WhoStartsFirst();
 	bool IsGameOver(IPlayer& currentPlayer);

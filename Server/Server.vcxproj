@@ -161,6 +161,7 @@
     <ClInclude Include="CardServer.h" />
     <ClInclude Include="Database.h" />
     <ClInclude Include="DeckServer.h" />
+    <ClInclude Include="GameStatistics.h" />
     <ClInclude Include="GameServer.h" />
     <ClInclude Include="IPlayer.h" />
     <ClInclude Include="Lobby.h" />

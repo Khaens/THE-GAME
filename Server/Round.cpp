@@ -34,6 +34,13 @@ void Round::OneRound(Game& game, TurnContext& m_ctx)
 				}
 			}
 			chosenPile->PlaceCard(chosenCard);
+			if (game.m_gameStats[currentPlayer.GetID()].lastPlayedCardValue != -1) {
+				int diff = std::abs(std::stoi(chosenCard->GetCardValue()) - game.m_gameStats[currentPlayer.GetID()].lastPlayedCardValue);
+				if (diff > 3) {
+					game.m_gameStats[currentPlayer.GetID()].perfectGame = false;
+				}
+			}
+			game.m_gameStats[currentPlayer.GetID()].lastPlayedCardValue = std::stoi(chosenCard->GetCardValue());
 			currentPlayer.RemoveCardFromHand(chosenCard);
 		}
 		else {

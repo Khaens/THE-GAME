@@ -23,7 +23,7 @@ public:
     Player() = default;
     Player(const UserModel& user);
     ~Player();
-
+    const int GetID() override;
     void AddCardToHand(Card* card) override;
     void RemoveCardFromHand(Card* card) override;
     const std::unordered_set<Card*>& GetHand() const override;
@@ -65,6 +65,12 @@ template<typename Ability>
 Player<Ability>::~Player()
 {
     m_hand.clear();
+}
+
+template<typename Ability>
+inline const int Player<Ability>::GetID()
+{
+    return UserModel::GetId();
 }
 
 template <typename Ability>

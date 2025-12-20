@@ -27,6 +27,11 @@ Game::Game(std::vector<UserModel>& users) : m_numberOfPlayers{ users.size() }
 	m_piles[m_pileIndex++] = new Pile{ PileType::ASCENDING };
 	m_piles[m_pileIndex++] = new Pile{ PileType::DESCENDING };
 	m_piles[m_pileIndex++] = new Pile{ PileType::DESCENDING };
+
+	m_gameStats.reserve(m_numberOfPlayers);
+	for(int i = 0; i < m_numberOfPlayers; i++) {
+		m_gameStats.insert({m_players[i]->GetID(), GameStatistics()});
+	}
 }
 
 size_t Game::WhoStartsFirst()
@@ -144,6 +149,9 @@ void Game::StartGame()
 			for (size_t i = 0; i < playedCards; i++) {
 				Card* drawnCard = m_wholeDeck.DrawCard();
 				if (drawnCard) currentPlayer.AddCardToHand(drawnCard);
+			}
+			if (m_ctx.endgame && playedCards < 2) {
+				m_gameStats[currentPlayer.GetID()].atLeastTwoCardsInEndgame = false;
 			}
 			/*currentPlayer.ShowHand();
 			m_wholeDeck.ShowDeck();*/
