@@ -3,6 +3,7 @@
 #include <string>
 #include "UserModel.h"
 #include "AchievementsModel.h"
+#include "StatisticsModel.h"
 
 using namespace sqlite_orm;
 
@@ -25,8 +26,14 @@ inline auto initStorage(const std::string& path) {
             make_column("vanilla_victory", &AchievementsModel::GetVanillaW, &AchievementsModel::SetVanillaW),
             make_column("high_risk_high_reward", &AchievementsModel::GetHighRisk, &AchievementsModel::SetHighRisk),
             make_column("perfect_game", &AchievementsModel::GetPerfectGame, &AchievementsModel::SetPerfectGame),
-            make_column("ghost_win", &AchievementsModel::GetGhost, &AchievementsModel::SetGhost),
-            foreign_key(&AchievementsModel::GetUserId).references(&UserModel::GetId).on_delete.cascade())
+            make_column("sixSeven", &AchievementsModel::GetSixSeven, &AchievementsModel::SetSixSeven),
+            foreign_key(&AchievementsModel::GetUserId).references(&UserModel::GetId).on_delete.cascade()),
+        make_table("statistics",
+            make_column("id", &StatisticsModel::GetId, &StatisticsModel::SetId, primary_key().autoincrement()),
+            make_column("user_id", &StatisticsModel::GetUserId, &StatisticsModel::SetUserId),
+            make_column("games_won", &StatisticsModel::GetGamesWon, &StatisticsModel::SetGamesWon),
+            make_column("win_rate", &StatisticsModel::GetWinRate, &StatisticsModel::SetWinRate),
+            foreign_key(&StatisticsModel::GetUserId).references(&UserModel::GetId).on_delete.cascade())
     );
 }
 
@@ -52,6 +59,11 @@ public:
     void UpdateUser(const UserModel& user);
     void DeleteUser(int id);
     bool UserExists(const std::string& username);
+
+    int InsertStatistics(const StatisticsModel& stats);
+    bool StatisticsExistForUser(int userId);
+    StatisticsModel GetStatisticsByUserId(int userId);
+    void UpdateStatistics(const StatisticsModel& statistics);
 
     int InsertAchievements(const AchievementsModel& achievements);
     AchievementsModel GetAchievementsByUserId(int userId);

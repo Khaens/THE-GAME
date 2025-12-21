@@ -16,7 +16,7 @@ bool AchievementsModel::GetZeroEffort() const { return zeroEffort; }
 bool AchievementsModel::GetVanillaW() const { return vanillaW; }
 bool AchievementsModel::GetHighRisk() const { return highRisk; }
 bool AchievementsModel::GetPerfectGame() const { return perfectGame; }
-bool AchievementsModel::GetGhost() const { return ghost; }
+bool AchievementsModel::GetSixSeven() const { return sixSeven; }
 
 void AchievementsModel::SetId(int newId) { id = newId; }
 void AchievementsModel::SetUserId(int newUserId) { userId = newUserId; }
@@ -30,4 +30,4 @@ void AchievementsModel::SetZeroEffort(bool value) { zeroEffort = value; }
 void AchievementsModel::SetVanillaW(bool value) { vanillaW = value; }
 void AchievementsModel::SetHighRisk(bool value) { highRisk = value; }
 void AchievementsModel::SetPerfectGame(bool value) { perfectGame = value; }
-void AchievementsModel::SetGhost(bool value) { ghost = value; }
+void AchievementsModel::SetSixSeven(bool value) { sixSeven = value; }

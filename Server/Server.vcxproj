@@ -152,6 +152,7 @@
     <ClCompile Include="PlayerFactory.cpp" />
     <ClCompile Include="PlayerServer.cpp" />
     <ClCompile Include="Round.cpp" />
+    <ClCompile Include="StatisticsModel.cpp" />
     <ClCompile Include="UserModel.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -168,6 +169,7 @@
     <ClInclude Include="PlayerFactory.h" />
     <ClInclude Include="PlayerServer.h" />
     <ClInclude Include="Round.h" />
+    <ClInclude Include="StatisticsModel.h" />
     <ClInclude Include="UserModel.h" />
   </ItemGroup>
   <ItemGroup>

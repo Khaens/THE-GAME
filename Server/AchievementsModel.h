@@ -16,7 +16,7 @@ private:
     bool vanillaW = false;
     bool highRisk = false;
     bool perfectGame = false;
-    bool ghost = false;
+    bool sixSeven = false;
 
 
 public:
@@ -35,7 +35,7 @@ public:
     bool GetVanillaW() const;
     bool GetHighRisk() const;
     bool GetPerfectGame() const;
-    bool GetGhost() const;
+    bool GetSixSeven() const;
 
     void SetId(int newId);
     void SetUserId(int newUserId);
@@ -49,5 +49,5 @@ public:
     void SetVanillaW(bool value);
     void SetHighRisk(bool value);
     void SetPerfectGame(bool value);
-    void SetGhost(bool value);
+    void SetSixSeven(bool value);
 };
