@@ -7,6 +7,22 @@
       "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\GameServer.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\Database.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\Database.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\Database.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\Database.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\AchievementsModel.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\AchievementsModel.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\AchievementsModel.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\AchievementsModel.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\Lobby.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\Lobby.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
@@ -29,22 +45,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\GameStatistics.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\GameStatistics.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\Database.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\Database.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\Database.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\Database.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\AchievementsModel.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\AchievementsModel.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\AchievementsModel.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{960284B6-44D0-488C-85A3-DD3AD0233048}|Server\\Server.vcxproj|solutionrelative:Server\\AchievementsModel.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{7CC77733-58A8-46B9-95FD-181F9920FE69}|HarryPotter\\HarryPotter.vcxproj|C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\HarryPotter\\HarryPotter.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
@@ -169,7 +169,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 6,
               "Title": "Lobby.h",
               "DocumentMoniker": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\Lobby.h",
               "RelativeDocumentMoniker": "Server\\Lobby.h",
@@ -177,12 +177,11 @@
               "RelativeToolTip": "Server\\Lobby.h",
               "ViewState": "AgIAAAkAAAAAAAAAAAAAABEAAAAyAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-12-20T16:57:32.745Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-20T16:57:32.745Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 5,
               "Title": "Lobby.cpp",
               "DocumentMoniker": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\Lobby.cpp",
               "RelativeDocumentMoniker": "Server\\Lobby.cpp",
@@ -190,12 +189,11 @@
               "RelativeToolTip": "Server\\Lobby.cpp",
               "ViewState": "AgIAABIAAAAAAAAAAAASwBcAAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-12-20T16:56:16.387Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-20T16:56:16.387Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 9,
               "Title": "StatisticsModel.cpp",
               "DocumentMoniker": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\StatisticsModel.cpp",
               "RelativeDocumentMoniker": "Server\\StatisticsModel.cpp",
@@ -203,12 +201,11 @@
               "RelativeToolTip": "Server\\StatisticsModel.cpp",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-12-20T14:38:59.98Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-20T14:38:59.98Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 8,
               "Title": "StatisticsModel.h",
               "DocumentMoniker": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\StatisticsModel.h",
               "RelativeDocumentMoniker": "Server\\StatisticsModel.h",
@@ -216,60 +213,55 @@
               "RelativeToolTip": "Server\\StatisticsModel.h",
               "ViewState": "AgIAAAkAAAAAAAAAAAAiwBkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-12-20T14:23:08.437Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-20T14:23:08.437Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 1,
               "Title": "Database.cpp",
               "DocumentMoniker": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\Database.cpp",
               "RelativeDocumentMoniker": "Server\\Database.cpp",
               "ToolTip": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\Database.cpp",
               "RelativeToolTip": "Server\\Database.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAADEBAAAWAAAAAAAAAA==",
+              "ViewState": "AgIAAIEBAAAAAAAAAAAswJEBAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-12-14T10:39:34.905Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-14T10:39:34.905Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 2,
               "Title": "Database.h",
               "DocumentMoniker": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\Database.h",
               "RelativeDocumentMoniker": "Server\\Database.h",
               "ToolTip": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\Database.h",
               "RelativeToolTip": "Server\\Database.h",
-              "ViewState": "AgIAAD8AAAAAAAAAAAAAABcAAABWAAAAAAAAAA==",
+              "ViewState": "AgIAAD8AAAAAAAAAAAAAAEsAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-12-14T10:38:33.923Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-14T10:38:33.923Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 3,
               "Title": "AchievementsModel.cpp",
               "DocumentMoniker": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\AchievementsModel.cpp",
               "RelativeDocumentMoniker": "Server\\AchievementsModel.cpp",
               "ToolTip": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\AchievementsModel.cpp",
               "RelativeToolTip": "Server\\AchievementsModel.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB8AAAA6AAAAAAAAAA==",
+              "ViewState": "AgIAABIAAAAAAAAAAAAAAB4AAABDAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-12-14T10:39:13.604Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-14T10:39:13.604Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 4,
               "Title": "AchievementsModel.h",
               "DocumentMoniker": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\AchievementsModel.h",
               "RelativeDocumentMoniker": "Server\\AchievementsModel.h",
               "ToolTip": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\AchievementsModel.h",
               "RelativeToolTip": "Server\\AchievementsModel.h",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAACAAAAANAAAAAAAAAA==",
+              "ViewState": "AgIAACEAAAAAAAAAAAAAADMAAAAgAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-12-14T10:38:38.705Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-14T10:38:38.705Z"
             },
             {
               "$type": "Document",
@@ -341,8 +333,7 @@
               "RelativeToolTip": "HarryPotter\\HarryPotter.h",
               "ViewState": "AgIAAAkAAAAAAAAAAAAAAAsAAAAgAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-12-12T17:25:41.493Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-12T17:25:41.493Z"
             },
             {
               "$type": "Document",
@@ -354,8 +345,7 @@
               "RelativeToolTip": "HarryPotter\\HarryPotter.cpp",
               "ViewState": "AgIAADMAAAAAAAAAAAAAAAEAAAAUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-12-12T17:25:36.196Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-12T17:25:36.196Z"
             },
             {
               "$type": "Document",
@@ -487,8 +477,7 @@
               "RelativeToolTip": "Peasant\\Peasant.h",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-12-12T16:12:11.889Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-12T16:12:11.889Z"
             },
             {
               "$type": "Document",
@@ -572,8 +561,7 @@
               "RelativeToolTip": "Server\\IPlayer.h",
               "ViewState": "AgIAABwAAAAAAAAAAAAiwCsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-12-12T14:15:18.927Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-12T14:15:18.927Z"
             },
             {
               "$type": "Document",
@@ -601,7 +589,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 10,
               "Title": "GameStatistics.h",
               "DocumentMoniker": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\GameStatistics.h",
               "RelativeDocumentMoniker": "Server\\GameStatistics.h",
@@ -609,8 +597,7 @@
               "RelativeToolTip": "Server\\GameStatistics.h",
               "ViewState": "AgIAAAgAAAAAAAAAAAAiwBgAAAACAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-12-20T16:17:58.668Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-20T16:17:58.668Z"
             },
             {
               "$type": "Document",
@@ -620,14 +607,14 @@
               "RelativeDocumentMoniker": "Server\\GameServer.cpp",
               "ToolTip": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\GameServer.cpp",
               "RelativeToolTip": "Server\\GameServer.cpp",
-              "ViewState": "AgIAAM4AAAAAAAAAAAAiwOkAAAA1AAAAAAAAAA==",
+              "ViewState": "AgIAAJgAAAAAAAAAAAAiwJ8AAAAXAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-12-12T14:11:38.854Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 7,
               "Title": "GameServer.h",
               "DocumentMoniker": "C:\\Users\\sebig\\OneDrive\\Documente\\GitHub\\THE-GAME\\Server\\GameServer.h",
               "RelativeDocumentMoniker": "Server\\GameServer.h",
@@ -635,8 +622,7 @@
               "RelativeToolTip": "Server\\GameServer.h",
               "ViewState": "AgIAAA8AAAAAAAAAAAAAACcAAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-12-12T14:11:35.183Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-12T14:11:35.183Z"
             }
           ]
         }

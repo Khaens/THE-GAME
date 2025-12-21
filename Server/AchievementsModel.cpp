@@ -10,6 +10,8 @@ bool AchievementsModel::GetAllOnRed() const { return allOnRed; }
 bool AchievementsModel::GetHarryPotter() const { return harryPotter; }
 bool AchievementsModel::GetSoothsayer() const { return soothsayer; }
 bool AchievementsModel::GetTaxEvader() const { return taxEvader; }
+bool AchievementsModel::GetGambler() const { return gambler; }
+bool AchievementsModel::GetPeasant() const { return peasant; }
 bool AchievementsModel::GetSeriousPlayer() const { return seriousPlayer; }
 bool AchievementsModel::GetTalentedPlayer() const { return talentedPlayer; }
 bool AchievementsModel::GetJack() const { return jack; }
@@ -25,6 +27,8 @@ void AchievementsModel::SetAllOnRed(bool value) { allOnRed = value; }
 void AchievementsModel::SetHarryPotter(bool value) { harryPotter = value; }
 void AchievementsModel::SetSoothsayer(bool value) { soothsayer = value; }
 void AchievementsModel::SetTaxEvader(bool value) { taxEvader = value; }
+void AchievementsModel::SetGambler(bool value) { gambler = value; }
+void AchievementsModel::SetPeasant(bool value) { peasant = value; }
 void AchievementsModel::SetSeriousPlayer(bool value) { seriousPlayer = value; }
 void AchievementsModel::SetTalentedPlayer(bool value) { talentedPlayer = value; }
 void AchievementsModel::SetJack(bool value) { jack = value; }

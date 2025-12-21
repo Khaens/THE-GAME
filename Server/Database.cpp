@@ -301,6 +301,8 @@ static const std::unordered_map<std::string, std::string> ACHIEVEMENT_DESCRIPTIO
     {"harryPotter", "HARRY POTTER: Played a game with the Harry Potter ability"},
     {"soothsayer", "SOOTHSAYER: Played a game with the Soothsayer ability"},
     {"taxEvader", "TAX EVADER: Played a game with the Tax Evader ability"},
+    {"gambler", "GAMBLER: Played a game with the Gambler ability"},
+    {"peasant", "PEASANT: Played a game as a Peasant (not used any ability)"},
     {"seriousPlayer", "SERIOUS PLAYER: You've won 5 games. Keep it up!"},
     {"talentedPlayer", "TALENTED PLAYER: You've won 8 or more games in your first ever 10 games. Keep it up!"},
     {"jack", "MASTER OF ALL TRADES: Played at least one game with all abilities. You are a truly versatile player!"},
@@ -317,6 +319,8 @@ static const std::unordered_map<std::string, AchievementGetter> ACHIEVEMENT_GETT
     {"soothsayer", &AchievementsModel::GetSoothsayer},
     {"taxEvader", &AchievementsModel::GetTaxEvader},
     {"seriousPlayer", &AchievementsModel::GetSeriousPlayer},
+    {"gambler", &AchievementsModel::GetGambler},
+    {"peasant", &AchievementsModel::GetPeasant},
     {"talentedPlayer", &AchievementsModel::GetTalentedPlayer},
     {"jack", &AchievementsModel::GetJack},
     {"zeroEffort", &AchievementsModel::GetZeroEffort},
@@ -352,6 +356,8 @@ static const std::unordered_map<std::string, AchievementSetter> ACHIEVEMENT_SETT
     {"harryPotter", &AchievementsModel::SetHarryPotter},
     {"soothsayer", &AchievementsModel::SetSoothsayer},
     {"taxEvader", &AchievementsModel::SetTaxEvader},
+    {"gambler", &AchievementsModel::SetGambler},
+    {"peasant", &AchievementsModel::SetPeasant},
     {"seriousPlayer", &AchievementsModel::SetSeriousPlayer},
     {"talentedPlayer", &AchievementsModel::SetTalentedPlayer},
     {"jack", &AchievementsModel::SetJack},
@@ -385,9 +391,36 @@ void Database::UnlockAchievements(int userId, const std::unordered_map<std::stri
         if (modified) {
             UpdateAchievements(achievements);
             std::cout << "Achievements updated for user " << userId << std::endl;
+
+            CheckAndUnlockJack(userId);
         }
     }
     catch (std::exception& e) {
         std::cerr << "Error unlocking achievements: " << e.what() << std::endl;
+    }
+}
+
+void Database::CheckAndUnlockJack(int userId)
+{
+    try {
+        AchievementsModel achievements = GetAchievementsByUserId(userId);
+        if (achievements.GetJack()) {
+            return;
+        }
+
+        bool hasAllRoles = achievements.GetHarryPotter() &&
+            achievements.GetSoothsayer() &&
+            achievements.GetTaxEvader() &&
+            achievements.GetGambler() &&
+            achievements.GetPeasant();
+
+        if (hasAllRoles) {
+            achievements.SetJack(true);
+            UpdateAchievements(achievements);
+            std::cout << "Congratulations! User " << userId << " unlocked 'Jack of All Trades' !" << std::endl;
+        }
+    }
+    catch (std::exception& e) {
+        std::cerr << "Error checking Jack achievement: " << e.what() << std::endl;
     }
 }

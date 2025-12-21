@@ -156,9 +156,10 @@ void Game::StartGame()
 			/*currentPlayer.ShowHand();
 			m_wholeDeck.ShowDeck();*/
 			m_gameStats[currentPlayer.GetID()].lastPlayedCardValue = -1;
+
+			CheckAchievements();
 			NextPlayer();
 		}
-		CheckAchievements();
 		UnlockAchievements();
 	}
 }
