@@ -3,6 +3,7 @@
 void Peasant::UseAbility(TurnContext& ctx, size_t currentPIndex)
 {
 	ctx.PeasantAbilityUse = true;
+	ctx.PeasantPlayerIndex = currentPIndex;
 }
 
 bool Peasant::CanUseAbility(TurnContext& ctx) const

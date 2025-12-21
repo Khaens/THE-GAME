@@ -38,6 +38,7 @@ public:
     void ShowHand() override;
 	void UseAbility(TurnContext& ctx, size_t currentPIndex) override;
     bool CanUseAbility(TurnContext& ctx) const override;
+    const int GetID() override;
 
     const bool IsTaxActive() override;
     virtual void SetTaxActive(bool state) override;
@@ -159,6 +160,12 @@ template<typename Ability>
 bool Player<Ability>::CanUseAbility(TurnContext& ctx) const
 {
     return ability.CanUseAbility(ctx);
+}
+
+template<typename Ability>
+inline const int Player<Ability>::GetID()
+{
+    return UserModel::GetId();
 }
 
 

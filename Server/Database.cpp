@@ -15,6 +15,13 @@ Database::Database(const std::string& path) : storage(initStorage(path)), dbPath
                 std::cout << "Created achievements for user: "
                     << user.GetUsername() << " (ID: " << user.GetId() << ")" << std::endl;
             }
+
+            if (!StatisticsExistForUser(user.GetId())) {
+                StatisticsModel stats(user.GetId());
+                storage.insert(stats);
+                std::cout << "Created statistics for user: "
+                    << user.GetUsername() << " (ID: " << user.GetId() << ")" << std::endl;
+            }
         }
     }
     catch (std::exception& e) {
@@ -82,6 +89,9 @@ int Database::InsertUser(const UserModel& user) {
 
         AchievementsModel achievements(userId);
         InsertAchievements(achievements);
+
+        StatisticsModel statistics(userId);
+        InsertStatistics(statistics);
 
         return userId;
     }
@@ -190,6 +200,60 @@ bool Database::UserExists(const std::string& username) {
     }
 }
 
+int Database::InsertStatistics(const StatisticsModel& stats)
+{
+    try {
+        return storage.insert(stats);
+    }
+    catch (std::exception& e) {
+        std::cerr << "Error inserting statistics: " << e.what() << std::endl;
+        return -1;
+    }
+}
+
+bool Database::StatisticsExistForUser(int userId)
+{
+    try {
+        auto count = storage.count<StatisticsModel>(
+            where(c(&StatisticsModel::GetUserId) == userId)
+        );
+        return count > 0;
+    }
+    catch (std::exception& e) {
+        std::cerr << "Error checking statistics existence: " << e.what() << std::endl;
+        return false;
+    }
+}
+
+StatisticsModel Database::GetStatisticsByUserId(int userId) {
+    try {
+        auto stats = storage.get_all<StatisticsModel>(
+            where(c(&StatisticsModel::GetUserId) == userId)
+        );
+
+        if (stats.empty()) {
+            StatisticsModel newStats(userId);
+            int id = storage.insert(newStats);
+            newStats.SetId(id);
+
+            std::cout << "Created statistics for user id: " << userId << std::endl;
+
+            return newStats;
+        }
+
+        return stats[0];
+    }
+    catch (std::exception& e) {
+        std::cerr << "Error getting statistics: " << e.what() << std::endl;
+        throw;
+    }
+}
+
+void Database::UpdateStatistics(const StatisticsModel& statistics) {
+    storage.update(statistics);
+}
+
+
 int Database::InsertAchievements(const AchievementsModel& achievements) {
     try {
         return storage.insert(achievements);
@@ -248,13 +312,16 @@ static const std::unordered_map<std::string, std::string> ACHIEVEMENT_DESCRIPTIO
     {"harryPotter", "HARRY POTTER: Played a game with the Harry Potter ability"},
     {"soothsayer", "SOOTHSAYER: Played a game with the Soothsayer ability"},
     {"taxEvader", "TAX EVADER: Played a game with the Tax Evader ability"},
+    {"gambler", "GAMBLER: Played a game with the Gambler ability"},
+    {"peasant", "PEASANT: Played a game as a Peasant (not used any ability)"},
     {"seriousPlayer", "SERIOUS PLAYER: You've won 5 games. Keep it up!"},
-    {"jack", "MASTER OF ALL TRADES: Played at least one game with all class achievements. You are a truly versatile player!"},
-    {"zeroEffort", "ZERO EFFORT: Won after using the Tax Evader ability at least 3 times. Laziness is the key to success."},
+    {"talentedPlayer", "TALENTED PLAYER: You've won 8 or more games in your first ever 10 games. Keep it up!"},
+    {"jack", "MASTER OF ALL TRADES: Played at least one game with all abilities. You are a truly versatile player!"},
+    {"zeroEffort", "ZERO EFFORT: Won after using the Tax Evader ability at least 5 times. Laziness is the key to success."},
     {"vanillaW", "VANILLA VICTORY: Your team won without using any special abilities. Pure skill!"},
-    {"highRisk", "HIGH-RISK, HIGH-REWARD: You played as the Gambler and always placed maximum 2 cards in every endgame round."},
+    {"highRisk", "HIGH-RISK, HIGH-REWARD: You played as the Gambler and utilised all your ability uses."},
     {"perfectGame", "PERFECT GAME: Won the game and always played cards with a maximum difference of 3 points between them throughout the entire match."},
-    {"ghost", "THE GHOST: Won the game before the endgame phase."}
+    {"sixSeven", "SIX-SEVEN: You placed both 6 and 7 in a single round."}
 };
 
 static const std::unordered_map<std::string, AchievementGetter> ACHIEVEMENT_GETTERS = {
@@ -262,13 +329,16 @@ static const std::unordered_map<std::string, AchievementGetter> ACHIEVEMENT_GETT
     {"harryPotter", &AchievementsModel::GetHarryPotter},
     {"soothsayer", &AchievementsModel::GetSoothsayer},
     {"taxEvader", &AchievementsModel::GetTaxEvader},
+    {"gambler", &AchievementsModel::GetGambler},
+    {"peasant", &AchievementsModel::GetPeasant},
     {"seriousPlayer", &AchievementsModel::GetSeriousPlayer},
+    {"talentedPlayer", &AchievementsModel::GetTalentedPlayer},
     {"jack", &AchievementsModel::GetJack},
     {"zeroEffort", &AchievementsModel::GetZeroEffort},
     {"vanillaW", &AchievementsModel::GetVanillaW},
     {"highRisk", &AchievementsModel::GetHighRisk},
     {"perfectGame", &AchievementsModel::GetPerfectGame},
-    {"ghost", &AchievementsModel::GetGhost}
+    {"sixSeven", &AchievementsModel::GetSixSeven}
 };
 
 std::vector<std::string> Database::GetUnlockedAchievement(int userId)
@@ -288,4 +358,81 @@ std::vector<std::string> Database::GetUnlockedAchievement(int userId)
     }
 
     return achievedDescriptions;
+}
+
+
+typedef void (AchievementsModel::* AchievementSetter)(bool);
+
+static const std::unordered_map<std::string, AchievementSetter> ACHIEVEMENT_SETTERS = {
+    {"allOnRed", &AchievementsModel::SetAllOnRed},
+    {"harryPotter", &AchievementsModel::SetHarryPotter},
+    {"soothsayer", &AchievementsModel::SetSoothsayer},
+    {"taxEvader", &AchievementsModel::SetTaxEvader},
+    {"gambler", &AchievementsModel::SetGambler},
+    {"peasant", &AchievementsModel::SetPeasant},
+    {"seriousPlayer", &AchievementsModel::SetSeriousPlayer},
+    {"talentedPlayer", &AchievementsModel::SetTalentedPlayer},
+    {"jack", &AchievementsModel::SetJack},
+    {"zeroEffort", &AchievementsModel::SetZeroEffort},
+    {"vanillaW", &AchievementsModel::SetVanillaW},
+    {"highRisk", &AchievementsModel::SetHighRisk},
+    {"perfectGame", &AchievementsModel::SetPerfectGame},
+    {"sixSeven", &AchievementsModel::SetSixSeven}
+};
+
+void Database::UnlockAchievements(int userId, const std::unordered_map<std::string, bool>& achievementConditions) {
+    try {
+        AchievementsModel achievements = GetAchievementsByUserId(userId);
+        bool modified = false;
+
+        for (const auto& [key, condition] : achievementConditions) {
+            auto setterIt = ACHIEVEMENT_SETTERS.find(key);
+            if (setterIt == ACHIEVEMENT_SETTERS.end()) {
+                std::cerr << "Unknown achievement key: " << key << std::endl;
+                continue;
+            }
+
+            if (condition) {
+                auto setter = setterIt->second;
+                (achievements.*setter)(true);
+                modified = true;
+                std::cout << "Unlocked achievement: " << key << std::endl;
+            }
+        }
+
+        if (modified) {
+            UpdateAchievements(achievements);
+            std::cout << "Achievements updated for user " << userId << std::endl;
+
+            CheckAndUnlockJack(userId);
+        }
+    }
+    catch (std::exception& e) {
+        std::cerr << "Error unlocking achievements: " << e.what() << std::endl;
+    }
+}
+
+void Database::CheckAndUnlockJack(int userId)
+{
+    try {
+        AchievementsModel achievements = GetAchievementsByUserId(userId);
+        if (achievements.GetJack()) {
+            return;
+        }
+
+        bool hasAllRoles = achievements.GetHarryPotter() &&
+            achievements.GetSoothsayer() &&
+            achievements.GetTaxEvader() &&
+            achievements.GetGambler() &&
+            achievements.GetPeasant();
+
+        if (hasAllRoles) {
+            achievements.SetJack(true);
+            UpdateAchievements(achievements);
+            std::cout << "Congratulations! User " << userId << " unlocked 'Jack of All Trades' !" << std::endl;
+        }
+    }
+    catch (std::exception& e) {
+        std::cerr << "Error checking Jack achievement: " << e.what() << std::endl;
+    }
 }

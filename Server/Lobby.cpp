@@ -68,7 +68,7 @@ void Lobby::Start()
     }
     
     m_status = LobbyStatus::Started;
-    m_game = std::make_unique<Game>(m_Users);
+    m_game = std::make_unique<Game>(m_Users, *m_db);
     m_game->StartGame();
 }
 

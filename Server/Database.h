@@ -3,6 +3,7 @@
 #include <string>
 #include "UserModel.h"
 #include "AchievementsModel.h"
+#include "StatisticsModel.h"
 
 using namespace sqlite_orm;
 
@@ -19,14 +20,23 @@ inline auto initStorage(const std::string& path) {
             make_column("harry_potter", &AchievementsModel::GetHarryPotter, &AchievementsModel::SetHarryPotter),
             make_column("soothsayer", &AchievementsModel::GetSoothsayer, &AchievementsModel::SetSoothsayer),
             make_column("tax_evader", &AchievementsModel::GetTaxEvader, &AchievementsModel::SetTaxEvader),
+            make_column("gambler", &AchievementsModel::GetGambler, &AchievementsModel::SetGambler),
+            make_column("peasant", &AchievementsModel::GetPeasant, &AchievementsModel::SetPeasant),
             make_column("serious_player", &AchievementsModel::GetSeriousPlayer, &AchievementsModel::SetSeriousPlayer),
+            make_column("talented_player", &AchievementsModel::GetTalentedPlayer, &AchievementsModel::SetTalentedPlayer),
             make_column("jack_of_all_trades", &AchievementsModel::GetJack, &AchievementsModel::SetJack),
             make_column("zero_effort", &AchievementsModel::GetZeroEffort, &AchievementsModel::SetZeroEffort),
             make_column("vanilla_victory", &AchievementsModel::GetVanillaW, &AchievementsModel::SetVanillaW),
             make_column("high_risk_high_reward", &AchievementsModel::GetHighRisk, &AchievementsModel::SetHighRisk),
             make_column("perfect_game", &AchievementsModel::GetPerfectGame, &AchievementsModel::SetPerfectGame),
-            make_column("ghost_win", &AchievementsModel::GetGhost, &AchievementsModel::SetGhost),
-            foreign_key(&AchievementsModel::GetUserId).references(&UserModel::GetId).on_delete.cascade())
+            make_column("sixSeven", &AchievementsModel::GetSixSeven, &AchievementsModel::SetSixSeven),
+            foreign_key(&AchievementsModel::GetUserId).references(&UserModel::GetId).on_delete.cascade()),
+        make_table("statistics",
+            make_column("id", &StatisticsModel::GetId, &StatisticsModel::SetId, primary_key().autoincrement()),
+            make_column("user_id", &StatisticsModel::GetUserId, &StatisticsModel::SetUserId),
+            make_column("games_won", &StatisticsModel::GetGamesWon, &StatisticsModel::SetGamesWon),
+            make_column("win_rate", &StatisticsModel::GetWinRate, &StatisticsModel::SetWinRate),
+            foreign_key(&StatisticsModel::GetUserId).references(&UserModel::GetId).on_delete.cascade())
     );
 }
 
@@ -53,10 +63,17 @@ public:
     void DeleteUser(int id);
     bool UserExists(const std::string& username);
 
+    int InsertStatistics(const StatisticsModel& stats);
+    bool StatisticsExistForUser(int userId);
+    StatisticsModel GetStatisticsByUserId(int userId);
+    void UpdateStatistics(const StatisticsModel& statistics);
+
     int InsertAchievements(const AchievementsModel& achievements);
     AchievementsModel GetAchievementsByUserId(int userId);
     void UpdateAchievements(const AchievementsModel& achievements);
     bool AchievementsExistForUser(int userId);
     std::vector<std::string> GetUnlockedAchievement(int userId);
+    void UnlockAchievements(int userId, const std::unordered_map<std::string, bool>& achievementConditions);
+    void CheckAndUnlockJack(int userId);
 };
 
