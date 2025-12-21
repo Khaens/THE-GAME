@@ -74,15 +74,19 @@ void Round::UpdateContext(Game& game, TurnContext& m_ctx, IPlayer& currentPlayer
 bool Round::IsGameWon(Game& game, IPlayer& currentPlayer)
 {
 	if (currentPlayer.GetHand().size() == 0) currentPlayer.SetFinished(true);
-	bool gameWon = false;
+	bool gameWon = true;
 	for (size_t i = 0; i < game.GetPlayers().size(); i++) {
 		if (!game.GetPlayers()[i]->IsFinished()) {
 			gameWon = false;
 		}
 	}
-	while (!currentPlayer.IsFinished()) {
-		game.NextPlayer();
-		currentPlayer = game.GetCurrentPlayer();
+	if (gameWon) return gameWon;
+	while (currentPlayer.IsFinished()) {
+		if (currentPlayer.IsFinished()) {
+			game.NextPlayer();
+			currentPlayer = game.GetCurrentPlayer();
+		}
+		else break;
 	}
 	return gameWon;
 }

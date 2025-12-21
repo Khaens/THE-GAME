@@ -58,7 +58,8 @@ public:
 	Info UseAbility(size_t playerIndex);
 	Info EndTurn(size_t playerIndex);
 
-	void CheckAndUnlockAchievements();
+	void UnlockAchievements();
+	void CheckAchievements(IPlayer& currentPlayer);
 
 	Card* DrawCard();
 
