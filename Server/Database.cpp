@@ -15,6 +15,13 @@ Database::Database(const std::string& path) : storage(initStorage(path)), dbPath
                 std::cout << "Created achievements for user: "
                     << user.GetUsername() << " (ID: " << user.GetId() << ")" << std::endl;
             }
+
+            if (!StatisticsExistForUser(user.GetId())) {
+                StatisticsModel stats(user.GetId());
+                storage.insert(stats);
+                std::cout << "Created statistics for user: "
+                    << user.GetUsername() << " (ID: " << user.GetId() << ")" << std::endl;
+            }
         }
     }
     catch (std::exception& e) {
@@ -82,6 +89,9 @@ int Database::InsertUser(const UserModel& user) {
 
         AchievementsModel achievements(userId);
         InsertAchievements(achievements);
+
+        StatisticsModel statistics(userId);
+        InsertStatistics(statistics);
 
         return userId;
     }
@@ -342,4 +352,51 @@ std::vector<std::string> Database::GetUnlockedAchievement(int userId)
     }
 
     return achievedDescriptions;
+}
+
+
+typedef void (AchievementsModel::* AchievementSetter)(bool);
+
+static const std::unordered_map<std::string, AchievementSetter> ACHIEVEMENT_SETTERS = {
+    {"allOnRed", &AchievementsModel::SetAllOnRed},
+    {"harryPotter", &AchievementsModel::SetHarryPotter},
+    {"soothsayer", &AchievementsModel::SetSoothsayer},
+    {"taxEvader", &AchievementsModel::SetTaxEvader},
+    {"seriousPlayer", &AchievementsModel::SetSeriousPlayer},
+    {"jack", &AchievementsModel::SetJack},
+    {"zeroEffort", &AchievementsModel::SetZeroEffort},
+    {"vanillaW", &AchievementsModel::SetVanillaW},
+    {"highRisk", &AchievementsModel::SetHighRisk},
+    {"perfectGame", &AchievementsModel::SetPerfectGame},
+    {"sixSeven", &AchievementsModel::SetSixSeven}
+};
+
+void Database::UnlockAchievements(int userId, const std::unordered_map<std::string, bool>& achievementConditions) {
+    try {
+        AchievementsModel achievements = GetAchievementsByUserId(userId);
+        bool modified = false;
+
+        for (const auto& [key, condition] : achievementConditions) {
+            auto setterIt = ACHIEVEMENT_SETTERS.find(key);
+            if (setterIt == ACHIEVEMENT_SETTERS.end()) {
+                std::cerr << "Unknown achievement key: " << key << std::endl;
+                continue;
+            }
+
+            if (condition) {
+                auto setter = setterIt->second;
+                (achievements.*setter)(true);
+                modified = true;
+                std::cout << "Unlocked achievement: " << key << std::endl;
+            }
+        }
+
+        if (modified) {
+            UpdateAchievements(achievements);
+            std::cout << "Achievements updated for user " << userId << std::endl;
+        }
+    }
+    catch (std::exception& e) {
+        std::cerr << "Error unlocking achievements: " << e.what() << std::endl;
+    }
 }
