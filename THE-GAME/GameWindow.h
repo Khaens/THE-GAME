@@ -31,4 +31,13 @@ private:
     QPixmap m_scaledBackground;
 
     void resizeUI();
+    
+    // Chat Functionality
+    void toggleChat();
+    void sendMessage();
+    bool m_isChatOpen = false;
+
+    // Card Selection State
+    QWidget* m_selectedCardWidget = nullptr;
+    QString m_selectedCardImagePath;
 };

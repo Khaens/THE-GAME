@@ -146,7 +146,7 @@
    <widget class="QLabel" name="ascending2">
     <property name="geometry">
      <rect>
-      <x>750</x>
+      <x>600</x>
       <y>50</y>
       <width>150</width>
       <height>225</height>
@@ -165,7 +165,7 @@
    <widget class="QLabel" name="ascending1">
     <property name="geometry">
      <rect>
-      <x>425</x>
+      <x>275</x>
       <y>50</y>
       <width>150</width>
       <height>225</height>
@@ -184,7 +184,7 @@
    <widget class="QLabel" name="descending2">
     <property name="geometry">
      <rect>
-      <x>750</x>
+      <x>700</x>
       <y>300</y>
       <width>150</width>
       <height>225</height>
@@ -203,7 +203,7 @@
    <widget class="QLabel" name="descending1">
     <property name="geometry">
      <rect>
-      <x>425</x>
+      <x>375</x>
       <y>300</y>
       <width>150</width>
       <height>225</height>
@@ -319,6 +319,146 @@
      <rect>
       <x>940</x>
       <y>630</y>
+      <width>150</width>
+      <height>225</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>125</width>
+      <height>187</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QWidget" name="chatWidget" native="true">
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>710</y>
+      <width>300</width>
+      <height>200</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>300</width>
+      <height>200</height>
+     </size>
+    </property>
+    <widget class="QLabel" name="chatBackground">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>300</width>
+       <height>200</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>300</width>
+       <height>200</height>
+      </size>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QListWidget" name="chatHistory">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>20</y>
+       <width>260</width>
+       <height>125</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background: transparent; border: none;</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="chatInput">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>150</y>
+       <width>260</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="placeholderText">
+      <string>Type a message...</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QLabel" name="ascPile1">
+    <property name="geometry">
+     <rect>
+      <x>275</x>
+      <y>50</y>
+      <width>150</width>
+      <height>225</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>125</width>
+      <height>187</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ascPile2">
+    <property name="geometry">
+     <rect>
+      <x>600</x>
+      <y>50</y>
+      <width>150</width>
+      <height>225</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>125</width>
+      <height>187</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="descPile1">
+    <property name="geometry">
+     <rect>
+      <x>375</x>
+      <y>300</y>
+      <width>150</width>
+      <height>225</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>125</width>
+      <height>187</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="descPile2">
+    <property name="geometry">
+     <rect>
+      <x>700</x>
+      <y>300</y>
       <width>150</width>
       <height>225</height>
      </rect>
