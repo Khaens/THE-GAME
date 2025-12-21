@@ -10,6 +10,8 @@ private:
     bool harryPotter = false;
     bool soothsayer = false;
     bool taxEvader = false;
+    bool gambler = false;
+    bool peasant = false;
     bool seriousPlayer = false;
     bool talentedPlayer = false;
     bool jack = false;
@@ -30,6 +32,8 @@ public:
     bool GetHarryPotter() const;
     bool GetSoothsayer() const;
     bool GetTaxEvader() const;
+    bool GetGambler() const;
+    bool GetPeasant() const;
     bool GetSeriousPlayer() const;
     bool GetTalentedPlayer() const;
     bool GetJack() const;
@@ -45,6 +49,8 @@ public:
     void SetHarryPotter(bool value);
     void SetSoothsayer(bool value);
     void SetTaxEvader(bool value);
+    void SetGambler(bool value);
+    void SetPeasant(bool value);
     void SetSeriousPlayer(bool value);
     void SetTalentedPlayer(bool value);
     void SetJack(bool value);

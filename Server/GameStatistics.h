@@ -22,4 +22,5 @@ struct GameStatistics {
 	bool usedSoothsayer = false;
 	bool usedTaxEvader = false;
 	bool usedGambler = false;
+	bool usedPeasant = false;
 };

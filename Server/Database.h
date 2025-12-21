@@ -20,6 +20,8 @@ inline auto initStorage(const std::string& path) {
             make_column("harry_potter", &AchievementsModel::GetHarryPotter, &AchievementsModel::SetHarryPotter),
             make_column("soothsayer", &AchievementsModel::GetSoothsayer, &AchievementsModel::SetSoothsayer),
             make_column("tax_evader", &AchievementsModel::GetTaxEvader, &AchievementsModel::SetTaxEvader),
+            make_column("gambler", &AchievementsModel::GetGambler, &AchievementsModel::SetGambler),
+            make_column("peasant", &AchievementsModel::GetPeasant, &AchievementsModel::SetPeasant),
             make_column("serious_player", &AchievementsModel::GetSeriousPlayer, &AchievementsModel::SetSeriousPlayer),
             make_column("talented_player", &AchievementsModel::GetTalentedPlayer, &AchievementsModel::SetTalentedPlayer),
             make_column("jack_of_all_trades", &AchievementsModel::GetJack, &AchievementsModel::SetJack),
@@ -72,5 +74,6 @@ public:
     bool AchievementsExistForUser(int userId);
     std::vector<std::string> GetUnlockedAchievement(int userId);
     void UnlockAchievements(int userId, const std::unordered_map<std::string, bool>& achievementConditions);
+    void CheckAndUnlockJack(int userId);
 };
 

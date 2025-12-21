@@ -158,6 +158,12 @@ static const std::unordered_map<std::string, AchievementChecker> ACHIEVEMENT_CHE
 	{"taxEvader", [](const IPlayer&, const GameStatistics& s, const StatisticsModel&) {
 		return s.usedTaxEvader;
 	}},
+	{"gambler", [](const IPlayer&, const GameStatistics& s, const StatisticsModel&) {
+		return s.usedGambler;
+	}},
+	{"peasant", [](const IPlayer&, const GameStatistics& s, const StatisticsModel&) {
+		return s.usedPeasant;
+	}},
 	{"allOnRed", [](const IPlayer&, const GameStatistics& s, const StatisticsModel&) {
 		return s.usedGambler && s.atLeastTwoCardsInEndgame;
 	}},
