@@ -63,8 +63,6 @@ void Round::FirstRoundDealing(Game& game)
 		}
 	}
 	m_players.size();
-
-	std::cout << "Muie aldea";
 }
 
 bool Round::CanPlaceCard(Game& game, const Card* card, Pile* pile, TurnContext& m_ctx)
