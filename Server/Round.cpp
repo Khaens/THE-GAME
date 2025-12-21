@@ -33,14 +33,16 @@ void Round::OneRound(Game& game, TurnContext& m_ctx)
 					game.GetPlayers()[m_ctx.HPplayerIndex]->SetHPFlag(false);
 				}
 			}
-			chosenPile->PlaceCard(chosenCard);
-			if (game.m_gameStats[currentPlayer.GetID()].lastPlayedCardValue != -1) {
-				int diff = std::abs(std::stoi(chosenCard->GetCardValue()) - game.m_gameStats[currentPlayer.GetID()].lastPlayedCardValue);
-				if (diff > 3) {
-					game.m_gameStats[currentPlayer.GetID()].perfectGame = false;
-				}
+			int diff = std::abs(std::stoi(chosenCard->GetCardValue()) - std::stoi(chosenPile->GetTopCard()->GetCardValue()));
+			if (diff > 3) {
+				game.m_gameStats[currentPlayer.GetID()].perfectGame = false;
 			}
+			chosenPile->PlaceCard(chosenCard);
 			game.m_gameStats[currentPlayer.GetID()].lastPlayedCardValue = std::stoi(chosenCard->GetCardValue());
+			if(game.m_gameStats[currentPlayer.GetID()].lastPlayedCardValue == 6 &&
+				std::stoi(chosenCard->GetCardValue()) == 7) {
+				game.m_gameStats[currentPlayer.GetID()].placed6And7InSameRound = true;
+			}
 			currentPlayer.RemoveCardFromHand(chosenCard);
 		}
 		else {

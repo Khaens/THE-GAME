@@ -37,7 +37,8 @@ public:
 	void StartGame();
 	void NextPlayer();
 
-	void CheckAndUnlockAchievements();
+	void UnlockAchievements();
+	void CheckAchievements();
 
 	Card* DrawCard();
 

@@ -155,9 +155,11 @@ void Game::StartGame()
 			}
 			/*currentPlayer.ShowHand();
 			m_wholeDeck.ShowDeck();*/
+			m_gameStats[currentPlayer.GetID()].lastPlayedCardValue = -1;
 			NextPlayer();
 		}
-		// CheckAndUnlockAchievements();
+		CheckAchievements();
+		UnlockAchievements();
 	}
 }
 
@@ -185,9 +187,9 @@ static const std::unordered_map<std::string, AchievementChecker> ACHIEVEMENT_CHE
 	{"zeroEffort", [](const IPlayer&, const GameStatistics& s, const StatisticsModel&) {
 		return s.wonGame && s.taxEvaderUses >= 5;
 	}},
-	{"vanillaW", [](const IPlayer&, const GameStatistics& s, const StatisticsModel&) {
+	/*{"vanillaW", [](const IPlayer&, const GameStatistics& s, const StatisticsModel&) {
 		return s.wonGame && !s.usedAnyAbility;
-	}},
+	}},*/
 	{"highRisk", [](const IPlayer&, const GameStatistics& s, const StatisticsModel&) {
 		return s.usedGambler && s.usedAllGamblerAbilities;
 	}},
@@ -213,7 +215,7 @@ static const std::unordered_map<std::string, AchievementChecker> ACHIEVEMENT_CHE
 	}}
 };
 
-void Game::CheckAndUnlockAchievements()
+void Game::UnlockAchievements()
 {
 	for (const auto& player : m_players) {
 		int userId = player->GetID();
@@ -232,6 +234,29 @@ void Game::CheckAndUnlockAchievements()
 			m_database.UnlockAchievements(userId, achievementConditions);
 			std::cout << "Unlocked " << achievementConditions.size()
 				<< " achievement(s) for " << player->GetUsername() << std::endl;
+		}
+	}
+}
+
+void Game::CheckAchievements()
+{
+	for (size_t i = 0; i < m_players.size(); i++) {
+		int userId = m_players[i]->GetID();
+		GameStatistics& stats = m_gameStats[userId];
+		if(i == m_ctx.HPplayerIndex){
+			stats.usedHarryPotter = true;
+		}
+		if(i == m_ctx.SoothPlayerIndex){
+			stats.usedSoothsayer = true;
+		}
+		if(i == m_ctx.TaxEvPlayerIndex){
+			stats.usedTaxEvader = true;
+		}
+		if(i == m_ctx.GamblerPlayerIndex){
+			stats.usedGambler = true;
+		}
+		if(i == m_ctx.PeasantPlayerIndex){
+			stats.usedPeasant = true;
 		}
 	}
 }
