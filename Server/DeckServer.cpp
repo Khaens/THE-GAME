@@ -32,6 +32,7 @@ Card* Deck::DrawCard()
 {
 	if (!m_initialCards.empty()) {
 		m_currentDeckSize--;
+		if (m_currentDeckSize > DECK_SIZE) return nullptr;
 		Card* drawnCard = m_initialCards[m_currentDeckSize];
 		m_initialCards[m_currentDeckSize] = nullptr;
 		return drawnCard;

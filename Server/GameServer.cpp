@@ -17,7 +17,7 @@ Game::Game(std::vector<UserModel>& users, Database& db) : m_numberOfPlayers{ use
 		i++;
 	}
 
-	for (int i = 2; i < 100; i++) {
+	for (int i = 2; i < 99; i++) {
 		Card* newCard = new Card(std::to_string(i));
 		Card* newCard2 = new Card(std::to_string(i));
 		m_wholeDeck.InsertCard(newCard);
@@ -77,7 +77,7 @@ bool Game::IsGameOver(IPlayer& currentPlayer)
 
 	if (currentPlayer.IsFinished()) return false;
 
-	if (m_currentPlayerIndex == m_ctx.HPplayerIndex && currentPlayer.GetHPFlag()) {
+	if (m_currentPlayerIndex == m_ctx.HPplayerIndex && currentPlayer.GetHPFlag() && !m_players[m_ctx.HPplayerIndex]->HPActive()) {
 		std::cout << "No one played a +/-10 card until " << currentPlayer.GetUsername() << "'s turn. All players lose!\n";
 		return true;
 	}
@@ -155,12 +155,13 @@ void Game::StartGame()
 			}
 			/*currentPlayer.ShowHand();
 			m_wholeDeck.ShowDeck();*/
+			m_gameStats[currentPlayer.GetID()].placed7 = false;
+			m_gameStats[currentPlayer.GetID()].placed6 = false;
 			m_gameStats[currentPlayer.GetID()].lastPlayedCardValue = -1;
-
-			CheckAchievements();
-			NextPlayer();
 		}
+		CheckAchievements();
 		UnlockAchievements();
+		NextPlayer();
 	}
 }
 
@@ -176,21 +177,27 @@ static const std::unordered_map<std::string, AchievementChecker> ACHIEVEMENT_CHE
 	{"harryPotter", [](const IPlayer&, const GameStatistics& s, const StatisticsModel&) {
 		return s.usedHarryPotter;
 	}},
+	{"peasant", [](const IPlayer&, const GameStatistics& s, const StatisticsModel&) {
+		return s.usedPeasant;
+	}},
+	{"gambler", [](const IPlayer&, const GameStatistics& s, const StatisticsModel&) {
+		return s.usedGambler;
+	}},
 	{"soothsayer", [](const IPlayer&, const GameStatistics& s, const StatisticsModel&) {
 		return s.usedSoothsayer;
 	}},
 	{"taxEvader", [](const IPlayer&, const GameStatistics& s, const StatisticsModel&) {
 		return s.usedTaxEvader;
 	}},
-	{"allOnRed", [](const IPlayer&, const GameStatistics& s, const StatisticsModel&) {
-		return s.usedGambler && s.atLeastTwoCardsInEndgame;
+	{"allOnRed", [](const IPlayer& p, const GameStatistics& s, const StatisticsModel&) {
+		return s.usedGambler && s.atLeastTwoCardsInEndgame && p.IsFinished();
 	}},
 	{"zeroEffort", [](const IPlayer&, const GameStatistics& s, const StatisticsModel&) {
 		return s.wonGame && s.taxEvaderUses >= 5;
 	}},
-	/*{"vanillaW", [](const IPlayer&, const GameStatistics& s, const StatisticsModel&) {
+	{"vanillaW", [](const IPlayer&, const GameStatistics& s, const StatisticsModel&) {
 		return s.wonGame && !s.usedAnyAbility;
-	}},*/
+	}},
 	{"highRisk", [](const IPlayer&, const GameStatistics& s, const StatisticsModel&) {
 		return s.usedGambler && s.usedAllGamblerAbilities;
 	}},
@@ -246,18 +253,23 @@ void Game::CheckAchievements()
 		GameStatistics& stats = m_gameStats[userId];
 		if(i == m_ctx.HPplayerIndex){
 			stats.usedHarryPotter = true;
+			std::cout << "HP true for " << m_players[i]->GetUsername() << "\n";
 		}
 		if(i == m_ctx.SoothPlayerIndex){
 			stats.usedSoothsayer = true;
+			std::cout << "Sooth true for " << m_players[i]->GetUsername() << "\n";
 		}
 		if(i == m_ctx.TaxEvPlayerIndex){
 			stats.usedTaxEvader = true;
+			std::cout << "TaxEv true for " << m_players[i]->GetUsername() << "\n";
 		}
 		if(i == m_ctx.GamblerPlayerIndex){
 			stats.usedGambler = true;
+			std::cout << "Gambler true for " << m_players[i]->GetUsername() << "\n";
 		}
 		if(i == m_ctx.PeasantPlayerIndex){
 			stats.usedPeasant = true;
+			std::cout << "Peasant true for " << m_players[i]->GetUsername() << "\n";
 		}
 	}
 }
@@ -299,4 +311,6 @@ void Game::ShowCtx()
 	std::cout << "HPPIndex " << m_ctx.HPplayerIndex << "\n";
 	std::cout << "GambPInd " << m_ctx.GamblerPlayerIndex << "\n";
 	std::cout << "TaxEvPInd" << m_ctx.TaxEvPlayerIndex << "\n";
+	std::cout << "SoothPInd" << m_ctx.SoothPlayerIndex << "\n";
+	std::cout << "PeasPInd" << m_ctx.PeasantPlayerIndex << "\n";
 }

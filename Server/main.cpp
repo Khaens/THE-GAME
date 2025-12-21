@@ -36,16 +36,33 @@ std::string generateLobbyId() {
 }
 
 int main() {
-    /*UserModel user(1, "user", "pass");
-    UserModel user2(2, "user2", "pass");
-    UserModel user3(3, "user3", "pass");
-	UserModel user4(4, "user4", "pass");
-	UserModel user5(5, "user5", "pass");
+	Database db("users.db");
+    UserModel testUser1;
+    testUser1.SetUsername("test1");
+    testUser1.SetPassword("pass");
+    UserModel testUser2;
+    testUser2.SetUsername("test2");
+    testUser2.SetPassword("pass");
+    UserModel testUser3;
+    testUser3.SetUsername("test3");
+    testUser3.SetPassword("pass");
+    UserModel testUser4;
+    testUser4.SetUsername("test4");
+    testUser4.SetPassword("pass");
+    UserModel testUser5;
+    testUser5.SetUsername("test5");
+    testUser5.SetPassword("pass");
+	UserModel test = db.GetUserByUsername("test1");
+	UserModel test2 = db.GetUserByUsername("test2");
+	UserModel test3 = db.GetUserByUsername("test3");
+	UserModel test4 = db.GetUserByUsername("test4");
+    UserModel Fedora = db.GetUserByUsername("Fedora");
+    std::cout << Fedora.GetId();
     std::vector<UserModel> users = {
-        user, user2, user3, user4, user5
+        test, test2, test3, test4, Fedora
     };
-    Game g(users);
-    g.StartGame();*/
+    Game g(users, db);
+    g.StartGame();
 
 
 	//primeste si valideaza cereri de la client, utilizand GameServer pentru logica jocului
@@ -53,7 +70,6 @@ int main() {
 	//trimite update-uri catre client
 
 	crow::SimpleApp app;
-	Database db("users.db");
 
     CROW_ROUTE(app, "/api/register")
         .methods(crow::HTTPMethod::POST)

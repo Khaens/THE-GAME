@@ -6,7 +6,11 @@ struct GameStatistics {
 	int taxEvaderUses = 0;
 	bool perfectGame = true;
 
+	bool placed6 = false;
+	bool placed7 = false;
+
 	bool wonGame = false;
+	bool usedAnyAbility = false;
 	bool placed6And7InSameRound = false;
 	int gamblerAbilityUses = 0;
 	bool usedAllGamblerAbilities = false;

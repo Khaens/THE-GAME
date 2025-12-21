@@ -39,10 +39,11 @@ void Round::OneRound(Game& game, TurnContext& m_ctx)
 			}
 			chosenPile->PlaceCard(chosenCard);
 			game.m_gameStats[currentPlayer.GetID()].lastPlayedCardValue = std::stoi(chosenCard->GetCardValue());
-			if(game.m_gameStats[currentPlayer.GetID()].lastPlayedCardValue == 6 &&
-				std::stoi(chosenCard->GetCardValue()) == 7) {
+			if (chosenCard->GetCardValue() == "6") game.m_gameStats[currentPlayer.GetID()].placed6 = true;
+			if (chosenCard->GetCardValue() == "7") game.m_gameStats[currentPlayer.GetID()].placed7 = true;
+			if (game.m_gameStats[currentPlayer.GetID()].placed6 && game.m_gameStats[currentPlayer.GetID()].placed7)
 				game.m_gameStats[currentPlayer.GetID()].placed6And7InSameRound = true;
-			}
+			std::cout << "Placed " << game.m_gameStats[currentPlayer.GetID()].lastPlayedCardValue << " on the chosen pile.\n";
 			currentPlayer.RemoveCardFromHand(chosenCard);
 		}
 		else {
@@ -61,6 +62,9 @@ void Round::FirstRoundDealing(Game& game)
 			m_players[i]->AddCardToHand(dealtCard);
 		}
 	}
+	m_players.size();
+
+	std::cout << "Muie aldea";
 }
 
 bool Round::CanPlaceCard(Game& game, const Card* card, Pile* pile, TurnContext& m_ctx)
@@ -124,15 +128,20 @@ void Round::UpdateContext(Game& game, TurnContext& m_ctx, IPlayer& currentPlayer
 bool Round::IsGameWon(Game& game, IPlayer& currentPlayer)
 {
 	if (currentPlayer.GetHand().size() == 0) currentPlayer.SetFinished(true);
-	bool gameWon = false;
+	if (currentPlayer.IsFinished()) std::cout << currentPlayer.GetUsername() + " has finished\n";
+	bool gameWon = true;
 	for (size_t i = 0; i < game.GetPlayers().size(); i++) {
 		if (!game.GetPlayers()[i]->IsFinished()) {
 			gameWon = false;
 		}
 	}
-	while (!currentPlayer.IsFinished()) {
-		game.NextPlayer();
-		currentPlayer = game.GetCurrentPlayer();
+	if (gameWon) return gameWon;
+	while (currentPlayer.IsFinished()) {
+		if (currentPlayer.IsFinished()) {
+			game.NextPlayer();
+			currentPlayer = game.GetCurrentPlayer();
+		}
+		else break;
 	}
 	return gameWon;
 }
@@ -144,6 +153,7 @@ void Round::AbilityUse(Game& game, TurnContext& m_ctx, IPlayer& currentPlayer)
 		char useAbility;
 		std::cin >> useAbility;
 		if (std::tolower(useAbility) == 'y') {
+			game.m_gameStats[currentPlayer.GetID()].usedAnyAbility = true;
 			currentPlayer.UseAbility(m_ctx, currentPlayer.GetPlayerIndex());
 			if (m_ctx.SoothPlayerIndex == currentPlayer.GetPlayerIndex() &&
 				currentPlayer.IsSoothActive()) {
