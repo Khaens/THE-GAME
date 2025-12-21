@@ -17,7 +17,7 @@ enum class Info {
 	CARD_PLACED
 };
 
-
+#include <unordered_map>
 #include <iostream>
 #include <thread>
 #include <vector>
@@ -31,6 +31,8 @@ enum class Info {
 #include "DeckServer.h"
 #include "TurnContext.h"
 #include "Round.h"
+#include "GameStatistics.h"
+#include "Database.h"
 
 class Game {
 private:
@@ -41,18 +43,22 @@ private:
 	std::array<Pile*, PILES_AMOUNT> m_piles;
 	Deck m_wholeDeck;
 	TurnContext m_ctx;
+	Database& m_database;
 
 public:
-	Game(std::vector<UserModel>& users);
+	Game(std::vector<UserModel>& users, Database& db);
 	size_t WhoStartsFirst();
 	bool IsGameOver(IPlayer& currentPlayer);
 	void StartGame();
 	void NextPlayer();
 
+	std::unordered_map<int, GameStatistics> m_gameStats;
+
 	Info PlaceCard(size_t playerIndex, int card, int chosenPile);
 	Info UseAbility(size_t playerIndex);
 	Info EndTurn(size_t playerIndex);
 
+	void CheckAndUnlockAchievements();
 
 	Card* DrawCard();
 

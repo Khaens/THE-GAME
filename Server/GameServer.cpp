@@ -1,7 +1,7 @@
 #include "GameServer.h"
 #include "PlayerFactory.h"
 
-Game::Game(std::vector<UserModel>& users) : m_numberOfPlayers{ users.size() }
+Game::Game(std::vector<UserModel>& users, Database& db) : m_numberOfPlayers{ users.size() }, m_database(db)
 {
 	m_players.reserve(m_numberOfPlayers);
 	if (users.size() < 2 || users.size() > 5) {
@@ -27,6 +27,11 @@ Game::Game(std::vector<UserModel>& users) : m_numberOfPlayers{ users.size() }
 	m_piles[m_pileIndex++] = new Pile{ PileType::ASCENDING };
 	m_piles[m_pileIndex++] = new Pile{ PileType::DESCENDING };
 	m_piles[m_pileIndex++] = new Pile{ PileType::DESCENDING };
+
+	m_gameStats.reserve(m_numberOfPlayers);
+	for (int i = 0; i < m_numberOfPlayers; i++) {
+		m_gameStats.insert({ m_players[i]->GetID(), GameStatistics() });
+	}
 }
 
 size_t Game::WhoStartsFirst()
@@ -139,6 +144,75 @@ Info Game::EndTurn(size_t playerIndex)
 		return Info::GAME_WON;
 	}
 	return Info::TURN_ENDED;
+}
+
+using AchievementChecker = std::function<bool(const IPlayer&, const GameStatistics&, const StatisticsModel&)>;
+
+static const std::unordered_map<std::string, AchievementChecker> ACHIEVEMENT_CHECKS = {
+	{"harryPotter", [](const IPlayer&, const GameStatistics& s, const StatisticsModel&) {
+		return s.usedHarryPotter;
+	}},
+	{"soothsayer", [](const IPlayer&, const GameStatistics& s, const StatisticsModel&) {
+		return s.usedSoothsayer;
+	}},
+	{"taxEvader", [](const IPlayer&, const GameStatistics& s, const StatisticsModel&) {
+		return s.usedTaxEvader;
+	}},
+	{"allOnRed", [](const IPlayer&, const GameStatistics& s, const StatisticsModel&) {
+		return s.usedGambler && s.atLeastTwoCardsInEndgame;
+	}},
+	{"zeroEffort", [](const IPlayer&, const GameStatistics& s, const StatisticsModel&) {
+		return s.wonGame && s.taxEvaderUses >= 5;
+	}},
+	{"vanillaW", [](const IPlayer&, const GameStatistics& s, const StatisticsModel&) {
+		return s.wonGame && !s.usedAnyAbility;
+	}},
+	{"highRisk", [](const IPlayer&, const GameStatistics& s, const StatisticsModel&) {
+		return s.usedGambler && s.usedAllGamblerAbilities;
+	}},
+	{"perfectGame", [](const IPlayer&, const GameStatistics& s, const StatisticsModel&) {
+		return s.wonGame && s.perfectGame;
+	}},
+	{"sixSeven", [](const IPlayer&, const GameStatistics& s, const StatisticsModel&) {
+		return s.placed6And7InSameRound;
+	}},
+	{"seriousPlayer", [](const IPlayer&, const GameStatistics&, const StatisticsModel& dbStats) {
+		return dbStats.GetGamesWon() >= 5;
+	}},
+	{"talentedPlayer", [](const IPlayer&, const GameStatistics&, const StatisticsModel& dbStats) {
+		int gamesWon = dbStats.GetGamesWon();
+		float winRate = dbStats.GetWinRate();
+
+		if (winRate <= 0.0f || gamesWon == 0) return false;
+		int totalGames = static_cast<int>(gamesWon / winRate);
+		return totalGames == 10 && winRate > 0.80f;
+	}},
+	{"jack", [](const IPlayer&, const GameStatistics& s, const StatisticsModel&) {
+		return s.playedWithAllAbilities;
+	}}
+};
+
+void Game::CheckAndUnlockAchievements()
+{
+	for (const auto& player : m_players) {
+		int userId = player->GetID();
+		const GameStatistics& stats = m_gameStats[userId];
+		StatisticsModel dbStats = m_database.GetStatisticsByUserId(userId);
+
+		std::unordered_map<std::string, bool> achievementConditions;
+
+		for (const auto& [achName, checker] : ACHIEVEMENT_CHECKS) {
+			if (checker(*player, stats, dbStats)) {
+				achievementConditions[achName] = true;
+			}
+		}
+
+		if (!achievementConditions.empty()) {
+			m_database.UnlockAchievements(userId, achievementConditions);
+			std::cout << "Unlocked " << achievementConditions.size()
+				<< " achievement(s) for " << player->GetUsername() << std::endl;
+		}
+	}
 }
 
 Info Game::UseAbility(size_t playerIndex) // Sothsayer Ability logic to be implemented

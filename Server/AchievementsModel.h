@@ -11,6 +11,7 @@ private:
     bool soothsayer = false;
     bool taxEvader = false;
     bool seriousPlayer = false;
+    bool talentedPlayer = false;
     bool jack = false;
     bool zeroEffort = false;
     bool vanillaW = false;
@@ -30,6 +31,7 @@ public:
     bool GetSoothsayer() const;
     bool GetTaxEvader() const;
     bool GetSeriousPlayer() const;
+    bool GetTalentedPlayer() const;
     bool GetJack() const;
     bool GetZeroEffort() const;
     bool GetVanillaW() const;
@@ -44,6 +46,7 @@ public:
     void SetSoothsayer(bool value);
     void SetTaxEvader(bool value);
     void SetSeriousPlayer(bool value);
+    void SetTalentedPlayer(bool value);
     void SetJack(bool value);
     void SetZeroEffort(bool value);
     void SetVanillaW(bool value);

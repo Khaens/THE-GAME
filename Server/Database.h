@@ -21,6 +21,7 @@ inline auto initStorage(const std::string& path) {
             make_column("soothsayer", &AchievementsModel::GetSoothsayer, &AchievementsModel::SetSoothsayer),
             make_column("tax_evader", &AchievementsModel::GetTaxEvader, &AchievementsModel::SetTaxEvader),
             make_column("serious_player", &AchievementsModel::GetSeriousPlayer, &AchievementsModel::SetSeriousPlayer),
+            make_column("talented_player", &AchievementsModel::GetTalentedPlayer, &AchievementsModel::SetTalentedPlayer),
             make_column("jack_of_all_trades", &AchievementsModel::GetJack, &AchievementsModel::SetJack),
             make_column("zero_effort", &AchievementsModel::GetZeroEffort, &AchievementsModel::SetZeroEffort),
             make_column("vanilla_victory", &AchievementsModel::GetVanillaW, &AchievementsModel::SetVanillaW),
