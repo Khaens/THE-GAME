@@ -43,6 +43,8 @@ private:
     QWebSocket m_webSocket;  // For game WebSocket
     QWebSocket m_lobbyWebSocket;  // For lobby updates WebSocket
     std::string m_currentLobbyId;  // Store lobby_id for subscription
+    std::string m_gameLobbyId;
+    int m_gameUserId = -1;
 
 public:
     explicit NetworkManager(const std::string& serverUrl = "http://localhost:18080", QObject* parent = nullptr);

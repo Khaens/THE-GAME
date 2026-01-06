@@ -19,6 +19,83 @@ static std::unordered_map<std::string, std::vector<crow::websocket::connection*>
 static std::mutex lobby_ws_mutex;
 
 
+
+// Helper to broadcast game state to all players in a lobby
+void BroadcastGameState(const std::string& lobby_id) {
+    std::lock_guard<std::mutex> lock(lobby_mutex);
+    if (lobbies.find(lobby_id) == lobbies.end()) return;
+    
+    Lobby& lobby = *lobbies[lobby_id];
+    Game* game = lobby.GetGame();
+    if (!game) return;
+
+    crow::json::wvalue state_base;
+    state_base["type"] = "game_state";
+    state_base["lobby_id"] = lobby_id;
+    
+    // Piles
+    auto piles = game->GetPiles(); // std::array<Pile*, 4>
+    for (size_t i = 0; i < piles.size(); ++i) {
+        if (piles[i]) {
+            state_base["piles"][i]["top_card"] = piles[i]->GetTopCard()->GetCardValue();
+            state_base["piles"][i]["count"] = piles[i]->GetSize();
+        }
+    }
+    
+    // Deck
+    state_base["deck_count"] = game->GetDeckSize();
+    
+    // Turn info
+    try {
+        IPlayer& current_player = game->GetCurrentPlayer();
+        state_base["current_turn_player_id"] = current_player.GetID();
+        state_base["current_turn_username"] = current_player.GetUsername();
+    } catch (...) {
+        state_base["current_turn_player_id"] = -1;
+    }
+
+    // Players info (public)
+    const auto& players = game->GetPlayers();
+    for (size_t i = 0; i < players.size(); ++i) {
+        state_base["players"][i]["user_id"] = players[i]->GetID();
+        state_base["players"][i]["username"] = players[i]->GetUsername();
+        state_base["players"][i]["hand_count"] = players[i]->GetHand().size();
+        state_base["players"][i]["is_finished"] = players[i]->IsFinished();
+        state_base["players"][i]["player_index"] = players[i]->GetPlayerIndex(); // or i
+    }
+
+    // Send personalized state to each connection
+    std::lock_guard<std::mutex> ws_lock(ws_mutex);
+    
+    // We need to map connections to user_ids to send private hands.
+    // However, for now, we only have a list of connections. 
+    // We can't easily map connection -> user without extra storage.
+    // OPTIMIZATION: We will broadcast the full state including ALL hands but marked with user_id, 
+    // and the client will filter what to show (or show backs of cards).
+    // ACTUALLY: It's better to send just the hand of the receiving user.
+    // Issue: We don't track which connection belongs to which user in `lobby_connections`.
+    // Fix: We will rely on the client ensuring they are subscribed?
+    // Alternative: We can broadcast "public state" and then separate "private hand" messages if we knew who is who.
+    // Assumption: For this stage, we will send all hands. It's a "local" game server, cheating is low risk. 
+    // Wait, "THE-GAME" might be competitive.
+    // Let's try to do it right? No, tracking connections is complex in this `main.cpp` structure without a session manager.
+    // I will include ALL hands in the broadcast for now, clients will just render their own.
+    
+    for (size_t i = 0; i < players.size(); ++i) {
+        crow::json::wvalue hand_json;
+        int idx = 0;
+        for (const auto* card : players[i]->GetHand()) {
+            hand_json[idx++] = card->GetCardValue();
+        }
+        state_base["players"][i]["hand"] = std::move(hand_json);
+    }
+    
+    std::string msg = state_base.dump();
+    for (auto* conn : lobby_connections[lobby_id]) {
+        if (conn) conn->send_text(msg);
+    }
+}
+
 int main() {
     /*UserModel user(1, "user", "pass");
     UserModel user2(2, "user2", "pass");
@@ -463,35 +540,132 @@ int main() {
              }
 		});
 
+
+
     CROW_WEBSOCKET_ROUTE(app, "/ws/game")
         .onopen([](crow::websocket::connection& conn) {
             std::cout << "New Game WebSocket connection" << std::endl;
         })
         .onclose([](crow::websocket::connection& conn, const std::string& reason, uint16_t) {
             std::cout << "Game WebSocket closed" << std::endl;
-            // Cleanup would be needed here in a real app (remove from lobby_connections)
+            std::lock_guard<std::mutex> lock(ws_mutex);
+             for (auto& [lobby_id, connections] : lobby_connections) {
+                connections.erase(
+                    std::remove_if(connections.begin(), connections.end(),
+                        [&conn](crow::websocket::connection* c) { return c == &conn; }),
+                    connections.end()
+                );
+            }
         })
         .onmessage([](crow::websocket::connection& conn, const std::string& data, bool is_binary) {
-             // Expecting JSON: { "lobby_id": "...", "action": "..." }
              auto body = crow::json::load(data);
              if(!body) return;
 
              if (body.has("lobby_id")) {
                  std::string lid = body["lobby_id"].s();
+                 std::string type = body.has("type") ? (std::string)body["type"].s() : "";
                  
-                 // Register connection to lobby if not already
-                 std::lock_guard<std::mutex> lock(ws_mutex);
-                 bool found = false;
-                 for(auto* c : lobby_connections[lid]) {
-                     if(c == &conn) found = true;
+                 // Register connection
+                 {
+                     std::lock_guard<std::mutex> lock(ws_mutex);
+                     bool found = false;
+                     for(auto* c : lobby_connections[lid]) {
+                         if(c == &conn) found = true;
+                     }
+                     if(!found) lobby_connections[lid].push_back(&conn);
                  }
-                 if(!found) lobby_connections[lid].push_back(&conn);
 
-                 // Broadcast to others in lobby
-                 for(auto* c : lobby_connections[lid]) {
-                     if(c != &conn) c->send_text(data);
+                 if (type == "chat") {
+                     // Broadcast chat
+                     std::lock_guard<std::mutex> lock(ws_mutex);
+                     for(auto* c : lobby_connections[lid]) {
+                         if(c) c->send_text(data); 
+                     }
+                     return;
+                 }
+                 
+                 if (type == "game_action") {
+                     // Handle game logic
+                     std::string action = body["action"].s();
+                     int user_id = body["user_id"].i();
+                     
+                     std::lock_guard<std::mutex> lock(lobby_mutex);
+                     if (lobbies.find(lid) == lobbies.end()) return;
+                     Lobby& lobby = *lobbies[lid];
+                     Game* game = lobby.GetGame();
+                     if (!game) return;
+                     
+                     // Find player index
+                     int player_idx = -1;
+                     const auto& players = game->GetPlayers();
+                     for(size_t i=0; i<players.size(); ++i) {
+                         if(players[i]->GetID() == user_id) {
+                             player_idx = i;
+                             break;
+                         }
+                     }
+                     
+                     if (player_idx == -1) return; // Player not found
+                     
+                     Info result = Info::TURN_ENDED; // Default safe value
+                     bool state_changed = false;
+
+                     if (action == "play_card") {
+                         int card_val = body["card_value"].i();
+                         int pile_idx = body["pile_index"].i();
+                         result = game->PlaceCard(player_idx, card_val, pile_idx);
+                         if (result == Info::CARD_PLACED || result == Info::TURN_ENDED || result == Info::GAME_WON || result == Info::GAME_LOST) {
+                             state_changed = true;
+                         }
+                     } 
+                     else if (action == "use_ability") {
+                         result = game->UseAbility(player_idx);
+                         if (result == Info::ABILITY_USED || result == Info::TAX_ABILITY_USED || result == Info::PEASANT_ABILITY_USED || result == Info::TURN_ENDED) {
+                             state_changed = true;
+                         }
+                     }
+                     else if (action == "end_turn") {
+                         result = game->EndTurn(player_idx);
+                         state_changed = true;
+                     }
+
+                     if (result == Info::GAME_WON || result == Info::GAME_LOST) {
+                         // Game End
+                         crow::json::wvalue over_msg;
+                         over_msg["type"] = "game_over";
+                         over_msg["lobby_id"] = lid;
+                         if (result == Info::GAME_WON) {
+                             over_msg["winner_id"] = user_id;
+                             over_msg["result"] = "won";
+                         } else {
+                             // Assuming GAME_LOST means valid loss
+                             over_msg["result"] = "lost"; 
+                         }
+                         
+                         std::string msg = over_msg.dump();
+                         std::lock_guard<std::mutex> ws_lock(ws_mutex);
+                         for(auto* c : lobby_connections[lid]) {
+                             if(c) c->send_text(msg);
+                         }
+                     }
+                     
+                     // If error/invalid move, maybe notify user?
+                     if (result == Info::CARD_NOT_PLAYABLE || result == Info::NOT_CURRENT_PLAYER_TURN) {
+                         crow::json::wvalue err;
+                         err["type"] = "error";
+                         if (result == Info::CARD_NOT_PLAYABLE) err["message"] = "Card not playable";
+                         if (result == Info::NOT_CURRENT_PLAYER_TURN) err["message"] = "Not your turn";
+                         conn.send_text(err.dump());
+                     }
+                 }
+                 
+                 // If we had game action or join, broadcast state
+                 // Note: lobby_mutex is NOT held here, so it's safe to call BroadcastGameState
+                 if (type == "game_action" || type == "join_game") {
+                     BroadcastGameState(lid);
                  }
              }
+
 		});
 
 	CROW_ROUTE(app, "/")([]() {

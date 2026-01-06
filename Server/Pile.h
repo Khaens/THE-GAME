@@ -17,5 +17,6 @@ public:
 	const Card* GetTopCard();
 	PileType GetPileType() const;
 	void PlaceCard(const Card* c);
+	size_t GetSize() const;
 };
 

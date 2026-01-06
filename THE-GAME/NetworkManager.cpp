@@ -180,6 +180,9 @@ std::vector<NetworkManager::PlayerInfo> NetworkManager::getLobbyPlayers(const st
 }
 
 void NetworkManager::connectToGame(const std::string& lobby_id, int user_id) {
+    m_gameLobbyId = lobby_id;
+    m_gameUserId = user_id;
+
     QString urlStr = QString::fromStdString(baseUrl);
     // Simple conversion from http to ws
     if (urlStr.startsWith("http")) {
@@ -202,6 +205,17 @@ void NetworkManager::sendGameAction(const QJsonObject& action) {
 
 void NetworkManager::onConnected() {
     qDebug() << "WebSocket Connected!";
+    
+    if (!m_gameLobbyId.empty() && m_gameUserId != -1) {
+        QJsonObject joinMsg;
+        joinMsg["type"] = "join_game";
+        joinMsg["lobby_id"] = QString::fromStdString(m_gameLobbyId);
+        joinMsg["user_id"] = m_gameUserId;
+        
+        QJsonDocument doc(joinMsg);
+        m_webSocket.sendTextMessage(QString::fromUtf8(doc.toJson(QJsonDocument::Compact)));
+    }
+
     emit gameConnected();
 }
 

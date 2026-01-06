@@ -27,7 +27,13 @@ PileType Pile::GetPileType() const
     return m_type;
 }
 
+
 void Pile::PlaceCard(const Card* c)
 {
     m_cards.push(const_cast<Card*>(c));
+}
+
+size_t Pile::GetSize() const
+{
+    return m_cards.size();
 }
