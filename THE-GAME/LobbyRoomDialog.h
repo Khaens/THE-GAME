@@ -30,7 +30,7 @@ public:
     void setLobbyInfo(const QString& name, const QString& code);
 
 signals:
-    void gameStarted();
+    void gameStarted(const QString& lobbyId);
 
 private slots:
     void onLeaveClicked();

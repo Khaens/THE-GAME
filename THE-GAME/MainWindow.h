@@ -34,7 +34,7 @@ private slots:
     void onSettingsClicked();
     void onAccountClicked();
     void toggleFullScreen();
-    void showGameOverlay();
+    void showGameOverlay(const QString& lobbyId);
 
 private:
     Ui::MainWindowClass* ui;

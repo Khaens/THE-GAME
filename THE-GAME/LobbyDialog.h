@@ -36,7 +36,7 @@ public:
     void setNetworkManager(NetworkManager* nm) { m_networkManager = nm; }
 
 signals:
-    void gameStartedFromLobby();
+    void gameStartedFromLobby(const QString& lobbyId);
 
 protected:
     void resizeEvent(QResizeEvent* event) override;
@@ -57,5 +57,5 @@ private:
 private slots:
     void onCreateLobbyClicked();
     void onJoinLobbyClicked();
-    void onGameStarted();
+    void onGameStarted(const QString& lobbyId);
 };

@@ -255,10 +255,10 @@ void LobbyDialog::onJoinLobbyClicked()
 }
 
 // NEW METHOD: Handle game started signal
-void LobbyDialog::onGameStarted()
+void LobbyDialog::onGameStarted(const QString& lobbyId)
 {
     // Forward the signal to MainWindow
-    emit gameStartedFromLobby(); // You'll need to add this signal to LobbyDialog
+    emit gameStartedFromLobby(lobbyId); 
 }
 
 void LobbyDialog::resizeEvent(QResizeEvent* event)

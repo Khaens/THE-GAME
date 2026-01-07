@@ -67,20 +67,6 @@ void BroadcastGameState(const std::string& lobby_id) {
     // Send personalized state to each connection
     std::lock_guard<std::mutex> ws_lock(ws_mutex);
     
-    // We need to map connections to user_ids to send private hands.
-    // However, for now, we only have a list of connections. 
-    // We can't easily map connection -> user without extra storage.
-    // OPTIMIZATION: We will broadcast the full state including ALL hands but marked with user_id, 
-    // and the client will filter what to show (or show backs of cards).
-    // ACTUALLY: It's better to send just the hand of the receiving user.
-    // Issue: We don't track which connection belongs to which user in `lobby_connections`.
-    // Fix: We will rely on the client ensuring they are subscribed?
-    // Alternative: We can broadcast "public state" and then separate "private hand" messages if we knew who is who.
-    // Assumption: For this stage, we will send all hands. It's a "local" game server, cheating is low risk. 
-    // Wait, "THE-GAME" might be competitive.
-    // Let's try to do it right? No, tracking connections is complex in this `main.cpp` structure without a session manager.
-    // I will include ALL hands in the broadcast for now, clients will just render their own.
-    
     for (size_t i = 0; i < players.size(); ++i) {
         crow::json::wvalue hand_json;
         int idx = 0;

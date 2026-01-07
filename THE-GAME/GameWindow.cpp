@@ -11,7 +11,12 @@
 #include <QEasingCurve>
 #include <QTimer>
 #include <QMouseEvent>
+#include <QMouseEvent>
 #include <QDebug>
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QMessageBox>
+#include <QListWidgetItem>
 
 GameWindow::GameWindow(QWidget* parent)
     : QWidget(parent)
@@ -41,6 +46,19 @@ GameWindow::GameWindow(QWidget* parent)
     }
     
     loadGameImage();
+    
+    // Attempt to connect end turn button if it exists (user added in Designer)
+    QPushButton* endTurnBtn = findChild<QPushButton*>("endTurnButton");
+    if (endTurnBtn) {
+        connect(endTurnBtn, &QPushButton::clicked, this, &GameWindow::sendEndTurnAction);
+    }
+    
+    // Create Turn Label
+    m_turnLabel = new QLabel(this);
+    m_turnLabel->setAlignment(Qt::AlignCenter);
+    m_turnLabel->setText("Waiting for game start...");
+    m_turnLabel->setStyleSheet("font-size: 24px; font-weight: bold; color: #FFFFFF; background-color: rgba(0,0,0,0.5); border-radius: 10px; padding: 10px;");
+    m_turnLabel->show();
 }
 
 GameWindow::~GameWindow()
@@ -328,16 +346,19 @@ bool GameWindow::eventFilter(QObject *obj, QEvent *event)
             // Select Card
             m_selectedCardWidget = static_cast<QWidget*>(obj);
             
-            // Store image path depending on which card it is
-            // For now, based on setupHandCard we know the paths:
-            if (obj == ui->hand1) m_selectedCardImagePath = "Resources/2.png";
-            else if (obj == ui->hand2) m_selectedCardImagePath = "Resources/3.png";
-            else if (obj == ui->hand3) m_selectedCardImagePath = "Resources/4.png";
-            else if (obj == ui->hand4) m_selectedCardImagePath = "Resources/5.png";
-            else if (obj == ui->hand5) m_selectedCardImagePath = "Resources/6.png";
-            else if (obj == ui->hand6) m_selectedCardImagePath = "Resources/7.png";
+            // Get Card Value to determine image path
+            int cardValue = m_selectedCardWidget->property("cardValue").toInt();
+            if (cardValue > 0) {
+                 m_selectedCardImagePath = "Resources/" + QString::number(cardValue) + ".png";
+                 qDebug() << "Selected card: " << m_selectedCardImagePath;
+            } else {
+                 m_selectedCardImagePath.clear();
+                 qDebug() << "Selected card invalid value";
+                 // Optional: Deselect if invalid
+                 m_selectedCardWidget = nullptr;
+                 return true;
+            }
             
-            qDebug() << "Selected card: " << m_selectedCardImagePath;
             return true;
         }
     }
@@ -347,6 +368,34 @@ bool GameWindow::eventFilter(QObject *obj, QEvent *event)
                 // Place Card
                 QLabel* pileLabel = static_cast<QLabel*>(obj);
                 
+                // Identify Pile Index
+                int pileIndex = -1;
+                if (pileLabel == ui->ascPile1) pileIndex = 0;
+                else if (pileLabel == ui->ascPile2) pileIndex = 1;
+                else if (pileLabel == ui->descPile1) pileIndex = 2;
+                else if (pileLabel == ui->descPile2) pileIndex = 3;
+
+                // Get Card Value
+                int cardValue = m_selectedCardWidget->property("cardValue").toInt();
+                
+                if (pileIndex != -1 && cardValue > 0 && m_networkManager) {
+                    QJsonObject action;
+                    action["type"] = "game_action";
+                    action["action"] = "play_card";
+                    action["card_value"] = cardValue;
+                    action["pile_index"] = pileIndex + 1; // Server expects 1-based index (1-4)
+                    action["lobby_id"] = QString::fromStdString(m_lobbyId);
+                    action["user_id"] = m_userId;
+                    
+                    m_networkManager->sendGameAction(action);
+                    
+                    // We can keep the local animation for responsiveness, 
+                    // or wait for server update. 
+                    // Let's keep it for "WOW" factor, assuming the move is valid.
+                    // If invalid, server sends error, but we might need to revert UI.
+                    // For now, simpler to just animate.
+                }
+
                 // Check if it was empty before (state change)
                 bool wasEmpty = pileLabel->pixmap().isNull();
                 
@@ -458,22 +507,21 @@ void GameWindow::loadGameImage()
     // Load Card Back
     loadPixmap(ui->cardBack, "Resources/Card_Back.png", "Card_Back.png");
     
-    // Install filter helper
-    auto setupHandCard = [this, &loadPixmap](QLabel* label, const QString& imgPath) {
+    // Initialize Hand Cards (Hidden initially)
+    auto initHandCard = [this](QLabel* label) {
         if (label) {
-            loadPixmap(label, imgPath, imgPath);
             label->installEventFilter(this);
             label->setCursor(Qt::PointingHandCursor);
+            label->setVisible(false); // Hide until we get cards
         }
     };
 
-    // Load Player Hand (Test Images)
-    setupHandCard(ui->hand1, "Resources/2.png");
-    setupHandCard(ui->hand2, "Resources/3.png");
-    setupHandCard(ui->hand3, "Resources/4.png");
-    setupHandCard(ui->hand4, "Resources/5.png");
-    setupHandCard(ui->hand5, "Resources/6.png");
-    setupHandCard(ui->hand6, "Resources/7.png");
+    initHandCard(ui->hand1);
+    initHandCard(ui->hand2);
+    initHandCard(ui->hand3);
+    initHandCard(ui->hand4);
+    initHandCard(ui->hand5);
+    initHandCard(ui->hand6);
 
     // Load Chat Background
     loadPixmap(ui->chatBackground, "Resources/TextBox_1-2.png", "TextBox_1-2.png");
@@ -523,6 +571,185 @@ void GameWindow::toggleChat()
     anim->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
+// ... (existing code)
+
+void GameWindow::initialize(NetworkManager* networkManager, int userId, const std::string& lobbyId)
+{
+    m_networkManager = networkManager;
+    m_userId = userId;
+    m_lobbyId = lobbyId;
+
+    if (m_networkManager) {
+        // Disconnect previous connections if any (safety check)
+        disconnect(m_networkManager, &NetworkManager::gameConnected, this, &GameWindow::onGameConnected);
+        disconnect(m_networkManager, &NetworkManager::gameMessageReceived, this, &GameWindow::onGameMessageReceived);
+
+        connect(m_networkManager, &NetworkManager::gameConnected, this, &GameWindow::onGameConnected);
+        connect(m_networkManager, &NetworkManager::gameMessageReceived, this, &GameWindow::onGameMessageReceived);
+
+        m_networkManager->connectToGame(m_lobbyId, m_userId);
+    }
+}
+
+void GameWindow::onGameConnected()
+{
+    qDebug() << "GameWindow: Connected to Game WebSocket";
+    // Send join game message is handled by NetworkManager::onConnected automatically if members are set
+    // But NetworkManager::connectToGame sets them, so it should be fine.
+}
+
+void GameWindow::onGameMessageReceived(const QJsonObject& message)
+{
+    QString type = message["type"].toString();
+
+    if (type == "game_state") {
+        handleGameState(message);
+    }
+    else if (type == "chat") {
+        QString username = message["username"].toString();
+        QString msg = message["message"].toString();
+        
+        QListWidgetItem* item = new QListWidgetItem(username + ": " + msg);
+        // Optional: Set icon based on user
+        ui->chatHistory->addItem(item);
+        ui->chatHistory->scrollToBottom();
+    }
+    else if (type == "game_over") {
+        QString result = message["result"].toString(); // "won" or "lost"
+        QString msg = (result == "won") ? "Victory! You won the game!" : "Game Over! You lost.";
+        QMessageBox::information(this, "Game Over", msg);
+        emit backToMenuRequested();
+    }
+    else if (type == "error") {
+        QString errorMsg = message["message"].toString();
+        // Ignore "not your turn" errors for now or show them subtly
+        qDebug() << "Game Error:" << errorMsg;
+    }
+}
+
+void GameWindow::handleGameState(const QJsonObject& state)
+{
+    // Update Piles
+    if (state.contains("piles")) {
+        updatePiles(state["piles"].toArray());
+    }
+
+    // Update My Hand and Opponents
+    if (state.contains("players")) {
+        QJsonArray players = state["players"].toArray();
+        QJsonArray myHand;
+        
+        for (const auto& p : players) {
+            QJsonObject player = p.toObject();
+            if (player["user_id"].toInt() == m_userId) {
+                if (player.contains("hand")) {
+                    updateHand(player["hand"].toArray());
+                }
+            }
+        }
+        updateOpponents(players);
+    }
+
+    // Turn indication
+    if (state.contains("current_turn_username")) {
+        QString currentTurn = state["current_turn_username"].toString();
+        
+        if (m_turnLabel) {
+            QString turnText = (state["current_turn_player_id"].toInt() == m_userId) 
+                ? "YOUR TURN" 
+                : ("Current Turn: " + currentTurn);
+                
+            m_turnLabel->setText(turnText);
+            
+            // Style update based on turn
+            if (turnText == "YOUR TURN") {
+                 m_turnLabel->setStyleSheet("font-size: 24px; font-weight: bold; color: #00FF00; background-color: rgba(0,0,0,0.5); border-radius: 10px; padding: 10px;");
+            } else {
+                 m_turnLabel->setStyleSheet("font-size: 24px; font-weight: bold; color: #FFFFFF; background-color: rgba(0,0,0,0.5); border-radius: 10px; padding: 10px;");
+            }
+            m_turnLabel->adjustSize();
+            // trigger re-center in resizeUI or just center here roughly
+             m_turnLabel->move((width() - m_turnLabel->width()) / 2, 20); // Top center
+        }
+        
+        qDebug() << "Current Turn:" << currentTurn;
+    }
+}
+
+void GameWindow::updatePiles(const QJsonArray& piles)
+{
+    // Protocol: [asc1, asc2, desc1, desc2]
+    // Piles: {"top_card": "s", "count": i}
+    
+    auto updatePileLabel = [this](QLabel* label, const QJsonObject& pileData) {
+        if (!label) return;
+        QString cardVal = pileData["top_card"].toString();
+        QString path = "Resources/" + cardVal + ".png";
+        
+        QPixmap pix(path);
+        if (!pix.isNull()) {
+            label->setPixmap(pix);
+            label->setScaledContents(true);
+        }
+    };
+
+    if (piles.size() >= 4) {
+        if (ui->ascending1) updatePileLabel(ui->ascending1, piles[0].toObject());
+        if (ui->ascending2) updatePileLabel(ui->ascending2, piles[1].toObject());
+        if (ui->descending1) updatePileLabel(ui->descending1, piles[2].toObject());
+        if (ui->descending2) updatePileLabel(ui->descending2, piles[3].toObject());
+    }
+}
+
+void GameWindow::updateHand(const QJsonArray& hand)
+{
+    // Clear existing hand widgets or update them
+    // Logic: We have 6 static slots: hand1...hand6
+    // We bind visible cards to slots. Hide unused slots.
+
+    QVector<QLabel*> handSlots = { ui->hand1, ui->hand2, ui->hand3, ui->hand4, ui->hand5, ui->hand6 };
+    
+    for (int i = 0; i < handSlots.size(); ++i) {
+        if (i < hand.size()) {
+            QString cardVal = hand[i].toString();
+            QString path = "Resources/" + cardVal + ".png";
+            
+            QPixmap pix(path);
+            if (!pix.isNull()) {
+                handSlots[i]->setPixmap(pix);
+                handSlots[i]->setScaledContents(true);
+                handSlots[i]->setVisible(true);
+                // Store card value for logic? We used m_selectedCardImagePath path logic before
+                // We'll rely on the existing click handler getting the pixmap or object
+                // But better to store the value as property
+                handSlots[i]->setProperty("cardValue", cardVal.toInt());
+            }
+        } else {
+            handSlots[i]->setVisible(false);
+        }
+    }
+}
+
+void GameWindow::updateOpponents(const QJsonArray& players)
+{
+    // TODO: Visualize other players (hand counts)
+    // For now we don't have UI slots for opponents in the provided UI design description
+    // existing GameWindow code didn't have opponent slots visible in setupUI
+}
+
+void GameWindow::sendEndTurnAction()
+{
+    if (m_networkManager) {
+        QJsonObject action;
+        action["type"] = "game_action";
+        action["action"] = "end_turn";
+        action["lobby_id"] = QString::fromStdString(m_lobbyId);
+        action["user_id"] = m_userId;
+        
+        m_networkManager->sendGameAction(action);
+    }
+}
+
 void GameWindow::sendMessage()
 {
     if (!ui->chatInput || !ui->chatHistory) return;
@@ -530,21 +757,16 @@ void GameWindow::sendMessage()
     QString text = ui->chatInput->text().trimmed();
     if (text.isEmpty()) return;
 
-    // Create a custom item
-    // For now, just text. We can add icon later if we want custom widget items
-    QListWidgetItem* item = new QListWidgetItem(text);
-    
-    // TODO: Add user name/avatar once we have that info available here
-    // For now just format: "Me: Message"
-    item->setText("Me: " + text);
-    
-    // Add placeholder avatar
-    QIcon avatar("Resources/2.png");
-    item->setIcon(avatar);
-    
-    ui->chatHistory->addItem(item);
+    if (m_networkManager) {
+        QJsonObject chatMsg;
+        chatMsg["type"] = "chat";
+        chatMsg["lobby_id"] = QString::fromStdString(m_lobbyId);
+        chatMsg["user_id"] = m_userId;
+        // chatMsg["username"] = ...; Server knows username from user_id or we can send it
+        chatMsg["message"] = text;
+        
+        m_networkManager->sendGameAction(chatMsg);
+    }
+
     ui->chatInput->clear();
-    
-    // Scroll to bottom
-    ui->chatHistory->scrollToBottom();
 }

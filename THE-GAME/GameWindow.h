@@ -1,6 +1,8 @@
 #pragma once
 
 #include "ui_GameWindow.h"
+#include "NetworkManager.h"
+#include <QLabel> // Added for QLabel
 
 class GameWindow : public QWidget
 {
@@ -12,6 +14,9 @@ public:
     void showOverlay();
     void hideOverlay();
 
+    // Game Logic
+    void initialize(NetworkManager* networkManager, int userId, const std::string& lobbyId);
+
 signals:
     void backToMenuRequested();
 
@@ -22,6 +27,8 @@ protected:
 
 private slots:
     void onBackButtonClicked();
+    void onGameConnected();
+    void onGameMessageReceived(const QJsonObject& message);
 
 private:
     Ui::Form* ui;
@@ -40,4 +47,19 @@ private:
     // Card Selection State
     QWidget* m_selectedCardWidget = nullptr;
     QString m_selectedCardImagePath;
+
+    void sendEndTurnAction();
+
+    // Network & Game State
+    NetworkManager* m_networkManager = nullptr;
+    int m_userId = -1;
+    std::string m_lobbyId;
+    std::string m_username; 
+
+    void handleGameState(const QJsonObject& state);
+    void updateHand(const QJsonArray& hand);
+    void updatePiles(const QJsonArray& piles);
+    void updateOpponents(const QJsonArray& players);
+
+    QLabel* m_turnLabel = nullptr; // New label for turn indication
 };

@@ -401,9 +401,8 @@ void LobbyRoomDialog::updateCountdown()
         stopCountdownTimer();
 
         // Only auto-start if we have at least 1 players (Temporary)
-        // ORIGINAL: if (m_players.size() >= 2) {
-        if (m_players.size() >= 1) {
-            onStartGameClicked();
+        if (m_players.size() >= 2) {
+             onStartGameClicked();
         }
         else {
             // Reset countdown if not enough players
@@ -448,10 +447,9 @@ void LobbyRoomDialog::onStartGameClicked()
     }
 
     // TEMPORARY: Allow 1 player for testing
-    // ORIGINAL: if (m_players.size() < 2) {
-    if (m_players.size() < 1) { 
+    if (m_players.size() < 2) {
         QMessageBox::warning(this, "Not Enough Players",
-            "Need at least 1 player to start the game."); // ORIGINAL: "Need at least 2 players to start the game."
+            "Need at least 2 players to start the game."); 
         return;
     }
 
@@ -480,15 +478,13 @@ void LobbyRoomDialog::onStartGameClicked()
         }
         */
         
-        bool serverStarted = m_networkManager->startGame(m_lobbyId.toStdString());
-        
-        if (!serverStarted) {
-             qDebug() << "Server failed to start game (likely due to player count), forcing client-side start for testing.";
+        if (m_networkManager->startGame(m_lobbyId.toStdString())) {
+             m_networkManager->disconnectFromLobby();
+             emit gameStarted(m_lobbyId);
+             accept(); // Close lobby dialog
+        } else {
+             QMessageBox::warning(this, "Error", "Failed to start game. Please try again.");
         }
-
-        m_networkManager->disconnectFromLobby();
-        emit gameStarted(); // EMIT SIGNAL INSTEAD
-        accept(); // Close lobby dialog
     }
 }
 
@@ -576,8 +572,7 @@ void LobbyRoomDialog::fetchLobbyPlayers()
     
     // Update START GAME button state
     if (m_isHost) {
-        // ORIGINAL: m_startGameButton->setEnabled(m_players.size() >= 2);
-        m_startGameButton->setEnabled(m_players.size() >= 1); // TEMPORARY: Allow 1 player
+        m_startGameButton->setEnabled(m_players.size() >= 2);
     }
     
     updatePlayerList(m_players);
@@ -599,13 +594,14 @@ void LobbyRoomDialog::handleLobbyUpdate(const LobbyStatus& status)
     fetchLobbyPlayers();
 
     // Check if game has started
+    // Check if game has started
     if (status.game_started) {
         stopRefreshTimer();
         stopCountdownTimer();
         m_networkManager->disconnectFromLobby();
-        QMessageBox::information(this, "Game Starting",
-            "Game is starting! Transitioning to game screen...");
-        accept();
+        // Removed intrusive popup as per user request
+        emit gameStarted(m_lobbyId);
+        accept(); 
     }
 }
 
@@ -651,6 +647,7 @@ void LobbyRoomDialog::handleLobbyWebSocketMessage(const QJsonObject& message)
             m_networkManager->disconnectFromLobby();
             QMessageBox::information(this, "Game Starting",
                 "Game is starting! Transitioning to game screen...");
+            emit gameStarted(m_lobbyId);
             accept();
         } else {
             fetchLobbyPlayers();
@@ -662,6 +659,7 @@ void LobbyRoomDialog::handleLobbyWebSocketMessage(const QJsonObject& message)
         m_networkManager->disconnectFromLobby();
         QMessageBox::information(this, "Game Starting",
             "Game is starting! Transitioning to game screen...");
+        emit gameStarted(m_lobbyId);
         accept();
     }
     else if (type == "player_left") {

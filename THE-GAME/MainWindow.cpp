@@ -252,7 +252,14 @@ void MainWindow::resizeEvent(QResizeEvent* event)
     QMainWindow::resizeEvent(event);
 }
 
-void MainWindow::showGameOverlay()
+void MainWindow::showGameOverlay(const QString& lobbyId)
 {
+    // Initialize GameWindow with network manager and details
+    if (m_accountDialog && m_gameWindow) {
+        int userId = m_accountDialog->getCurrentUserId();
+        // Assuming m_networkManager is shared_ptr, get raw pointer
+        m_gameWindow->initialize(m_networkManager.get(), userId, lobbyId.toStdString());
+    }
+    
     m_gameWindow->showOverlay();
 }
