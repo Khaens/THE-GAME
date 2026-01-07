@@ -38,7 +38,7 @@ private:
     QPixmap m_scaledBackground;
 
     void resizeUI();
-    
+
     // Chat Functionality
     void toggleChat();
     void sendMessage();
@@ -54,7 +54,7 @@ private:
     NetworkManager* m_networkManager = nullptr;
     int m_userId = -1;
     std::string m_lobbyId;
-    std::string m_username; 
+    std::string m_username;
 
     void handleGameState(const QJsonObject& state);
     void updateHand(const QJsonArray& hand);
@@ -62,4 +62,5 @@ private:
     void updateOpponents(const QJsonArray& players);
 
     QLabel* m_turnLabel = nullptr; // New label for turn indication
+    QString m_lastPileTops[4]; // Track pile state to avoid redundant animations
 };

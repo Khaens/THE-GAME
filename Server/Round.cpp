@@ -15,15 +15,26 @@ void Round::FirstRoundDealing(Game& game)
 
 bool Round::CanPlaceCard(Game& game, const Card* card, Pile* pile, TurnContext& m_ctx)
 {
-	int top = std::stoi(pile->GetTopCard()->GetCardValue());
-	int value = std::stoi(card->GetCardValue());
-	if (m_ctx.HPplayerIndex != -1
-		&& game.GetPlayers()[m_ctx.HPplayerIndex]->HPActive()) return true;
+	try {
+        if (!pile || !pile->GetTopCard() || !card) return false;
 
-	if (pile->GetPileType() == PileType::ASCENDING)
-		return (value > top) || (value == top - 10);
-	else
-		return (value < top) || (value == top + 10);
+		std::string pileStr = pile->GetTopCard()->GetCardValue();
+		std::string cardStr = card->GetCardValue();
+		
+		int top = std::stoi(pileStr);
+		int value = std::stoi(cardStr);
+		if (m_ctx.HPplayerIndex != -1
+			&& game.GetPlayers()[m_ctx.HPplayerIndex]->HPActive()) return true;
+
+		if (pile->GetPileType() == PileType::ASCENDING)
+			return (value > top) || (value == top - 10);
+		else
+			return (value < top) || (value == top + 10);
+	}
+	catch (...) {
+		std::cout << "CRASH AVOIDED in CanPlaceCard! Invalid Data." << std::endl;
+		return false;
+	}
 }
 
 Pile* Round::GetPile(int pileChoice, std::array<Pile*, PILES_AMOUNT> piles)
@@ -81,12 +92,12 @@ bool Round::IsGameWon(Game& game, IPlayer& currentPlayer)
 		}
 	}
 	if (gameWon) return gameWon;
-	while (currentPlayer.IsFinished()) {
-		if (currentPlayer.IsFinished()) {
-			game.NextPlayer();
-			currentPlayer = game.GetCurrentPlayer();
-		}
-		else break;
+	// Advance to next non-finished player if necessary
+	size_t checks = 0;
+	size_t numPlayers = game.GetPlayers().size();
+	while (game.GetCurrentPlayer().IsFinished() && checks < numPlayers) {
+		game.NextPlayer();
+		checks++;
 	}
 	return gameWon;
 }

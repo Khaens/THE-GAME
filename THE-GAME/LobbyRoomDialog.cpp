@@ -594,7 +594,6 @@ void LobbyRoomDialog::handleLobbyUpdate(const LobbyStatus& status)
     fetchLobbyPlayers();
 
     // Check if game has started
-    // Check if game has started
     if (status.game_started) {
         stopRefreshTimer();
         stopCountdownTimer();
@@ -645,8 +644,6 @@ void LobbyRoomDialog::handleLobbyWebSocketMessage(const QJsonObject& message)
             stopRefreshTimer();
             stopCountdownTimer();
             m_networkManager->disconnectFromLobby();
-            QMessageBox::information(this, "Game Starting",
-                "Game is starting! Transitioning to game screen...");
             emit gameStarted(m_lobbyId);
             accept();
         } else {
@@ -657,8 +654,6 @@ void LobbyRoomDialog::handleLobbyWebSocketMessage(const QJsonObject& message)
         stopRefreshTimer();
         stopCountdownTimer();
         m_networkManager->disconnectFromLobby();
-        QMessageBox::information(this, "Game Starting",
-            "Game is starting! Transitioning to game screen...");
         emit gameStarted(m_lobbyId);
         accept();
     }

@@ -143,7 +143,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QLabel" name="ascending2">
+   <widget class="QLabel" name="underAsc2">
     <property name="geometry">
      <rect>
       <x>600</x>
@@ -162,7 +162,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QLabel" name="ascending1">
+   <widget class="QLabel" name="underAsc1">
     <property name="geometry">
      <rect>
       <x>275</x>
@@ -181,7 +181,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QLabel" name="descending2">
+   <widget class="QLabel" name="underDesc2">
     <property name="geometry">
      <rect>
       <x>700</x>
@@ -200,7 +200,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QLabel" name="descending1">
+   <widget class="QLabel" name="underDesc1">
     <property name="geometry">
      <rect>
       <x>375</x>
@@ -400,7 +400,7 @@
    <widget class="QLabel" name="ascPile1">
     <property name="geometry">
      <rect>
-      <x>275</x>
+      <x>350</x>
       <y>50</y>
       <width>150</width>
       <height>225</height>
@@ -419,7 +419,7 @@
    <widget class="QLabel" name="ascPile2">
     <property name="geometry">
      <rect>
-      <x>600</x>
+      <x>675</x>
       <y>50</y>
       <width>150</width>
       <height>225</height>
@@ -438,7 +438,7 @@
    <widget class="QLabel" name="descPile1">
     <property name="geometry">
      <rect>
-      <x>375</x>
+      <x>450</x>
       <y>300</y>
       <width>150</width>
       <height>225</height>
@@ -457,7 +457,7 @@
    <widget class="QLabel" name="descPile2">
     <property name="geometry">
      <rect>
-      <x>700</x>
+      <x>775</x>
       <y>300</y>
       <width>150</width>
       <height>225</height>
@@ -476,14 +476,27 @@
    <widget class="QPushButton" name="endTurnButton">
     <property name="geometry">
      <rect>
-      <x>60</x>
-      <y>150</y>
-      <width>80</width>
-      <height>24</height>
+      <x>20</x>
+      <y>200</y>
+      <width>200</width>
+      <height>45</height>
      </rect>
     </property>
     <property name="text">
      <string>END TURN</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="turnLabel">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>250</y>
+      <width>200</width>
+      <height>75</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
     </property>
    </widget>
   </widget>

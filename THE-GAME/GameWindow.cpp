@@ -53,12 +53,14 @@ GameWindow::GameWindow(QWidget* parent)
         connect(endTurnBtn, &QPushButton::clicked, this, &GameWindow::sendEndTurnAction);
     }
     
-    // Create Turn Label
-    m_turnLabel = new QLabel(this);
-    m_turnLabel->setAlignment(Qt::AlignCenter);
-    m_turnLabel->setText("Waiting for game start...");
-    m_turnLabel->setStyleSheet("font-size: 24px; font-weight: bold; color: #FFFFFF; background-color: rgba(0,0,0,0.5); border-radius: 10px; padding: 10px;");
-    m_turnLabel->show();
+    // Connect to Turn Label defined in Designer
+    m_turnLabel = findChild<QLabel*>("turnLabel");
+    if (m_turnLabel) {
+        m_turnLabel->setText("Waiting for game start...");
+        m_turnLabel->setVisible(true);
+    } else {
+        qDebug() << "Warning: turnLabel not found in UI!";
+    }
 }
 
 GameWindow::~GameWindow()
@@ -185,16 +187,16 @@ void GameWindow::resizeUI()
     
     // Piles
     // Asc1: (425, 50, 125, 187)
-    if (ui->ascending1) ui->ascending1->setGeometry(scaleRect(275, 50, 150, 225));
+    if (ui->underAsc1) ui->underAsc1->setGeometry(scaleRect(275, 50, 150, 225));
     
     // Asc2: (750, 50, 125, 187)
-    if (ui->ascending2) ui->ascending2->setGeometry(scaleRect(600, 50, 150, 225));
+    if (ui->underAsc2) ui->underAsc2->setGeometry(scaleRect(600, 50, 150, 225));
     
     // Desc1: (425, 300, 125, 187)
-    if (ui->descending1) ui->descending1->setGeometry(scaleRect(375, 300, 150, 225));
+    if (ui->underDesc1) ui->underDesc1->setGeometry(scaleRect(375, 300, 150, 225));
     
     // Desc2: (750, 300, 150, 225)
-    if (ui->descending2) ui->descending2->setGeometry(scaleRect(700, 300, 150, 225));
+    if (ui->underDesc2) ui->underDesc2->setGeometry(scaleRect(700, 300, 150, 225));
 
     // Hand Cards
     // Base Y is 630, W 150, H 225
@@ -297,7 +299,9 @@ bool GameWindow::eventFilter(QObject *obj, QEvent *event)
     
     // Check if object is a pile
     bool isPile = (ui && (obj == ui->ascPile1 || obj == ui->ascPile2 || 
-                          obj == ui->descPile1 || obj == ui->descPile2));
+                          obj == ui->descPile1 || obj == ui->descPile2 ||
+                          obj == ui->underAsc1 || obj == ui->underAsc2 ||
+                          obj == ui->underDesc1 || obj == ui->underDesc2));
 
     if (isHandCard) {
         if (event->type() == QEvent::Enter) {
@@ -370,13 +374,19 @@ bool GameWindow::eventFilter(QObject *obj, QEvent *event)
                 
                 // Identify Pile Index
                 int pileIndex = -1;
-                if (pileLabel == ui->ascPile1) pileIndex = 0;
-                else if (pileLabel == ui->ascPile2) pileIndex = 1;
-                else if (pileLabel == ui->descPile1) pileIndex = 2;
-                else if (pileLabel == ui->descPile2) pileIndex = 3;
+                // Check both Top and Base piles
+                if (pileLabel == ui->ascPile1 || pileLabel == ui->underAsc1) pileIndex = 0;
+                else if (pileLabel == ui->ascPile2 || pileLabel == ui->underAsc2) pileIndex = 1;
+                else if (pileLabel == ui->descPile1 || pileLabel == ui->underDesc1) pileIndex = 2;
+                else if (pileLabel == ui->descPile2 || pileLabel == ui->underDesc2) pileIndex = 3;
 
                 // Get Card Value
                 int cardValue = m_selectedCardWidget->property("cardValue").toInt();
+                
+                qDebug() << "Attempting to place card. PileIndex:" << pileIndex 
+                         << " CardValue:" << cardValue 
+                         << " SelectedWidget:" << m_selectedCardWidget
+                         << " NetworkManager:" << m_networkManager;
                 
                 if (pileIndex != -1 && cardValue > 0 && m_networkManager) {
                     QJsonObject action;
@@ -388,64 +398,20 @@ bool GameWindow::eventFilter(QObject *obj, QEvent *event)
                     action["user_id"] = m_userId;
                     
                     m_networkManager->sendGameAction(action);
-                    
-                    // We can keep the local animation for responsiveness, 
-                    // or wait for server update. 
-                    // Let's keep it for "WOW" factor, assuming the move is valid.
-                    // If invalid, server sends error, but we might need to revert UI.
-                    // For now, simpler to just animate.
-                }
-
-                // Check if it was empty before (state change)
-                bool wasEmpty = pileLabel->pixmap().isNull();
-                
-                QPixmap pix(m_selectedCardImagePath);
-                if (!pix.isNull()) {
-                    pileLabel->setPixmap(pix);
-                    pileLabel->setScaledContents(true);
-                    
-                    // Hide original card
-                    m_selectedCardWidget->hide();
+                    qDebug() << "Sent play_card action to server";
                     
                     // Reset selection
                     m_selectedCardWidget = nullptr;
                     m_selectedCardImagePath.clear();
-                    
-                    int baseX = 0;
-                    int baseY = 0;
-                    if (pileLabel == ui->ascPile1) { baseX = 275; baseY = 50; }
-                    else if (pileLabel == ui->ascPile2) { baseX = 600; baseY = 50; }
-                    else if (pileLabel == ui->descPile1) { baseX = 375; baseY = 300; }
-                    else if (pileLabel == ui->descPile2) { baseX = 700; baseY = 300; }
-                    
-                    if (baseX != 0) {
-                        float designW = 1366.0f;
-                        float designH = 768.0f;
-                        float sX = width() / designW;
-                        float sY = height() / designH;
-                        
-                        int startX = static_cast<int>(baseX * sX); // Start at BASE (275)
-                        int startY = static_cast<int>(baseY * sY);
-                        
-                        int targetX = static_cast<int>((baseX + 75) * sX); // End at OFFSET (350)
-                        int targetY = static_cast<int>(baseY * sY);
-                        int targetW = static_cast<int>(150 * sX);
-                        int targetH = static_cast<int>(225 * sY);
-                        
-                        QPropertyAnimation* anim = new QPropertyAnimation(pileLabel, "geometry");
-                        anim->setDuration(300);
-                        // Force start from BASE so we see the slide
-                        anim->setStartValue(QRect(startX, startY, targetW, targetH)); 
-                        anim->setEndValue(QRect(targetX, targetY, targetW, targetH));
-                        anim->setEasingCurve(QEasingCurve::OutBack);
-                        anim->start(QAbstractAnimation::DeleteWhenStopped);
-                    }
+                } else {
+                    qDebug() << "Failed checks for placement.";
                 }
+            } else {
+                 qDebug() << "Selection invalid or empty during pile click.";
             }
             return true; 
         }
     }
-    
     return QWidget::eventFilter(obj, event);
 }
 
@@ -480,13 +446,13 @@ void GameWindow::loadGameImage()
     loadPixmap(ui->beerLabel, "Resources/BeerMeter1TableMC.png", "BeerMeter1TableMC.png");
 
     // Load Ascending Piles (1 and 2) -> 1.png
-    loadPixmap(ui->ascending1, "Resources/1.png", "1.png");
-    loadPixmap(ui->ascending2, "Resources/1.png", "1.png");
+    loadPixmap(ui->underAsc1, "Resources/1.png", "1.png");
+    loadPixmap(ui->underAsc2, "Resources/1.png", "1.png");
 
     // Load Descending Piles (1 and 2) -> 100.png
     // Note: UI has descending2 based on user info
-    loadPixmap(ui->descending1, "Resources/100.png", "100.png");
-    loadPixmap(ui->descending2, "Resources/100.png", "100.png"); 
+    loadPixmap(ui->underDesc1, "Resources/100.png", "100.png");
+    loadPixmap(ui->underDesc2, "Resources/100.png", "100.png"); 
     
     // Setup Placeable Piles (Clickable)
     auto setupPile = [this, &loadPixmap](QLabel* label) {
@@ -500,6 +466,12 @@ void GameWindow::loadGameImage()
     setupPile(ui->ascPile2);
     setupPile(ui->descPile1);
     setupPile(ui->descPile2);
+    
+    // Also setup base piles to capture clicks when top pile is hidden
+    setupPile(ui->underAsc1);
+    setupPile(ui->underAsc2);
+    setupPile(ui->underDesc1);
+    setupPile(ui->underDesc2);
 
     // Load Chat Button Default
     loadPixmap(ui->chatButton, "Resources/Button_Chat.png", "Button_Chat.png");
@@ -667,9 +639,7 @@ void GameWindow::handleGameState(const QJsonObject& state)
             } else {
                  m_turnLabel->setStyleSheet("font-size: 24px; font-weight: bold; color: #FFFFFF; background-color: rgba(0,0,0,0.5); border-radius: 10px; padding: 10px;");
             }
-            m_turnLabel->adjustSize();
-            // trigger re-center in resizeUI or just center here roughly
-             m_turnLabel->move((width() - m_turnLabel->width()) / 2, 20); // Top center
+            // Let the Designer layout handle position, just update text/style
         }
         
         qDebug() << "Current Turn:" << currentTurn;
@@ -681,23 +651,52 @@ void GameWindow::updatePiles(const QJsonArray& piles)
     // Protocol: [asc1, asc2, desc1, desc2]
     // Piles: {"top_card": "s", "count": i}
     
-    auto updatePileLabel = [this](QLabel* label, const QJsonObject& pileData) {
-        if (!label) return;
-        QString cardVal = pileData["top_card"].toString();
-        QString path = "Resources/" + cardVal + ".png";
+    auto updatePileLabel = [this](int index, QLabel* pileLabel, const QJsonObject& pileData, QLabel* baseLabel) {
+        if (!pileLabel || !baseLabel || index < 0 || index >= 4) return;
         
-        QPixmap pix(path);
-        if (!pix.isNull()) {
-            label->setPixmap(pix);
-            label->setScaledContents(true);
+        int count = pileData["count"].toInt();
+        QString cardVal = pileData["top_card"].toString();
+        
+        bool changed = (m_lastPileTops[index] != cardVal);
+        m_lastPileTops[index] = cardVal; // Update state
+
+        if (count <= 1) {
+            // Only 1 card (the base card), hide the played pile widget
+            pileLabel->setVisible(false);
+        } else {
+            // Show new card
+            QString path = "Resources/" + cardVal + ".png";
+            QPixmap pix(path);
+            if (!pix.isNull()) {
+                pileLabel->setPixmap(pix);
+                pileLabel->setScaledContents(true);
+                pileLabel->setVisible(true);
+                
+                // Animation Logic - ONLY if changed
+                if (changed) {
+                    // Base Geometry comes from baseLabel
+                    QRect baseRect = baseLabel->geometry();
+                    
+                    // Offset Geometry (Base X + 75)
+                    QRect targetRect = baseRect;
+                    targetRect.moveLeft(baseRect.x() + 75);
+                    
+                    QPropertyAnimation* anim = new QPropertyAnimation(pileLabel, "geometry");
+                    anim->setDuration(300);
+                    anim->setStartValue(baseRect);
+                    anim->setEndValue(targetRect);
+                    anim->setEasingCurve(QEasingCurve::OutBack);
+                    anim->start(QAbstractAnimation::DeleteWhenStopped);
+                }
+            }
         }
     };
 
     if (piles.size() >= 4) {
-        if (ui->ascending1) updatePileLabel(ui->ascending1, piles[0].toObject());
-        if (ui->ascending2) updatePileLabel(ui->ascending2, piles[1].toObject());
-        if (ui->descending1) updatePileLabel(ui->descending1, piles[2].toObject());
-        if (ui->descending2) updatePileLabel(ui->descending2, piles[3].toObject());
+        if (ui->ascPile1 && ui->underAsc1) updatePileLabel(0, ui->ascPile1, piles[0].toObject(), ui->underAsc1);
+        if (ui->ascPile2 && ui->underAsc2) updatePileLabel(1, ui->ascPile2, piles[1].toObject(), ui->underAsc2);
+        if (ui->descPile1 && ui->underDesc1) updatePileLabel(2, ui->descPile1, piles[2].toObject(), ui->underDesc1);
+        if (ui->descPile2 && ui->underDesc2) updatePileLabel(3, ui->descPile2, piles[3].toObject(), ui->underDesc2);
     }
 }
 

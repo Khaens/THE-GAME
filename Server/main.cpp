@@ -562,10 +562,35 @@ int main() {
                  }
 
                  if (type == "chat") {
-                     // Broadcast chat
-                     std::lock_guard<std::mutex> lock(ws_mutex);
-                     for(auto* c : lobby_connections[lid]) {
-                         if(c) c->send_text(data); 
+                     // Get lobby and game to find username
+                     std::lock_guard<std::mutex> lock(lobby_mutex);
+                     if (lobbies.find(lid) != lobbies.end()) {
+                         Lobby& lobby = *lobbies[lid];
+                         Game* game = lobby.GetGame();
+                         if (game) {
+                             int uid = body["user_id"].i();
+                             std::string username = "Unknown";
+                             
+                             const auto& players = game->GetPlayers();
+                             for(const auto& p : players) {
+                                 if (p->GetID() == uid) {
+                                     username = p->GetUsername();
+                                     break;
+                                 }
+                             }
+                             
+                             // Re-serialize with username
+                             crow::json::wvalue chat_val = body;
+                             chat_val["username"] = username;
+                             
+                             std::string mod_data = chat_val.dump();
+                             
+                             // Broadcast
+                             std::lock_guard<std::mutex> ws_lock(ws_mutex);
+                             for(auto* c : lobby_connections[lid]) {
+                                 if(c) c->send_text(mod_data); 
+                             }
+                         }
                      }
                      return;
                  }

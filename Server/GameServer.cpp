@@ -59,7 +59,8 @@ bool Game::IsGameOver(IPlayer& currentPlayer)
 		std::cout << "Game Over! " << currentPlayer.GetUsername() << " loses!\n";
 		return true;
 	}
-
+	// Add safety check before finishing turn logic to catch issues early?
+	// For now, Round.cpp fix should cover the crash.
 	return false;
 }
 
@@ -101,7 +102,12 @@ Info Game::PlaceCard(size_t playerIndex, int card, int pile)
 				m_players[m_ctx.HPplayerIndex]->SetHPFlag(false);
 			}
 		}
-		int diff = std::abs(std::stoi(chosenCard->GetCardValue()) - std::stoi(chosenPile->GetTopCard()->GetCardValue()));
+		int diff = 0;
+		try {
+			diff = std::abs(std::stoi(chosenCard->GetCardValue()) - std::stoi(chosenPile->GetTopCard()->GetCardValue()));
+		} catch(...) {
+			std::cout << "Error calculating diff in PlaceCard." << std::endl;
+		}
 		if (diff > 3) {
 			m_gameStats[GetCurrentPlayer().GetID()].perfectGame = false;
 		}
