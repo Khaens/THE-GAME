@@ -49,8 +49,7 @@ private:
     GameWindow* m_gameWindow;  // Now an overlay
 
     QPixmap m_titlePixmap;
-    QPixmap m_backgroundPixmap;     
-    QPixmap m_scaledBackground;
+    QPixmap m_backgroundPixmap;
 
     // Network
     std::shared_ptr<NetworkManager> m_networkManager;

@@ -215,9 +215,6 @@ void MainWindow::toggleFullScreen()
 
 void MainWindow::resizeEvent(QResizeEvent* event)
 {
-    // Rescale background when window resizes
-    // No longer needed as we draw to rect() directly
-
     // Rescale title image
     if (!m_titlePixmap.isNull() && ui->titleLabel) {
         QSize labelSize = ui->titleLabel->size();

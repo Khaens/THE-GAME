@@ -11,7 +11,6 @@
 #include <QEasingCurve>
 #include <QTimer>
 #include <QMouseEvent>
-#include <QMouseEvent>
 #include <QDebug>
 #include <QJsonObject>
 #include <QJsonArray>
@@ -208,7 +207,6 @@ void GameWindow::resizeUI()
     if (ui->hand5) ui->hand5->setGeometry(scaleRect(840, 630, 150, 225));
     if (ui->hand6) ui->hand6->setGeometry(scaleRect(940, 630, 150, 225));
     
-    // New Piles (User-defined in .ui)
     // New Piles (User-defined in .ui)
     // AscPile1: Base 275
     bool hasCard1 = !ui->ascPile1->pixmap().isNull();
@@ -542,8 +540,6 @@ void GameWindow::toggleChat()
     anim->setEasingCurve(QEasingCurve::OutCubic);
     anim->start(QAbstractAnimation::DeleteWhenStopped);
 }
-
-// ... (existing code)
 
 void GameWindow::initialize(NetworkManager* networkManager, int userId, const std::string& lobbyId)
 {

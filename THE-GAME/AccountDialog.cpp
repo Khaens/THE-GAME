@@ -452,8 +452,6 @@ void AccountDialog::setupUI()
 
 void AccountDialog::setupStyle()
 {
-    //setStyleSheet("background-color: rgba(0, 0, 0, 150);");
-
     m_contentContainer->setStyleSheet(R"(
         #accountContainer{
             background-color: transparent;

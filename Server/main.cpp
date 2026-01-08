@@ -55,7 +55,7 @@ void BroadcastGameState(const std::string& lobby_id) {
         state_base["players"][i]["username"] = players[i]->GetUsername();
         state_base["players"][i]["hand_count"] = players[i]->GetHand().size();
         state_base["players"][i]["is_finished"] = players[i]->IsFinished();
-        state_base["players"][i]["player_index"] = players[i]->GetPlayerIndex(); // or i
+        state_base["players"][i]["player_index"] = players[i]->GetPlayerIndex();
     }
 
     // Send personalized state to each connection

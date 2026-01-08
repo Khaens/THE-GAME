@@ -219,8 +219,6 @@ void SettingsDialog::setupUI()
 
 void SettingsDialog::setupStyle()
 {
-    //setStyleSheet("background-color: rgba(0, 0, 0, 150);");
-
     m_contentContainer->setStyleSheet(R"(
         #settingsContainer{
             background-color: transparent;

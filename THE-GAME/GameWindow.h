@@ -35,7 +35,6 @@ private:
     void loadGameImage();
 
     QPixmap m_backgroundPixmap;
-    QPixmap m_scaledBackground;
 
     void resizeUI();
 

@@ -31,8 +31,6 @@ LobbyRoomDialog::LobbyRoomDialog(int userId, const QString& lobbyId,
     setAttribute(Qt::WA_TranslucentBackground);
     setModal(true);
 
-    // NetworkManager is now passed in, no need to create new one
-
     setupUI();
     setupStyle();
     setupConnections();
@@ -326,7 +324,6 @@ void LobbyRoomDialog::startRefreshTimer()
         m_refreshTimer = new QTimer(this);
         connect(m_refreshTimer, &QTimer::timeout, this, &LobbyRoomDialog::refreshLobbyStatus);
     }
-    // Use longer interval since we have WebSocket for real-time updates
     m_refreshTimer->start(5000); // Refresh every 5 seconds (just as backup)
 }
 
@@ -355,7 +352,6 @@ void LobbyRoomDialog::stopCountdownTimer()
     }
 }
 
-// NEW: Update countdown every second
 void LobbyRoomDialog::updateCountdown()
 {
     m_countdownSeconds--;
@@ -400,7 +396,6 @@ void LobbyRoomDialog::updateCountdown()
     if (m_countdownSeconds <= 0) {
         stopCountdownTimer();
 
-        // Only auto-start if we have at least 1 players (Temporary)
         if (m_players.size() >= 2) {
              onStartGameClicked();
         }
@@ -446,7 +441,6 @@ void LobbyRoomDialog::onStartGameClicked()
         return;
     }
 
-    // TEMPORARY: Allow 1 player for testing
     if (m_players.size() < 2) {
         QMessageBox::warning(this, "Not Enough Players",
             "Need at least 2 players to start the game."); 
@@ -462,21 +456,7 @@ void LobbyRoomDialog::onStartGameClicked()
     }
 
     if (reply == QMessageBox::Yes) {
-        stopRefreshTimer();
         stopCountdownTimer();
-        
-        // Start game on server
-        // Try to start on server, but if it fails (e.g. not enough players), 
-        // proceed client-side anyway for testing purposes.
-        /* ORIGINAL:
-        if (m_networkManager->startGame(m_lobbyId.toStdString())) {
-            m_networkManager->disconnectFromLobby();
-            emit gameStarted(); // EMIT SIGNAL INSTEAD
-            accept(); // Close lobby dialog
-        } else {
-            QMessageBox::warning(this, "Error", "Failed to start game. Please try again.");
-        }
-        */
         
         if (m_networkManager->startGame(m_lobbyId.toStdString())) {
              m_networkManager->disconnectFromLobby();
@@ -598,7 +578,6 @@ void LobbyRoomDialog::handleLobbyUpdate(const LobbyStatus& status)
         stopRefreshTimer();
         stopCountdownTimer();
         m_networkManager->disconnectFromLobby();
-        // Removed intrusive popup as per user request
         emit gameStarted(m_lobbyId);
         accept(); 
     }

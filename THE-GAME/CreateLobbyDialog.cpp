@@ -213,8 +213,6 @@ void CreateLobbyDialog::onAccept()
         return;
     }
 
-    // Don't generate code here - the server will generate the lobby_id
-    // Just mark as created and accept
     m_lobbyCreated = true;
     accept();  // Close dialog immediately - LobbyRoomDialog will show the real code
 }

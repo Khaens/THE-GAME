@@ -21,38 +21,3 @@ int main(int argc, char* argv[]) {
 
 	return app.exec();
 }
-
-// End of THE-GAME/main.cpp
-/*
-
-/api/register
-/api/login
-
-/api/lobby/create
-/api/lobby/join
-/api/lobby/<id>/status
-/api/lobby/<id>/players
-/api/lobby/<id>/start
-/api/lobby/leave
-
-/ws/lobby - for lobby updates
-
-subscribe
-lobby_state
-player_join
-player_left
-game_started
-lobby_closed
-
-/ws/game - for game actions and state updates
-
-join_game
-chat
-game_action - action - play_card
-game_action - action - use_ability
-game_action - action - end_turn
-game_state
-game_over
-error
-
-*/

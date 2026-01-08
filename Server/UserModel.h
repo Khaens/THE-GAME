@@ -12,6 +12,9 @@ public:
     UserModel() = default;
     UserModel(int id, const std::string& user, const std::string& pass);
     UserModel(const UserModel& user);
+    UserModel(UserModel&& user) noexcept;  // Move constructor
+    UserModel& operator=(const UserModel& user);  // Copy assignment
+    UserModel& operator=(UserModel&& user) noexcept;  // Move assignment
     const int& GetId() const;
     const std::string& GetUsername() const;
     const std::string& GetPassword() const;
