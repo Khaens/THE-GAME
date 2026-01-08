@@ -60,7 +60,6 @@ public:
     bool startGame(const std::string& lobby_id);
     bool leaveLobby(int user_id, const std::string& lobby_id);
     
-    // Get list of players in lobby
     struct PlayerInfo {
         int user_id;
         std::string username;

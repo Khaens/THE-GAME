@@ -6,21 +6,15 @@
 #include <random>
 
 // --- LOBBY LOGIC (Global Scope) ---
-// Global storage using pointer to Lobby class
 static std::unordered_map<std::string, std::unique_ptr<Lobby>> lobbies;
 static std::mutex lobby_mutex;
 
-// Global map to store websocket connections per lobby (for game)
 static std::unordered_map<std::string, std::vector<crow::websocket::connection*>> lobby_connections;
 static std::mutex ws_mutex;
 
-// Global map to store websocket connections per lobby (for lobby updates)
 static std::unordered_map<std::string, std::vector<crow::websocket::connection*>> lobby_update_connections;
 static std::mutex lobby_ws_mutex;
 
-
-
-// Helper to broadcast game state to all players in a lobby
 void BroadcastGameState(const std::string& lobby_id) {
     std::lock_guard<std::mutex> lock(lobby_mutex);
     if (lobbies.find(lobby_id) == lobbies.end()) return;
@@ -34,7 +28,7 @@ void BroadcastGameState(const std::string& lobby_id) {
     state_base["lobby_id"] = lobby_id;
     
     // Piles
-    auto piles = game->GetPiles(); // std::array<Pile*, 4>
+    auto piles = game->GetPiles();
     for (size_t i = 0; i < piles.size(); ++i) {
         if (piles[i]) {
             state_base["piles"][i]["top_card"] = piles[i]->GetTopCard()->GetCardValue();
@@ -193,11 +187,10 @@ int main() {
 
         std::lock_guard<std::mutex> lock(lobby_mutex);
         
-        // Create new lobby using the Lobby class
         auto new_lobby = std::make_unique<Lobby>(db, name, max_players, password);
         
         try {
-            new_lobby->JoinLobby(user_id);  // Creator joins the lobby
+            new_lobby->JoinLobby(user_id);
         } catch (const std::exception& e) {
             crow::json::wvalue response;
             response["success"] = false;
@@ -237,7 +230,6 @@ int main() {
 
         Lobby& lobby = *lobbies[lobby_id];
         
-        // Check if already in lobby
         if (lobby.IsUserInLobby(user_id)) {
             crow::json::wvalue response;
             response["success"] = true;
@@ -256,7 +248,6 @@ int main() {
             return crow::response(409, response);
         }
         
-        // Notify all connected clients in this lobby about the new player
         std::lock_guard<std::mutex> ws_lock(lobby_ws_mutex);
         crow::json::wvalue update;
         update["type"] = "player_joined";
@@ -265,13 +256,12 @@ int main() {
         update["current_players"] = lobby.GetCurrentPlayers();
         update["max_players"] = lobby.GetMaxPlayers();
         
-        // Get username from database
         std::string username = "Player_" + std::to_string(user_id);
         try {
             UserModel user = db->GetUserById(user_id);
             username = user.GetUsername();
         } catch (...) {
-            // Use default username if we can't get it
+			username = "Player_" + std::to_string(user_id);
         }
         update["username"] = username;
         
@@ -309,7 +299,6 @@ int main() {
         return crow::response(200, response);
     });
 
-    // Get list of players in a lobby with their usernames
     CROW_ROUTE(app, "/api/lobby/<string>/players")
         .methods(crow::HTTPMethod::GET)
         ([&db](const std::string& lobby_id) {
@@ -324,7 +313,6 @@ int main() {
         crow::json::wvalue response;
         response["lobby_id"] = lobby.GetId();
         
-        // Build players array with usernames
         int player_index = 0;
         for (const auto& user : lobby.GetUsers()) {
             response["players"][player_index]["user_id"] = user.GetId();
@@ -347,7 +335,7 @@ int main() {
         Lobby& lobby = *lobbies[lobby_id];
         
         try {
-            lobby.Start();  // This creates the Game and starts it
+            lobby.Start();
             std::cout << "Lobby " << lobby_id << " started!" << std::endl;
         } catch (const std::exception& e) {
             crow::json::wvalue response;
@@ -356,7 +344,6 @@ int main() {
             return crow::response(400, response);
         }
         
-        // Notify all connected clients that game has started
         std::lock_guard<std::mutex> ws_lock(lobby_ws_mutex);
         crow::json::wvalue update;
         update["type"] = "game_started";
@@ -373,7 +360,6 @@ int main() {
         return crow::response(200, response);
     });
 
-    // Leave a lobby (or delete it if host leaves)
     CROW_ROUTE(app, "/api/lobby/leave")
         .methods(crow::HTTPMethod::POST)
         ([&db](const crow::request& req) {
@@ -395,7 +381,6 @@ int main() {
 
         Lobby& lobby = *lobbies[lobby_id];
 
-        // Check if user is in the lobby
         if (!lobby.IsUserInLobby(user_id)) {
             crow::json::wvalue response;
             response["success"] = false;
@@ -403,9 +388,7 @@ int main() {
             return crow::response(400, response);
         }
 
-        // Check if user is the host
         if (lobby.IsOwner(user_id)) {
-            // Host is leaving - delete the lobby and notify everyone
             std::lock_guard<std::mutex> ws_lock(lobby_ws_mutex);
             
             crow::json::wvalue update;
@@ -419,8 +402,7 @@ int main() {
                     conn->send_text(update_msg);
                 }
             }
-            
-            // Clean up connections and lobby
+          
             lobby_update_connections[lobby_id].clear();
             lobbies.erase(lobby_id);
             
@@ -432,13 +414,10 @@ int main() {
             return crow::response(200, response);
         }
         else {
-            // Regular player leaving - just remove them
             lobby.LeaveLobby(user_id);
             
-            // Notify others
             std::lock_guard<std::mutex> ws_lock(lobby_ws_mutex);
             
-            // Get username for notification
             std::string username = "Player_" + std::to_string(user_id);
             try {
                 UserModel user = db->GetUserById(user_id);
@@ -472,14 +451,12 @@ int main() {
 
 	// ----------------------------- WEBSOCKET ENDPOINTS --------------------------
 
-    // WebSocket for lobby updates (player joins/leaves)
     CROW_WEBSOCKET_ROUTE(app, "/ws/lobby")
         .onopen([](crow::websocket::connection& conn) {
             std::cout << "New Lobby WebSocket connection" << std::endl;
         })
         .onclose([](crow::websocket::connection& conn, const std::string& reason, uint16_t) {
             std::cout << "Lobby WebSocket closed" << std::endl;
-            // Remove connection from all lobbies
             std::lock_guard<std::mutex> lock(lobby_ws_mutex);
             for (auto& [lobby_id, connections] : lobby_update_connections) {
                 connections.erase(
@@ -490,7 +467,6 @@ int main() {
             }
         })
         .onmessage([](crow::websocket::connection& conn, const std::string& data, bool is_binary) {
-             // Expecting JSON: { "lobby_id": "...", "action": "subscribe" }
              auto body = crow::json::load(data);
              if(!body) return;
 
@@ -499,7 +475,6 @@ int main() {
                  std::string action = body["action"].s();
                  
                  if (action == "subscribe") {
-                     // Register connection to lobby if not already
                      std::lock_guard<std::mutex> lock(lobby_ws_mutex);
                      bool found = false;
                      for(auto* c : lobby_update_connections[lid]) {
@@ -509,7 +484,6 @@ int main() {
                          lobby_update_connections[lid].push_back(&conn);
                          std::cout << "Client subscribed to lobby " << lid << std::endl;
                          
-                         // Send current lobby state
                          std::lock_guard<std::mutex> lobby_lock(lobby_mutex);
                          if (lobbies.find(lid) != lobbies.end()) {
                              const Lobby& lobby = *lobbies[lid];
@@ -551,7 +525,6 @@ int main() {
                  std::string lid = body["lobby_id"].s();
                  std::string type = body.has("type") ? (std::string)body["type"].s() : "";
                  
-                 // Register connection
                  {
                      std::lock_guard<std::mutex> lock(ws_mutex);
                      bool found = false;
@@ -562,7 +535,6 @@ int main() {
                  }
 
                  if (type == "chat") {
-                     // Get lobby and game to find username
                      std::lock_guard<std::mutex> lock(lobby_mutex);
                      if (lobbies.find(lid) != lobbies.end()) {
                          Lobby& lobby = *lobbies[lid];
@@ -579,13 +551,11 @@ int main() {
                                  }
                              }
                              
-                             // Re-serialize with username
                              crow::json::wvalue chat_val = body;
                              chat_val["username"] = username;
                              
                              std::string mod_data = chat_val.dump();
                              
-                             // Broadcast
                              std::lock_guard<std::mutex> ws_lock(ws_mutex);
                              for(auto* c : lobby_connections[lid]) {
                                  if(c) c->send_text(mod_data); 
@@ -596,7 +566,6 @@ int main() {
                  }
                  
                  if (type == "game_action") {
-                     // Handle game logic
                      std::string action = body["action"].s();
                      int user_id = body["user_id"].i();
                      
@@ -606,7 +575,6 @@ int main() {
                      Game* game = lobby.GetGame();
                      if (!game) return;
                      
-                     // Find player index
                      int player_idx = -1;
                      const auto& players = game->GetPlayers();
                      for(size_t i=0; i<players.size(); ++i) {
@@ -616,9 +584,9 @@ int main() {
                          }
                      }
                      
-                     if (player_idx == -1) return; // Player not found
+                     if (player_idx == -1) return; 
                      
-                     Info result = Info::TURN_ENDED; // Default safe value
+                     Info result = Info::TURN_ENDED; 
                      bool state_changed = false;
 
                      if (action == "play_card") {
@@ -641,7 +609,6 @@ int main() {
                      }
 
                      if (result == Info::GAME_WON || result == Info::GAME_LOST) {
-                         // Game End
                          crow::json::wvalue over_msg;
                          over_msg["type"] = "game_over";
                          over_msg["lobby_id"] = lid;
@@ -649,7 +616,6 @@ int main() {
                              over_msg["winner_id"] = user_id;
                              over_msg["result"] = "won";
                          } else {
-                             // Assuming GAME_LOST means valid loss
                              over_msg["result"] = "lost"; 
                          }
                          
@@ -660,7 +626,6 @@ int main() {
                          }
                      }
                      
-                     // If error/invalid move, maybe notify user?
                      if (result == Info::CARD_NOT_PLAYABLE || result == Info::NOT_CURRENT_PLAYER_TURN) {
                          crow::json::wvalue err;
                          err["type"] = "error";
@@ -670,8 +635,6 @@ int main() {
                      }
                  }
                  
-                 // If we had game action or join, broadcast state
-                 // Note: lobby_mutex is NOT held here, so it's safe to call BroadcastGameState
                  if (type == "game_action" || type == "join_game") {
                      BroadcastGameState(lid);
                  }

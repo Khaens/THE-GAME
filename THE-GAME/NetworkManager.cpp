@@ -184,7 +184,6 @@ void NetworkManager::connectToGame(const std::string& lobby_id, int user_id) {
     m_gameUserId = user_id;
 
     QString urlStr = QString::fromStdString(baseUrl);
-    // Simple conversion from http to ws
     if (urlStr.startsWith("http")) {
         urlStr.replace("http", "ws");
     } else {
@@ -234,7 +233,6 @@ void NetworkManager::onDisconnected() {
 
 void NetworkManager::connectToLobby(const std::string& lobby_id) {
     QString urlStr = QString::fromStdString(baseUrl);
-    // Simple conversion from http to ws
     if (urlStr.startsWith("http")) {
         urlStr.replace("http", "ws");
     } else {
@@ -244,7 +242,6 @@ void NetworkManager::connectToLobby(const std::string& lobby_id) {
     
     qDebug() << "Connecting to Lobby WebSocket: " << urlStr;
     
-    // Store lobby_id for subscription after connection
     m_currentLobbyId = lobby_id;
     
     m_lobbyWebSocket.open(QUrl(urlStr));
@@ -259,7 +256,6 @@ void NetworkManager::disconnectFromLobby() {
 void NetworkManager::onLobbyConnected() {
     qDebug() << "Lobby WebSocket Connected!";
     
-    // Subscribe to lobby updates
     if (!m_currentLobbyId.empty()) {
         QJsonObject subscribeMsg;
         subscribeMsg["action"] = "subscribe";
