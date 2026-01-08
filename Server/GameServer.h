@@ -44,6 +44,7 @@ private:
 	Deck m_wholeDeck;
 	TurnContext m_ctx;
 	Database& m_database;
+	std::unordered_map<int, GameStatistics> m_gameStats;
 
 public:
 	Game(std::vector<UserModel>& users, Database& db);
@@ -52,7 +53,6 @@ public:
 	void StartGame();
 	void NextPlayer();
 
-	std::unordered_map<int, GameStatistics> m_gameStats;
 
 	Info PlaceCard(size_t playerIndex, int card, int chosenPile);
 	Info UseAbility(size_t playerIndex);
