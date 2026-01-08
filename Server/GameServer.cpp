@@ -34,6 +34,13 @@ Game::Game(std::vector<UserModel>& users, Database& db) : m_numberOfPlayers{ use
 	}
 }
 
+Game::~Game()
+{
+	for (size_t i = 0; i < PILES_AMOUNT; i++) {
+		delete m_piles[i];
+	}
+}
+
 size_t Game::WhoStartsFirst()
 {
 	std::random_device rd;

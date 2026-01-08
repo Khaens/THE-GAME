@@ -48,11 +48,12 @@ private:
 
 public:
 	Game(std::vector<UserModel>& users, Database& db);
+	~Game();
+
 	size_t WhoStartsFirst();
 	bool IsGameOver(IPlayer& currentPlayer);
 	void StartGame();
 	void NextPlayer();
-
 
 	Info PlaceCard(size_t playerIndex, int card, int chosenPile);
 	Info UseAbility(size_t playerIndex);
@@ -70,5 +71,4 @@ public:
 	Deck& GetDeck();
 
 	void ShowCtx();
-
 };
