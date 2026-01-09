@@ -8,4 +8,4 @@
 // For local testing, use "http://localhost:18080"
 // ============================================
 
-#define SERVER_URL "http://localhost:18080"
+#define SERVER_URL "http://10.216.100.241:18080"

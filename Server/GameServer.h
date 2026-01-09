@@ -61,6 +61,7 @@ public:
 
 	void UnlockAchievements();
 	void CheckAchievements(IPlayer& currentPlayer);
+	void UpdateGameStats(bool won);
 
 	Card* DrawCard();
 

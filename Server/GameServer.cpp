@@ -127,6 +127,7 @@ Info Game::PlaceCard(size_t playerIndex, int card, int pile)
 		m_players[playerIndex]->RemoveCardFromHand(chosenCard);
 
 		if (IsGameOver(GetCurrentPlayer())) {
+			UpdateGameStats(false);
 			return Info::GAME_LOST;
 		}
 		return Info::CARD_PLACED;
@@ -164,9 +165,11 @@ Info Game::EndTurn(size_t playerIndex)
 	Round::UpdateContext(*this, m_ctx, GetCurrentPlayer());
 	m_ctx.placedCardsThisTurn = 0;
 	if (IsGameOver(GetCurrentPlayer())) {
+		UpdateGameStats(false);
 		return Info::GAME_LOST;
 	}
 	if (Round::IsGameWon(*this, GetCurrentPlayer())) {
+		UpdateGameStats(true);
 		return Info::GAME_WON;
 	}
 	return Info::TURN_ENDED;
@@ -265,7 +268,31 @@ void Game::CheckAchievements(IPlayer& currentPlayer)
 	if (currentPlayer.GetPlayerIndex() == m_ctx.PeasantPlayerIndex) {
 		stats.usedPeasant = true;
 	}
+}
 
+void Game::UpdateGameStats(bool won)
+{
+	for (const auto& player : m_players) {
+		int userId = player->GetID();
+		try {
+			StatisticsModel stats = m_database.GetStatisticsByUserId(userId);
+			
+			stats.SetGamesPlayed(stats.GetGamesPlayed() + 1);
+			if (won) stats.SetGamesWon(stats.GetGamesWon() + 1);
+			if (stats.GetGamesPlayed() > 0) 
+				stats.SetWinRate((float)stats.GetGamesWon() / stats.GetGamesPlayed());
+
+			m_database.UpdateStatistics(stats);
+			std::cout << "Updated statistics for user " << player->GetUsername() 
+				<< ": Games Played=" << stats.GetGamesPlayed() 
+				<< ", Games Won=" << stats.GetGamesWon() 
+				<< ", Win Rate=" << stats.GetWinRate() << std::endl;
+
+		}
+		catch (const std::exception& e) {
+			std::cerr << "Error updating statistics for user " << userId << ": " << e.what() << std::endl;
+		}
+	}
 }
 
 Info Game::UseAbility(size_t playerIndex) // Sothsayer Ability logic to be implemented
