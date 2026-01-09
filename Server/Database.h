@@ -12,7 +12,8 @@ inline auto initStorage(const std::string& path) {
         make_table("users",
             make_column("id", &UserModel::GetId, &UserModel::SetId, primary_key().autoincrement()),
             make_column("username", &UserModel::GetUsername, &UserModel::SetUsername, unique()),
-            make_column("password", &UserModel::GetPassword, &UserModel::SetPassword)),
+            make_column("password", &UserModel::GetPassword, &UserModel::SetPassword),
+            make_column("profile_image", &UserModel::GetProfileImage, &UserModel::SetProfileImage)),
         make_table("achievements",
             make_column("id", &AchievementsModel::GetId, &AchievementsModel::SetId, primary_key().autoincrement()),
             make_column("user_id", &AchievementsModel::GetUserId, &AchievementsModel::SetUserId),
@@ -38,7 +39,7 @@ inline auto initStorage(const std::string& path) {
             make_column("games_played", &StatisticsModel::GetGamesPlayed, &StatisticsModel::SetGamesPlayed),
             make_column("win_rate", &StatisticsModel::GetWinRate, &StatisticsModel::SetWinRate),
             foreign_key(&StatisticsModel::GetUserId).references(&UserModel::GetId).on_delete.cascade())
-    );
+        );
 }
 
 
@@ -63,6 +64,10 @@ public:
     void UpdateUser(const UserModel& user);
     void DeleteUser(int id);
     bool UserExists(const std::string& username);
+    bool UpdateProfileImage(int userId, std::vector<char> imageBuffer);
+    std::vector<char> GetProfileImage(int userId);
+    bool HasProfileImage(int userId);
+    void DeleteProfileImage(int userId);
 
     int InsertStatistics(const StatisticsModel& stats);
     bool StatisticsExistForUser(int userId);

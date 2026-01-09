@@ -200,6 +200,55 @@ bool Database::UserExists(const std::string& username) {
     }
 }
 
+bool Database::UpdateProfileImage(int userId, std::vector<char> imageBuffer) {
+    try {
+        auto user = storage.get_pointer<UserModel>(userId);
+        if (!user) return false;
+
+        user->SetProfileImageMove(std::move(imageBuffer));
+        storage.update(*user);
+        return true;
+    }
+    catch (const std::exception& e) {
+        std::cerr << "Eroare: " << e.what() << std::endl;
+        return false;
+    }   
+}
+
+std::vector<char> Database::GetProfileImage(int userId) {
+    try {
+        UserModel user = storage.get<UserModel>(userId);
+        return user.GetProfileImage();
+    }
+    catch (std::exception& e) {
+        std::cerr << "Error getting profile image: " << e.what() << std::endl;
+        return std::vector<char>();
+    }
+}
+
+bool Database::HasProfileImage(int userId) {
+    try {
+        UserModel user = storage.get<UserModel>(userId);
+        return !user.GetProfileImage().empty();
+    }
+    catch (std::exception& e) {
+        std::cerr << "Error checking profile image: " << e.what() << std::endl;
+        return false;
+    }
+}
+
+void Database::DeleteProfileImage(int userId) {
+    try {
+        UserModel user = storage.get<UserModel>(userId);
+        user.SetProfileImage(std::vector<char>());
+        UpdateUser(user);
+        std::cout << "Profile image deleted for user ID: " << userId << std::endl;
+    }
+    catch (std::exception& e) {
+        std::cerr << "Error deleting profile image: " << e.what() << std::endl;
+    }
+}
+
 int Database::InsertStatistics(const StatisticsModel& stats)
 {
     try {
