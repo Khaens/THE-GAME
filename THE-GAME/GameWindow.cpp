@@ -228,6 +228,12 @@ void GameWindow::resizeUI()
     int off4 = hasCard4 ? 75 : 0;
     if (ui->descPile2) ui->descPile2->setGeometry(scaleRect(700 + off4, 300, 150, 225));
 
+    // Pile Light Indicators (to the left of each pile)
+    if (ui->asc1Light) ui->asc1Light->setGeometry(scaleRect(255, 50, 10, 225));
+    if (ui->asc2Light) ui->asc2Light->setGeometry(scaleRect(580, 50, 10, 225));
+    if (ui->desc1Light) ui->desc1Light->setGeometry(scaleRect(355, 300, 10, 225));
+    if (ui->desc2Light) ui->desc2Light->setGeometry(scaleRect(680, 300, 10, 225));
+
     // Chat Widget: (140, 768, 300, 200)
     // Design: W=300, H=200.
     // Logic: 
@@ -330,6 +336,11 @@ bool GameWindow::eventFilter(QObject *obj, QEvent *event)
         else if (event->type() == QEvent::Leave) {
             QWidget* card = static_cast<QWidget*>(obj);
             
+            // Don't animate down if this card is currently selected
+            if (card == m_selectedCardWidget) {
+                return true;
+            }
+            
             // Animate back down
             float scaleY = static_cast<float>(height()) / 768.0f;
             int baseY = static_cast<int>(630 * scaleY);
@@ -345,20 +356,32 @@ bool GameWindow::eventFilter(QObject *obj, QEvent *event)
             return true;
         }
         else if (event->type() == QEvent::MouseButtonPress) {
-            // Select Card
-            m_selectedCardWidget = static_cast<QWidget*>(obj);
+            QWidget* clickedCard = static_cast<QWidget*>(obj);
+            int cardValue = clickedCard->property("cardValue").toInt();
             
-            // Get Card Value to determine image path
-            int cardValue = m_selectedCardWidget->property("cardValue").toInt();
-            if (cardValue > 0) {
-                 m_selectedCardImagePath = "Resources/" + QString::number(cardValue) + ".png";
-                 qDebug() << "Selected card: " << m_selectedCardImagePath;
+            if (cardValue <= 0) {
+                qDebug() << "Clicked card has invalid value";
+                return true;
+            }
+            
+            // Toggle selection: if clicking the same card, deselect it
+            if (m_selectedCardWidget == clickedCard) {
+                clearCardSelection();
+                qDebug() << "Deselected card";
             } else {
-                 m_selectedCardImagePath.clear();
-                 qDebug() << "Selected card invalid value";
-                 // Optional: Deselect if invalid
-                 m_selectedCardWidget = nullptr;
-                 return true;
+                // Clear previous selection first
+                clearCardSelection();
+                
+                // Select new card
+                m_selectedCardWidget = clickedCard;
+                m_selectedCardImagePath = "Resources/" + QString::number(cardValue) + ".png";
+                
+                // Card stays elevated (Leave event won't animate it down)
+                
+                qDebug() << "Selected card:" << cardValue;
+                
+                // Update pile light indicators based on selected card
+                updatePileClickability();
             }
             
             return true;
@@ -366,46 +389,60 @@ bool GameWindow::eventFilter(QObject *obj, QEvent *event)
     }
     else if (isPile) {
         if (event->type() == QEvent::MouseButtonPress) {
-            if (m_selectedCardWidget && !m_selectedCardImagePath.isEmpty()) {
-                // Place Card
-                QLabel* pileLabel = static_cast<QLabel*>(obj);
-                
-                // Identify Pile Index
-                int pileIndex = -1;
-                // Check both Top and Base piles
-                if (pileLabel == ui->ascPile1 || pileLabel == ui->underAsc1) pileIndex = 0;
-                else if (pileLabel == ui->ascPile2 || pileLabel == ui->underAsc2) pileIndex = 1;
-                else if (pileLabel == ui->descPile1 || pileLabel == ui->underDesc1) pileIndex = 2;
-                else if (pileLabel == ui->descPile2 || pileLabel == ui->underDesc2) pileIndex = 3;
+            // Block if not player's turn
+            if (!m_isMyTurn) {
+                qDebug() << "Cannot place card - not your turn";
+                return true;
+            }
+            
+            // Block if no card selected
+            if (!m_selectedCardWidget || m_selectedCardImagePath.isEmpty()) {
+                qDebug() << "No card selected";
+                return true;
+            }
+            
+            // Place Card
+            QLabel* pileLabel = static_cast<QLabel*>(obj);
+            
+            // Identify Pile Index
+            int pileIndex = -1;
+            // Check both Top and Base piles
+            if (pileLabel == ui->ascPile1 || pileLabel == ui->underAsc1) pileIndex = 0;
+            else if (pileLabel == ui->ascPile2 || pileLabel == ui->underAsc2) pileIndex = 1;
+            else if (pileLabel == ui->descPile1 || pileLabel == ui->underDesc1) pileIndex = 2;
+            else if (pileLabel == ui->descPile2 || pileLabel == ui->underDesc2) pileIndex = 3;
 
-                // Get Card Value
-                int cardValue = m_selectedCardWidget->property("cardValue").toInt();
+            // Get Card Value
+            int cardValue = m_selectedCardWidget->property("cardValue").toInt();
+            
+            // Validate card placement
+            if (pileIndex == -1 || cardValue <= 0) {
+                qDebug() << "Invalid pile index or card value";
+                return true;
+            }
+            
+            if (!canPlaceCardOnPile(cardValue, pileIndex)) {
+                qDebug() << "Illegal move - card" << cardValue << "cannot be placed on pile" << pileIndex;
+                return true;
+            }
+            
+            qDebug() << "Placing card. PileIndex:" << pileIndex 
+                     << " CardValue:" << cardValue;
+            
+            if (m_networkManager) {
+                QJsonObject action;
+                action["type"] = "game_action";
+                action["action"] = "play_card";
+                action["card_value"] = cardValue;
+                action["pile_index"] = pileIndex + 1; // Server expects 1-based index (1-4)
+                action["lobby_id"] = QString::fromStdString(m_lobbyId);
+                action["user_id"] = m_userId;
                 
-                qDebug() << "Attempting to place card. PileIndex:" << pileIndex 
-                         << " CardValue:" << cardValue 
-                         << " SelectedWidget:" << m_selectedCardWidget
-                         << " NetworkManager:" << m_networkManager;
+                m_networkManager->sendGameAction(action);
+                qDebug() << "Sent play_card action to server";
                 
-                if (pileIndex != -1 && cardValue > 0 && m_networkManager) {
-                    QJsonObject action;
-                    action["type"] = "game_action";
-                    action["action"] = "play_card";
-                    action["card_value"] = cardValue;
-                    action["pile_index"] = pileIndex + 1; // Server expects 1-based index (1-4)
-                    action["lobby_id"] = QString::fromStdString(m_lobbyId);
-                    action["user_id"] = m_userId;
-                    
-                    m_networkManager->sendGameAction(action);
-                    qDebug() << "Sent play_card action to server";
-                    
-                    // Reset selection
-                    m_selectedCardWidget = nullptr;
-                    m_selectedCardImagePath.clear();
-                } else {
-                    qDebug() << "Failed checks for placement.";
-                }
-            } else {
-                 qDebug() << "Selection invalid or empty during pile click.";
+                // Reset selection
+                clearCardSelection();
             }
             return true; 
         }
@@ -622,23 +659,35 @@ void GameWindow::handleGameState(const QJsonObject& state)
     if (state.contains("current_turn_username")) {
         QString currentTurn = state["current_turn_username"].toString();
         
+        // Track if it's this player's turn
+        bool wasMyTurn = m_isMyTurn;
+        m_isMyTurn = (state["current_turn_player_id"].toInt() == m_userId);
+        
         if (m_turnLabel) {
-            QString turnText = (state["current_turn_player_id"].toInt() == m_userId) 
+            QString turnText = m_isMyTurn 
                 ? "YOUR TURN" 
                 : ("Current Turn: " + currentTurn);
                 
             m_turnLabel->setText(turnText);
             
             // Style update based on turn
-            if (turnText == "YOUR TURN") {
+            if (m_isMyTurn) {
                  m_turnLabel->setStyleSheet("font-size: 24px; font-weight: bold; color: #00FF00; background-color: rgba(0,0,0,0.5); border-radius: 10px; padding: 10px;");
             } else {
                  m_turnLabel->setStyleSheet("font-size: 24px; font-weight: bold; color: #FFFFFF; background-color: rgba(0,0,0,0.5); border-radius: 10px; padding: 10px;");
             }
-            // Let the Designer layout handle position, just update text/style
         }
         
-        qDebug() << "Current Turn:" << currentTurn;
+        // Update pile clickability when turn changes
+        if (wasMyTurn != m_isMyTurn) {
+            updatePileClickability();
+            // Clear selection when turn ends
+            if (!m_isMyTurn) {
+                clearCardSelection();
+            }
+        }
+        
+        qDebug() << "Current Turn:" << currentTurn << "(My turn:" << m_isMyTurn << ")";
     }
 }
 
@@ -655,6 +704,13 @@ void GameWindow::updatePiles(const QJsonArray& piles)
         
         bool changed = (m_lastPileTops[index] != cardVal);
         m_lastPileTops[index] = cardVal; // Update state
+        
+        // Store pile top value for client-side validation
+        bool ok;
+        int topValue = cardVal.toInt(&ok);
+        if (ok) {
+            m_pileTopValues[index] = topValue;
+        }
 
         if (count <= 1) {
             // Only 1 card (the base card), hide the played pile widget
@@ -764,4 +820,103 @@ void GameWindow::sendMessage()
     }
 
     ui->chatInput->clear();
+}
+
+bool GameWindow::canPlaceCardOnPile(int cardValue, int pileIndex) const
+{
+    if (pileIndex < 0 || pileIndex >= 4) return false;
+    
+    int topValue = m_pileTopValues[pileIndex];
+    
+    // Piles 0 and 1 are ascending (start at 1, go up OR exactly -10)
+    // Piles 2 and 3 are descending (start at 100, go down OR exactly +10)
+    bool isAscending = (pileIndex < 2);
+    
+    if (isAscending) {
+        // Ascending: card must be higher OR exactly 10 less
+        return (cardValue > topValue) || (cardValue == topValue - 10);
+    } else {
+        // Descending: card must be lower OR exactly 10 more
+        return (cardValue < topValue) || (cardValue == topValue + 10);
+    }
+}
+
+void GameWindow::updatePileClickability()
+{
+    // Get light labels for each pile
+    QVector<QLabel*> lightLabels = { ui->asc1Light, ui->asc2Light, ui->desc1Light, ui->desc2Light };
+    QVector<QLabel*> pileLabels = { ui->ascPile1, ui->ascPile2, ui->descPile1, ui->descPile2 };
+    QVector<QLabel*> basePileLabels = { ui->underAsc1, ui->underAsc2, ui->underDesc1, ui->underDesc2 };
+    
+    int selectedCardValue = 0;
+    if (m_selectedCardWidget) {
+        selectedCardValue = m_selectedCardWidget->property("cardValue").toInt();
+    }
+    
+    for (int i = 0; i < 4; ++i) {
+        if (!lightLabels[i]) continue;
+        
+        QString lightColor = "";
+        
+        if (!m_isMyTurn || selectedCardValue <= 0) {
+            // No card selected or not player's turn - hide lights (transparent)
+            lightColor = "background-color: transparent;";
+            if (pileLabels[i]) pileLabels[i]->setCursor(m_isMyTurn ? Qt::PointingHandCursor : Qt::ForbiddenCursor);
+            if (basePileLabels[i]) basePileLabels[i]->setCursor(m_isMyTurn ? Qt::PointingHandCursor : Qt::ForbiddenCursor);
+        } else {
+            int topValue = m_pileTopValues[i];
+            bool isAscending = (i < 2);
+            
+            // Check for ±10 special move
+            bool isTenMove = false;
+            if (isAscending) {
+                isTenMove = (selectedCardValue == topValue - 10);
+            } else {
+                isTenMove = (selectedCardValue == topValue + 10);
+            }
+            
+            bool canPlace = canPlaceCardOnPile(selectedCardValue, i);
+            
+            if (isTenMove) {
+                // Purple for ±10 special move
+                lightColor = "background-color: #9B30FF; border-radius: 3px;";
+                if (pileLabels[i]) pileLabels[i]->setCursor(Qt::PointingHandCursor);
+                if (basePileLabels[i]) basePileLabels[i]->setCursor(Qt::PointingHandCursor);
+            } else if (canPlace) {
+                // Green for valid regular move
+                lightColor = "background-color: #00FF00; border-radius: 3px;";
+                if (pileLabels[i]) pileLabels[i]->setCursor(Qt::PointingHandCursor);
+                if (basePileLabels[i]) basePileLabels[i]->setCursor(Qt::PointingHandCursor);
+            } else {
+                // Red for invalid move
+                lightColor = "background-color: #FF0000; border-radius: 3px;";
+                if (pileLabels[i]) pileLabels[i]->setCursor(Qt::ForbiddenCursor);
+                if (basePileLabels[i]) basePileLabels[i]->setCursor(Qt::ForbiddenCursor);
+            }
+        }
+        
+        lightLabels[i]->setStyleSheet(lightColor);
+    }
+}
+
+void GameWindow::clearCardSelection()
+{
+    if (m_selectedCardWidget) {
+        // Animate previously selected card back down
+        float scaleY = static_cast<float>(height()) / 768.0f;
+        int baseY = static_cast<int>(630 * scaleY);
+        
+        QRect currentGeom = m_selectedCardWidget->geometry();
+        
+        QPropertyAnimation* anim = new QPropertyAnimation(m_selectedCardWidget, "geometry");
+        anim->setDuration(100);
+        anim->setStartValue(currentGeom);
+        anim->setEndValue(QRect(currentGeom.x(), baseY, currentGeom.width(), currentGeom.height()));
+        anim->start(QAbstractAnimation::DeleteWhenStopped);
+    }
+    m_selectedCardWidget = nullptr;
+    m_selectedCardImagePath.clear();
+    
+    // Reset pile light indicators
+    updatePileClickability();
 }

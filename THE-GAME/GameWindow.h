@@ -62,4 +62,13 @@ private:
 
     QLabel* m_turnLabel = nullptr; // New label for turn indication
     QString m_lastPileTops[4]; // Track pile state to avoid redundant animations
+
+    // Turn and Pile State for Client-Side Validation
+    bool m_isMyTurn = false;
+    int m_pileTopValues[4] = {1, 1, 100, 100}; // Current top card values [asc1, asc2, desc1, desc2]
+
+    // Card Placement Validation
+    bool canPlaceCardOnPile(int cardValue, int pileIndex) const;
+    void updatePileClickability();
+    void clearCardSelection();
 };

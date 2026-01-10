@@ -499,6 +499,82 @@
      <string/>
     </property>
    </widget>
+   <widget class="QLabel" name="asc1Light">
+    <property name="geometry">
+     <rect>
+      <x>255</x>
+      <y>50</y>
+      <width>10</width>
+      <height>225</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>5</width>
+      <height>187</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="asc2Light">
+    <property name="geometry">
+     <rect>
+      <x>580</x>
+      <y>50</y>
+      <width>10</width>
+      <height>225</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>5</width>
+      <height>187</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="desc1Light">
+    <property name="geometry">
+     <rect>
+      <x>355</x>
+      <y>300</y>
+      <width>10</width>
+      <height>225</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>5</width>
+      <height>187</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="desc2Light">
+    <property name="geometry">
+     <rect>
+      <x>680</x>
+      <y>300</y>
+      <width>10</width>
+      <height>225</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>5</width>
+      <height>187</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>
