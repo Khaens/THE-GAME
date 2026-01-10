@@ -4,6 +4,8 @@
 #include <QMessageBox>
 #include <QPainter>
 #include <QPixmap>
+#include <QFileDialog>
+#include <QPainterPath>
 
 AccountDialog::AccountDialog(QWidget* parent)
     : QWidget(parent)
@@ -334,29 +336,28 @@ void AccountDialog::setupUI()
     // === PROFILE PAGE ===
     m_profilePage = new QWidget();
     QVBoxLayout* profileLayout = new QVBoxLayout(m_profilePage);
-    profileLayout->setSpacing(20);
+    profileLayout->setSpacing(10);
     profileLayout->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
 
     // Profile Picture (circle)
     m_profilePicture = new QLabel();
-    m_profilePicture->setFixedSize(120, 120);
-    m_profilePicture->setStyleSheet(R"(
-        QLabel {
-            background-color: #deaf11;
-            border: 4px solid #f3d05a;
-            border-radius: 60px;
-        }
-    )");
+    m_profilePicture->setFixedSize(124, 124);
+    // Remove border from label itself to avoid conflict with manual drawing
+    m_profilePicture->setStyleSheet("background-color: transparent;");
     profileLayout->addWidget(m_profilePicture, 0, Qt::AlignCenter);
+    
+    // Add spacing between picture and username (Increased again)
+    profileLayout->addSpacing(70);
 
     // Username
     m_profileUsername = new QLabel("Username");
     m_profileUsername->setAlignment(Qt::AlignCenter);
     m_profileUsername->setStyleSheet(R"(
-        font-size: 40px; 
+        font-size: 32px; 
         font-weight: bold;
         font-family: "Jersey 15"; 
         color: #f3d05a;
+        margin-top: 15px;
     )"
     );
     profileLayout->addWidget(m_profileUsername);
@@ -372,8 +373,39 @@ void AccountDialog::setupUI()
     )"
     );
     profileLayout->addWidget(userIdLabel);
+    
+    // Change Profile Picture Button
+    m_changeProfilePicButton = new QPushButton("Add profile picture");
+    m_changeProfilePicButton->setFixedHeight(35);
+    m_changeProfilePicButton->setCursor(Qt::PointingHandCursor);
+    m_changeProfilePicButton->setStyleSheet(R"(
+        QPushButton {
+            background-color: transparent;
+            color: #f3d05a;
+            border: 2px solid #f3d05a;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            font-family: "Jersey 15";
+            padding: 5px;
+            outline: 0;
+        }
+        QPushButton:hover {
+            background-color: rgba(243, 208, 90, 0.1);
+        }
+        QPushButton:pressed {
+            background-color: rgba(243, 208, 90, 0.2);
+            border: 2px solid #d4b449;
+        }
+        QPushButton:focus {
+            outline: none;
+            border: 2px solid #f3d05a;
+        }
+    )");
+    connect(m_changeProfilePicButton, &QPushButton::clicked, this, &AccountDialog::onChangeProfilePicClicked);
+    profileLayout->addWidget(m_changeProfilePicButton);
 
-    profileLayout->addSpacing(30);
+    profileLayout->addSpacing(20);
 
     // Stats placeholder
     QLabel* statsLabel = new QLabel("Statistics coming soon...");
@@ -499,12 +531,90 @@ void AccountDialog::showProfilePage()
     if (userIdLabel) {
         userIdLabel->setText(QString("User ID: %1").arg(m_currentUserId));
     }
+    
+    // Update button text based on whether a profile picture is set
+    // Check if the pixmap is valid (not null)
+    if (!m_profilePicture->pixmap().isNull()) {
+        m_changeProfilePicButton->setText("Change profile picture");
+    } else {
+        m_changeProfilePicButton->setText("Add profile picture");
+        
+        // Use a default placeholder logic if we want, but currently just text.
+        // If we want a default circle:
+        QPixmap defaultPic(124, 124);
+        defaultPic.fill(Qt::transparent);
+        QPainter p(&defaultPic);
+        p.setRenderHint(QPainter::Antialiasing);
+        // Draw background circle
+        p.setBrush(QColor("#deaf11"));
+        p.setPen(QPen(QColor("#f3d05a"), 4));
+        p.drawEllipse(2, 2, 120, 120);
+        m_profilePicture->setPixmap(defaultPic);
+    }
+    
     m_stackedWidget->setCurrentWidget(m_profilePage);
 }
 
 void AccountDialog::setNetworkManager(std::shared_ptr<NetworkManager> networkManager)
 {
     m_networkManager = networkManager;
+}
+
+void AccountDialog::onChangeProfilePicClicked()
+{
+    QString fileName = QFileDialog::getOpenFileName(this, 
+        tr("Select Profile Picture"), 
+        "", 
+        tr("Images (*.png *.jpg *.jpeg *.bmp)"));
+
+    if (fileName.isEmpty())
+        return;
+
+    QPixmap p(fileName);
+    if (!p.isNull()) {
+        // Create circular mask with higher quality manual drawing
+        // Size 120 + 4px border total = 124
+        int size = 120;
+        int border = 4;
+        int totalSize = size + border;
+        
+        QImage outImage(totalSize, totalSize, QImage::Format_ARGB32);
+        outImage.fill(Qt::transparent);
+        
+        QPainter painter(&outImage);
+        painter.setRenderHint(QPainter::Antialiasing, true);
+        painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
+        
+        // 1. Draw image cropped to circle
+        QPainterPath path;
+        // Inner circle for image
+        path.addEllipse(border/2, border/2, size, size);
+        painter.setClipPath(path);
+        
+        // Scale keeping aspect ratio to fill
+        QImage image = p.toImage();
+        QImage scaled = image.scaled(size, size, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+        
+        // Center crop
+        int x = (scaled.width() - size) / 2;
+        int y = (scaled.height() - size) / 2;
+        
+        painter.drawImage(border/2, border/2, scaled, x, y, size, size);
+        
+        // 2. Draw border on top
+        painter.setClipping(false); // Disable clip to draw border
+        QPen pen(QColor("#f3d05a"));
+        pen.setWidth(border);
+        painter.setPen(pen);
+        painter.setBrush(Qt::NoBrush);
+        painter.drawEllipse(border/2, border/2, size, size);
+        
+        m_profilePicture->setPixmap(QPixmap::fromImage(outImage));
+        m_changeProfilePicButton->setText("Change profile picture");
+        
+        // TODO: Send to server via NetworkManager
+        // m_networkManager->uploadProfilePicture(fileName);
+    }
 }
 
 void AccountDialog::onLoginClicked()

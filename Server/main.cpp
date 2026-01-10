@@ -28,13 +28,17 @@ void BroadcastGameState(const std::string& lobby_id) {
     state_base["lobby_id"] = lobby_id;
     
     // Piles
+    std::vector<crow::json::wvalue> piles_json;
     auto piles = game->GetPiles();
     for (size_t i = 0; i < piles.size(); ++i) {
         if (piles[i]) {
-            state_base["piles"][i]["top_card"] = piles[i]->GetTopCard()->GetCardValue();
-            state_base["piles"][i]["count"] = piles[i]->GetSize();
+            crow::json::wvalue pile_val;
+            pile_val["top_card"] = piles[i]->GetTopCard()->GetCardValue();
+            pile_val["count"] = (int)piles[i]->GetSize();
+            piles_json.push_back(std::move(pile_val));
         }
     }
+    state_base["piles"] = std::move(piles_json);
     
     // Deck
     state_base["deck_count"] = game->GetDeckSize();
@@ -48,27 +52,34 @@ void BroadcastGameState(const std::string& lobby_id) {
         state_base["current_turn_player_id"] = -1;
     }
 
-    // Players info (public)
+    // Players info & Hands
+    // We construct the players list once. 
+    // Note: This sends all hands to all players (current behavior).
+    // Safe refactoring using vectors.
+    std::vector<crow::json::wvalue> players_json;
     const auto& players = game->GetPlayers();
-    for (size_t i = 0; i < players.size(); ++i) {
-        state_base["players"][i]["user_id"] = players[i]->GetID();
-        state_base["players"][i]["username"] = players[i]->GetUsername();
-        state_base["players"][i]["hand_count"] = players[i]->GetHand().size();
-        state_base["players"][i]["is_finished"] = players[i]->IsFinished();
-        state_base["players"][i]["player_index"] = players[i]->GetPlayerIndex();
-    }
-
-    // Send personalized state to each connection
-    std::lock_guard<std::mutex> ws_lock(ws_mutex);
     
     for (size_t i = 0; i < players.size(); ++i) {
-        crow::json::wvalue hand_json;
-        int idx = 0;
+        crow::json::wvalue player_val;
+        player_val["user_id"] = players[i]->GetID();
+        player_val["username"] = players[i]->GetUsername();
+        player_val["hand_count"] = (int)players[i]->GetHand().size();
+        player_val["is_finished"] = players[i]->IsFinished();
+        player_val["player_index"] = players[i]->GetPlayerIndex();
+        
+        // Hand
+        std::vector<std::string> hand_cards;
         for (const auto* card : players[i]->GetHand()) {
-            hand_json[idx++] = card->GetCardValue();
+            hand_cards.push_back(card->GetCardValue());
         }
-        state_base["players"][i]["hand"] = std::move(hand_json);
+        player_val["hand"] = std::move(hand_cards); 
+
+        players_json.push_back(std::move(player_val));
     }
+    state_base["players"] = std::move(players_json);
+
+    // Send to all connections
+    std::lock_guard<std::mutex> ws_lock(ws_mutex);
     
     std::string msg = state_base.dump();
     for (auto* conn : lobby_connections[lobby_id]) {

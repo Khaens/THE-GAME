@@ -228,18 +228,79 @@ void GameWindow::resizeUI()
     int off4 = hasCard4 ? 75 : 0;
     if (ui->descPile2) ui->descPile2->setGeometry(scaleRect(700 + off4, 300, 150, 225));
 
+    // Turn Label (styled as a container)
+    // Rect: (20, 280, 220, 100) -> Slightly wider
+    if (ui->turnLabel) {
+        ui->turnLabel->setGeometry(scaleRect(20, 280, 220, 100));
+        ui->turnLabel->setStyleSheet("border-image: url(Resources/TextBox_1-2_Small.png); background-color: transparent; border: none;");
+        ui->turnLabel->setText(""); // Clear text as it's a background container now
+        ui->turnLabel->lower(); // Put behind pfp/username
+    }
+    
+    // Profile Picture in Turn Label
+    // Rect relative to turnLabel roughly (30, 310, 40, 40) - Smaller and better centered
+    if (ui->pfpLabel) {
+        ui->pfpLabel->setGeometry(scaleRect(30, 310, 40, 40));
+        // Circular styling (placeholder until image loading)
+        ui->pfpLabel->setStyleSheet(R"(
+            QLabel {
+                background-color: #deaf11;
+                border: 2px solid #f3d05a;
+                border-radius: 20px; 
+            }
+        )");
+        ui->pfpLabel->raise();
+    }
+    
+    // Username Label in Turn Label
+    if (ui->usernameLabel) {
+        ui->usernameLabel->setGeometry(scaleRect(80, 295, 150, 70)); // Moved left, wider
+        ui->usernameLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter); // Align left to not overlap pfp
+        ui->usernameLabel->setStyleSheet(R"(
+            QLabel {
+                font-family: "Jersey 15";
+                font-size: 20px;
+                color: #f3d05a;
+                font-weight: bold;
+                background: transparent;
+                padding-left: 5px;
+            }
+        )");
+        ui->usernameLabel->raise();
+    }
+    
+    // End Turn Button
+    if (ui->endTurnButton) {
+        ui->endTurnButton->setGeometry(scaleRect(20, 150, 200, 100));
+        ui->endTurnButton->setCursor(Qt::PointingHandCursor);
+        ui->endTurnButton->setStyleSheet(R"(
+            QPushButton {
+                border-image: url(Resources/Button.png);
+                font-family: 'Jersey 15';
+                font-size: 30px;
+                color: white;
+                font-weight: bold;
+                padding-bottom: 5px;
+            }
+            QPushButton:pressed {
+                border-image: url(Resources/Button_Pressed.png);
+                padding-top: 5px;
+            }
+            QPushButton:disabled {
+                opacity: 0.5;
+                color: rgba(255, 255, 255, 0.5);
+            }
+        )");
+        // Text is set in UI file ("END TURN")
+    }
+
     // Pile Light Indicators (to the left of each pile)
     if (ui->asc1Light) ui->asc1Light->setGeometry(scaleRect(255, 50, 10, 225));
     if (ui->asc2Light) ui->asc2Light->setGeometry(scaleRect(580, 50, 10, 225));
     if (ui->desc1Light) ui->desc1Light->setGeometry(scaleRect(355, 300, 10, 225));
     if (ui->desc2Light) ui->desc2Light->setGeometry(scaleRect(680, 300, 10, 225));
-
-    // Chat Widget: (140, 768, 300, 200)
-    // Design: W=300, H=200.
-    // Logic: 
-    // - Closed (Peeking): Y = designH - 40 (shows top 40px)
-    // - Open: Y = designH - 200 (fully visible)
     
+    // ... existing ChatWidget logic ...
     if (ui->chatWidget) {
         int w = 300;
         int h = 200;
@@ -255,10 +316,11 @@ void GameWindow::resizeUI()
         QRect finalRect = scaleRect(x, designY, w, h);
         ui->chatWidget->setGeometry(finalRect);
         
-        // Ensure it's above other things if needed, but sidebar/hands might overlap
+        // Ensure it's above other things if needed
         ui->chatWidget->raise();
     }
 }
+
 
 void GameWindow::paintEvent(QPaintEvent* event)
 {
@@ -420,7 +482,7 @@ bool GameWindow::eventFilter(QObject *obj, QEvent *event)
                 qDebug() << "Invalid pile index or card value";
                 return true;
             }
-            
+
             if (!canPlaceCardOnPile(cardValue, pileIndex)) {
                 qDebug() << "Illegal move - card" << cardValue << "cannot be placed on pile" << pileIndex;
                 return true;
@@ -441,6 +503,14 @@ bool GameWindow::eventFilter(QObject *obj, QEvent *event)
                 m_networkManager->sendGameAction(action);
                 qDebug() << "Sent play_card action to server";
                 
+                // Increment cards played logic handled here client-side for immediate feedback, 
+                // but strictly should be on server confirmation. 
+                // For now assuming success to update UI immediately.
+                if (m_isMyTurn) {
+                    m_cardsPlayedThisTurn++;
+                    updateEndTurnButtonState();
+                }
+
                 // Reset selection
                 clearCardSelection();
             }
@@ -449,6 +519,7 @@ bool GameWindow::eventFilter(QObject *obj, QEvent *event)
     }
     return QWidget::eventFilter(obj, event);
 }
+
 
 void GameWindow::loadGameImage()
 {
@@ -658,26 +729,28 @@ void GameWindow::handleGameState(const QJsonObject& state)
     // Turn indication
     if (state.contains("current_turn_username")) {
         QString currentTurn = state["current_turn_username"].toString();
+        int currentTurnId = state["current_turn_player_id"].toInt();
         
         // Track if it's this player's turn
         bool wasMyTurn = m_isMyTurn;
-        m_isMyTurn = (state["current_turn_player_id"].toInt() == m_userId);
+        m_isMyTurn = (currentTurnId == m_userId);
         
-        if (m_turnLabel) {
-            QString turnText = m_isMyTurn 
-                ? "YOUR TURN" 
-                : ("Current Turn: " + currentTurn);
-                
-            m_turnLabel->setText(turnText);
-            
-            // Style update based on turn
+        // If turn changed, reset counter
+        if (m_isMyTurn && !wasMyTurn) {
+            m_cardsPlayedThisTurn = 0;
+        }
+
+        if (ui->usernameLabel) {
             if (m_isMyTurn) {
-                 m_turnLabel->setStyleSheet("font-size: 24px; font-weight: bold; color: #00FF00; background-color: rgba(0,0,0,0.5); border-radius: 10px; padding: 10px;");
+                ui->usernameLabel->setText("YOUR TURN");
             } else {
-                 m_turnLabel->setStyleSheet("font-size: 24px; font-weight: bold; color: #FFFFFF; background-color: rgba(0,0,0,0.5); border-radius: 10px; padding: 10px;");
+                ui->usernameLabel->setText(currentTurn + "'s TURN");
             }
         }
         
+        // Update End Turn Button State based on new rules
+        updateEndTurnButtonState();
+
         // Update pile clickability when turn changes
         if (wasMyTurn != m_isMyTurn) {
             updatePileClickability();
@@ -689,7 +762,57 @@ void GameWindow::handleGameState(const QJsonObject& state)
         
         qDebug() << "Current Turn:" << currentTurn << "(My turn:" << m_isMyTurn << ")";
     }
+    
+    // ...
 }
+
+void GameWindow::updateEndTurnButtonState()
+{
+    if (!ui->endTurnButton) return;
+
+    // Logic: Enabled ONLY if it's my turn AND I've played at least 2 cards
+    // OR if deck is empty (but we don't track deck_count explicitly yet, assuming >0 for now or relying on std rules)
+    // Basic rule: Must play 2 cards.
+    
+    bool canEnd = m_isMyTurn && (m_cardsPlayedThisTurn >= 2);
+    
+    // Visual transparency update
+    if (canEnd) {
+        ui->endTurnButton->setEnabled(true);
+        ui->endTurnButton->setStyleSheet(R"(
+            QPushButton {
+                border-image: url(Resources/Button.png);
+                font-family: 'Jersey 15';
+                font-size: 30px;
+                color: white;
+                font-weight: bold;
+                padding-bottom: 5px;
+                opacity: 1.0;
+            }
+            QPushButton:pressed {
+                border-image: url(Resources/Button_Pressed.png);
+                padding-top: 5px;
+            }
+        )");
+    } else {
+        ui->endTurnButton->setEnabled(false); // Make it unclickable
+        ui->endTurnButton->setStyleSheet(R"(
+            QPushButton {
+                border-image: url(Resources/Button.png);
+                font-family: 'Jersey 15';
+                font-size: 30px;
+                color: rgba(255, 255, 255, 0.5); 
+                font-weight: bold;
+                padding-bottom: 5px;
+            }
+        )");
+         // Using QGraphicsOpacityEffect would be better for full widget opacity, 
+         // but stylesheet color alpha works for text/border-image content usually if supported. 
+         // 'opacity' property in stylesheet might not work on all widgets directly.
+         // Let's rely on setEnabled(false) visual + dim text.
+    }
+}    
+
 
 void GameWindow::updatePiles(const QJsonArray& piles)
 {

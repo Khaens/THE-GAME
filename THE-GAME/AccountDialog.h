@@ -60,6 +60,7 @@ private:
     QWidget* m_profilePage;
     QLabel* m_profilePicture;
     QLabel* m_profileUsername;
+    QPushButton* m_changeProfilePicButton;
     QPushButton* m_logoutButton;
 
     // Session data
@@ -78,4 +79,5 @@ private slots:
     void onGoToLoginClicked();
     void onToggleLoginPasswordVisibility();
     void onToggleRegisterPasswordVisibility();
+    void onChangeProfilePicClicked();
 };
