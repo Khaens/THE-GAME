@@ -153,6 +153,10 @@
     <ClCompile Include="PlayerServer.cpp" />
     <ClCompile Include="Round.cpp" />
     <ClCompile Include="StatisticsModel.cpp" />
+    <ClCompile Include="AuthRoutes.cpp" />
+    <ClCompile Include="GameRoutes.cpp" />
+    <ClCompile Include="LobbyRoutes.cpp" />
+    <ClCompile Include="NetworkUtils.cpp" />
     <ClCompile Include="UserModel.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -171,6 +175,10 @@
     <ClInclude Include="PlayerServer.h" />
     <ClInclude Include="Round.h" />
     <ClInclude Include="StatisticsModel.h" />
+    <ClInclude Include="AuthRoutes.h" />
+    <ClInclude Include="GameRoutes.h" />
+    <ClInclude Include="LobbyRoutes.h" />
+    <ClInclude Include="NetworkUtils.h" />
     <ClInclude Include="UserModel.h" />
   </ItemGroup>
   <ItemGroup>
