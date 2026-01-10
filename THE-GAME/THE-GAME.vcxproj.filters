@@ -54,6 +54,9 @@
     <ClCompile Include="GameWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="UiUtils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="MainWindow.h">
@@ -86,6 +89,9 @@
     <QtMoc Include="NetworkManager.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <ClInclude Include="UiUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="MainWindow.ui" />

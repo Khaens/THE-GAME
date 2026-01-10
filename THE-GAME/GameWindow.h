@@ -61,6 +61,7 @@ private:
     void updateOpponents(const QJsonArray& players);
 
     QLabel* m_turnLabel = nullptr; // New label for turn indication
+    int m_lastTurnUserId = -1;
     QString m_lastPileTops[4]; // Track pile state to avoid redundant animations
 
     // Turn and Pile State for Client-Side Validation

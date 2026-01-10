@@ -30,6 +30,7 @@
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="NetworkManager.cpp" />
     <ClCompile Include="SettingsDialog.cpp" />
+    <ClCompile Include="UiUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="AccountDialog.h" />
@@ -48,6 +49,7 @@
     <QtMoc Include="LobbyRoomDialog.h" />
     <QtMoc Include="GameWindow.h" />
     <QtMoc Include="NetworkManager.h" />
+    <ClInclude Include="UiUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="help.html" />

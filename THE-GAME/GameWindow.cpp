@@ -1,5 +1,6 @@
 #include "GameWindow.h"
 #include "ui_GameWindow.h"
+#include "UiUtils.h"
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QLabel>
@@ -12,6 +13,7 @@
 #include <QTimer>
 #include <QMouseEvent>
 #include <QDebug>
+#include <QBuffer>
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QMessageBox>
@@ -741,12 +743,48 @@ void GameWindow::handleGameState(const QJsonObject& state)
         }
 
         if (ui->usernameLabel) {
-            if (m_isMyTurn) {
-                ui->usernameLabel->setText("YOUR TURN");
+             ui->usernameLabel->setVisible(false); // Hide potentially unused label
+        }
+        if (ui->pfpLabel) {
+             ui->pfpLabel->setVisible(false); // Hide potentially unused label
+        }
+
+        // Update Turn Label with PFP and Text using HTML
+        if (m_turnLabel) {
+            QString turnText = m_isMyTurn ? "YOUR TURN" : (currentTurn + "'s TURN");
+            
+            // Get Avatar
+            QPixmap avatar = UiUtils::GetAvatar(currentTurnId, m_networkManager);
+            if (avatar.isNull()) {
+                // Return placeholder logical color or handling
+                // For now just empty image
+                 m_turnLabel->setText(QString("<div style='display: flex; align-items: center; justify-content: center;'><span style='font-size: 20px; font-weight: bold; color: #f3d05a;'>%1</span></div>").arg(turnText));
             } else {
-                ui->usernameLabel->setText(currentTurn + "'s TURN");
+                QByteArray bArray;
+                QBuffer buffer(&bArray);
+                buffer.open(QIODevice::WriteOnly);
+                avatar.save(&buffer, "PNG");
+                QString base64 = QString::fromLatin1(bArray.toBase64().data());
+                
+                // HTML Layout: Image left, Text right, vertically centered
+                // Note: QLabel rich text support is limited. Tables are robust.
+                QString html = QString(
+                    "<table border='0' cellspacing='5' cellpadding='0'>"
+                    "<tr>"
+                    "<td valign='middle'><img src='data:image/png;base64,%1' width='40' height='40'></td>"
+                    "<td valign='middle'><span style='font-size: 20px; font-weight: bold; color: #f3d05a;'>%2</span></td>"
+                    "</tr>"
+                    "</table>"
+                ).arg(base64).arg(turnText);
+                
+                m_turnLabel->setText(html);
+                // Ensure text format allows rich text
+                m_turnLabel->setTextFormat(Qt::RichText);
+                m_turnLabel->setAlignment(Qt::AlignCenter);
             }
         }
+        
+        m_lastTurnUserId = currentTurnId;
         
         // Update End Turn Button State based on new rules
         updateEndTurnButtonState();

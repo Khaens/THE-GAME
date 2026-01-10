@@ -1,5 +1,6 @@
 ﻿#include "LobbyRoomDialog.h"
 #include "GameWindow.h"
+#include "UiUtils.h"
 #include <QClipboard>
 #include <QApplication>
 #include <QListWidgetItem>
@@ -676,7 +677,13 @@ void LobbyRoomDialog::updatePlayerList(const QVector<PlayerInfo>& players)
         }
 
         QListWidgetItem* item = new QListWidgetItem(playerText, m_playerListWidget);
-        item->setTextAlignment(Qt::AlignCenter);
+        item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter); 
+
+        // Set Icon (PFP) using UiUtils
+        QPixmap avatar = UiUtils::GetAvatar(player.userId, m_networkManager);
+        if (!avatar.isNull()) {
+            item->setIcon(QIcon(avatar));
+        }
 
         // Set different colors based on status
         if (player.userId == m_userId) {

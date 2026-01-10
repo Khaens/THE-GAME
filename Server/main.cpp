@@ -3,7 +3,12 @@
 #include <string>
 #include "Lobby.h"
 #include <mutex>
+#include <mutex>
 #include <random>
+#include <regex>
+#include <queue>
+#include <thread>
+#include <condition_variable>
 
 
 
@@ -16,6 +21,61 @@ static std::mutex ws_mutex;
 
 static std::unordered_map<std::string, std::vector<crow::websocket::connection*>> lobby_update_connections;
 static std::mutex lobby_ws_mutex;
+
+// --- CHAT WORKER & CENSORSHIP ---
+struct ChatMessage {
+    std::string lobby_id;
+    std::string message_json; 
+};
+
+static std::queue<ChatMessage> chatQueue;
+static std::mutex chatMutex;
+static std::condition_variable chatCv;
+
+std::string CensorMessage(std::string input) {
+    std::regex digits(R"(\b([1-9]|[1-9][0-9]|100)\b)");
+    input = std::regex_replace(input, digits, "###");
+    std::string pattern = R"(\b()"
+        R"((douazeci|treizeci|patruzeci|cincizeci|saizeci|saptezeci|optzeci|nouazeci)\s+si\s+(unu|doi|trei|patru|cinci|sase|sapte|opt|noua)|)"
+        R"(one|two|three|four|five|six|seven|eight|nine|ten|)"
+        R"(eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|)"
+        R"(twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred|)"
+        R"(unu|doi|trei|patru|cinci|sase|sapte|opt|noua|zece|)"
+        R"(unsprezece|doisprezece|treisprezece|patrusprezece|cincisprezece|saisprezece|saptesprezece|optsprezece|nouasprezece|)"
+        R"(douazeci|treizeci|patruzeci|cincizeci|saizeci|saptezeci|optzeci|nouazeci|suta)"
+        R"()\b)";
+    
+    std::regex words(pattern, std::regex_constants::icase);
+    input = std::regex_replace(input, words, "###");
+    
+    return input;
+}
+
+void ChatWorker() {
+    while (true) {
+        std::unique_lock<std::mutex> lock(chatMutex);
+        chatCv.wait(lock, [] { return !chatQueue.empty(); });
+
+        while (!chatQueue.empty()) {
+            ChatMessage msg = chatQueue.front();
+            chatQueue.pop();
+            lock.unlock(); 
+
+            // Broadcast
+            {
+                std::lock_guard<std::mutex> ws_lock(ws_mutex);
+                auto it = lobby_connections.find(msg.lobby_id);
+                if (it != lobby_connections.end()) {
+                    for (auto* conn : it->second) {
+                        if (conn) conn->send_text(msg.message_json);
+                    }
+                }
+            }
+
+            lock.lock(); 
+        }
+    }
+}
 
 void BroadcastGameState(const std::string& lobby_id) {
     std::lock_guard<std::mutex> lock(lobby_mutex);
@@ -54,10 +114,6 @@ void BroadcastGameState(const std::string& lobby_id) {
         state_base["current_turn_player_id"] = -1;
     }
 
-    // Players info & Hands
-    // We construct the players list once. 
-    // Note: This sends all hands to all players (current behavior).
-    // Safe refactoring using vectors.
     std::vector<crow::json::wvalue> players_json;
     const auto& players = game->GetPlayers();
     
@@ -90,12 +146,12 @@ void BroadcastGameState(const std::string& lobby_id) {
 }
 
 int main() {
-	//primeste si valideaza cereri de la client, utilizand GameServer pentru logica jocului
-	//metodele din GameServer vor fi apelate aici in functie de cererile primite 
-	//trimite update-uri catre client
 
 	crow::SimpleApp app;
 	Database* db = new Database("users.db");
+
+    // Start Chat Worker
+    std::thread(ChatWorker).detach();
 
 	// ----------------------------- AUTHENTICATION ENDPOINTS --------------------------
 
@@ -213,8 +269,6 @@ int main() {
                  return crow::response(404, "No profile image");
              }
              std::string imgStr(img.begin(), img.end());
-             // Assuming PNG for simplicity, seeing as we don't store mime type yet
-             // Client can usually auto-detect or we can just say "image/png"
              crow::response res(imgStr);
              res.add_header("Content-Type", "image/png");
              return res;
@@ -625,15 +679,22 @@ int main() {
                                  }
                              }
                              
-                             crow::json::wvalue chat_val = body;
+                             std::string raw_msg = body["message"].s();
+                             std::string censored_msg = CensorMessage(raw_msg);
+
+                             crow::json::wvalue chat_val;
+                             chat_val["type"] = "chat";
+                             chat_val["lobby_id"] = lid;
+                             chat_val["user_id"] = uid;
                              chat_val["username"] = username;
+                             chat_val["message"] = censored_msg;
                              
-                             std::string mod_data = chat_val.dump();
-                             
-                             std::lock_guard<std::mutex> ws_lock(ws_mutex);
-                             for(auto* c : lobby_connections[lid]) {
-                                 if(c) c->send_text(mod_data); 
+                             // Enqueue instead of direct send
+                             {
+                                 std::lock_guard<std::mutex> qLock(chatMutex);
+                                 chatQueue.push({lid, chat_val.dump()});
                              }
+                             chatCv.notify_one();
                          }
                      }
                      return;
