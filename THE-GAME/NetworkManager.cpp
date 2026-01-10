@@ -154,6 +154,51 @@ bool NetworkManager::leaveLobby(int user_id, const std::string& lobby_id) {
     return response.status_code == 200;
 }
 
+bool NetworkManager::uploadProfilePicture(int user_id, const QByteArray& data) {
+    std::string dataStr(data.constData(), data.length());
+
+    auto response = cpr::Post(
+        cpr::Url{ baseUrl + "/api/user/" + std::to_string(user_id) + "/profile-picture" },
+        cpr::Body{ dataStr },
+        cpr::Header{ {"Content-Type", "application/octet-stream"} }
+    );
+
+    return response.status_code == 200;
+}
+
+QByteArray NetworkManager::getProfilePicture(int user_id) {
+    auto response = cpr::Get(
+        cpr::Url{ baseUrl + "/api/user/" + std::to_string(user_id) + "/profile-picture" }
+    );
+
+    if (response.status_code == 200) {
+        return QByteArray(response.text.c_str(), response.text.length());
+    }
+
+    return QByteArray();
+}
+
+bool NetworkManager::hasProfilePicture(int user_id) {
+    auto response = cpr::Get(
+        cpr::Url{ baseUrl + "/api/user/" + std::to_string(user_id) + "/has-profile-picture" }
+    );
+
+    if (response.status_code == 200) {
+        auto data = crow::json::load(response.text);
+        if (data && data.has("has_image")) {
+            return data["has_image"].b();
+        }
+    }
+    return false;
+}
+
+bool NetworkManager::deleteProfilePicture(int user_id) {
+    auto response = cpr::Delete(
+        cpr::Url{ baseUrl + "/api/user/" + std::to_string(user_id) + "/profile-picture" }
+    );
+    return response.status_code == 200;
+}
+
 std::vector<NetworkManager::PlayerInfo> NetworkManager::getLobbyPlayers(const std::string& lobby_id) {
     auto response = cpr::Get(
         cpr::Url{ baseUrl + "/api/lobby/" + lobby_id + "/players" }

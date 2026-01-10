@@ -6,6 +6,7 @@
 #include <QPixmap>
 #include <QFileDialog>
 #include <QPainterPath>
+#include <QBuffer>
 
 AccountDialog::AccountDialog(QWidget* parent)
     : QWidget(parent)
@@ -524,37 +525,6 @@ void AccountDialog::showRegisterPage()
     m_stackedWidget->setCurrentWidget(m_registerPage);
 }
 
-void AccountDialog::showProfilePage()
-{
-    m_profileUsername->setText(m_currentUsername);
-    QLabel* userIdLabel = m_profilePage->findChild<QLabel*>("userIdLabel");
-    if (userIdLabel) {
-        userIdLabel->setText(QString("User ID: %1").arg(m_currentUserId));
-    }
-    
-    // Update button text based on whether a profile picture is set
-    // Check if the pixmap is valid (not null)
-    if (!m_profilePicture->pixmap().isNull()) {
-        m_changeProfilePicButton->setText("Change profile picture");
-    } else {
-        m_changeProfilePicButton->setText("Add profile picture");
-        
-        // Use a default placeholder logic if we want, but currently just text.
-        // If we want a default circle:
-        QPixmap defaultPic(124, 124);
-        defaultPic.fill(Qt::transparent);
-        QPainter p(&defaultPic);
-        p.setRenderHint(QPainter::Antialiasing);
-        // Draw background circle
-        p.setBrush(QColor("#deaf11"));
-        p.setPen(QPen(QColor("#f3d05a"), 4));
-        p.drawEllipse(2, 2, 120, 120);
-        m_profilePicture->setPixmap(defaultPic);
-    }
-    
-    m_stackedWidget->setCurrentWidget(m_profilePage);
-}
-
 void AccountDialog::setNetworkManager(std::shared_ptr<NetworkManager> networkManager)
 {
     m_networkManager = networkManager;
@@ -612,9 +582,63 @@ void AccountDialog::onChangeProfilePicClicked()
         m_profilePicture->setPixmap(QPixmap::fromImage(outImage));
         m_changeProfilePicButton->setText("Change profile picture");
         
-        // TODO: Send to server via NetworkManager
-        // m_networkManager->uploadProfilePicture(fileName);
+        // Upload to server
+        if (m_networkManager) {
+            // Save QImage to buffer
+            QByteArray byteArray;
+            QBuffer buffer(&byteArray);
+            buffer.open(QIODevice::WriteOnly);
+            outImage.save(&buffer, "PNG");
+            
+            if (m_networkManager->uploadProfilePicture(m_currentUserId, byteArray)) {
+                QMessageBox::information(this, "Success", "Profile picture updated!");
+            } else {
+                 QMessageBox::warning(this, "Error", "Failed to upload profile picture.");
+            }
+        }
     }
+}
+
+void AccountDialog::showProfilePage()
+{
+    m_profileUsername->setText(m_currentUsername);
+    QLabel* userIdLabel = m_profilePage->findChild<QLabel*>("userIdLabel");
+    if (userIdLabel) {
+        userIdLabel->setText(QString("User ID: %1").arg(m_currentUserId));
+    }
+    
+    bool hasImage = false;
+    if (m_networkManager) {
+        hasImage = m_networkManager->hasProfilePicture(m_currentUserId);
+    }
+    
+    if (hasImage) {
+        m_changeProfilePicButton->setText("Change profile picture");
+        if (m_networkManager) {
+             QByteArray data = m_networkManager->getProfilePicture(m_currentUserId);
+             if (!data.isEmpty()) {
+                 QPixmap p;
+                 p.loadFromData(data);
+                 m_profilePicture->setPixmap(p);
+             }
+        }
+    } else {
+        m_changeProfilePicButton->setText("Add profile picture");
+        
+        // Use a default placeholder logic if we want, but currently just text.
+        // If we want a default circle:
+        QPixmap defaultPic(124, 124);
+        defaultPic.fill(Qt::transparent);
+        QPainter p(&defaultPic);
+        p.setRenderHint(QPainter::Antialiasing);
+        // Draw background circle
+        p.setBrush(QColor("#deaf11"));
+        p.setPen(QPen(QColor("#f3d05a"), 4));
+        p.drawEllipse(2, 2, 120, 120);
+        m_profilePicture->setPixmap(defaultPic);
+    }
+    
+    m_stackedWidget->setCurrentWidget(m_profilePage);
 }
 
 void AccountDialog::onLoginClicked()

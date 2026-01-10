@@ -143,9 +143,17 @@ Info Game::EndTurn(size_t playerIndex)
 		std::cout << "It's not your turn!\n";
 		return Info::NOT_CURRENT_PLAYER_TURN;
 	}
-	if (m_ctx.placedCardsThisTurn < m_ctx.currentRequired) {
+	// Validation: Must play at least 2 cards unless deck is empty (or edge case where they literally can't)
+	// The requirement specifically asks to disable End Turn until 2 cards are played.
+	// We check m_gameStats or logic to see if deck is empty if we want to be nice, 
+	// but generally the rule is 2 cards.
+	
+	// If the deck is NOT empty, we enforce the rule strictly.
+	if (m_wholeDeck.GetSize() > 0 && m_ctx.placedCardsThisTurn < 2) {
+		std::cout << "Cannot end turn: Played " << m_ctx.placedCardsThisTurn << " cards, required 2.\n";
 		return Info::NOT_ENOUGH_PLAYED_CARDS;
 	}
+	
 	int cardsToDraw = m_ctx.placedCardsThisTurn;
 	for (int i = 0; i < cardsToDraw; i++) {
 		Card* drawnCard = m_wholeDeck.DrawCard();

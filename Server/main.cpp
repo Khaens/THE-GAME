@@ -5,6 +5,8 @@
 #include <mutex>
 #include <random>
 
+
+
 // --- LOBBY LOGIC (Global Scope) ---
 static std::unordered_map<std::string, std::unique_ptr<Lobby>> lobbies;
 static std::mutex lobby_mutex;
@@ -168,6 +170,79 @@ int main() {
             return crow::response(401, response);
         }
             });
+
+	// ----------------------------- PROFILE PICTURE ENDPOINTS -----------------
+
+    CROW_ROUTE(app, "/api/user/<int>/profile-picture")
+        .methods(crow::HTTPMethod::POST)
+        ([&db](const crow::request& req, int user_id) {
+        std::vector<char> imageData(req.body.begin(), req.body.end());
+        
+        if (imageData.empty()) {
+             crow::json::wvalue response;
+             response["success"] = false;
+             response["error"] = "Empty image data";
+             return crow::response(400, response);
+        }
+
+        try {
+            if (db->UpdateProfileImage(user_id, imageData)) {
+                crow::json::wvalue response;
+                response["success"] = true;
+                return crow::response(200, response);
+            } else {
+                 crow::json::wvalue response;
+                 response["success"] = false;
+                 response["error"] = "Failed to update profile image (User not found?)";
+                 return crow::response(500, response);
+            }
+        } catch (const std::exception& e) {
+             crow::json::wvalue response;
+             response["success"] = false;
+             response["error"] = e.what();
+             return crow::response(500, response);
+        }
+    });
+
+    CROW_ROUTE(app, "/api/user/<int>/profile-picture")
+         .methods(crow::HTTPMethod::GET)
+         ([&db](int user_id) {
+         try {
+             std::vector<char> img = db->GetProfileImage(user_id);
+             if (img.empty()) {
+                 return crow::response(404, "No profile image");
+             }
+             std::string imgStr(img.begin(), img.end());
+             // Assuming PNG for simplicity, seeing as we don't store mime type yet
+             // Client can usually auto-detect or we can just say "image/png"
+             crow::response res(imgStr);
+             res.add_header("Content-Type", "image/png");
+             return res;
+         } catch (...) {
+             return crow::response(500, "Error retrieving image");
+         }
+    });
+
+    CROW_ROUTE(app, "/api/user/<int>/has-profile-picture")
+        .methods(crow::HTTPMethod::GET)
+        ([&db](int user_id) {
+        bool has = db->HasProfileImage(user_id);
+        crow::json::wvalue response;
+        response["has_image"] = has;
+        return crow::response(200, response);
+    });
+
+    CROW_ROUTE(app, "/api/user/<int>/profile-picture")
+#ifdef DELETE
+#undef DELETE
+#endif
+        .methods(crow::HTTPMethod::DELETE)
+        ([&db](int user_id) {
+        db->DeleteProfileImage(user_id);
+        crow::json::wvalue response;
+        response["success"] = true;
+        return crow::response(200, response);
+    });
 
 	// ----------------------------- LOBBY ENDPOINTS --------------------------
 

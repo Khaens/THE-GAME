@@ -59,6 +59,12 @@ public:
     std::optional<LobbyStatus> getLobbyStatus(const std::string& lobby_id);
     bool startGame(const std::string& lobby_id);
     bool leaveLobby(int user_id, const std::string& lobby_id);
+
+    // Profile Picture
+    bool uploadProfilePicture(int user_id, const QByteArray& data);
+    QByteArray getProfilePicture(int user_id);
+    bool hasProfilePicture(int user_id);
+    bool deleteProfilePicture(int user_id);
     
     struct PlayerInfo {
         int user_id;
