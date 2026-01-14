@@ -3,6 +3,8 @@
 #include "Database.h"
 #include <memory>
 
+constexpr size_t LOBBY_PASS_LENGTH = 4;
+
 enum class LobbyStatus {
 	Waiting,
 	Started
@@ -13,7 +15,6 @@ class Lobby
 private:
 	std::string m_id;
 	std::string m_name;
-	int m_maxPlayers = 4;
 	std::string m_password;
 	std::vector<UserModel> m_Users;
 	int m_ownerId = -1;
@@ -21,7 +22,7 @@ private:
 	LobbyStatus m_status = LobbyStatus::Waiting;
 	std::unique_ptr<Game> m_game = nullptr;
 	
-	static std::string GenerateRandomId(size_t length = 6);
+	static std::string GenerateRandomId(size_t length = LOBBY_PASS_LENGTH);
 
 public:
 	Lobby(Database* db, const std::string& name = "New Lobby", int maxPlayers = 4, const std::string& password = "");

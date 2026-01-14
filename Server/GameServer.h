@@ -1,6 +1,9 @@
 #pragma once
 
 constexpr size_t PILES_AMOUNT = 4;
+constexpr int CARD_SET = 100;
+constexpr size_t MAX_PLAYERS = 5;
+constexpr size_t MIN_PLAYERS = 2;
 
 enum class Info {
 	PILE_NOT_FOUND,
@@ -70,6 +73,4 @@ public:
 	const std::vector<std::unique_ptr<IPlayer>>& GetPlayers();
 	std::array<Pile*, PILES_AMOUNT> GetPiles();
 	Deck& GetDeck();
-
-	void ShowCtx();
 };

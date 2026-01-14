@@ -2,27 +2,24 @@
 #include <algorithm>
 
 Lobby::Lobby(Database* db, const std::string& name, int maxPlayers, const std::string& password)
-    : m_id(GenerateRandomId()), m_name(name), m_maxPlayers(maxPlayers), m_password(password), m_db(db)
+    : m_id(GenerateRandomId()), m_name(name), m_password(password), m_db(db)
 {
 }
 
 void Lobby::JoinLobby(int userId)
 {
-    // Check if already in lobby
     for (const auto& user : m_Users) {
         if (user.GetId() == userId) {
             throw std::runtime_error("Player already in lobby");
         }
     }
 
-    // Check if lobby is full
-    if (static_cast<int>(m_Users.size()) >= m_maxPlayers) {
+    if (static_cast<int>(m_Users.size()) > MAX_PLAYERS) {
         throw std::runtime_error("Lobby is full");
     }
 
     UserModel user = m_db->GetUserById(userId);
     
-    // First player becomes owner
     if (m_Users.empty()) {
         m_ownerId = userId;
     }
@@ -38,7 +35,7 @@ void Lobby::JoinLobby(const std::string& playerName)
         }
     }
 
-    if (static_cast<int>(m_Users.size()) >= m_maxPlayers) {
+    if (static_cast<int>(m_Users.size()) > MAX_PLAYERS) {
         throw std::runtime_error("Lobby is full");
     }
 
@@ -63,7 +60,7 @@ void Lobby::LeaveLobby(int userId)
 
 void Lobby::Start()
 {
-    if (m_Users.size() < 2) {
+    if (m_Users.size() < MIN_PLAYERS) {
         throw std::runtime_error("Need at least 2 players to start");
     }
     
@@ -89,7 +86,7 @@ const std::string& Lobby::GetName() const
 
 int Lobby::GetMaxPlayers() const
 {
-    return m_maxPlayers;
+    return MAX_PLAYERS;
 }
 
 int Lobby::GetCurrentPlayers() const

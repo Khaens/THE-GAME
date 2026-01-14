@@ -6,7 +6,7 @@ void Round::FirstRoundDealing(Game& game)
 	const auto& m_players = game.GetPlayers();
 	Deck& deck = game.GetDeck();
 	for (size_t i = 0; i < m_players.size(); i++) {
-		for (size_t j = 0; j < 6; j++) {
+		for (size_t j = 0; j < STARTING_HAND_SIZE; j++) {
 			Card* dealtCard = deck.DrawCard();
 			m_players[i]->AddCardToHand(dealtCard);
 		}
@@ -92,7 +92,6 @@ bool Round::IsGameWon(Game& game, IPlayer& currentPlayer)
 		}
 	}
 	if (gameWon) return gameWon;
-	// Advance to next non-finished player if necessary
 	size_t checks = 0;
 	size_t numPlayers = game.GetPlayers().size();
 	while (game.GetCurrentPlayer().IsFinished() && checks < numPlayers) {

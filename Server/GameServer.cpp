@@ -4,7 +4,7 @@
 Game::Game(std::vector<UserModel>& users, Database& db) : m_numberOfPlayers{ users.size() }, m_database(db)
 {
 	m_players.reserve(m_numberOfPlayers);
-	if (users.size() < 2 || users.size() > 5) {
+	if (users.size() < MIN_PLAYERS || users.size() > MAX_PLAYERS) {
 		throw std::invalid_argument("Number of players must be between 2 and 5.");
 	}
 
@@ -17,7 +17,7 @@ Game::Game(std::vector<UserModel>& users, Database& db) : m_numberOfPlayers{ use
 		i++;
 	}
 
-	for (int i = 2; i < 100; i++) {
+	for (int i = 2; i < CARD_SET; i++) {
 		Card* newCard = new Card(std::to_string(i));
 		Card* newCard2 = new Card(std::to_string(i));
 		m_wholeDeck.InsertCard(newCard);
@@ -351,13 +351,4 @@ std::array<Pile*, PILES_AMOUNT> Game::GetPiles()
 Deck& Game::GetDeck()
 {
 	return m_wholeDeck;
-}
-
-void Game::ShowCtx()
-{
-	std::cout << "baseReq " << m_ctx.baseRequired << "\n";
-	std::cout << "currReq " << m_ctx.currentRequired << "\n";
-	std::cout << "HPPIndex " << m_ctx.HPplayerIndex << "\n";
-	std::cout << "GambPInd " << m_ctx.GamblerPlayerIndex << "\n";
-	std::cout << "TaxEvPInd" << m_ctx.TaxEvPlayerIndex << "\n";
 }

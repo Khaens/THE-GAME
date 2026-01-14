@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 
+constexpr size_t STARTING_HAND_SIZE = 6;
+
 class Game;
 struct TurnContext;
 class IPlayer;
