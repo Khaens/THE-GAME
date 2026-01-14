@@ -79,6 +79,7 @@ public:
 
 	size_t GetDeckSize() const;
 	IPlayer& GetCurrentPlayer();
+	TurnContext& GetCtx();
 	const std::vector<std::unique_ptr<IPlayer>>& GetPlayers();
 	std::array<Pile*, PILES_AMOUNT> GetPiles();
 	Deck& GetDeck();

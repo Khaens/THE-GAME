@@ -40,8 +40,8 @@ public:
     std::condition_variable chatCv;
 
     // --- Helper Functions ---
-    void BroadcastGameState(const std::string& lobby_id);
-    void BroadcastGameStateLocked(const std::string& lobby_id);
+    void BroadcastGameState(const std::string& lobby_id, crow::websocket::connection* targetConn = nullptr);
+    void BroadcastGameStateLocked(const std::string& lobby_id, crow::websocket::connection* targetConn = nullptr);
     std::string CensorMessage(std::string input);
     void ChatWorker();
     

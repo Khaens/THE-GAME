@@ -694,9 +694,18 @@ void GameWindow::onGameMessageReceived(const QJsonObject& message)
     }
     else if (type == "game_over") {
         QString result = message["result"].toString(); // "won" or "lost"
-        QString msg = (result == "won") ? "Victory! You won the game!" : "Game Over! You lost.";
-        QMessageBox::information(this, "Game Over", msg);
-        emit backToMenuRequested();
+        
+        if (result == "won") {
+            WinDialog* dialog = new WinDialog(this);
+            connect(dialog, &WinDialog::backToMenuRequested, this, &GameWindow::backToMenuRequested, Qt::QueuedConnection);
+            dialog->setAttribute(Qt::WA_DeleteOnClose);
+            dialog->open();
+        } else {
+            LossDialog* dialog = new LossDialog(this);
+            connect(dialog, &LossDialog::backToMenuRequested, this, &GameWindow::backToMenuRequested, Qt::QueuedConnection);
+            dialog->setAttribute(Qt::WA_DeleteOnClose);
+            dialog->open();
+        }
     }
     else if (type == "error") {
         QString errorMsg = message["message"].toString();
@@ -710,6 +719,17 @@ void GameWindow::handleGameState(const QJsonObject& state)
     // Update Piles
     if (state.contains("piles")) {
         updatePiles(state["piles"].toArray());
+    }
+
+    // Update Deck Count (for Endgame Logic)
+    if (state.contains("deck_count")) {
+        int oldDeckCount = m_deckCount;
+        m_deckCount = state["deck_count"].toInt();
+        
+        // If deck count changed, re-evaluate button state
+        if (oldDeckCount != m_deckCount) {
+            updateEndTurnButtonState();
+        }
     }
 
     // Update My Hand and Opponents
@@ -809,10 +829,12 @@ void GameWindow::updateEndTurnButtonState()
     if (!ui->endTurnButton) return;
 
     // Logic: Enabled ONLY if it's my turn AND I've played at least 2 cards
-    // OR if deck is empty (but we don't track deck_count explicitly yet, assuming >0 for now or relying on std rules)
-    // Basic rule: Must play 2 cards.
+    // OR if deck is empty/almost empty (Endgame Condition)
+    // Rule: If deck has 1 or 0 cards, minimum required is 1 card.
     
-    bool canEnd = m_isMyTurn && (m_cardsPlayedThisTurn >= 2);
+    int requiredCards = (m_deckCount <= 1) ? 1 : 2;
+    
+    bool canEnd = m_isMyTurn && (m_cardsPlayedThisTurn >= requiredCards);
     
     // Visual transparency update
     if (canEnd) {

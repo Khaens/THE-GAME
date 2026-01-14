@@ -157,6 +157,11 @@ Info Game::PlaceCard(size_t playerIndex, int card, int pile)
 		chosenPile->PlaceCard(m_players[playerIndex]->RemoveCardFromHand(chosenCard)); 
 		m_ctx.placedCardsThisTurn++;
 
+		if (Round::IsGameWon(*this, GetCurrentPlayer())) {
+			UpdateGameStats(true);
+			return Info::GAME_WON;
+		}
+
 		if (IsGameOver(GetCurrentPlayer())) {
 			UpdateGameStats(false);
 			return Info::GAME_LOST;
@@ -363,6 +368,11 @@ IPlayer& Game::GetCurrentPlayer()
         throw std::out_of_range("Current player index out of range");
     }
 	return *m_players[m_currentPlayerIndex];
+}
+
+TurnContext& Game::GetCtx()
+{
+	return m_ctx;
 }
 
 std::unique_ptr<Card> Game::DrawCard()

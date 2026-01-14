@@ -26,17 +26,21 @@
     <ClCompile Include="JoinLobbyDialog.cpp" />
     <ClCompile Include="LobbyDialog.cpp" />
     <ClCompile Include="LobbyRoomDialog.cpp" />
+    <ClCompile Include="LossDialog.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="NetworkManager.cpp" />
     <ClCompile Include="SettingsDialog.cpp" />
     <ClCompile Include="UiUtils.cpp" />
+    <ClCompile Include="WinDialog.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="AccountDialog.h" />
     <QtMoc Include="MainWindow.h" />
     <QtMoc Include="HelpDialog.h" />
     <QtMoc Include="SettingsDialog.h" />
+    <QtMoc Include="WinDialog.h" />
+    <QtMoc Include="LossDialog.h" />
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="GameWindow.ui" />

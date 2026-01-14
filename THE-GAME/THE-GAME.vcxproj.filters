@@ -57,6 +57,12 @@
     <ClCompile Include="UiUtils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LossDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WinDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="MainWindow.h">
@@ -87,6 +93,12 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="NetworkManager.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="WinDialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="LossDialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <ClInclude Include="UiUtils.h">

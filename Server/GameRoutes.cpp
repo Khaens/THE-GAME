@@ -146,10 +146,18 @@ void GameRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtils
                          if (result == Info::NOT_CURRENT_PLAYER_TURN) err["message"] = "Not your turn";
                          conn.send_text(err.dump());
                      }
+                     // Only broadcast game state if the game is NOT over (to avoid conflict with game_over message)
+                     // and to prevent unnecessary traffic
+                     if (result != Info::GAME_WON && result != Info::GAME_LOST) {
+                         // Use Locked version because lobby_mutex is already held at line 85
+                         networkUtils.BroadcastGameStateLocked(lid);
+                     }
                  }
                  
-                 if (type == "game_action" || type == "join_game") {
-                     networkUtils.BroadcastGameState(lid);
+                 if (type == "join_game") {
+                     // For "join_game", only send state to the requesting client
+                     // This prevents N*N broadcasts when N players join simultaneously
+                     networkUtils.BroadcastGameState(lid, &conn);
                  }
              }
          });

@@ -3,6 +3,8 @@
 #include "ui_GameWindow.h"
 #include "NetworkManager.h"
 #include <QLabel> // Added for QLabel
+#include "WinDialog.h"
+#include "LossDialog.h"
 
 class GameWindow : public QWidget
 {
@@ -67,7 +69,8 @@ private:
     // Turn and Pile State for Client-Side Validation
     bool m_isMyTurn = false;
     int m_cardsPlayedThisTurn = 0; // Track number of cards played in current turn
-    int m_pileTopValues[4] = {1, 1, 100, 100}; // Current top card values [asc1, asc2, desc1, desc2]
+    int m_pileTopValues[4] = { 1, 1, 100, 100 }; // Current top card values [asc1, asc2, desc1, desc2]
+    int m_deckCount = 0; // Updated from server state. Default 0 safe for start.
 
     // Card Placement Validation
     bool canPlaceCardOnPile(int cardValue, int pileIndex) const;

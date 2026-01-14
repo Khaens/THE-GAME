@@ -13,12 +13,12 @@ void NetworkUtils::StartChatWorker() {
     }).detach();
 }
 
-void NetworkUtils::BroadcastGameState(const std::string& lobby_id) {
+void NetworkUtils::BroadcastGameState(const std::string& lobby_id, crow::websocket::connection* targetConn) {
     std::lock_guard<std::mutex> lock(lobby_mutex);
-    BroadcastGameStateLocked(lobby_id);
+    BroadcastGameStateLocked(lobby_id, targetConn);
 }
 
-void NetworkUtils::BroadcastGameStateLocked(const std::string& lobby_id) {
+void NetworkUtils::BroadcastGameStateLocked(const std::string& lobby_id, crow::websocket::connection* targetConn) {
     if (lobbies.find(lobby_id) == lobbies.end()) return;
     
     Lobby& lobby = *lobbies[lobby_id];
@@ -86,13 +86,22 @@ void NetworkUtils::BroadcastGameStateLocked(const std::string& lobby_id) {
     }
     state_base["players"] = std::move(players_json);
 
-    // Send to all connections
+    // Send to connections
     std::lock_guard<std::mutex> ws_lock(ws_mutex);
-    
     std::string msg = state_base.dump();
+
     if (lobby_connections.find(lobby_id) != lobby_connections.end()) {
-        for (auto* conn : lobby_connections[lobby_id]) {
-            if (conn) conn->send_text(msg);
+        // If targetConn is specified, send only to it
+        if (targetConn) {
+            targetConn->send_text(std::string(msg));
+        } 
+        // Otherwise broadcast to all
+        else {
+            for (auto* conn : lobby_connections[lobby_id]) {
+                if (conn) {
+                    conn->send_text(std::string(msg)); 
+                }
+            }
         }
     }
 }
