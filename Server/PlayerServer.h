@@ -15,7 +15,7 @@ class Player :
 	public UserModel, public IPlayer
 {
 private:
-    std::unordered_set<Card*> m_hand;
+    std::vector<std::unique_ptr<Card>> m_hand;
     Ability ability;
     size_t m_playerIndex = 10;
     bool m_finished = false;
@@ -24,9 +24,9 @@ public:
     Player(const UserModel& user);
     ~Player();
 
-    void AddCardToHand(Card* card) override;
-    void RemoveCardFromHand(Card* card) override;
-    const std::unordered_set<Card*>& GetHand() const override;
+    void AddCardToHand(std::unique_ptr<Card> card) override;
+    std::unique_ptr<Card> RemoveCardFromHand(Card* card) override;
+    const std::vector<std::unique_ptr<Card>>& GetHand() const override;
     Card* ChooseCard(std::string cardValue) override;
     const std::string& GetUsername() const override;
     void SetPlayerIndex(size_t index) override;
@@ -70,19 +70,27 @@ Player<Ability>::~Player()
 }
 
 template <typename Ability>
-void Player<Ability>::AddCardToHand(Card* card)
+void Player<Ability>::AddCardToHand(std::unique_ptr<Card> card)
 {
-    m_hand.insert(card);
+    m_hand.push_back(std::move(card));
 }
 
 template <typename Ability>
-void Player<Ability>::RemoveCardFromHand(Card* card)
+std::unique_ptr<Card> Player<Ability>::RemoveCardFromHand(Card* card)
 {
-    m_hand.erase(card);
+    auto it = std::find_if(m_hand.begin(), m_hand.end(),
+        [&card](const std::unique_ptr<Card>& c) { return c.get() == card; });
+
+    if (it != m_hand.end()) {
+        std::unique_ptr<Card> removedCard = std::move(*it);
+        m_hand.erase(it);
+        return removedCard;
+    }
+    return nullptr;
 }
 
 template <typename Ability>
-const std::unordered_set<Card*>& Player<Ability>::GetHand() const
+const std::vector<std::unique_ptr<Card>>& Player<Ability>::GetHand() const
 {
     return m_hand;
 }
@@ -91,10 +99,10 @@ template <typename Ability>
 Card* Player<Ability>::ChooseCard(std::string cardValue)
 {
     auto it = std::find_if(m_hand.begin(), m_hand.end(),
-        [&cardValue](Card* c) { return c->GetCardValue() == cardValue; });
+        [&cardValue](const std::unique_ptr<Card>& c) { return c->GetCardValue() == cardValue; });
 
     if (it != m_hand.end()) {
-        return *it;
+        return it->get();
     }
     return nullptr;
 }
@@ -133,9 +141,9 @@ inline bool Player<Ability>::IsFinished() const
 template<typename Ability>
 inline Card* Player<Ability>::GetCardFromHand(int cardValue) const
 {
-    for (auto card : m_hand) {
+    for (const auto& card : m_hand) {
         if (std::stoi(card->GetCardValue()) == cardValue) {
-            return card;
+            return card.get();
         }
     }
     return nullptr;
@@ -144,7 +152,7 @@ inline Card* Player<Ability>::GetCardFromHand(int cardValue) const
 template <typename Ability>
 void Player<Ability>::ShowHand()
 {
-    for (auto card : m_hand) {
+    for (const auto& card : m_hand) {
         std::cout << card->GetCardValue() << " ";
     }
     std::cout << std::endl;

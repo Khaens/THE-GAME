@@ -2,23 +2,23 @@
 
 Pile::Pile(PileType type) : m_type{ type }
 {
+    std::unique_ptr<Card> initialCard;
     if (type == PileType::ASCENDING) {
-        m_initialCard = new Card("1");
+        initialCard = std::make_unique<Card>("1");
     }
     else {
-        m_initialCard = new Card("100");
+        initialCard = std::make_unique<Card>("100");
     }
-    m_cards.push(m_initialCard);
+    m_cards.push(std::move(initialCard));
 }
 
 Pile::~Pile()
 {
-    delete m_initialCard;
 }
 
 const Card* Pile::GetTopCard()
 {
-	return m_cards.top();
+    return m_cards.top().get();
 }
 
 
@@ -28,9 +28,9 @@ PileType Pile::GetPileType() const
 }
 
 
-void Pile::PlaceCard(const Card* c)
+void Pile::PlaceCard(std::unique_ptr<Card> c)
 {
-    m_cards.push(const_cast<Card*>(c));
+    m_cards.push(std::move(c));
 }
 
 size_t Pile::GetSize() const

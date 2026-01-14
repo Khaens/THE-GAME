@@ -7,8 +7,10 @@ void Round::FirstRoundDealing(Game& game)
 	Deck& deck = game.GetDeck();
 	for (size_t i = 0; i < m_players.size(); i++) {
 		for (size_t j = 0; j < STARTING_HAND_SIZE; j++) {
-			Card* dealtCard = deck.DrawCard();
-			m_players[i]->AddCardToHand(dealtCard);
+			std::unique_ptr<Card> dealtCard = deck.DrawCard();
+			if (dealtCard) {
+				m_players[i]->AddCardToHand(std::move(dealtCard));
+			}
 		}
 	}
 }
@@ -37,12 +39,12 @@ bool Round::CanPlaceCard(Game& game, const Card* card, Pile* pile, TurnContext& 
 	}
 }
 
-Pile* Round::GetPile(int pileChoice, std::array<Pile*, PILES_AMOUNT> piles)
+Pile* Round::GetPile(int pileChoice, const std::array<std::unique_ptr<Pile>, PILES_AMOUNT>& piles)
 {
-	if (pileChoice == 1) return piles[0];
-	else if (pileChoice == 2) return piles[1];
-	else if (pileChoice == 3) return piles[2];
-	else if (pileChoice == 4) return piles[3];
+	if (pileChoice == 1) return piles[0].get();
+	else if (pileChoice == 2) return piles[1].get();
+	else if (pileChoice == 3) return piles[2].get();
+	else if (pileChoice == 4) return piles[3].get();
 	return nullptr;
 }
 
@@ -53,7 +55,8 @@ int Round::GetNrOfPlayableCardsInHand(Game& game, TurnContext& m_ctx)
 	const auto& m_players = game.GetPlayers();
 
 	int count = 0;
-	for (Card* card : currentPlayer.GetHand()) {
+	for (const auto& cardPtr : currentPlayer.GetHand()) {
+		Card* card = cardPtr.get();
 		if ((CanPlaceCard(game, card, piles[0], m_ctx) || CanPlaceCard(game, card, piles[1], m_ctx) ||
 			CanPlaceCard(game, card, piles[2], m_ctx) || CanPlaceCard(game, card, piles[3], m_ctx)) ||
 			(m_ctx.HPplayerIndex != -1 && m_players[m_ctx.HPplayerIndex]->HPActive())) {

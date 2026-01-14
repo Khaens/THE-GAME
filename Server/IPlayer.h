@@ -1,5 +1,6 @@
 #pragma once
-#include <unordered_set>
+#include <vector>
+#include <memory>
 #include <string>
 import Card;
 #include "TurnContext.h"
@@ -27,10 +28,10 @@ public:
 	virtual const bool GActive() = 0;
 	virtual void SetGActive(bool state) = 0;
 
-    virtual void ShowHand() = 0;
-    virtual const std::unordered_set<Card*>& GetHand() const = 0;
-	virtual void AddCardToHand(Card* card) = 0;
-	virtual void RemoveCardFromHand(Card* card) = 0;
+	virtual void ShowHand() = 0;
+    virtual const std::vector<std::unique_ptr<Card>>& GetHand() const = 0;
+	virtual void AddCardToHand(std::unique_ptr<Card> card) = 0;
+	virtual std::unique_ptr<Card> RemoveCardFromHand(Card* card) = 0;
 	virtual Card* ChooseCard(std::string cardValue) = 0;
 	virtual const std::string& GetUsername() const = 0;
 	virtual const int GetID() = 0;

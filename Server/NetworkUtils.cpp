@@ -62,10 +62,11 @@ void NetworkUtils::BroadcastGameState(const std::string& lobby_id) {
         player_val["is_finished"] = players[i]->IsFinished();
         player_val["player_index"] = players[i]->GetPlayerIndex();
         
-        // Hand
         std::vector<std::string> hand_cards;
-        for (const auto* card : players[i]->GetHand()) {
-            hand_cards.push_back(card->GetCardValue());
+        for (const auto& card : players[i]->GetHand()) {
+            if (card) {
+                hand_cards.push_back(card->GetCardValue());
+            }
         }
         player_val["hand"] = std::move(hand_cards); 
 

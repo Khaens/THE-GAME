@@ -43,7 +43,7 @@ private:
 	size_t m_currentPlayerIndex = 0;
 	size_t m_pileIndex = 0;
 	std::vector<std::unique_ptr<IPlayer>> m_players;
-	std::array<Pile*, PILES_AMOUNT> m_piles;
+	std::array<std::unique_ptr<Pile>, PILES_AMOUNT> m_piles;
 	Deck m_wholeDeck;
 	TurnContext m_ctx;
 	Database& m_database;
@@ -52,6 +52,14 @@ private:
 public:
 	Game(std::vector<UserModel>& users, Database& db);
 	~Game();
+
+    // Rule of 5: Move Semantics
+    Game(Game&& other) noexcept;
+    Game& operator=(Game&& other) noexcept;
+
+    // Rule of 5: Delete Copy
+    Game(const Game&) = delete;
+    Game& operator=(const Game&) = delete;
 
 	size_t WhoStartsFirst();
 	bool IsGameOver(IPlayer& currentPlayer);
@@ -66,7 +74,7 @@ public:
 	void CheckAchievements(IPlayer& currentPlayer);
 	void UpdateGameStats(bool won);
 
-	Card* DrawCard();
+	std::unique_ptr<Card> DrawCard();
 
 	size_t GetDeckSize() const;
 	IPlayer& GetCurrentPlayer();

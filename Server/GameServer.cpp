@@ -18,15 +18,13 @@ Game::Game(std::vector<UserModel>& users, Database& db) : m_numberOfPlayers{ use
 	}
 
 	for (int i = 2; i < CARD_SET; i++) {
-		Card* newCard = new Card(std::to_string(i));
-		Card* newCard2 = new Card(std::to_string(i));
-		m_wholeDeck.InsertCard(newCard);
-		m_wholeDeck.InsertCard(newCard2);
+		m_wholeDeck.InsertCard(std::make_unique<Card>(std::to_string(i)));
+		m_wholeDeck.InsertCard(std::make_unique<Card>(std::to_string(i)));
 	}
-	m_piles[m_pileIndex++] = new Pile{ PileType::ASCENDING };
-	m_piles[m_pileIndex++] = new Pile{ PileType::ASCENDING };
-	m_piles[m_pileIndex++] = new Pile{ PileType::DESCENDING };
-	m_piles[m_pileIndex++] = new Pile{ PileType::DESCENDING };
+	m_piles[m_pileIndex++] = std::make_unique<Pile>(PileType::ASCENDING);
+	m_piles[m_pileIndex++] = std::make_unique<Pile>(PileType::ASCENDING);
+	m_piles[m_pileIndex++] = std::make_unique<Pile>(PileType::DESCENDING);
+	m_piles[m_pileIndex++] = std::make_unique<Pile>(PileType::DESCENDING);
 
 	m_gameStats.reserve(m_numberOfPlayers);
 	for (int i = 0; i < m_numberOfPlayers; i++) {
@@ -36,9 +34,34 @@ Game::Game(std::vector<UserModel>& users, Database& db) : m_numberOfPlayers{ use
 
 Game::~Game()
 {
-	for (size_t i = 0; i < PILES_AMOUNT; i++) {
-		delete m_piles[i];
-	}
+}
+
+Game::Game(Game&& other) noexcept
+    : m_numberOfPlayers(other.m_numberOfPlayers),
+    m_currentPlayerIndex(other.m_currentPlayerIndex),
+    m_pileIndex(other.m_pileIndex),
+    m_players(std::move(other.m_players)),
+    m_piles(std::move(other.m_piles)),
+    m_wholeDeck(std::move(other.m_wholeDeck)), 
+    m_ctx(std::move(other.m_ctx)),
+    m_database(other.m_database),
+    m_gameStats(std::move(other.m_gameStats))
+{
+}
+
+Game& Game::operator=(Game&& other) noexcept
+{
+    if (this != &other) {
+        m_numberOfPlayers = other.m_numberOfPlayers;
+        m_currentPlayerIndex = other.m_currentPlayerIndex;
+        m_pileIndex = other.m_pileIndex;
+        m_players = std::move(other.m_players);
+        m_piles = std::move(other.m_piles);
+        m_wholeDeck = std::move(other.m_wholeDeck);
+        m_ctx = std::move(other.m_ctx);
+        m_gameStats = std::move(other.m_gameStats);
+    }
+    return *this;
 }
 
 size_t Game::WhoStartsFirst()
@@ -70,7 +93,6 @@ bool Game::IsGameOver(IPlayer& currentPlayer)
 }
 
 
-
 void Game::StartGame()
 {
 	m_wholeDeck.ShuffleDeck();
@@ -93,7 +115,6 @@ Info Game::PlaceCard(size_t playerIndex, int card, int pile)
 	if (!chosenCard) {
 		return Info::CARD_NOT_PLAYABLE;
 	}
-
 	Pile* chosenPile = Round::GetPile(pile, m_piles);
 
 	if (!chosenPile) {
@@ -120,9 +141,8 @@ Info Game::PlaceCard(size_t playerIndex, int card, int pile)
 		if (chosenCard->GetCardValue() == "7") m_gameStats[GetCurrentPlayer().GetID()].placed7 = true;
 		if (m_gameStats[GetCurrentPlayer().GetID()].placed6 && m_gameStats[GetCurrentPlayer().GetID()].placed7)
 			m_gameStats[GetCurrentPlayer().GetID()].placed6And7InSameRound = true;
-		chosenPile->PlaceCard(chosenCard);
+		chosenPile->PlaceCard(m_players[playerIndex]->RemoveCardFromHand(chosenCard)); 
 		m_ctx.placedCardsThisTurn++;
-		m_players[playerIndex]->RemoveCardFromHand(chosenCard);
 
 		if (IsGameOver(GetCurrentPlayer())) {
 			UpdateGameStats(false);
@@ -149,9 +169,9 @@ Info Game::EndTurn(size_t playerIndex)
 	
 	int cardsToDraw = m_ctx.placedCardsThisTurn;
 	for (int i = 0; i < cardsToDraw; i++) {
-		Card* drawnCard = m_wholeDeck.DrawCard();
+		std::unique_ptr<Card> drawnCard = m_wholeDeck.DrawCard();
 		if (drawnCard) {
-			m_players[playerIndex]->AddCardToHand(drawnCard);
+			m_players[playerIndex]->AddCardToHand(std::move(drawnCard));
 		}
 	}
 	if (playerIndex == m_ctx.GamblerPlayerIndex &&
@@ -328,7 +348,7 @@ IPlayer& Game::GetCurrentPlayer()
 	return *m_players[m_currentPlayerIndex];
 }
 
-Card* Game::DrawCard()
+std::unique_ptr<Card> Game::DrawCard()
 {
 	return m_wholeDeck.DrawCard();
 }
@@ -345,7 +365,11 @@ const std::vector<std::unique_ptr<IPlayer>>& Game::GetPlayers()
 
 std::array<Pile*, PILES_AMOUNT> Game::GetPiles()
 {
-	return m_piles;
+	std::array<Pile*, PILES_AMOUNT> rawPiles;
+    for (size_t i = 0; i < PILES_AMOUNT; ++i) {
+        rawPiles[i] = m_piles[i].get();
+    }
+    return rawPiles;
 }
 
 Deck& Game::GetDeck()
