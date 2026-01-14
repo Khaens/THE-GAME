@@ -1,8 +1,10 @@
-#include "PlayerFactory.h"
-#include "PlayerServer.h"
+module;
+
 #include <stdexcept>
 #include <random>
 #include <memory>
+
+module PlayerFactory;
 
 template class Player<Gambler>;
 template class Player<HarryPotter>;

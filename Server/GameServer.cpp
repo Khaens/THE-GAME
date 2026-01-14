@@ -1,5 +1,5 @@
 #include "GameServer.h"
-#include "PlayerFactory.h"
+import PlayerFactory;
 
 Game::Game(std::vector<UserModel>& users, Database& db) : m_numberOfPlayers{ users.size() }, m_database(db)
 {

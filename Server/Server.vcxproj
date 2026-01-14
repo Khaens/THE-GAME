@@ -150,6 +150,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Pile.cpp" />
     <ClCompile Include="PlayerFactory.cpp" />
+    <ClCompile Include="PlayerFactory.cppm" />
     <ClCompile Include="PlayerServer.cpp" />
     <ClCompile Include="Round.cpp" />
     <ClCompile Include="StatisticsModel.cpp" />
@@ -171,7 +172,6 @@
     <ClInclude Include="Lobby.h" />
     <ClInclude Include="Pile.h" />
     <ClInclude Include="PileType.h" />
-    <ClInclude Include="PlayerFactory.h" />
     <ClInclude Include="PlayerServer.h" />
     <ClInclude Include="Round.h" />
     <ClInclude Include="StatisticsModel.h" />
