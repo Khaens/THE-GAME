@@ -46,7 +46,7 @@ Pile* Round::GetPile(int pileChoice, std::array<Pile*, PILES_AMOUNT> piles)
 	return nullptr;
 }
 
-int Round::NrOfPlayableCardsInHand(Game& game, TurnContext& m_ctx)
+int Round::GetNrOfPlayableCardsInHand(Game& game, TurnContext& m_ctx)
 {
 	IPlayer& currentPlayer = game.GetCurrentPlayer();
 	std::array<Pile*, PILES_AMOUNT> piles = game.GetPiles();

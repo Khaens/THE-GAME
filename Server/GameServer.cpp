@@ -53,7 +53,7 @@ size_t Game::WhoStartsFirst()
 
 bool Game::IsGameOver(IPlayer& currentPlayer)
 {
-	int playableCards = Round::NrOfPlayableCardsInHand(*this, m_ctx);
+	int playableCards = Round::GetNrOfPlayableCardsInHand(*this, m_ctx);
 
 	if (currentPlayer.IsFinished()) return false;
 
@@ -66,8 +66,6 @@ bool Game::IsGameOver(IPlayer& currentPlayer)
 		std::cout << "Game Over! " << currentPlayer.GetUsername() << " loses!\n";
 		return true;
 	}
-	// Add safety check before finishing turn logic to catch issues early?
-	// For now, Round.cpp fix should cover the crash.
 	return false;
 }
 
@@ -143,14 +141,9 @@ Info Game::EndTurn(size_t playerIndex)
 		std::cout << "It's not your turn!\n";
 		return Info::NOT_CURRENT_PLAYER_TURN;
 	}
-	// Validation: Must play at least 2 cards unless deck is empty (or edge case where they literally can't)
-	// The requirement specifically asks to disable End Turn until 2 cards are played.
-	// We check m_gameStats or logic to see if deck is empty if we want to be nice, 
-	// but generally the rule is 2 cards.
-	
-	// If the deck is NOT empty, we enforce the rule strictly.
-	if (m_wholeDeck.GetSize() > 0 && m_ctx.placedCardsThisTurn < 2) {
-		std::cout << "Cannot end turn: Played " << m_ctx.placedCardsThisTurn << " cards, required 2.\n";
+
+	if (m_ctx.placedCardsThisTurn < m_ctx.currentRequired) {
+		std::cout << "Cannot end turn: Played " << m_ctx.placedCardsThisTurn << " cards, required " << m_ctx.currentRequired << "\n";
 		return Info::NOT_ENOUGH_PLAYED_CARDS;
 	}
 	
