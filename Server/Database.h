@@ -8,7 +8,7 @@
 using namespace sqlite_orm;
 
 inline auto initStorage(const std::string& path) {
-    return make_storage(path,
+    auto storage = make_storage(path,
         make_table("users",
             make_column("id", &UserModel::GetId, &UserModel::SetId, primary_key().autoincrement()),
             make_column("username", &UserModel::GetUsername, &UserModel::SetUsername, unique()),
@@ -40,6 +40,12 @@ inline auto initStorage(const std::string& path) {
             make_column("win_rate", &StatisticsModel::GetWinRate, &StatisticsModel::SetWinRate),
             foreign_key(&StatisticsModel::GetUserId).references(&UserModel::GetId).on_delete.cascade())
         );
+    
+    storage.on_open = [](sqlite3* db) {
+        sqlite3_exec(db, "PRAGMA foreign_keys = ON", nullptr, nullptr, nullptr);
+    };
+    
+    return storage;
 }
 
 

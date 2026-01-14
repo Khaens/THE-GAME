@@ -48,6 +48,7 @@ private:
 	TurnContext m_ctx;
 	Database& m_database;
 	std::unordered_map<int, GameStatistics> m_gameStats;
+	mutable std::mutex m_stateMutex;
 
 public:
 	Game(std::vector<UserModel>& users, Database& db);
@@ -81,4 +82,5 @@ public:
 	const std::vector<std::unique_ptr<IPlayer>>& GetPlayers();
 	std::array<Pile*, PILES_AMOUNT> GetPiles();
 	Deck& GetDeck();
+	std::mutex& GetStateMutex() { return m_stateMutex; }
 };

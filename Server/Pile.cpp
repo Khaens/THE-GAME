@@ -18,6 +18,9 @@ Pile::~Pile()
 
 const Card* Pile::GetTopCard()
 {
+    if (m_cards.empty()) {
+        return nullptr;
+    }
     return m_cards.top().get();
 }
 

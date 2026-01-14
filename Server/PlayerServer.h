@@ -8,6 +8,7 @@ import Card;
 #include "TaxEvader.h"
 #include "Soothsayer.h"
 #include "Peasant.h"
+#include <string_view>
 #include "TurnContext.h"
 
 template <typename Ability>
@@ -36,7 +37,7 @@ public:
     Card* GetCardFromHand(int cardValue) const override;
 
     void ShowHand() override;
-	void UseAbility(TurnContext& ctx, size_t currentPIndex) override;
+	void UseAbility(TurnContext& ctx, size_t CurrentPIndex) override;
     bool CanUseAbility(TurnContext& ctx) const override;
     const int GetID() override;
 

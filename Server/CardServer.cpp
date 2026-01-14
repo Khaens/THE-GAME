@@ -1,5 +1,3 @@
-module;
-
 #include <string>
 
 module Card;

@@ -1,4 +1,8 @@
 #include "DeckServer.h"
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <iostream>
 
 Deck::Deck() 
 {
@@ -50,7 +54,9 @@ void Deck::ShowDeck() const
 {
 	std::vector<std::string> cardValues;
 	for (const auto& card : m_initialCards) {
-		cardValues.push_back(card->GetCardValue());
+		if (card) {
+			cardValues.push_back(card->GetCardValue());
+		}
 	}
 	std::sort(cardValues.begin(), cardValues.end());
 	std::cout << "\n";

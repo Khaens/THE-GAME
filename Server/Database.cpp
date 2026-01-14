@@ -29,8 +29,8 @@ Database::Database(const std::string& path) : storage(initStorage(path)), dbPath
     }
 }
 
-static std::string HashPassword(const std::string& password) {
-    std::hash<std::string> hasher;
+static std::string HashPassword(std::string_view password) {
+    std::hash<std::string_view> hasher;
     return std::to_string(hasher(password));
 }
 
@@ -83,39 +83,36 @@ bool Database::UpdatePasswordRecovery(int userId, const std::string& newPassword
 
 int Database::InsertUser(const UserModel& user) {
     try {
-        UserModel hashedUser = user;
-        hashedUser.SetPassword(HashPassword(user.GetPassword()));
-        int userId = storage.insert(hashedUser);
+        return storage.transaction([&]() -> int {
+            UserModel hashedUser = user;
+            hashedUser.SetPassword(HashPassword(user.GetPassword()));
+            int userId = storage.insert(hashedUser);
 
-        AchievementsModel achievements(userId);
-        InsertAchievements(achievements);
+            AchievementsModel achievements(userId);
+            InsertAchievements(achievements);
 
-        StatisticsModel statistics(userId);
-        InsertStatistics(statistics);
+            StatisticsModel statistics(userId);
+            InsertStatistics(statistics);
 
-        return userId;
+            return userId;
+        });
     }
     catch (std::exception& e) {
-        std::cerr << "Error inserting user: " << e.what() << std::endl;
+        std::cerr << "Error inserting user (transaction failed): " << e.what() << std::endl;
         return -1;
     }
 }
 
 bool Database::VerifyLogin(const std::string& username, const std::string& plainPassword) {
     try {
-        auto selectStatement = storage.prepare(
-            select(&UserModel::GetPassword,
-                where(c(&UserModel::GetUsername) == username))
-        );
+        auto users = storage.get_all<UserModel>(where(c(&UserModel::GetUsername) == username));
 
-        auto rows = storage.execute(selectStatement);
-
-        if (rows.empty()) {
+        if (users.empty()) {
             return false;
         }
-        std::string test = HashPassword(plainPassword);
-        std::cout << "Stored hash: " << rows[0] << ", Computed hash: " << test << std::endl;
-        return HashPassword(plainPassword) == rows[0];
+        
+        std::string computedHash = HashPassword(plainPassword);
+        return computedHash == users[0].GetPassword();
     }
     catch (std::exception& e) {
         std::cerr << "Login error: " << e.what() << std::endl;
@@ -125,26 +122,13 @@ bool Database::VerifyLogin(const std::string& username, const std::string& plain
 
 UserModel Database::GetUserByUsername(const std::string& username) {
     try {
-        auto selectStatement = storage.prepare(
-            select(columns(&UserModel::GetId,
-                &UserModel::GetUsername,
-                &UserModel::GetPassword),
-                where(c(&UserModel::GetUsername) == username))
-        );
+        auto users = storage.get_all<UserModel>(where(c(&UserModel::GetUsername) == username));
 
-        auto rows = storage.execute(selectStatement);
-
-        if (rows.empty()) {
+        if (users.empty()) {
             throw std::runtime_error("User not found");
         }
 
-        auto& row = rows[0];
-        UserModel user;
-        user.SetId(std::get<0>(row));
-        user.SetUsername(std::get<1>(row));
-        user.SetPassword(std::get<2>(row));
-
-        return user;
+        return users[0];
     }
     catch (std::exception& e) {
         std::cerr << "Error getting user: " << e.what() << std::endl;
@@ -172,27 +156,18 @@ void Database::UpdateUser(const UserModel& user) {
 
 void Database::DeleteUser(int id) {
     try {
-        AchievementsModel achievements = GetAchievementsByUserId(id);
-
-        storage.remove<AchievementsModel>(achievements.GetId());
+        // Relying on ON DELETE CASCADE defined in Database.h
         storage.remove<UserModel>(id);
-
-        std::cout << "User " << id << " and associated achievements deleted." << std::endl;
+        std::cout << "User " << id << " and all associated data deleted via CASCADE." << std::endl;
     }
     catch (std::exception& e) {
-        std::cerr << "Error deleting user and associated data: " << e.what() << std::endl;
+        std::cerr << "Error deleting user: " << e.what() << std::endl;
     }
 }
 
 bool Database::UserExists(const std::string& username) {
     try {
-        auto selectStatement = storage.prepare(
-            select(count<UserModel>(),
-                where(c(&UserModel::GetUsername) == username))
-        );
-
-        auto result = storage.execute(selectStatement);
-        return !result.empty() && result[0] > 0;
+        return storage.count<UserModel>(where(c(&UserModel::GetUsername) == username)) > 0;
     }
     catch (std::exception& e) {
         std::cerr << "Error checking user existence: " << e.what() << std::endl;

@@ -1,7 +1,11 @@
 #include "GameServer.h"
 import PlayerFactory;
 
-Game::Game(std::vector<UserModel>& users, Database& db) : m_numberOfPlayers{ users.size() }, m_database(db)
+Game::Game(std::vector<UserModel>& users, Database& db) : 
+    m_numberOfPlayers{ users.size() }, 
+    m_currentPlayerIndex(0), 
+    m_pileIndex(0), 
+    m_database(db)
 {
 	m_players.reserve(m_numberOfPlayers);
 	if (users.size() < MIN_PLAYERS || users.size() > MAX_PLAYERS) {
@@ -80,13 +84,14 @@ bool Game::IsGameOver(IPlayer& currentPlayer)
 
 	if (currentPlayer.IsFinished()) return false;
 
-	if (m_currentPlayerIndex == m_ctx.HPplayerIndex && currentPlayer.GetHPFlag()) {
-		std::cout << "No one played a +/-10 card until " << currentPlayer.GetUsername() << "'s turn. All players lose!\n";
+    const std::string& username = currentPlayer.GetUsername();
+	if (m_currentPlayerIndex == static_cast<size_t>(m_ctx.HPplayerIndex) && currentPlayer.GetHPFlag()) {
+		std::cout << "No one played a +/-10 card until " << username << "'s turn. All players lose!\n";
 		return true;
 	}
 	if (playableCards + m_ctx.placedCardsThisTurn < m_ctx.currentRequired) {
-		std::cout << currentPlayer.GetUsername() << " cannot play the required number of cards (" << m_ctx.currentRequired << ").\n";
-		std::cout << "Game Over! " << currentPlayer.GetUsername() << " loses!\n";
+		std::cout << username << " cannot play the required number of cards (" << m_ctx.currentRequired << ").\n";
+		std::cout << "Game Over! " << username << " loses!\n";
 		return true;
 	}
 	return false;
@@ -95,6 +100,7 @@ bool Game::IsGameOver(IPlayer& currentPlayer)
 
 void Game::StartGame()
 {
+    std::lock_guard<std::mutex> lock(m_stateMutex);
 	m_wholeDeck.ShuffleDeck();
 	Round::FirstRoundDealing(*this);
 	m_currentPlayerIndex = WhoStartsFirst();
@@ -122,15 +128,22 @@ Info Game::PlaceCard(size_t playerIndex, int card, int pile)
 	}
 
 	if (Round::CanPlaceCard(*this, chosenCard, chosenPile, m_ctx)) {
-		if (m_ctx.HPplayerIndex != -1 && m_players[m_ctx.HPplayerIndex]->HPActive()) {
-			if (std::stoi(chosenCard->GetCardValue()) == std::stoi(chosenPile->GetTopCard()->GetCardValue()) + 10 ||
-				std::stoi(chosenCard->GetCardValue()) == std::stoi(chosenPile->GetTopCard()->GetCardValue()) - 10) {
-				m_players[m_ctx.HPplayerIndex]->SetHPFlag(false);
-			}
+        const Card* pileTopCard = chosenPile->GetTopCard();
+        if (!pileTopCard) {
+             return Info::PILE_NOT_FOUND; // Or appropriate error
+        }
+
+		if (m_ctx.HPplayerIndex != -1 && m_players[static_cast<size_t>(m_ctx.HPplayerIndex)]->HPActive()) {
+            try {
+			    if (std::stoi(chosenCard->GetCardValue()) == std::stoi(pileTopCard->GetCardValue()) + 10 ||
+				    std::stoi(chosenCard->GetCardValue()) == std::stoi(pileTopCard->GetCardValue()) - 10) {
+				    m_players[static_cast<size_t>(m_ctx.HPplayerIndex)]->SetHPFlag(false);
+			    }
+            } catch (...) {}
 		}
 		int diff = 0;
 		try {
-			diff = std::abs(std::stoi(chosenCard->GetCardValue()) - std::stoi(chosenPile->GetTopCard()->GetCardValue()));
+			diff = std::abs(std::stoi(chosenCard->GetCardValue()) - std::stoi(pileTopCard->GetCardValue()));
 		} catch(...) {
 			std::cout << "Error calculating diff in PlaceCard." << std::endl;
 		}
@@ -295,6 +308,7 @@ void Game::UpdateGameStats(bool won)
 {
 	for (const auto& player : m_players) {
 		int userId = player->GetID();
+        const std::string& username = player->GetUsername();
 		try {
 			StatisticsModel stats = m_database.GetStatisticsByUserId(userId);
 			
@@ -304,7 +318,7 @@ void Game::UpdateGameStats(bool won)
 				stats.SetWinRate((float)stats.GetGamesWon() / stats.GetGamesPlayed());
 
 			m_database.UpdateStatistics(stats);
-			std::cout << "Updated statistics for user " << player->GetUsername() 
+			std::cout << "Updated statistics for user " << username 
 				<< ": Games Played=" << stats.GetGamesPlayed() 
 				<< ", Games Won=" << stats.GetGamesWon() 
 				<< ", Win Rate=" << stats.GetWinRate() << std::endl;
@@ -345,6 +359,9 @@ Info Game::UseAbility(size_t playerIndex) // Sothsayer Ability logic to be imple
 
 IPlayer& Game::GetCurrentPlayer()
 {
+    if (m_currentPlayerIndex >= m_players.size()) {
+        throw std::out_of_range("Current player index out of range");
+    }
 	return *m_players[m_currentPlayerIndex];
 }
 

@@ -16,11 +16,11 @@ void GameRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtils
             std::cout << "Game WebSocket closed" << std::endl;
             std::lock_guard<std::mutex> lock(networkUtils.ws_mutex);
              for (auto& [lobby_id, connections] : networkUtils.lobby_connections) {
-                connections.erase(
-                    std::remove_if(connections.begin(), connections.end(),
-                        [&conn](crow::websocket::connection* c) { return c == &conn; }),
-                    connections.end()
-                );
+                auto it = std::remove_if(connections.begin(), connections.end(),
+                    [&conn](crow::websocket::connection* c) { return c == &conn; });
+                if (it != connections.end()) {
+                    connections.erase(it, connections.end());
+                }
             }
         })
         .onmessage([&networkUtils](crow::websocket::connection& conn, const std::string& data, bool is_binary) {
@@ -52,7 +52,7 @@ void GameRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtils
                              const auto& players = game->GetPlayers();
                              for(const auto& p : players) {
                                  if (p->GetID() == uid) {
-                                     username = p->GetUsername();
+                                     username = std::string(p->GetUsername());
                                      break;
                                  }
                              }

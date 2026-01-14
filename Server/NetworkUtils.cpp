@@ -15,11 +15,18 @@ void NetworkUtils::StartChatWorker() {
 
 void NetworkUtils::BroadcastGameState(const std::string& lobby_id) {
     std::lock_guard<std::mutex> lock(lobby_mutex);
+    BroadcastGameStateLocked(lobby_id);
+}
+
+void NetworkUtils::BroadcastGameStateLocked(const std::string& lobby_id) {
     if (lobbies.find(lobby_id) == lobbies.end()) return;
     
     Lobby& lobby = *lobbies[lobby_id];
     Game* game = lobby.GetGame();
     if (!game) return;
+
+    // Lock game state to prevent concurrent modification during iteration
+    std::lock_guard<std::mutex> game_lock(game->GetStateMutex());
 
     crow::json::wvalue state_base;
     state_base["type"] = "game_state";
@@ -31,7 +38,12 @@ void NetworkUtils::BroadcastGameState(const std::string& lobby_id) {
     for (size_t i = 0; i < piles.size(); ++i) {
         if (piles[i]) {
             crow::json::wvalue pile_val;
-            pile_val["top_card"] = piles[i]->GetTopCard()->GetCardValue();
+            const Card* topCard = piles[i]->GetTopCard();
+            if (topCard) {
+                pile_val["top_card"] = std::string(topCard->GetCardValue());
+            } else {
+                pile_val["top_card"] = "ERR"; 
+            }
             pile_val["count"] = (int)piles[i]->GetSize();
             piles_json.push_back(std::move(pile_val));
         }
@@ -45,7 +57,7 @@ void NetworkUtils::BroadcastGameState(const std::string& lobby_id) {
     try {
         IPlayer& current_player = game->GetCurrentPlayer();
         state_base["current_turn_player_id"] = current_player.GetID();
-        state_base["current_turn_username"] = current_player.GetUsername();
+        state_base["current_turn_username"] = std::string(current_player.GetUsername());
     } catch (...) {
         state_base["current_turn_player_id"] = -1;
     }
@@ -57,7 +69,7 @@ void NetworkUtils::BroadcastGameState(const std::string& lobby_id) {
     for (size_t i = 0; i < players.size(); ++i) {
         crow::json::wvalue player_val;
         player_val["user_id"] = players[i]->GetID();
-        player_val["username"] = players[i]->GetUsername();
+        player_val["username"] = std::string(players[i]->GetUsername());
         player_val["hand_count"] = (int)players[i]->GetHand().size();
         player_val["is_finished"] = players[i]->IsFinished();
         player_val["player_index"] = players[i]->GetPlayerIndex();
@@ -65,7 +77,7 @@ void NetworkUtils::BroadcastGameState(const std::string& lobby_id) {
         std::vector<std::string> hand_cards;
         for (const auto& card : players[i]->GetHand()) {
             if (card) {
-                hand_cards.push_back(card->GetCardValue());
+                hand_cards.push_back(std::string(card->GetCardValue()));
             }
         }
         player_val["hand"] = std::move(hand_cards); 

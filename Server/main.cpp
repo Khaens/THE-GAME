@@ -1,4 +1,5 @@
 ﻿#include <crow.h>
+#include <memory>
 #include "Database.h"
 #include "NetworkUtils.h"
 #include "AuthRoutes.h"
@@ -7,7 +8,7 @@
 
 int main() {
     crow::SimpleApp app;
-    Database* db = new Database("users.db");
+    auto db = std::make_unique<Database>("users.db");
     
     // Centralized access to globals and helpers
     NetworkUtils networkUtils;
@@ -16,9 +17,9 @@ int main() {
     networkUtils.StartChatWorker();
 
     // Register Routes (const instances as requested)
-    const AuthRoutes authRoutes(app, db, networkUtils);
-    const LobbyRoutes lobbyRoutes(app, db, networkUtils);
-    const GameRoutes gameRoutes(app, db, networkUtils);
+    const AuthRoutes authRoutes(app, db.get(), networkUtils);
+    const LobbyRoutes lobbyRoutes(app, db.get(), networkUtils);
+    const GameRoutes gameRoutes(app, db.get(), networkUtils);
 
     CROW_ROUTE(app, "/")([]() {
         return crow::response(200, "THE GAME Server is running!");

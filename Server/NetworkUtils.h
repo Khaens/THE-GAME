@@ -41,6 +41,7 @@ public:
 
     // --- Helper Functions ---
     void BroadcastGameState(const std::string& lobby_id);
+    void BroadcastGameStateLocked(const std::string& lobby_id);
     std::string CensorMessage(std::string input);
     void ChatWorker();
     

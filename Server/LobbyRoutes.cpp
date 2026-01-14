@@ -1,6 +1,7 @@
 #include "LobbyRoutes.h"
 #include <iostream>
 #include <algorithm>
+#include <string>
 
 LobbyRoutes::LobbyRoutes(crow::SimpleApp& app, Database* db, NetworkUtils& networkUtils) {
     RegisterRoutes(app, db, networkUtils);
@@ -156,7 +157,7 @@ void LobbyRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtil
         int player_index = 0;
         for (const auto& user : lobby.GetUsers()) {
             response["players"][player_index]["user_id"] = user.GetId();
-            response["players"][player_index]["username"] = user.GetUsername();
+            response["players"][player_index]["username"] = std::string(user.GetUsername());
             response["players"][player_index]["is_host"] = lobby.IsOwner(user.GetId());
             player_index++;
         }
@@ -178,6 +179,7 @@ void LobbyRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtil
         try {
             lobby.Start();
             std::cout << "Lobby " << lobby_id << " started!" << std::endl;
+            networkUtils.BroadcastGameStateLocked(lobby_id);
         } catch (const std::exception& e) {
             crow::json::wvalue response;
             response["success"] = false;
@@ -263,7 +265,7 @@ void LobbyRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtil
             std::string username = "Player_" + std::to_string(user_id);
             try {
                 UserModel user = db->GetUserById(user_id);
-                username = user.GetUsername();
+                username = std::string(user.GetUsername());
             } catch (...) {}
             
             crow::json::wvalue update;
@@ -300,11 +302,11 @@ void LobbyRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtil
             std::cout << "Lobby WebSocket closed" << std::endl;
             std::lock_guard<std::mutex> lock(networkUtils.lobby_ws_mutex);
             for (auto& [lobby_id, connections] : networkUtils.lobby_update_connections) {
-                connections.erase(
-                    std::remove_if(connections.begin(), connections.end(),
-                        [&conn](crow::websocket::connection* c) { return c == &conn; }),
-                    connections.end()
-                );
+                auto it = std::remove_if(connections.begin(), connections.end(),
+                    [&conn](crow::websocket::connection* c) { return c == &conn; });
+                if (it != connections.end()) {
+                    connections.erase(it, connections.end());
+                }
             }
         })
         .onmessage([&networkUtils](crow::websocket::connection& conn, const std::string& data, bool is_binary) {
