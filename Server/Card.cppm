@@ -1,7 +1,10 @@
-#pragma once
+module;
+
 #include <string>
 
-class Card
+export module Card;
+
+export class Card
 {
 private:
 	std::string m_cardValue;

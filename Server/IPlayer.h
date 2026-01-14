@@ -1,6 +1,7 @@
 #pragma once
 #include <unordered_set>
-#include "CardServer.h"
+#include <string>
+import Card;
 #include "TurnContext.h"
 
 

@@ -1,5 +1,5 @@
 #pragma once
-#include "CardServer.h"
+import Card;
 #include "PileType.h"
 #include <stack>
 #include <stdexcept>

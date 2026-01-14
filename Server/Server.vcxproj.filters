@@ -1,114 +1,98 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="AchievementsModel.cpp" />
+    <ClCompile Include="Database.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="StatisticsModel.cpp" />
+    <ClCompile Include="Card.cppm">
+      <Filter>Header Files\Game Logic</Filter>
     </ClCompile>
-    <ClCompile Include="Database.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="PlayerFactory.cppm">
+      <Filter>Header Files\Player</Filter>
     </ClCompile>
     <ClCompile Include="CardServer.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Game Logic</Filter>
     </ClCompile>
     <ClCompile Include="DeckServer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Pile.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Game Logic</Filter>
     </ClCompile>
     <ClCompile Include="GameServer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="UserModel.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Game Logic</Filter>
     </ClCompile>
     <ClCompile Include="Lobby.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Game Logic</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerFactory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="AchievementsModel.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Pile.cpp">
+      <Filter>Source Files\Game Logic</Filter>
     </ClCompile>
     <ClCompile Include="Round.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Game Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="UserModel.cpp">
+      <Filter>Source Files\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerFactory.cpp">
+      <Filter>Source Files\Player</Filter>
     </ClCompile>
     <ClCompile Include="PlayerServer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="StatisticsModel.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="NetworkUtils.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Player</Filter>
     </ClCompile>
     <ClCompile Include="AuthRoutes.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="LobbyRoutes.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Network</Filter>
     </ClCompile>
     <ClCompile Include="GameRoutes.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="LobbyRoutes.cpp">
+      <Filter>Source Files\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkUtils.cpp">
+      <Filter>Source Files\Network</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Database.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CardServer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="DeckServer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Pile.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PileType.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerServer.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Game Logic</Filter>
     </ClInclude>
     <ClInclude Include="GameServer.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Game Logic</Filter>
     </ClInclude>
-    <ClInclude Include="UserModel.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Pile.h">
+      <Filter>Header Files\Game Logic</Filter>
     </ClInclude>
-    <ClInclude Include="AchievementsModel.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IPlayer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Lobby.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="AbilityType.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerFactory.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="PileType.h">
+      <Filter>Header Files\Game Logic</Filter>
     </ClInclude>
     <ClInclude Include="Round.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Game Logic</Filter>
+    </ClInclude>
+    <ClInclude Include="AbilityType.h">
+      <Filter>Header Files\Game Logic</Filter>
+    </ClInclude>
+    <ClInclude Include="IPlayer.h">
+      <Filter>Header Files\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerServer.h">
+      <Filter>Header Files\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="UserModel.h">
+      <Filter>Header Files\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="AuthRoutes.h">
+      <Filter>Header Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="GameRoutes.h">
+      <Filter>Header Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="LobbyRoutes.h">
+      <Filter>Header Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkUtils.h">
+      <Filter>Header Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Lobby.h">
+      <Filter>Header Files\Network</Filter>
     </ClInclude>
     <ClInclude Include="StatisticsModel.h">
       <Filter>Header Files</Filter>
@@ -116,18 +100,37 @@
     <ClInclude Include="GameStatistics.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Database.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AchievementsModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
-    <ClInclude Include="NetworkUtils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="AuthRoutes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LobbyRoutes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GameRoutes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{36ccc451-f26f-44dc-a6b0-471761ba055f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Game Logic">
+      <UniqueIdentifier>{5fc0b895-5e42-47ea-b9f0-f897eaf13ace}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Player">
+      <UniqueIdentifier>{754d7386-bbef-45ac-a7b1-fdc6da18a44d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Network">
+      <UniqueIdentifier>{0c5a5354-4842-4b35-bf23-25f7f3c95284}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{c6030ae9-bf2a-426a-aa71-64fd27cc8d64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game Logic">
+      <UniqueIdentifier>{879ed57c-86e7-4ad5-8db2-20deb0663d4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Player">
+      <UniqueIdentifier>{a04f6a77-d94e-4013-9b65-7a563e965051}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Network">
+      <UniqueIdentifier>{0d3d7bb4-cea8-4e8f-84a7-46184f7daa10}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>
