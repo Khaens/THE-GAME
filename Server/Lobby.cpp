@@ -2,7 +2,8 @@
 #include <algorithm>
 
 Lobby::Lobby(Database* db, const std::string& name, int maxPlayers, const std::string& password)
-    : m_id(GenerateRandomId()), m_name(name), m_password(password), m_db(db)
+    : m_id(GenerateRandomId()), m_name(name), m_password(password), m_db(db), m_maxPlayers(maxPlayers),
+    m_roundStartTime(std::chrono::steady_clock::now())
 {
 }
 
@@ -14,7 +15,7 @@ void Lobby::JoinLobby(int userId)
         }
     }
 
-    if (static_cast<int>(m_Users.size()) > MAX_PLAYERS) {
+    if (static_cast<int>(m_Users.size()) >= m_maxPlayers) {
         throw std::runtime_error("Lobby is full");
     }
 
@@ -25,6 +26,7 @@ void Lobby::JoinLobby(int userId)
     }
     
     m_Users.push_back(std::move(user));
+    m_roundStartTime = std::chrono::steady_clock::now();
 }
 
 void Lobby::JoinLobby(const std::string& playerName)
@@ -35,7 +37,7 @@ void Lobby::JoinLobby(const std::string& playerName)
         }
     }
 
-    if (static_cast<int>(m_Users.size()) > MAX_PLAYERS) {
+    if (static_cast<int>(m_Users.size()) >= m_maxPlayers) {
         throw std::runtime_error("Lobby is full");
     }
 
@@ -46,6 +48,7 @@ void Lobby::JoinLobby(const std::string& playerName)
     }
     
     m_Users.push_back(std::move(user));
+    m_roundStartTime = std::chrono::steady_clock::now();
 }
 
 void Lobby::LeaveLobby(int userId)
@@ -55,6 +58,7 @@ void Lobby::LeaveLobby(int userId)
     
     if (it != m_Users.end()) {
         m_Users.erase(it);
+        m_roundStartTime = std::chrono::steady_clock::now();
     }
 }
 
@@ -86,7 +90,7 @@ const std::string& Lobby::GetName() const
 
 int Lobby::GetMaxPlayers() const
 {
-    return MAX_PLAYERS;
+    return m_maxPlayers;
 }
 
 int Lobby::GetCurrentPlayers() const
@@ -137,6 +141,11 @@ bool Lobby::IsUserInLobby(int userId) const
         }
     }
     return false;
+}
+
+std::chrono::steady_clock::time_point Lobby::GetRoundStartTime() const
+{
+    return m_roundStartTime;
 }
 
 std::vector<int> Lobby::GetPlayerIds() const

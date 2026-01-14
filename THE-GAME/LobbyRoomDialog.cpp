@@ -564,6 +564,20 @@ void LobbyRoomDialog::handleLobbyUpdate(const LobbyStatus& status)
     // Store max_players for later use
     m_maxPlayers = status.max_players;
 
+    // Helper: Update Name
+    if (!status.name.empty()) {
+        m_lobbyName = QString::fromStdString(status.name);
+        if(m_lobbyNameLabel) m_lobbyNameLabel->setText(m_lobbyName);
+    }
+    
+    // Helper: Sync Timer
+    if (status.remaining_seconds >= 0) {
+        m_countdownSeconds = status.remaining_seconds;
+        if(m_countdownBar) m_countdownBar->setValue(m_countdownSeconds);
+        // Force update of label immediately
+        if(m_countdownLabel) m_countdownLabel->setText(QString("Game starts in: %1s").arg(m_countdownSeconds));
+    }
+
     // Update player count label
     if (m_playerCountLabel) {
         m_playerCountLabel->setText(QString("Players: %1/%2")
@@ -596,10 +610,25 @@ void LobbyRoomDialog::handleLobbyWebSocketMessage(const QJsonObject& message)
         int max_players = message["max_players"].toInt();
         
         // Update player count
+        m_maxPlayers = max_players; // Sync max players
         if (m_playerCountLabel) {
             m_playerCountLabel->setText(QString("Players: %1/%2")
                 .arg(current_players)
                 .arg(max_players));
+        }
+        
+        // Update Name if present
+        if (message.contains("name")) {
+            m_lobbyName = message["name"].toString();
+            if(m_lobbyNameLabel) m_lobbyNameLabel->setText(m_lobbyName);
+        }
+
+        // Update Timer if present
+        if (message.contains("remaining_seconds")) {
+            int rem = message["remaining_seconds"].toInt();
+            m_countdownSeconds = rem;
+             if(m_countdownBar) m_countdownBar->setValue(m_countdownSeconds);
+             if(m_countdownLabel) m_countdownLabel->setText(QString("Game starts in: %1s").arg(m_countdownSeconds));
         }
         
         // Fetch updated player list to get all players with correct info
@@ -614,10 +643,26 @@ void LobbyRoomDialog::handleLobbyWebSocketMessage(const QJsonObject& message)
         int max_players = message["max_players"].toInt();
         bool game_started = message["game_started"].toBool();
         
+        m_maxPlayers = max_players;
+
         if (m_playerCountLabel) {
             m_playerCountLabel->setText(QString("Players: %1/%2")
                 .arg(current_players)
                 .arg(max_players));
+        }
+
+        // Update Name if present
+        if (message.contains("name")) {
+            m_lobbyName = message["name"].toString();
+            if(m_lobbyNameLabel) m_lobbyNameLabel->setText(m_lobbyName);
+        }
+
+        // Update Timer if present
+        if (message.contains("remaining_seconds")) {
+            int rem = message["remaining_seconds"].toInt();
+            m_countdownSeconds = rem;
+             if(m_countdownBar) m_countdownBar->setValue(m_countdownSeconds);
+             if(m_countdownLabel) m_countdownLabel->setText(QString("Game starts in: %1s").arg(m_countdownSeconds));
         }
         
         if (game_started) {

@@ -136,6 +136,11 @@ void LobbyRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtil
         response["current_players"] = lobby.GetCurrentPlayers(); 
         response["max_players"] = lobby.GetMaxPlayers();
         response["game_started"] = lobby.IsStarted();
+        response["name"] = lobby.GetName();
+        auto duration = std::chrono::steady_clock::now() - lobby.GetRoundStartTime();
+        int elapsed_seconds = std::chrono::duration_cast<std::chrono::seconds>(duration).count();
+        int remaining = std::max(0, 60 - elapsed_seconds);
+        response["remaining_seconds"] = remaining;
         return crow::response(200, response);
     });
 
@@ -337,6 +342,11 @@ void LobbyRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtil
                              update["current_players"] = lobby.GetCurrentPlayers();
                              update["max_players"] = lobby.GetMaxPlayers();
                              update["game_started"] = lobby.IsStarted();
+                             update["name"] = lobby.GetName();
+                             auto duration = std::chrono::steady_clock::now() - lobby.GetRoundStartTime();
+                             int elapsed_seconds = std::chrono::duration_cast<std::chrono::seconds>(duration).count();
+                             int remaining = std::max(0, 60 - elapsed_seconds);
+                             update["remaining_seconds"] = remaining;
                              conn.send_text(update.dump());
                          }
                      }

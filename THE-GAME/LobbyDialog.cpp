@@ -226,8 +226,6 @@ void LobbyDialog::onJoinLobbyClicked()
         bool success = m_networkManager->joinLobby(m_userId, code_to_join);
 
         if (success) {
-            QMessageBox::information(this, "Success",
-                "Successfully joined lobby with code: " + lobbyCode);
             hideOverlay();
 
             // Create and show LobbyRoomDialog

@@ -728,7 +728,20 @@ void GameWindow::handleGameState(const QJsonObject& state)
         
         // If deck count changed, re-evaluate button state
         if (oldDeckCount != m_deckCount) {
-            updateEndTurnButtonState();
+             updateEndTurnButtonState();
+             
+             // Trigger Deck Exit Animation if deck becomes empty
+             if (m_deckCount == 0 && oldDeckCount > 0) {
+                 if (ui && ui->cardBack) {
+                     QRect currentGeom = ui->cardBack->geometry();
+                     QPropertyAnimation* anim = new QPropertyAnimation(ui->cardBack, "geometry");
+                     anim->setDuration(1500);
+                     anim->setStartValue(currentGeom);
+                     anim->setEndValue(QRect(currentGeom.x(), -currentGeom.height(), currentGeom.width(), currentGeom.height()));
+                     anim->setEasingCurve(QEasingCurve::InBack);
+                     anim->start(QAbstractAnimation::DeleteWhenStopped);
+                 }
+             }
         }
     }
 

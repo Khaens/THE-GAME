@@ -2,6 +2,7 @@
 #include "GameServer.h"
 #include "Database.h"
 #include <memory>
+#include <chrono>
 
 constexpr size_t LOBBY_PASS_LENGTH = 4;
 
@@ -21,6 +22,8 @@ private:
 	Database* m_db;
 	LobbyStatus m_status = LobbyStatus::Waiting;
 	std::unique_ptr<Game> m_game = nullptr;
+    int m_maxPlayers;
+    std::chrono::steady_clock::time_point m_roundStartTime;
 	
 	static std::string GenerateRandomId(size_t length = LOBBY_PASS_LENGTH);
 
@@ -45,6 +48,7 @@ public:
 	bool CheckPassword(const std::string& pwd) const;
 	Game* GetGame();
 	bool IsStarted() const;
+    std::chrono::steady_clock::time_point GetRoundStartTime() const;
 	
 	// Utility
 	bool IsOwner(int userId) const;

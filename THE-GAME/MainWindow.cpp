@@ -47,6 +47,9 @@ MainWindow::MainWindow(QWidget* parent)
     connect(ui->settingsButton, &QPushButton::clicked, this, &MainWindow::onSettingsClicked);
     connect(ui->accountButton, &QPushButton::clicked, this, &MainWindow::onAccountClicked);
 
+    // Game Window Back Connection
+    connect(m_gameWindow, &GameWindow::backToMenuRequested, this, &MainWindow::onGameBackToMenu);
+
     // Fullscreen shortcut
     QShortcut* fsShortcut = new QShortcut(QKeySequence(Qt::Key_F11), this);
     connect(fsShortcut, &QShortcut::activated, this, &MainWindow::toggleFullScreen);
@@ -259,4 +262,21 @@ void MainWindow::showGameOverlay(const QString& lobbyId)
     }
     
     m_gameWindow->showOverlay();
+}
+
+void MainWindow::onGameBackToMenu()
+{
+    if (m_gameWindow) {
+        m_gameWindow->hideOverlay();
+    }
+    // Show main window (it might already be visible behind, but ensure it)
+    this->show();
+    
+    // Optionally reopen the lobby dialog if that's the desired flow, 
+    // or just sit at the main menu. User asked for "Back to Menu", so Main Menu is safer.
+    // However, if they were in a lobby lobby list, maybe that? Use judgment.
+    // Sticking to Main Menu (close overlays) as requested.
+    if (m_lobbyDialog) {
+        m_lobbyDialog->hideOverlay();
+    }
 }

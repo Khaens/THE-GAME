@@ -33,6 +33,8 @@ struct LobbyStatus {
     int current_players;
     int max_players;
     bool game_started;
+    std::string name;
+    int remaining_seconds;
 };
 
 class NetworkManager : public QObject {

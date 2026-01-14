@@ -117,12 +117,17 @@ std::optional<LobbyStatus> NetworkManager::getLobbyStatus(const std::string& lob
 
     if (response.status_code == 200) {
         auto data = crow::json::load(response.text);
-        return LobbyStatus{
-            data["lobby_id"].s(),
-            static_cast<int>(data["current_players"].i()),
-            static_cast<int>(data["max_players"].i()),
-            data["game_started"].b()
-        };
+        LobbyStatus status;
+        status.lobby_id = data["lobby_id"].s();
+        status.current_players = static_cast<int>(data["current_players"].i());
+        status.max_players = static_cast<int>(data["max_players"].i());
+        status.game_started = data["game_started"].b();
+        
+        if (data.has("name")) status.name = data["name"].s();
+        if (data.has("remaining_seconds")) status.remaining_seconds = static_cast<int>(data["remaining_seconds"].i());
+        else status.remaining_seconds = 60; // Default fallback
+
+        return status;
     }
 
     return std::nullopt;
