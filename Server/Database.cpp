@@ -83,19 +83,31 @@ bool Database::UpdatePasswordRecovery(int userId, const std::string& newPassword
 
 int Database::InsertUser(const UserModel& user) {
     try {
-        return storage.transaction([&]() -> int {
+        int newUserId = -1;
+        bool result = storage.transaction([&]() -> bool {
             UserModel hashedUser = user;
             hashedUser.SetPassword(HashPassword(user.GetPassword()));
-            int userId = storage.insert(hashedUser);
+            storage.insert(hashedUser);
 
-            AchievementsModel achievements(userId);
+            auto users = storage.get_all<UserModel>(where(c(&UserModel::GetUsername) == user.GetUsername()));
+            if (users.empty()) return false;
+
+            newUserId = users[0].GetId();
+
+            AchievementsModel achievements(newUserId);
             InsertAchievements(achievements);
 
-            StatisticsModel statistics(userId);
+            StatisticsModel statistics(newUserId);
             InsertStatistics(statistics);
 
-            return userId;
+            return true;
         });
+
+        if (result) {
+             return newUserId;
+        } else {
+             return -1;
+        }
     }
     catch (std::exception& e) {
         std::cerr << "Error inserting user (transaction failed): " << e.what() << std::endl;
@@ -110,7 +122,7 @@ bool Database::VerifyLogin(const std::string& username, const std::string& plain
         if (users.empty()) {
             return false;
         }
-        
+
         std::string computedHash = HashPassword(plainPassword);
         return computedHash == users[0].GetPassword();
     }
@@ -156,7 +168,6 @@ void Database::UpdateUser(const UserModel& user) {
 
 void Database::DeleteUser(int id) {
     try {
-        // Relying on ON DELETE CASCADE defined in Database.h
         storage.remove<UserModel>(id);
         std::cout << "User " << id << " and all associated data deleted via CASCADE." << std::endl;
     }
@@ -187,7 +198,7 @@ bool Database::UpdateProfileImage(int userId, std::vector<char> imageBuffer) {
     catch (const std::exception& e) {
         std::cerr << "Eroare: " << e.what() << std::endl;
         return false;
-    }   
+    }
 }
 
 std::vector<char> Database::GetProfileImage(int userId) {
