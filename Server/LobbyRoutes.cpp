@@ -307,11 +307,15 @@ void LobbyRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtil
             std::cout << "Lobby WebSocket closed" << std::endl;
             std::lock_guard<std::mutex> lock(networkUtils.lobby_ws_mutex);
             for (auto& [lobby_id, connections] : networkUtils.lobby_update_connections) {
-                auto it = std::remove_if(connections.begin(), connections.end(),
-                    [&conn](crow::websocket::connection* c) { return c == &conn; });
-                if (it != connections.end()) {
-                    connections.erase(it, connections.end());
-                }
+                 for (size_t i = 0; i < connections.size(); ++i) {
+                     if (connections[i] == &conn) {
+                         if (i != connections.size() - 1) {
+                             connections[i] = connections.back();
+                         }
+                         connections.pop_back();
+                         break; 
+                     }
+                 }
             }
         })
         .onmessage([&networkUtils](crow::websocket::connection& conn, const std::string& data, bool is_binary) {

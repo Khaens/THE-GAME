@@ -114,6 +114,7 @@ void Game::NextPlayer()
 
 Info Game::PlaceCard(size_t playerIndex, int card, int pile)
 {
+    std::lock_guard<std::mutex> lock(m_stateMutex);
 	if (playerIndex != m_currentPlayerIndex) {
 		return Info::NOT_CURRENT_PLAYER_TURN;
 	}
@@ -175,6 +176,7 @@ Info Game::PlaceCard(size_t playerIndex, int card, int pile)
 
 Info Game::EndTurn(size_t playerIndex)
 {
+    std::lock_guard<std::mutex> lock(m_stateMutex);
 	if (playerIndex != m_currentPlayerIndex) {
 		std::cout << "It's not your turn!\n";
 		return Info::NOT_CURRENT_PLAYER_TURN;
@@ -337,6 +339,7 @@ void Game::UpdateGameStats(bool won)
 
 Info Game::UseAbility(size_t playerIndex) // Sothsayer Ability logic to be implemented
 {
+    std::lock_guard<std::mutex> lock(m_stateMutex);
 	if (m_currentPlayerIndex != playerIndex) {
 		return Info::NOT_CURRENT_PLAYER_TURN;
 	}
