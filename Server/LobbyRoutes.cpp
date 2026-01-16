@@ -244,6 +244,7 @@ void LobbyRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtil
             update["type"] = "lobby_closed";
             update["lobby_id"] = lobby_id;
             update["reason"] = "Host left the lobby";
+            update["clear_chat"] = true;
             std::string update_msg = update.dump();
             
             for (auto* conn : networkUtils.lobby_update_connections[lobby_id]) {
@@ -305,15 +306,70 @@ void LobbyRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtil
         })
         .onclose([&networkUtils](crow::websocket::connection& conn, const std::string& reason, uint16_t) {
             std::cout << "Lobby WebSocket closed: " << &conn << std::endl;
-            std::lock_guard<std::mutex> lock(networkUtils.lobby_ws_mutex);
-            for (auto& [lobby_id, connections] : networkUtils.lobby_update_connections) {
-                auto it = std::find(connections.begin(), connections.end(), &conn);
-                while (it != connections.end()) {
-                    if (connections.size() > 1 && it != connections.end() - 1) {
-                        *it = connections.back();
+            
+            std::string lid;
+            int uid = -1;
+            {
+                std::lock_guard<std::mutex> lock(networkUtils.lobby_ws_mutex);
+                for (auto& pair : networkUtils.lobby_update_connections) {
+                    auto& vec = pair.second;
+                    vec.erase(std::remove(vec.begin(), vec.end(), &conn), vec.end());
+                }
+
+                std::lock_guard<std::mutex> ws_lock(networkUtils.ws_mutex);
+                if (networkUtils.connection_to_lobby.count(&conn)) lid = networkUtils.connection_to_lobby[&conn];
+                if (networkUtils.connection_to_user.count(&conn)) uid = networkUtils.connection_to_user[&conn];
+                
+                networkUtils.connection_to_user.erase(&conn);
+                networkUtils.connection_to_lobby.erase(&conn);
+            }
+
+            if (!lid.empty() && uid != -1) {
+                std::lock_guard<std::mutex> lock(networkUtils.lobby_mutex);
+                if (networkUtils.lobbies.count(lid)) {
+                    Lobby& lobby = *networkUtils.lobbies[lid];
+                    if (lobby.IsOwner(uid)) {
+                        std::cout << "Host disconnected (Lobby WS). Closing lobby: " << lid << std::endl;
+                        
+                        crow::json::wvalue update;
+                        update["type"] = "lobby_closed";
+                        update["lobby_id"] = lid;
+                        update["reason"] = "Host disconnected";
+                        update["clear_chat"] = true;
+                        std::string msg = update.dump();
+
+                        {
+                            std::lock_guard<std::mutex> l_ws_lock(networkUtils.lobby_ws_mutex);
+                            if (networkUtils.lobby_update_connections.count(lid)) {
+                                for (auto* c : networkUtils.lobby_update_connections[lid]) {
+                                    if (c) c->send_text(msg);
+                                }
+                                networkUtils.lobby_update_connections.erase(lid);
+                            }
+                        }
+                        {
+                            std::lock_guard<std::mutex> ws_lock(networkUtils.ws_mutex);
+                            networkUtils.lobby_connections.erase(lid);
+                        }
+                        networkUtils.lobbies.erase(lid);
+                    } else {
+                        lobby.LeaveLobby(uid);
+                        // Trigger lobby update broadcast logic
+                        crow::json::wvalue update;
+                        update["type"] = "player_left";
+                        update["lobby_id"] = lid;
+                        update["user_id"] = uid;
+                        update["current_players"] = lobby.GetCurrentPlayers();
+                        update["max_players"] = lobby.GetMaxPlayers();
+                        std::string update_msg = update.dump();
+                        
+                        std::lock_guard<std::mutex> l_ws_lock(networkUtils.lobby_ws_mutex);
+                        if (networkUtils.lobby_update_connections.count(lid)) {
+                            for (auto* c : networkUtils.lobby_update_connections[lid]) {
+                                if (c) c->send_text(update_msg);
+                            }
+                        }
                     }
-                    connections.pop_back();
-                    it = std::find(connections.begin(), connections.end(), &conn);
                 }
             }
         })
@@ -326,6 +382,11 @@ void LobbyRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtil
                  std::string action = body["action"].s();
                  
                  if (action == "subscribe") {
+                     if (body.has("user_id")) {
+                         std::lock_guard<std::mutex> lock(networkUtils.ws_mutex);
+                         networkUtils.connection_to_user[&conn] = body["user_id"].i();
+                         networkUtils.connection_to_lobby[&conn] = lid;
+                     }
                      std::lock_guard<std::mutex> lock(networkUtils.lobby_ws_mutex);
                      bool found = false;
                      for(auto* c : networkUtils.lobby_update_connections[lid]) {

@@ -53,7 +53,12 @@ void NetworkUtils::BroadcastGameStateLocked(const std::string& lobby_id, crow::w
     // Deck
     state_base["deck_count"] = game->GetDeckSize();
     
-    // Turn info
+    // Turn info & Context
+    TurnContext& ctx = game->GetCtx();
+    state_base["current_required"] = ctx.currentRequired;
+    state_base["base_required"] = ctx.baseRequired;
+    state_base["is_endgame"] = ctx.endgame;
+
     try {
         IPlayer& current_player = game->GetCurrentPlayer();
         state_base["current_turn_player_id"] = current_player.GetID();
@@ -73,6 +78,12 @@ void NetworkUtils::BroadcastGameStateLocked(const std::string& lobby_id, crow::w
         player_val["hand_count"] = (int)players[i]->GetHand().size();
         player_val["is_finished"] = players[i]->IsFinished();
         player_val["player_index"] = players[i]->GetPlayerIndex();
+        
+        // Ability states
+        player_val["sooth_active"] = players[i]->IsSoothActive();
+        player_val["hp_active"] = players[i]->HPActive();
+        player_val["tax_active"] = players[i]->IsTaxActive();
+        player_val["gambler_active"] = players[i]->GActive();
         
         std::vector<std::string> hand_cards;
         for (const auto& card : players[i]->GetHand()) {

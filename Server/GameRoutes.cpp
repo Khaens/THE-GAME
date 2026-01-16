@@ -14,16 +14,53 @@ void GameRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtils
         })
         .onclose([&networkUtils](crow::websocket::connection& conn, const std::string& reason, uint16_t) {
             std::cout << "Game WebSocket closed: " << &conn << std::endl;
-            std::lock_guard<std::mutex> lock(networkUtils.ws_mutex);
-            for (auto& [lobby_id, connections] : networkUtils.lobby_connections) {
-                auto it = std::find(connections.begin(), connections.end(), &conn);
-                while (it != connections.end()) {
-                    if (connections.size() > 1 && it != connections.end() - 1) {
-                        *it = connections.back();
+            
+            std::string lid;
+            int uid = -1;
+            {
+                std::lock_guard<std::mutex> lock(networkUtils.ws_mutex);
+                if (networkUtils.connection_to_lobby.count(&conn)) lid = networkUtils.connection_to_lobby[&conn];
+                if (networkUtils.connection_to_user.count(&conn)) uid = networkUtils.connection_to_user[&conn];
+
+                for (auto& pair : networkUtils.lobby_connections) {
+                    auto& vec = pair.second;
+                    vec.erase(std::remove(vec.begin(), vec.end(), &conn), vec.end());
+                }
+                networkUtils.connection_to_user.erase(&conn);
+                networkUtils.connection_to_lobby.erase(&conn);
+            }
+
+            if (!lid.empty() && uid != -1) {
+                std::lock_guard<std::mutex> lock(networkUtils.lobby_mutex);
+                if (networkUtils.lobbies.count(lid)) {
+                    Lobby& lobby = *networkUtils.lobbies[lid];
+                    if (lobby.IsOwner(uid)) {
+                        std::cout << "Host disconnected. Closing lobby: " << lid << std::endl;
+                        
+                        crow::json::wvalue update;
+                        update["type"] = "lobby_closed";
+                        update["lobby_id"] = lid;
+                        update["reason"] = "Host disconnected";
+                        std::string msg = update.dump();
+
+                        {
+                            std::lock_guard<std::mutex> ws_lock(networkUtils.ws_mutex);
+                            if (networkUtils.lobby_connections.count(lid)) {
+                                for (auto* c : networkUtils.lobby_connections[lid]) {
+                                    if (c) c->send_text(msg);
+                                }
+                                networkUtils.lobby_connections.erase(lid);
+                            }
+                        }
+                        {
+                            std::lock_guard<std::mutex> l_ws_lock(networkUtils.lobby_ws_mutex);
+                            networkUtils.lobby_update_connections.erase(lid);
+                        }
+                        networkUtils.lobbies.erase(lid);
+                    } else {
+                        lobby.LeaveLobby(uid);
+                        networkUtils.BroadcastGameStateLocked(lid);
                     }
-                    connections.pop_back();
-                    // Search again in case of duplicates (though unlikely for same lobby, safer to be thorough)
-                    it = std::find(connections.begin(), connections.end(), &conn);
                 }
             }
         })
@@ -44,7 +81,8 @@ void GameRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtils
                      if(!found) networkUtils.lobby_connections[lid].push_back(&conn);
                  }
 
-                 if (type == "chat") {
+                 networkUtils.connection_to_lobby[&conn] = lid;
+                 if (body.has("user_id")) {
                      std::lock_guard<std::mutex> lock(networkUtils.lobby_mutex);
                      if (networkUtils.lobbies.find(lid) != networkUtils.lobbies.end()) {
                          Lobby& lobby = *networkUtils.lobbies[lid];
@@ -117,11 +155,17 @@ void GameRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtils
                      } 
                      else if (action == "use_ability") {
                          result = game->UseAbility(player_idx);
-                         if (result == Info::ABILITY_USED || result == Info::TAX_ABILITY_USED || result == Info::PEASANT_ABILITY_USED || result == Info::TURN_ENDED) {
-                             state_changed = true;
-                         }
+                          if (result == Info::ABILITY_USED || result == Info::TAX_ABILITY_USED || 
+                              result == Info::PEASANT_ABILITY_USED || result == Info::SOOTHSAYER_ABILITY_USED ||
+                              result == Info::GAMBLER_ABILITY_USED || result == Info::HARRY_POTTER_ABILITY_USED ||
+                              result == Info::TURN_ENDED) {
+                              state_changed = true;
+                          }
                      }
                      else if (action == "end_turn") {
+                         if (players[player_idx]->IsSoothActive()) {
+                             players[player_idx]->SetSoothState(false);
+                         }
                          result = game->EndTurn(player_idx);
                          state_changed = true;
                      }
@@ -136,6 +180,7 @@ void GameRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtils
                          } else {
                              over_msg["result"] = "lost"; 
                          }
+                         over_msg["clear_chat"] = true;
                          
                          std::string msg = over_msg.dump();
                          
