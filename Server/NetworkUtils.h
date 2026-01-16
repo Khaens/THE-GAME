@@ -27,9 +27,7 @@ public:
     std::mutex lobby_mutex;
 
     // WebSocket connections for game
-    // Track which user/lobby is on which connection
-    std::unordered_map<crow::websocket::connection*, int> connection_to_user;
-    std::unordered_map<crow::websocket::connection*, std::string> connection_to_lobby;
+    std::unordered_map<std::string, std::vector<crow::websocket::connection*>> lobby_connections;
     std::mutex ws_mutex;
 
     // WebSocket connections for lobby updates
