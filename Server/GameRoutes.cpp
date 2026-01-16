@@ -24,7 +24,10 @@ void GameRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtils
 
                 for (auto& pair : networkUtils.lobby_connections) {
                     auto& vec = pair.second;
-                    vec.erase(std::remove(vec.begin(), vec.end(), &conn), vec.end());
+                    auto it = std::find(vec.begin(), vec.end(), &conn);
+                    if (it != vec.end()) {
+                        vec.erase(it);
+                    }
                 }
                 networkUtils.connection_to_user.erase(&conn);
                 networkUtils.connection_to_lobby.erase(&conn);
@@ -83,6 +86,7 @@ void GameRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtils
 
                  networkUtils.connection_to_lobby[&conn] = lid;
                  if (body.has("user_id")) {
+                     networkUtils.connection_to_user[&conn] = static_cast<int>(body["user_id"].i());
                      std::lock_guard<std::mutex> lock(networkUtils.lobby_mutex);
                      if (networkUtils.lobbies.find(lid) != networkUtils.lobbies.end()) {
                          Lobby& lobby = *networkUtils.lobbies[lid];

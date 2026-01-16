@@ -2,7 +2,7 @@
 #include <iostream>
 #include "UserModel.h"
 #include "IPlayer.h"
-#include "CardServer.h";
+#include "CardServer.h"
 #include "Gambler.h"
 #include "HarryPotter.h"
 #include "TaxEvader.h"
