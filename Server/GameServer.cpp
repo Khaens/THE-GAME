@@ -372,6 +372,18 @@ Info Game::UseAbility(size_t playerIndex) // Sothsayer Ability logic to be imple
 			m_ctx.PeasantAbilityUse = false;
 			return Info::PEASANT_ABILITY_USED;
 		}
+		if (currentPlayer.GetPlayerIndex() == m_ctx.SoothPlayerIndex
+			&& currentPlayer.IsSoothActive()) {
+			return Info::SOOTHSAYER_ABILITY_USED;
+		}
+		if (currentPlayer.GetPlayerIndex() == m_ctx.HPplayerIndex
+			&& currentPlayer.HPActive()) {
+			return Info::HARRY_POTTER_ABILITY_USED;
+		}
+		if(currentPlayer.GetPlayerIndex() == m_ctx.GamblerPlayerIndex) {
+			m_gameStats[currentPlayer.GetID()].gamblerAbilityUses++;
+			return Info::GAMBLER_ABILITY_USED;
+		}
 		return Info::ABILITY_USED;
 	}
 	else {
