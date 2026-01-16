@@ -221,6 +221,9 @@ Info Game::EndTurn(size_t playerIndex)
 		UpdateGameStats(true);
 		return Info::GAME_WON;
 	}
+
+	m_wholeDeck.ShuffleDeck();
+	
 	return Info::TURN_ENDED;
 }
 

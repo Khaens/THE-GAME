@@ -13,20 +13,17 @@ void GameRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtils
             std::cout << "New Game WebSocket connection" << std::endl;
         })
         .onclose([&networkUtils](crow::websocket::connection& conn, const std::string& reason, uint16_t) {
-            std::cout << "Game WebSocket closed" << std::endl;
+            std::cout << "Game WebSocket closed: " << &conn << std::endl;
             std::lock_guard<std::mutex> lock(networkUtils.ws_mutex);
              for (auto& [lobby_id, connections] : networkUtils.lobby_connections) {
-             for (auto& [lobby_id, connections] : networkUtils.lobby_connections) {
-                 for (size_t i = 0; i < connections.size(); ++i) {
-                     if (connections[i] == &conn) {
-                         if (i != connections.size() - 1) {
-                             connections[i] = connections.back();
-                         }
-                         connections.pop_back();
-                         break; 
+                 auto it = std::find(connections.begin(), connections.end(), &conn);
+                 if (it != connections.end()) {
+                     if (connections.size() > 1 && it != connections.end() - 1) {
+                        *it = connections.back();
                      }
+                     connections.pop_back();
+                     break;
                  }
-             }
              }
         })
         .onmessage([&networkUtils](crow::websocket::connection& conn, const std::string& data, bool is_binary) {
@@ -72,8 +69,7 @@ void GameRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtils
                              chat_val["user_id"] = uid;
                              chat_val["username"] = username;
                              chat_val["message"] = censored_msg;
-                             
-                             // Enqueue instead of direct send
+                            
                              {
                                  std::lock_guard<std::mutex> qLock(networkUtils.chatMutex);
                                  networkUtils.chatQueue.push({lid, chat_val.dump()});
@@ -141,10 +137,27 @@ void GameRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtils
                          }
                          
                          std::string msg = over_msg.dump();
-                         std::lock_guard<std::mutex> ws_lock(networkUtils.ws_mutex);
-                         for(auto* c : networkUtils.lobby_connections[lid]) {
-                             if(c) c->send_text(msg);
+                         
+                         {
+                             std::lock_guard<std::mutex> ws_lock(networkUtils.ws_mutex);
+                             if (networkUtils.lobby_connections.find(lid) != networkUtils.lobby_connections.end()) {
+                                 for(auto* c : networkUtils.lobby_connections[lid]) {
+                                     if(c) c->send_text(msg);
+                                 }
+                                 networkUtils.lobby_connections.erase(lid);
+                             }
                          }
+                         
+                         {
+                            std::lock_guard<std::mutex> l_ws_lock(networkUtils.lobby_ws_mutex);
+                            if (networkUtils.lobby_update_connections.find(lid) != networkUtils.lobby_update_connections.end()) {
+                                networkUtils.lobby_update_connections.erase(lid);
+                            }
+                         }
+
+                         std::cout << "Game finished for lobby " << lid << ". Destroying lobby." << std::endl;
+                         
+                         networkUtils.lobbies.erase(lid);
                      }
                      
                      if (result == Info::CARD_NOT_PLAYABLE || result == Info::NOT_CURRENT_PLAYER_TURN) {
@@ -154,17 +167,13 @@ void GameRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtils
                          if (result == Info::NOT_CURRENT_PLAYER_TURN) err["message"] = "Not your turn";
                          conn.send_text(err.dump());
                      }
-                     // Only broadcast game state if the game is NOT over (to avoid conflict with game_over message)
-                     // and to prevent unnecessary traffic
+
                      if (result != Info::GAME_WON && result != Info::GAME_LOST) {
-                         // Use Locked version because lobby_mutex is already held at line 85
                          networkUtils.BroadcastGameStateLocked(lid);
                      }
                  }
                  
                  if (type == "join_game") {
-                     // For "join_game", only send state to the requesting client
-                     // This prevents N*N broadcasts when N players join simultaneously
                      networkUtils.BroadcastGameState(lid, &conn);
                  }
              }

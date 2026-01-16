@@ -304,18 +304,19 @@ void LobbyRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtil
             std::cout << "New Lobby WebSocket connection" << std::endl;
         })
         .onclose([&networkUtils](crow::websocket::connection& conn, const std::string& reason, uint16_t) {
-            std::cout << "Lobby WebSocket closed" << std::endl;
+            std::cout << "Lobby WebSocket closed: " << &conn << std::endl;
             std::lock_guard<std::mutex> lock(networkUtils.lobby_ws_mutex);
             for (auto& [lobby_id, connections] : networkUtils.lobby_update_connections) {
-                 for (size_t i = 0; i < connections.size(); ++i) {
-                     if (connections[i] == &conn) {
-                         if (i != connections.size() - 1) {
-                             connections[i] = connections.back();
-                         }
-                         connections.pop_back();
-                         break; 
-                     }
-                 }
+                auto it = std::find(connections.begin(), connections.end(), &conn);
+                if (it != connections.end()) {
+                    if (connections.size() > 1 && it != connections.end() - 1) {
+                        *it = connections.back();
+                    }
+                    connections.pop_back();
+                    // We can stop searching after finding and removing the connection
+                    // assuming a connection belongs to only one lobby at a time in this map
+                    break;
+                }
             }
         })
         .onmessage([&networkUtils](crow::websocket::connection& conn, const std::string& data, bool is_binary) {

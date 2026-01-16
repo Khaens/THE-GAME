@@ -6,6 +6,7 @@
 #include <QWebSocket>
 #include <QJsonObject>
 #include <QJsonDocument>
+#include <QTimer>
 
 struct LoginResponse {
     bool success;
@@ -42,9 +43,9 @@ class NetworkManager : public QObject {
 
 private:
     std::string baseUrl;
-    QWebSocket m_webSocket;  // For game WebSocket
-    QWebSocket m_lobbyWebSocket;  // For lobby updates WebSocket
-    std::string m_currentLobbyId;  // Store lobby_id for subscription
+    QWebSocket m_webSocket; 
+    QWebSocket m_lobbyWebSocket;  
+    std::string m_currentLobbyId;  
     std::string m_gameLobbyId;
     int m_gameUserId = -1;
 
@@ -102,5 +103,12 @@ private slots:
     void onLobbyConnected();
     void onLobbyTextMessageReceived(const QString& message);
     void onLobbyDisconnected();
+
+private slots:
+    void checkServerStatus();
+
+private:
+    QTimer* m_serverCheckTimer;
+    bool m_serverAvailable = false;
 };
 

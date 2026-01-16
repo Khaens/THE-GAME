@@ -97,10 +97,16 @@ void NetworkUtils::BroadcastGameStateLocked(const std::string& lobby_id, crow::w
         } 
         // Otherwise broadcast to all
         else {
-            for (auto* conn : lobby_connections[lobby_id]) {
-                if (conn) {
-                    conn->send_text(std::string(msg)); 
+            try {
+                for (auto* conn : lobby_connections[lobby_id]) {
+                    if (conn) {
+                        conn->send_text(std::string(msg)); 
+                    }
                 }
+            } catch (const std::exception& e) {
+                std::cerr << "Error broadcasting game state to lobby " << lobby_id << ": " << e.what() << std::endl;
+            } catch (...) {
+                std::cerr << "Unknown error broadcasting game state to lobby " << lobby_id << std::endl;
             }
         }
     }
@@ -142,8 +148,12 @@ void NetworkUtils::ChatWorker() {
                 std::lock_guard<std::mutex> ws_lock(ws_mutex);
                 auto it = lobby_connections.find(msg.lobby_id);
                 if (it != lobby_connections.end()) {
-                    for (auto* conn : it->second) {
-                        if (conn) conn->send_text(msg.message_json);
+                    try {
+                        for (auto* conn : it->second) {
+                            if (conn) conn->send_text(msg.message_json);
+                        }
+                    } catch (const std::exception& e) {
+                        std::cerr << "Error broadcasting chat to lobby " << msg.lobby_id << ": " << e.what() << std::endl;
                     }
                 }
             }

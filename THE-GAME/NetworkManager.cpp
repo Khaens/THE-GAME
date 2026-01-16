@@ -13,6 +13,29 @@ NetworkManager::NetworkManager(const std::string& serverUrl, QObject* parent)
     connect(&m_lobbyWebSocket, &QWebSocket::connected, this, &NetworkManager::onLobbyConnected);
     connect(&m_lobbyWebSocket, &QWebSocket::disconnected, this, &NetworkManager::onLobbyDisconnected);
     connect(&m_lobbyWebSocket, &QWebSocket::textMessageReceived, this, &NetworkManager::onLobbyTextMessageReceived);
+
+    // Auto-reconnect / Server Check Timer
+    m_serverCheckTimer = new QTimer(this);
+    connect(m_serverCheckTimer, &QTimer::timeout, this, &NetworkManager::checkServerStatus);
+    m_serverCheckTimer->start(2000); 
+}
+
+void NetworkManager::checkServerStatus() {
+    auto response = cpr::Head(
+        cpr::Url{ baseUrl + "/" },
+        cpr::Timeout{ 1000 } 
+    );
+
+    bool isOnline = (response.status_code != 0);
+
+    if (isOnline && !m_serverAvailable) {
+        qDebug() << "Server is now ONLINE!";
+        m_serverAvailable = true;
+    }
+    else if (!isOnline && m_serverAvailable) {
+        qDebug() << "Server went OFFLINE!";
+        m_serverAvailable = false;
+    }
 }
 
 RegisterResponse NetworkManager::registerUser(const std::string& username, const std::string& password) {
@@ -26,7 +49,15 @@ RegisterResponse NetworkManager::registerUser(const std::string& username, const
         cpr::Header{ {"Content-Type", "application/json"} }
     );
 
+    if (response.status_code == 0) {
+       return RegisterResponse{ false, -1, "Server invalid/offline" };
+    }
+
     auto data = crow::json::load(response.text);
+    if (!data) {
+        return RegisterResponse{ false, -1, "Invalid response from server" };
+    }
+
     if (response.status_code == 201) {
         return RegisterResponse{
             true,
@@ -53,7 +84,15 @@ LoginResponse NetworkManager::loginUser(const std::string& username, const std::
         cpr::Header{ {"Content-Type", "application/json"} }
     );
 
+    if (response.status_code == 0) {
+       return LoginResponse{ false, -1, "", "Server invalid/offline" };
+    }
+
     auto data = crow::json::load(response.text);
+    if (!data) {
+        return LoginResponse{ false, -1, "", "Invalid response from server" };
+    }
+
     if (response.status_code == 200) {
         return LoginResponse{
             true,
@@ -83,7 +122,15 @@ LobbyResponse NetworkManager::createLobby(int user_id, const std::string& name, 
         cpr::Header{ {"Content-Type", "application/json"} }
     );
 
+    if (response.status_code == 0) {
+        return LobbyResponse{ false, "", 0, 0, "Server invalid/offline" };
+    }
+
     auto data = crow::json::load(response.text);
+    if (!data) {
+        return LobbyResponse{ false, "", 0, 0, "Invalid response" };
+    }
+
     if (response.status_code == 201) {
         return LobbyResponse{
             true,
@@ -115,8 +162,12 @@ std::optional<LobbyStatus> NetworkManager::getLobbyStatus(const std::string& lob
         cpr::Url{ baseUrl + "/api/lobby/" + lobby_id + "/status" }
     );
 
+    if (response.status_code == 0) return std::nullopt;
+
     if (response.status_code == 200) {
         auto data = crow::json::load(response.text);
+        if (!data) return std::nullopt;
+
         LobbyStatus status;
         status.lobby_id = data["lobby_id"].s();
         status.current_players = static_cast<int>(data["current_players"].i());
@@ -142,6 +193,7 @@ bool NetworkManager::startGame(const std::string& lobby_id) {
         cpr::Header{ {"Content-Type", "application/json"} }
     );
 
+    if (response.status_code == 0) return false;
     return response.status_code == 200;
 }
 
@@ -156,6 +208,7 @@ bool NetworkManager::leaveLobby(int user_id, const std::string& lobby_id) {
         cpr::Header{ {"Content-Type", "application/json"} }
     );
 
+    if (response.status_code == 0) return false;
     return response.status_code == 200;
 }
 
@@ -168,6 +221,7 @@ bool NetworkManager::uploadProfilePicture(int user_id, const QByteArray& data) {
         cpr::Header{ {"Content-Type", "application/octet-stream"} }
     );
 
+    if (response.status_code == 0) return false;
     return response.status_code == 200;
 }
 
@@ -175,6 +229,8 @@ QByteArray NetworkManager::getProfilePicture(int user_id) {
     auto response = cpr::Get(
         cpr::Url{ baseUrl + "/api/user/" + std::to_string(user_id) + "/profile-picture" }
     );
+
+    if (response.status_code == 0) return QByteArray();
 
     if (response.status_code == 200) {
         return QByteArray(response.text.c_str(), response.text.length());
@@ -187,6 +243,8 @@ bool NetworkManager::hasProfilePicture(int user_id) {
     auto response = cpr::Get(
         cpr::Url{ baseUrl + "/api/user/" + std::to_string(user_id) + "/has-profile-picture" }
     );
+
+    if (response.status_code == 0) return false;
 
     if (response.status_code == 200) {
         auto data = crow::json::load(response.text);
@@ -201,6 +259,7 @@ bool NetworkManager::deleteProfilePicture(int user_id) {
     auto response = cpr::Delete(
         cpr::Url{ baseUrl + "/api/user/" + std::to_string(user_id) + "/profile-picture" }
     );
+    if (response.status_code == 0) return false;
     return response.status_code == 200;
 }
 
@@ -211,8 +270,12 @@ std::vector<NetworkManager::PlayerInfo> NetworkManager::getLobbyPlayers(const st
 
     std::vector<PlayerInfo> players;
     
+    if (response.status_code == 0) return players;
+
     if (response.status_code == 200) {
         auto data = crow::json::load(response.text);
+        if (!data) return players;
+
         if (data.has("players")) {
             auto players_array = data["players"];
             for (size_t i = 0; i < players_array.size(); i++) {
