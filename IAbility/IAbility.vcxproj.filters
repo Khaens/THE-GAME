@@ -21,12 +21,18 @@
     <ClInclude Include="TurnContext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="AbilityType.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="IAbility.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TurnContext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AbilityType.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

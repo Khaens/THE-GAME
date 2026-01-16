@@ -1,6 +1,11 @@
 #include "HarryPotter.h"
 #include <stdexcept>
 
+AbilityType HarryPotter::GetAbilityType() const
+{
+	return m_type;
+}
+
 void HarryPotter::UseAbility(TurnContext& ctx, size_t currentPIndex) // special round rules for said ability
 {
 	ctx.HPplayerIndex = currentPIndex;

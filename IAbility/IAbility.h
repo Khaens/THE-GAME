@@ -6,6 +6,7 @@
 #endif
 
 #include "TurnContext.h"
+#include "AbilityType.h"
 
 class ABILITY_API IAbility {
 protected:
@@ -15,6 +16,8 @@ private:
 	IAbility& operator=(const IAbility&) = delete;
 public:
 	virtual ~IAbility() = default;
+
+	virtual AbilityType GetAbilityType() const = 0;
 
 	virtual void UseAbility(TurnContext& ctx, size_t CurrentPIndex) = 0;
 	virtual bool CanUseAbility(TurnContext& ctx) const = 0;

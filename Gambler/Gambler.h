@@ -1,7 +1,6 @@
 #pragma once
 #include "IAbility.h"
 
-
 //(only in earlygame) minimum required cards = 1. Can only use it 3 times.
 //in late game, the number of times he used this ability = the number of rounds he has to place
 // 2 times the minimum required cards
@@ -9,6 +8,8 @@
 class __declspec(dllexport) Gambler : public IAbility
 {
 public:
+	AbilityType GetAbilityType() const override;
+
 	void UseAbility(TurnContext& ctx, size_t currentPIndex) override;
 	bool CanUseAbility(TurnContext& ctx) const override;
 
@@ -30,5 +31,6 @@ private:
 	size_t m_usesLeft = 3;
 	size_t m_uses = 0;
 	bool m_active = false;
+	AbilityType m_type = AbilityType::Gambler;
 };
 

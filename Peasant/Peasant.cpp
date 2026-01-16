@@ -1,5 +1,10 @@
 #include "Peasant.h"
 
+AbilityType Peasant::GetAbilityType() const
+{
+	return m_type;
+}
+
 void Peasant::UseAbility(TurnContext& ctx, size_t currentPIndex)
 {
 	ctx.PeasantAbilityUse = true;

@@ -64,9 +64,6 @@
     <ClInclude Include="Round.h">
       <Filter>Header Files\Game Logic</Filter>
     </ClInclude>
-    <ClInclude Include="AbilityType.h">
-      <Filter>Header Files\Game Logic</Filter>
-    </ClInclude>
     <ClInclude Include="IPlayer.h">
       <Filter>Header Files\Player</Filter>
     </ClInclude>

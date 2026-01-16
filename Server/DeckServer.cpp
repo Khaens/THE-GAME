@@ -23,9 +23,9 @@ void Deck::InsertCard(std::unique_ptr<Card> insertedCard)
 
 void Deck::ShuffleDeck()
 {
+	std::random_device rd;
+	std::mt19937 gen(rd());
 	for (int i = 0; i < 5; i++) {
-		std::random_device rd;
-		std::mt19937 gen(rd());
 		std::shuffle(m_initialCards.begin(), m_initialCards.begin() + m_currentDeckSize, gen);
 	}
 }

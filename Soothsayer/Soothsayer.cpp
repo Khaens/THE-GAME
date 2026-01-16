@@ -1,6 +1,11 @@
 #include "Soothsayer.h"
 #include <stdexcept>
 
+AbilityType Soothsayer::GetAbilityType() const
+{
+	return m_type;
+}
+
 void Soothsayer::UseAbility(TurnContext& ctx, size_t currentPIndex)
 {
 	ctx.SoothPlayerIndex = currentPIndex;

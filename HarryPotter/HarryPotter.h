@@ -6,6 +6,8 @@
 class __declspec(dllexport) HarryPotter : public IAbility
 {
 public:
+	AbilityType GetAbilityType() const override;
+
 	void UseAbility(TurnContext& ctx, size_t CurrentPIndex) override;
 	bool CanUseAbility(TurnContext& ctx) const override;
 
@@ -27,5 +29,6 @@ private:
 	bool m_canUse = true;
 	bool m_active = false;
 	bool m_HPFlag = false;
+	AbilityType m_type = AbilityType::HarryPotter;
 };
 

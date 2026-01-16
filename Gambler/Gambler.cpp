@@ -2,6 +2,11 @@
 #include <stdexcept>
 
 
+AbilityType Gambler::GetAbilityType() const
+{
+	return m_type;
+}
+
 void Gambler::UseAbility(TurnContext& ctx, size_t currentPIndex) //special round rules for said ability
 {
 	if (m_usesLeft > 0 && !ctx.endgame) {

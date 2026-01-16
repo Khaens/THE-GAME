@@ -5,7 +5,11 @@
 class __declspec(dllexport) Peasant :
     public IAbility
 {
+private:
+	AbilityType m_type = AbilityType::Peasant;
 public:
+	AbilityType GetAbilityType() const override;
+
     void UseAbility(TurnContext& ctx, size_t currentPIndex) override;
 	bool CanUseAbility(TurnContext& ctx) const override;
 

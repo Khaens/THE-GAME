@@ -5,6 +5,11 @@
 // skips his turn (doesn't need to play any cards) but the next player has to place 2x
 //minimum cards reqired
 
+AbilityType TaxEvader::GetAbilityType() const
+{
+    return m_type;
+}
+
 void TaxEvader::UseAbility(TurnContext& ctx, size_t CurrentPIndex)
 {
     if (!CanUseAbility(ctx)) return;

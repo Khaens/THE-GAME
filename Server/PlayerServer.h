@@ -37,6 +37,7 @@ public:
     Card* GetCardFromHand(const std::string& cardValue) const override;
 
     void ShowHand() override;
+    AbilityType GetAbilityType() const override;
 	void UseAbility(TurnContext& ctx, size_t CurrentPIndex) override;
     bool CanUseAbility(TurnContext& ctx) const override;
     const int GetID() override;
@@ -157,6 +158,12 @@ void Player<Ability>::ShowHand()
         std::cout << card->GetCardValue() << " ";
     }
     std::cout << std::endl;
+}
+
+template<typename Ability>
+inline AbilityType Player<Ability>::GetAbilityType() const
+{
+    return ability.GetAbilityType();
 }
 
 template<typename Ability>

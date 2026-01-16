@@ -4,6 +4,8 @@
 class __declspec(dllexport) TaxEvader : public IAbility
 {
 public:
+	AbilityType GetAbilityType() const override;
+
 	void UseAbility(TurnContext& ctx, size_t CurrentPIndex) override;
 	bool CanUseAbility(TurnContext& ctx) const override;
 
@@ -24,6 +26,6 @@ public:
 private:
 	size_t m_uses = 2;
 	bool m_active = false;
-
+	AbilityType m_type = AbilityType::TaxEvader;
 };
 

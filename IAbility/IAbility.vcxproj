@@ -133,10 +133,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AbilityType.h" />
     <ClInclude Include="IAbility.h" />
     <ClInclude Include="TurnContext.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AbilityType.cpp" />
     <ClCompile Include="IAbility.cpp">
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ABILITYCORE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">ABILITYCORE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>

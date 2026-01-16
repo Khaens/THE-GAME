@@ -5,6 +5,8 @@ class __declspec(dllexport) Soothsayer :
     public IAbility
 {
 public:
+	AbilityType GetAbilityType() const override;
+
     void UseAbility(TurnContext& ctx, size_t currentPIndex) override;
     bool CanUseAbility(TurnContext& ctx) const override;
 
@@ -26,5 +28,6 @@ public:
 private:
     bool m_active = false;
     uint8_t m_usesLeft = 2;
+	AbilityType m_type = AbilityType::Soothsayer;
 };
 
