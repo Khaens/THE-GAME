@@ -30,7 +30,7 @@ enum class Info {
 #include <memory>
 #include "IPlayer.h"
 #include "PlayerServer.h"
-#include "Pile.h"
+import PileServer;
 #include "DeckServer.h"
 #include "TurnContext.h"
 #include "Round.h"

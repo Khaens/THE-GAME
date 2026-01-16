@@ -111,6 +111,8 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions> /D _SILENCE_ALL_CXX20_DEPRECATION_WARNINGS /D_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS %(AdditionalOptions)</AdditionalOptions>
       <AdditionalIncludeDirectories>$(SolutionDir)HarryPotter\;$(SolutionDir)TaxEvader\;$(SolutionDir)IAbility\;$(SolutionDir)Gambler\;$(SolutionDir)Soothsayer\;$(SolutionDir)Peasant\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ScanSourceForModuleDependencies>true</ScanSourceForModuleDependencies>
+      <EnableModules>true</EnableModules>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -142,7 +144,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AchievementsModel.cpp" />
-    <ClCompile Include="Card.cppm" />
     <ClCompile Include="CardServer.cpp" />
     <ClCompile Include="Database.cpp" />
     <ClCompile Include="DeckServer.cpp" />
@@ -150,6 +151,7 @@
     <ClCompile Include="Lobby.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Pile.cpp" />
+    <ClCompile Include="Pile.cppm" />
     <ClCompile Include="PlayerFactory.cpp" />
     <ClCompile Include="PlayerFactory.cppm" />
     <ClCompile Include="PlayerServer.cpp" />
@@ -164,13 +166,13 @@
   <ItemGroup>
     <ClInclude Include="AbilityType.h" />
     <ClInclude Include="AchievementsModel.h" />
+    <ClInclude Include="CardServer.h" />
     <ClInclude Include="Database.h" />
     <ClInclude Include="DeckServer.h" />
     <ClInclude Include="GameServer.h" />
     <ClInclude Include="GameStatistics.h" />
     <ClInclude Include="IPlayer.h" />
     <ClInclude Include="Lobby.h" />
-    <ClInclude Include="Pile.h" />
     <ClInclude Include="PileType.h" />
     <ClInclude Include="PlayerServer.h" />
     <ClInclude Include="Round.h" />

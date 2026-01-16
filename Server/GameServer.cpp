@@ -1,4 +1,7 @@
 #include "GameServer.h"
+#include "PileType.h"
+#include "AbilityType.h"
+
 import PlayerFactory;
 
 Game::Game(std::vector<UserModel>& users, Database& db) : 
@@ -136,11 +139,16 @@ Info Game::PlaceCard(size_t playerIndex, int card, int pile)
 
 		if (m_ctx.HPplayerIndex != -1 && m_players[static_cast<size_t>(m_ctx.HPplayerIndex)]->HPActive()) {
             try {
-			    if (std::stoi(chosenCard->GetCardValue()) == std::stoi(pileTopCard->GetCardValue()) + 10 ||
-				    std::stoi(chosenCard->GetCardValue()) == std::stoi(pileTopCard->GetCardValue()) - 10) {
+			    if (std::stoi(chosenCard->GetCardValue()) == std::stoi(pileTopCard->GetCardValue()) + 10 &&
+					chosenPile->GetPileType() == PileType::DESCENDING) {
 				    m_players[static_cast<size_t>(m_ctx.HPplayerIndex)]->SetHPFlag(false);
 			    }
-            } catch (...) {}
+				if (std::stoi(chosenCard->GetCardValue()) == std::stoi(pileTopCard->GetCardValue()) - 10 &&
+					chosenPile->GetPileType() == PileType::ASCENDING) {
+					m_players[static_cast<size_t>(m_ctx.HPplayerIndex)]->SetHPFlag(false);
+				}	
+			}
+			catch (...) {}
 		}
 		int diff = 0;
 		try {

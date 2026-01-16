@@ -6,11 +6,6 @@
 constexpr size_t STARTING_HAND_SIZE = 6;
 
 class Game;
-struct TurnContext;
-class IPlayer;
-class Pile;
-class Card;
-
 
 class Round
 {

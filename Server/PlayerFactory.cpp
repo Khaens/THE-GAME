@@ -6,6 +6,15 @@ module;
 
 module PlayerFactory;
 
+import "PlayerServer.h";
+import "TurnContext.h";
+import "Gambler.h";
+import "HarryPotter.h";
+import "TaxEvader.h";
+import "Soothsayer.h";
+import "UserModel.h";
+import "AbilityType.h";
+
 template class Player<Gambler>;
 template class Player<HarryPotter>;
 template class Player<TaxEvader>;

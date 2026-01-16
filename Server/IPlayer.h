@@ -3,7 +3,7 @@
 #include <vector>
 #include <memory>
 #include <string>
-import Card;
+#include "CardServer.h"
 #include "TurnContext.h"
 
 

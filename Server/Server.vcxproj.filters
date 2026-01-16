@@ -5,9 +5,6 @@
     <ClCompile Include="Database.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="StatisticsModel.cpp" />
-    <ClCompile Include="Card.cppm">
-      <Filter>Header Files\Game Logic</Filter>
-    </ClCompile>
     <ClCompile Include="PlayerFactory.cppm">
       <Filter>Header Files\Player</Filter>
     </ClCompile>
@@ -50,15 +47,15 @@
     <ClCompile Include="NetworkUtils.cpp">
       <Filter>Source Files\Network</Filter>
     </ClCompile>
+    <ClCompile Include="Pile.cppm">
+      <Filter>Header Files\Game Logic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DeckServer.h">
       <Filter>Header Files\Game Logic</Filter>
     </ClInclude>
     <ClInclude Include="GameServer.h">
-      <Filter>Header Files\Game Logic</Filter>
-    </ClInclude>
-    <ClInclude Include="Pile.h">
       <Filter>Header Files\Game Logic</Filter>
     </ClInclude>
     <ClInclude Include="PileType.h">
@@ -105,6 +102,9 @@
     </ClInclude>
     <ClInclude Include="AchievementsModel.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CardServer.h">
+      <Filter>Header Files\Game Logic</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

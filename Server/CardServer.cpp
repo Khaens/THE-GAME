@@ -1,6 +1,4 @@
-#include <string>
-
-module Card;
+#include "CardServer.h"
 
 Card::Card(const std::string& cardValue) : m_cardValue(cardValue)
 {

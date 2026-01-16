@@ -426,3 +426,5 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+/.vs
+.vs/THE-GAME/v17/.suo
