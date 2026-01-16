@@ -219,7 +219,8 @@
               "RelativeToolTip": "Server\\GameServer.cpp",
               "ViewState": "AgIAABIBAAAAAAAAAAApwBYBAAACAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2026-01-08T18:09:03.227Z"
+              "WhenOpened": "2026-01-08T18:09:03.227Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -255,7 +256,8 @@
               "RelativeToolTip": "Server\\GameRoutes.cpp",
               "ViewState": "AgIAAMQAAAAAAAAAAAAAANsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2026-01-14T11:08:31.945Z"
+              "WhenOpened": "2026-01-14T11:08:31.945Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -277,7 +279,7 @@
               "RelativeDocumentMoniker": "Server\\AuthRoutes.cpp",
               "ToolTip": "C:\\Users\\mihne\\Documents\\GitHub\\THE-GAME\\Server\\AuthRoutes.cpp",
               "RelativeToolTip": "Server\\AuthRoutes.cpp",
-              "ViewState": "AgIAAHsAAAAAAAAAAAAAAJkAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAHsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2026-01-14T11:08:34.391Z",
               "EditorCaption": ""

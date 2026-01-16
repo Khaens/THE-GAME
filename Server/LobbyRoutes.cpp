@@ -313,10 +313,7 @@ void LobbyRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtil
                 std::lock_guard<std::mutex> lock(networkUtils.lobby_ws_mutex);
                 for (auto& pair : networkUtils.lobby_update_connections) {
                     auto& vec = pair.second;
-                    auto it = std::find(vec.begin(), vec.end(), &conn);
-                    if (it != vec.end()) {
-                        vec.erase(it);
-                    }
+                    vec.erase(std::remove(vec.begin(), vec.end(), &conn), vec.end());
                 }
 
                 std::lock_guard<std::mutex> ws_lock(networkUtils.ws_mutex);
@@ -387,7 +384,7 @@ void LobbyRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtil
                  if (action == "subscribe") {
                      if (body.has("user_id")) {
                          std::lock_guard<std::mutex> lock(networkUtils.ws_mutex);
-                         networkUtils.connection_to_user[&conn] = static_cast<int>(body["user_id"].i());
+                         networkUtils.connection_to_user[&conn] = body["user_id"].i();
                          networkUtils.connection_to_lobby[&conn] = lid;
                      }
                      std::lock_guard<std::mutex> lock(networkUtils.lobby_ws_mutex);
