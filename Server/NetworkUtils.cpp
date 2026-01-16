@@ -106,9 +106,10 @@ void NetworkUtils::BroadcastGameStateLocked(const std::string& lobby_id, crow::w
     }
 }
 
-std::string NetworkUtils::CensorMessage(std::string input) {
+std::string NetworkUtils::CensorMessage(const std::string& input) {
+    std::string result = input;
     std::regex digits(R"(\b([1-9]|[1-9][0-9]|100)\b)");
-    input = std::regex_replace(input, digits, "###");
+    result = std::regex_replace(result, digits, "###");
     
     std::string pattern = R"(\b()"
         R"((douazeci|treizeci|patruzeci|cincizeci|saizeci|saptezeci|optzeci|nouazeci)\s+si\s+(unu|doi|trei|patru|cinci|sase|sapte|opt|noua)|)"
@@ -121,9 +122,9 @@ std::string NetworkUtils::CensorMessage(std::string input) {
         R"()\b)";
     
     std::regex words(pattern, std::regex_constants::icase);
-    input = std::regex_replace(input, words, "###");
+    result = std::regex_replace(result, words, "###");
     
-    return input;
+    return result;
 }
 
 void NetworkUtils::ChatWorker() {

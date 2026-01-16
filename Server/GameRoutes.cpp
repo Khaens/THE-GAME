@@ -111,7 +111,9 @@ void GameRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtils
                      if (action == "play_card") {
                          int card_val = body["card_value"].i();
                          int pile_idx = body["pile_index"].i();
-                         result = game->PlaceCard(player_idx, card_val, pile_idx);
+                         
+                         Card tempCard(std::to_string(card_val));
+                         result = game->PlaceCard(player_idx, tempCard, pile_idx);
                          if (result == Info::CARD_PLACED || result == Info::TURN_ENDED || result == Info::GAME_WON || result == Info::GAME_LOST) {
                              state_changed = true;
                          }

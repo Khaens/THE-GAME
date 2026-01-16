@@ -15,7 +15,7 @@ public:
 	virtual bool CanUseAbility(TurnContext& ctx) const = 0;
 	virtual bool IsFinished() const = 0;
 	virtual void SetFinished(bool state) = 0;
-	virtual Card* GetCardFromHand(int cardValue) const = 0;
+	virtual Card* GetCardFromHand(const std::string& cardValue) const = 0;
     
 	virtual const bool IsTaxActive() = 0;
 	virtual void SetTaxActive(bool state) = 0;
@@ -33,7 +33,7 @@ public:
     virtual const std::vector<std::unique_ptr<Card>>& GetHand() const = 0;
 	virtual void AddCardToHand(std::unique_ptr<Card> card) = 0;
 	virtual std::unique_ptr<Card> RemoveCardFromHand(Card* card) = 0;
-	virtual Card* ChooseCard(std::string cardValue) = 0;
+	virtual Card* ChooseCard(const std::string& cardValue) = 0;
 	virtual const std::string& GetUsername() const = 0;
 	virtual const int GetID() = 0;
 

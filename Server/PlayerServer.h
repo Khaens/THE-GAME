@@ -28,13 +28,13 @@ public:
     void AddCardToHand(std::unique_ptr<Card> card) override;
     std::unique_ptr<Card> RemoveCardFromHand(Card* card) override;
     const std::vector<std::unique_ptr<Card>>& GetHand() const override;
-    Card* ChooseCard(std::string cardValue) override;
+    Card* ChooseCard(const std::string& cardValue) override;
     const std::string& GetUsername() const override;
     void SetPlayerIndex(size_t index) override;
 	size_t GetPlayerIndex() const override;
     void SetFinished(bool state) override;
     bool IsFinished() const override;
-    Card* GetCardFromHand(int cardValue) const override;
+    Card* GetCardFromHand(const std::string& cardValue) const override;
 
     void ShowHand() override;
 	void UseAbility(TurnContext& ctx, size_t CurrentPIndex) override;
@@ -97,7 +97,7 @@ const std::vector<std::unique_ptr<Card>>& Player<Ability>::GetHand() const
 }
 
 template <typename Ability>
-Card* Player<Ability>::ChooseCard(std::string cardValue)
+Card* Player<Ability>::ChooseCard(const std::string& cardValue)
 {
     auto it = std::find_if(m_hand.begin(), m_hand.end(),
         [&cardValue](const std::unique_ptr<Card>& c) { return c->GetCardValue() == cardValue; });
@@ -140,10 +140,10 @@ inline bool Player<Ability>::IsFinished() const
 }
 
 template<typename Ability>
-inline Card* Player<Ability>::GetCardFromHand(int cardValue) const
+inline Card* Player<Ability>::GetCardFromHand(const std::string& cardValue) const
 {
     for (const auto& card : m_hand) {
-        if (std::stoi(card->GetCardValue()) == cardValue) {
+        if (card->GetCardValue() == cardValue) {
             return card.get();
         }
     }

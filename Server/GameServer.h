@@ -67,7 +67,7 @@ public:
 	void StartGame();
 	void NextPlayer();
 
-	Info PlaceCard(size_t playerIndex, int card, int chosenPile);
+	Info PlaceCard(size_t playerIndex, const Card& card, int chosenPile);
 	Info UseAbility(size_t playerIndex);
 	Info EndTurn(size_t playerIndex);
 

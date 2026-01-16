@@ -115,13 +115,13 @@ void Game::NextPlayer()
 	m_currentPlayerIndex = (m_currentPlayerIndex + 1) % m_numberOfPlayers;
 }
 
-Info Game::PlaceCard(size_t playerIndex, int card, int pile)
+Info Game::PlaceCard(size_t playerIndex, const Card& card, int pile)
 {
     std::lock_guard<std::mutex> lock(m_stateMutex);
 	if (playerIndex != m_currentPlayerIndex) {
 		return Info::NOT_CURRENT_PLAYER_TURN;
 	}
-	Card* chosenCard = m_players[playerIndex]->GetCardFromHand(card);
+	Card* chosenCard = m_players[playerIndex]->GetCardFromHand(card.GetCardValue());
 	if (!chosenCard) {
 		return Info::CARD_NOT_PLAYABLE;
 	}

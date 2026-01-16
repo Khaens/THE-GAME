@@ -42,7 +42,7 @@ public:
     // --- Helper Functions ---
     void BroadcastGameState(const std::string& lobby_id, crow::websocket::connection* targetConn = nullptr);
     void BroadcastGameStateLocked(const std::string& lobby_id, crow::websocket::connection* targetConn = nullptr);
-    std::string CensorMessage(std::string input);
+    std::string CensorMessage(const std::string& input);
     void ChatWorker();
     
     // Helper to start the worker thread
