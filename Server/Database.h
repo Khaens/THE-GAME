@@ -85,7 +85,7 @@ public:
     void UpdateAchievements(const AchievementsModel& achievements);
     bool AchievementsExistForUser(int userId);
     std::vector<std::string> GetUnlockedAchievement(int userId);
-    void UnlockAchievements(int userId, const std::unordered_map<std::string, bool>& achievementConditions);
-    void CheckAndUnlockJack(int userId);
+    std::vector<std::string> UnlockAchievements(int userId, const std::unordered_map<std::string, bool>& achievementConditions);
+    bool CheckAndUnlockJack(int userId);
 };
 

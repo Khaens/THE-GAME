@@ -6,10 +6,16 @@ void Round::FirstRoundDealing(Game& game)
 	const auto& m_players = game.GetPlayers();
 	Deck& deck = game.GetDeck();
 	for (size_t i = 0; i < m_players.size(); i++) {
+		int counter = 0;
 		for (size_t j = 0; j < STARTING_HAND_SIZE; j++) {
 			std::unique_ptr<Card> dealtCard = deck.DrawCard();
 			if (dealtCard) {
 				m_players[i]->AddCardToHand(std::move(dealtCard));
+			}
+			counter++;
+			if (counter == 2) {
+				counter = 0;
+				deck.ShuffleDeck();
 			}
 		}
 	}

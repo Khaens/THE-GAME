@@ -415,7 +415,8 @@ static const std::unordered_map<std::string, AchievementSetter> ACHIEVEMENT_SETT
     {"sixSeven", &AchievementsModel::SetSixSeven}
 };
 
-void Database::UnlockAchievements(int userId, const std::unordered_map<std::string, bool>& achievementConditions) {
+std::vector<std::string> Database::UnlockAchievements(int userId, const std::unordered_map<std::string, bool>& achievementConditions) {
+    std::vector<std::string> newlyUnlocked;
     try {
         AchievementsModel achievements = GetAchievementsByUserId(userId);
         bool modified = false;
@@ -428,10 +429,18 @@ void Database::UnlockAchievements(int userId, const std::unordered_map<std::stri
             }
 
             if (condition) {
-                auto setter = setterIt->second;
-                (achievements.*setter)(true);
-                modified = true;
-                std::cout << "Unlocked achievement: " << key << std::endl;
+                auto getterIt = ACHIEVEMENT_GETTERS.find(key);
+                if (getterIt != ACHIEVEMENT_GETTERS.end()) {
+                    auto getter = getterIt->second;
+                    // Check if already unlocked
+                    if (!(achievements.*getter)()) {
+                        auto setter = setterIt->second;
+                        (achievements.*setter)(true);
+                        newlyUnlocked.push_back(key);
+                        modified = true;
+                        std::cout << "Unlocked achievement: " << key << std::endl;
+                    }
+                }
             }
         }
 
@@ -439,20 +448,23 @@ void Database::UnlockAchievements(int userId, const std::unordered_map<std::stri
             UpdateAchievements(achievements);
             std::cout << "Achievements updated for user " << userId << std::endl;
 
-            CheckAndUnlockJack(userId);
+            if (CheckAndUnlockJack(userId)) {
+                newlyUnlocked.push_back("jack");
+            }
         }
     }
     catch (std::exception& e) {
         std::cerr << "Error unlocking achievements: " << e.what() << std::endl;
     }
+    return newlyUnlocked;
 }
 
-void Database::CheckAndUnlockJack(int userId)
+bool Database::CheckAndUnlockJack(int userId)
 {
     try {
         AchievementsModel achievements = GetAchievementsByUserId(userId);
         if (achievements.GetJack()) {
-            return;
+            return false;
         }
 
         bool hasAllRoles = achievements.GetHarryPotter() &&
@@ -465,9 +477,11 @@ void Database::CheckAndUnlockJack(int userId)
             achievements.SetJack(true);
             UpdateAchievements(achievements);
             std::cout << "Congratulations! User " << userId << " unlocked 'Jack of All Trades' !" << std::endl;
+            return true;
         }
     }
     catch (std::exception& e) {
         std::cerr << "Error checking Jack achievement: " << e.what() << std::endl;
     }
+    return false;
 }
