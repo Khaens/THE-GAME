@@ -71,7 +71,7 @@ public:
 	Info UseAbility(size_t playerIndex);
 	Info EndTurn(size_t playerIndex);
 
-	void UnlockAchievements();
+	std::vector<std::pair<int, std::string>> UnlockAchievements();
 	void CheckAchievements(IPlayer& currentPlayer);
 	void UpdateGameStats(bool won);
 

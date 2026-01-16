@@ -308,14 +308,12 @@ void LobbyRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtil
             std::lock_guard<std::mutex> lock(networkUtils.lobby_ws_mutex);
             for (auto& [lobby_id, connections] : networkUtils.lobby_update_connections) {
                 auto it = std::find(connections.begin(), connections.end(), &conn);
-                if (it != connections.end()) {
+                while (it != connections.end()) {
                     if (connections.size() > 1 && it != connections.end() - 1) {
                         *it = connections.back();
                     }
                     connections.pop_back();
-                    // We can stop searching after finding and removing the connection
-                    // assuming a connection belongs to only one lobby at a time in this map
-                    break;
+                    it = std::find(connections.begin(), connections.end(), &conn);
                 }
             }
         })

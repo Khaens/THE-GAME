@@ -43,6 +43,7 @@ public:
     void BroadcastGameState(const std::string& lobby_id, crow::websocket::connection* targetConn = nullptr);
     void BroadcastGameStateLocked(const std::string& lobby_id, crow::websocket::connection* targetConn = nullptr);
     std::string CensorMessage(const std::string& input);
+    void BroadcastAchievement(const std::string& lobby_id, int user_id, const std::string& achievement_key);
     void ChatWorker();
     
     // Helper to start the worker thread

@@ -15,16 +15,17 @@ void GameRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtils
         .onclose([&networkUtils](crow::websocket::connection& conn, const std::string& reason, uint16_t) {
             std::cout << "Game WebSocket closed: " << &conn << std::endl;
             std::lock_guard<std::mutex> lock(networkUtils.ws_mutex);
-             for (auto& [lobby_id, connections] : networkUtils.lobby_connections) {
-                 auto it = std::find(connections.begin(), connections.end(), &conn);
-                 if (it != connections.end()) {
-                     if (connections.size() > 1 && it != connections.end() - 1) {
+            for (auto& [lobby_id, connections] : networkUtils.lobby_connections) {
+                auto it = std::find(connections.begin(), connections.end(), &conn);
+                while (it != connections.end()) {
+                    if (connections.size() > 1 && it != connections.end() - 1) {
                         *it = connections.back();
-                     }
-                     connections.pop_back();
-                     break;
-                 }
-             }
+                    }
+                    connections.pop_back();
+                    // Search again in case of duplicates (though unlikely for same lobby, safer to be thorough)
+                    it = std::find(connections.begin(), connections.end(), &conn);
+                }
+            }
         })
         .onmessage([&networkUtils](crow::websocket::connection& conn, const std::string& data, bool is_binary) {
              auto body = crow::json::load(data);
@@ -170,6 +171,12 @@ void GameRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtils
 
                      if (result != Info::GAME_WON && result != Info::GAME_LOST) {
                          networkUtils.BroadcastGameStateLocked(lid);
+                     }
+
+                     // Check for and broadcast newly unlocked achievements
+                     auto newlyUnlocked = game->UnlockAchievements();
+                     for (const auto& pair : newlyUnlocked) {
+                         networkUtils.BroadcastAchievement(lid, pair.first, pair.second);
                      }
                  }
                  

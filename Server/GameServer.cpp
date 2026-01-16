@@ -209,7 +209,6 @@ Info Game::EndTurn(size_t playerIndex)
 	CheckAchievements(GetCurrentPlayer());
 	m_gameStats[m_players[playerIndex]->GetID()].placed7 = false;
 	m_gameStats[m_players[playerIndex]->GetID()].placed6 = false;
-	UnlockAchievements();
 	NextPlayer();
 	Round::UpdateContext(*this, m_ctx, GetCurrentPlayer());
 	m_ctx.placedCardsThisTurn = 0;
@@ -279,27 +278,34 @@ static const std::unordered_map<std::string, AchievementChecker> ACHIEVEMENT_CHE
 	}}
 };
 
-void Game::UnlockAchievements()
+std::vector<std::pair<int, std::string>> Game::UnlockAchievements()
 {
-	for (const auto& player : m_players) {
-		int userId = player->GetID();
-		const GameStatistics& stats = m_gameStats[userId];
-		StatisticsModel dbStats = m_database.GetStatisticsByUserId(userId);
+    std::vector<std::pair<int, std::string>> allNewlyUnlocked;
+    for (const auto& player : m_players) {
+        int userId = player->GetID();
+        const GameStatistics& stats = m_gameStats[userId];
+        StatisticsModel dbStats = m_database.GetStatisticsByUserId(userId);
 
-		std::unordered_map<std::string, bool> achievementConditions;
+        std::unordered_map<std::string, bool> achievementConditions;
 
-		for (const auto& [achName, checker] : ACHIEVEMENT_CHECKS) {
-			if (checker(*player, stats, dbStats)) {
-				achievementConditions[achName] = true;
-			}
-		}
+        for (const auto& [achName, checker] : ACHIEVEMENT_CHECKS) {
+            if (checker(*player, stats, dbStats)) {
+                achievementConditions[achName] = true;
+            }
+        }
 
-		if (!achievementConditions.empty()) {
-			m_database.UnlockAchievements(userId, achievementConditions);
-			std::cout << "Unlocked " << achievementConditions.size()
-				<< " achievement(s) for " << player->GetUsername() << std::endl;
-		}
-	}
+        if (!achievementConditions.empty()) {
+            std::vector<std::string> newAchs = m_database.UnlockAchievements(userId, achievementConditions);
+            for (const auto& achKey : newAchs) {
+                allNewlyUnlocked.push_back({ userId, achKey });
+            }
+            if (!newAchs.empty()) {
+                std::cout << "Unlocked " << newAchs.size()
+                    << " new achievement(s) for " << player->GetUsername() << std::endl;
+            }
+        }
+    }
+    return allNewlyUnlocked;
 }
 void Game::CheckAchievements(IPlayer& currentPlayer)
 {
