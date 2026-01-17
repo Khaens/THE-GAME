@@ -27,6 +27,9 @@ public:
 
     const size_t GetSoothsayerUses() override;
 
+    bool GetSameTurn() override;
+    void SetSameTurn(bool sameTurn) override;
+
 private:
     bool m_active = false;
     uint8_t m_usesLeft = 2;

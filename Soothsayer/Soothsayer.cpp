@@ -77,3 +77,13 @@ const size_t Soothsayer::GetSoothsayerUses()
 {
 	return m_usesLeft;
 }
+
+bool Soothsayer::GetSameTurn()
+{
+	return false;
+}
+
+void Soothsayer::SetSameTurn(bool sameTurn)
+{
+	
+}

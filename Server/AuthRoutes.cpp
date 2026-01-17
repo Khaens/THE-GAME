@@ -62,7 +62,7 @@ void AuthRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtils
                 crow::json::wvalue response;
                 response["success"] = true;
                 response["user_id"] = user.GetId();
-                response["username"] = user.GetUsername();
+                response["username"] = std::string(user.GetUsername());
                 return crow::response(200, response);
             }
 

@@ -57,6 +57,9 @@ public:
     void SetSoothState(bool state) override;
 	bool IsSoothActive() override;
     const size_t GetSoothsayerUses() override;
+
+    bool GetSameTurn() override;
+    void SetSameTurn(bool sameTurn) override;
 };
 
 
@@ -256,4 +259,16 @@ template<typename Ability>
 inline const size_t Player<Ability>::GetSoothsayerUses()
 {
     return ability.GetSoothsayerUses();
+}
+
+template<typename Ability>
+inline bool Player<Ability>::GetSameTurn()
+{
+    return ability.GetSameTurn();
+}
+
+template<typename Ability>
+inline void Player<Ability>::SetSameTurn(bool sameTurn)
+{
+    ability.SetSameTurn(sameTurn);
 }

@@ -75,3 +75,13 @@ const size_t Peasant::GetSoothsayerUses()
 {
 	return 0; // Peasant doesn't have soothsayer uses
 }
+
+bool Peasant::GetSameTurn()
+{
+	return false;
+}
+
+void Peasant::SetSameTurn(bool sameTurn)
+{
+
+}

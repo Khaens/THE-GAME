@@ -29,15 +29,11 @@ void GameRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtils
             // Then remove from lobby connections
             std::lock_guard<std::mutex> lock(networkUtils.ws_mutex);
             for (auto& [lobby_id, connections] : networkUtils.lobby_connections) {
-                auto it = std::find(connections.begin(), connections.end(), &conn);
-                while (it != connections.end()) {
-                    if (connections.size() > 1 && it != connections.end() - 1) {
-                        *it = connections.back();
-                    }
-                    connections.pop_back();
-                    // Search again in case of duplicates (though unlikely for same lobby, safer to be thorough)
-                    it = std::find(connections.begin(), connections.end(), &conn);
-                }
+                // Use erase-remove idiom to safely remove all occurrences
+                connections.erase(
+                    std::remove(connections.begin(), connections.end(), &conn),
+                    connections.end()
+                );
             }
         })
         .onmessage([&networkUtils](crow::websocket::connection& conn, const std::string& data, bool is_binary) {
@@ -185,12 +181,19 @@ void GameRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtils
                          err["type"] = "error";
                          if (result == Info::CARD_NOT_PLAYABLE) err["message"] = "Card not playable";
                          if (result == Info::NOT_CURRENT_PLAYER_TURN) err["message"] = "Not your turn";
-                         networkUtils.SafeSendText(&conn, err.dump());
+                         std::string err_msg = err.dump();
+                         networkUtils.SafeSendText(&conn, err_msg);
                      }
 
-                     if (result != Info::GAME_WON && result != Info::GAME_LOST) {
-                         networkUtils.BroadcastGameStateLocked(lid);
-                     }
+                    if (result != Info::GAME_WON && result != Info::GAME_LOST) {
+                        try {
+                            networkUtils.BroadcastGameStateLocked(lid);
+                        } catch (const std::exception& e) {
+                            std::cerr << "Error broadcasting game state after action: " << e.what() << std::endl;
+                        } catch (...) {
+                            std::cerr << "Unknown error broadcasting game state after action" << std::endl;
+                        }
+                    }
 
                      // Check for and broadcast newly unlocked achievements
                      auto newlyUnlocked = game->UnlockAchievements();

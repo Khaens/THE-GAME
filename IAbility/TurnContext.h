@@ -21,4 +21,6 @@ struct ABILITY_API TurnContext {
 	bool PeasantAbilityUse = false;
 
 	bool endgame = false;
+	
+	size_t GamblerEndgamePenaltyTurns = 0; // Number of endgame turns where gambler must place 2 cards
 };

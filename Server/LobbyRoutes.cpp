@@ -72,7 +72,7 @@ void LobbyRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtil
         if (lobby.IsUserInLobby(user_id)) {
             crow::json::wvalue response;
             response["success"] = true;
-            response["lobby_id"] = lobby.GetId();
+            response["lobby_id"] = std::string(lobby.GetId());
             response["max_players"] = lobby.GetMaxPlayers();
             response["current_players"] = lobby.GetCurrentPlayers();
             return crow::response(200, response);
@@ -90,7 +90,7 @@ void LobbyRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtil
         std::lock_guard<std::mutex> ws_lock(networkUtils.lobby_ws_mutex);
         crow::json::wvalue update;
         update["type"] = "player_joined";
-        update["lobby_id"] = lobby.GetId();
+        update["lobby_id"] = std::string(lobby.GetId());
         update["user_id"] = user_id;
         update["current_players"] = lobby.GetCurrentPlayers();
         update["max_players"] = lobby.GetMaxPlayers();
@@ -111,7 +111,7 @@ void LobbyRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtil
 
         crow::json::wvalue response;
         response["success"] = true;
-        response["lobby_id"] = lobby.GetId();
+        response["lobby_id"] = std::string(lobby.GetId());
         response["max_players"] = lobby.GetMaxPlayers();
         response["current_players"] = lobby.GetCurrentPlayers();
         return crow::response(200, response);
@@ -130,11 +130,11 @@ void LobbyRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtil
         const Lobby& lobby = *networkUtils.lobbies[lobby_id];
 
         crow::json::wvalue response;
-        response["lobby_id"] = lobby.GetId();
+        response["lobby_id"] = std::string(lobby.GetId());
         response["current_players"] = lobby.GetCurrentPlayers(); 
         response["max_players"] = lobby.GetMaxPlayers();
         response["game_started"] = lobby.IsStarted();
-        response["name"] = lobby.GetName();
+        response["name"] = std::string(lobby.GetName());
         auto duration = std::chrono::steady_clock::now() - lobby.GetRoundStartTime();
         int elapsed_seconds = std::chrono::duration_cast<std::chrono::seconds>(duration).count();
         int remaining = std::max(0, 60 - elapsed_seconds);
@@ -155,7 +155,7 @@ void LobbyRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtil
         const Lobby& lobby = *networkUtils.lobbies[lobby_id];
 
         crow::json::wvalue response;
-        response["lobby_id"] = lobby.GetId();
+        response["lobby_id"] = std::string(lobby.GetId());
         
         int player_index = 0;
         for (const auto& user : lobby.GetUsers()) {
@@ -312,14 +312,11 @@ void LobbyRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtil
             // Then remove from lobby update connections
             std::lock_guard<std::mutex> lock(networkUtils.lobby_ws_mutex);
             for (auto& [lobby_id, connections] : networkUtils.lobby_update_connections) {
-                auto it = std::find(connections.begin(), connections.end(), &conn);
-                while (it != connections.end()) {
-                    if (connections.size() > 1 && it != connections.end() - 1) {
-                        *it = connections.back();
-                    }
-                    connections.pop_back();
-                    it = std::find(connections.begin(), connections.end(), &conn);
-                }
+                // Use erase-remove idiom to safely remove all occurrences
+                connections.erase(
+                    std::remove(connections.begin(), connections.end(), &conn),
+                    connections.end()
+                );
             }
         })
         .onmessage([&networkUtils](crow::websocket::connection& conn, const std::string& data, bool is_binary) {
@@ -350,12 +347,13 @@ void LobbyRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtil
                              update["current_players"] = lobby.GetCurrentPlayers();
                              update["max_players"] = lobby.GetMaxPlayers();
                              update["game_started"] = lobby.IsStarted();
-                             update["name"] = lobby.GetName();
+                             update["name"] = std::string(lobby.GetName());
                              auto duration = std::chrono::steady_clock::now() - lobby.GetRoundStartTime();
                              int elapsed_seconds = std::chrono::duration_cast<std::chrono::seconds>(duration).count();
                              int remaining = std::max(0, 60 - elapsed_seconds);
                              update["remaining_seconds"] = remaining;
-                             networkUtils.SafeSendText(&conn, update.dump());
+                             std::string update_msg = update.dump();
+                             networkUtils.SafeSendText(&conn, update_msg);
                          }
                      }
                  }

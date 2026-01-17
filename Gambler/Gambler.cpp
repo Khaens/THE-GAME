@@ -15,6 +15,8 @@ void Gambler::UseAbility(TurnContext& ctx, size_t currentPIndex) //special round
 		ctx.currentRequired = ctx.baseRequired - 1;
 		m_uses++;
 		m_active = true;
+		// Track how many endgame penalty turns: each use = 1 penalty turn in endgame
+		ctx.GamblerEndgamePenaltyTurns++;
 	}
 }
 
@@ -83,3 +85,14 @@ const size_t Gambler::GetSoothsayerUses()
 {
 	return 0; // Gambler doesn't have soothsayer uses
 }
+
+bool Gambler::GetSameTurn()
+{
+	return false;
+}
+
+void Gambler::SetSameTurn(bool sameTurn)
+{
+	
+}
+

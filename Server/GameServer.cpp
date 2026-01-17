@@ -88,11 +88,19 @@ bool Game::IsGameOver(IPlayer& currentPlayer)
 	if (currentPlayer.IsFinished()) return false;
 
     const std::string& username = currentPlayer.GetUsername();
-	if (m_currentPlayerIndex == static_cast<size_t>(m_ctx.HPplayerIndex) && currentPlayer.GetHPFlag()) {
-		std::cout << "No one played a +/-10 card until " << username << "'s turn. All players lose!\n";
-		return true;
+
+	if (m_currentPlayerIndex == static_cast<size_t>(m_ctx.HPplayerIndex) && !currentPlayer.GetSameTurn()) {
+		if (currentPlayer.GetHPFlag()) {
+			std::cout << "No one played a +/-10 card until " << username << "'s turn. All players lose!\n";
+			return true;
+		}
 	}
-	if (playableCards + m_ctx.placedCardsThisTurn < m_ctx.currentRequired) {
+	// Allow player to place 1 card if they only have 1 card but need 2 (gambler penalty case)
+	if (m_ctx.endgame && currentPlayer.GetHand().size() == 1 && m_ctx.currentRequired == 2 && playableCards == 1) {
+		// Allow this - player can place their 1 card
+		return false;
+	}
+	else if (playableCards + m_ctx.placedCardsThisTurn < m_ctx.currentRequired) {
 		std::cout << username << " cannot play the required number of cards (" << m_ctx.currentRequired << ").\n";
 		std::cout << "Game Over! " << username << " loses!\n";
 		return true;
@@ -125,6 +133,10 @@ Info Game::PlaceCard(size_t playerIndex, const Card& card, int pile)
 	if (!chosenCard) {
 		return Info::CARD_NOT_PLAYABLE;
 	}
+	
+	// CRITICAL: Copy card value string before removing card from hand to avoid invalidated references
+	std::string chosenCardValue = chosenCard->GetCardValue();
+	
 	Pile* chosenPile = Round::GetPile(pile, m_piles);
 
 	if (!chosenPile) {
@@ -136,14 +148,17 @@ Info Game::PlaceCard(size_t playerIndex, const Card& card, int pile)
         if (!pileTopCard) {
              return Info::PILE_NOT_FOUND; // Or appropriate error
         }
+        
+        // Copy pile top card value to avoid invalidated references
+        std::string pileTopCardValue = pileTopCard->GetCardValue();
 
 		if (m_ctx.HPplayerIndex != -1 && m_players[static_cast<size_t>(m_ctx.HPplayerIndex)]->HPActive()) {
             try {
-			    if (std::stoi(chosenCard->GetCardValue()) == std::stoi(pileTopCard->GetCardValue()) + 10 &&
+			    if (std::stoi(chosenCardValue) == std::stoi(pileTopCardValue) + 10 &&
 					chosenPile->GetPileType() == PileType::DESCENDING) {
 				    m_players[static_cast<size_t>(m_ctx.HPplayerIndex)]->SetHPFlag(false);
 			    }
-				if (std::stoi(chosenCard->GetCardValue()) == std::stoi(pileTopCard->GetCardValue()) - 10 &&
+				if (std::stoi(chosenCardValue) == std::stoi(pileTopCardValue) - 10 &&
 					chosenPile->GetPileType() == PileType::ASCENDING) {
 					m_players[static_cast<size_t>(m_ctx.HPplayerIndex)]->SetHPFlag(false);
 				}	
@@ -152,15 +167,15 @@ Info Game::PlaceCard(size_t playerIndex, const Card& card, int pile)
 		}
 		int diff = 0;
 		try {
-			diff = std::abs(std::stoi(chosenCard->GetCardValue()) - std::stoi(pileTopCard->GetCardValue()));
+			diff = std::abs(std::stoi(chosenCardValue) - std::stoi(pileTopCardValue));
 		} catch(...) {
 			std::cout << "Error calculating diff in PlaceCard." << std::endl;
 		}
 		if (diff > 3) {
 			m_gameStats[GetCurrentPlayer().GetID()].perfectGame = false;
 		}
-		if (chosenCard->GetCardValue() == "6") m_gameStats[GetCurrentPlayer().GetID()].placed6 = true;
-		if (chosenCard->GetCardValue() == "7") m_gameStats[GetCurrentPlayer().GetID()].placed7 = true;
+		if (chosenCardValue == "6") m_gameStats[GetCurrentPlayer().GetID()].placed6 = true;
+		if (chosenCardValue == "7") m_gameStats[GetCurrentPlayer().GetID()].placed7 = true;
 		if (m_gameStats[GetCurrentPlayer().GetID()].placed6 && m_gameStats[GetCurrentPlayer().GetID()].placed7)
 			m_gameStats[GetCurrentPlayer().GetID()].placed6And7InSameRound = true;
 		chosenPile->PlaceCard(m_players[playerIndex]->RemoveCardFromHand(chosenCard)); 
@@ -190,7 +205,16 @@ Info Game::EndTurn(size_t playerIndex)
 		return Info::NOT_CURRENT_PLAYER_TURN;
 	}
 
-	if (m_ctx.placedCardsThisTurn < m_ctx.currentRequired) {
+	// Allow ending turn with fewer cards if player only had 1 card but needs 2 (gambler penalty case)
+	// If they placed all their cards (hand is empty) but placed less than required, allow it
+	bool canEndWithFewerCards = m_ctx.endgame && 
+	                             playerIndex == m_ctx.GamblerPlayerIndex &&
+	                             m_ctx.GamblerEndgamePenaltyTurns > 0 &&
+	                             m_players[playerIndex]->GetHand().size() == 0 && // All cards placed
+	                             m_ctx.placedCardsThisTurn < m_ctx.currentRequired &&
+	                             m_ctx.currentRequired == 2;
+	
+	if (m_ctx.placedCardsThisTurn < m_ctx.currentRequired && !canEndWithFewerCards) {
 		std::cout << "Cannot end turn: Played " << m_ctx.placedCardsThisTurn << " cards, required " << m_ctx.currentRequired << "\n";
 		return Info::NOT_ENOUGH_PLAYED_CARDS;
 	}
@@ -206,10 +230,16 @@ Info Game::EndTurn(size_t playerIndex)
 		m_players[m_ctx.GamblerPlayerIndex]->GActive()) {
 		GetCurrentPlayer().SetGActive(false);
 	}
+	// Decrement gambler endgame penalty turns if in endgame and it was the gambler's turn
+	// The penalty counts even if player only had 1 card (they were required to place 2, but only had 1)
+	if (m_ctx.endgame && playerIndex == m_ctx.GamblerPlayerIndex && m_ctx.GamblerEndgamePenaltyTurns > 0) {
+		m_ctx.GamblerEndgamePenaltyTurns--;
+	}
 	// Reset Soothsayer active state
 	if (m_players[playerIndex]->IsSoothActive()) {
 		m_players[playerIndex]->SetSoothState(false);
 	}
+	if (m_players[playerIndex]->HPActive()) m_players[playerIndex]->SetSameTurn(false);
 	CheckAchievements(GetCurrentPlayer());
 	m_gameStats[m_players[playerIndex]->GetID()].placed7 = false;
 	m_gameStats[m_players[playerIndex]->GetID()].placed6 = false;

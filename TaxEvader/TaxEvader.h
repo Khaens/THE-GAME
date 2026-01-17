@@ -24,6 +24,9 @@ public:
 	const bool IsSoothActive() override;
 	void SetSoothState(bool state) override;
 	const size_t GetSoothsayerUses() override;
+
+	bool GetSameTurn() override;
+	void SetSameTurn(bool sameTurn) override;
 private:
 	size_t m_uses = 2;
 	bool m_active = false;

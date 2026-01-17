@@ -26,10 +26,14 @@ public:
 	const bool IsSoothActive() override;
 	void SetSoothState(bool state) override;
 	const size_t GetSoothsayerUses() override;
+
+	bool GetSameTurn() override;
+	void SetSameTurn(bool sameTurn) override;
 private:
 	bool m_canUse = true;
 	bool m_active = false;
 	bool m_HPFlag = false;
+	bool m_sameTurn = true;
 	AbilityType m_type = AbilityType::HarryPotter;
 };
 

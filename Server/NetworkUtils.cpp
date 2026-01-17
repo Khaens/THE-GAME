@@ -65,8 +65,14 @@ void NetworkUtils::BroadcastGameStateLocked(const std::string& lobby_id, crow::w
         IPlayer& current_player = game->GetCurrentPlayer();
         state_base["current_turn_player_id"] = current_player.GetID();
         state_base["current_turn_username"] = std::string(current_player.GetUsername());
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cerr << "Error getting current player in BroadcastGameState: " << e.what() << std::endl;
         state_base["current_turn_player_id"] = -1;
+        state_base["current_turn_username"] = "Unknown";
+    } catch (...) {
+        std::cerr << "Unknown error getting current player in BroadcastGameState" << std::endl;
+        state_base["current_turn_player_id"] = -1;
+        state_base["current_turn_username"] = "Unknown";
     }
 
     // Context Info
@@ -77,20 +83,22 @@ void NetworkUtils::BroadcastGameStateLocked(const std::string& lobby_id, crow::w
     const auto& players = game->GetPlayers();
     
     for (size_t i = 0; i < players.size(); ++i) {
-        crow::json::wvalue player_val;
-        player_val["user_id"] = players[i]->GetID();
-        player_val["username"] = std::string(players[i]->GetUsername());
-        player_val["hand_count"] = (int)players[i]->GetHand().size();
-        player_val["is_finished"] = players[i]->IsFinished();
-        player_val["player_index"] = players[i]->GetPlayerIndex();
-        
-        std::vector<std::string> hand_cards;
-        for (const auto& card : players[i]->GetHand()) {
-            if (card) {
-                hand_cards.push_back(std::string(card->GetCardValue()));
+        try {
+            crow::json::wvalue player_val;
+            player_val["user_id"] = players[i]->GetID();
+            player_val["username"] = std::string(players[i]->GetUsername());
+            player_val["hand_count"] = (int)players[i]->GetHand().size();
+            player_val["is_finished"] = players[i]->IsFinished();
+            player_val["player_index"] = players[i]->GetPlayerIndex();
+            
+            std::vector<std::string> hand_cards;
+            for (const auto& card : players[i]->GetHand()) {
+                if (card) {
+                    // Copy card value to avoid invalidated references
+                    hand_cards.push_back(std::string(card->GetCardValue()));
+                }
             }
-        }
-        player_val["hand"] = std::move(hand_cards); 
+            player_val["hand"] = std::move(hand_cards); 
 
         // Add Ability
         std::string abilityName = "Unknown";
@@ -121,7 +129,14 @@ void NetworkUtils::BroadcastGameStateLocked(const std::string& lobby_id, crow::w
             player_val["soothsayer_uses_left"] = (int)players[i]->GetSoothsayerUses();
         }
 
-        players_json.push_back(std::move(player_val));
+            players_json.push_back(std::move(player_val));
+        } catch (const std::exception& e) {
+            std::cerr << "Error serializing player " << i << " in BroadcastGameState: " << e.what() << std::endl;
+            // Continue with other players
+        } catch (...) {
+            std::cerr << "Unknown error serializing player " << i << " in BroadcastGameState" << std::endl;
+            // Continue with other players
+        }
     }
     state_base["players"] = std::move(players_json);
 
@@ -256,7 +271,24 @@ void NetworkUtils::WsWorker() {
         // Send the message from this single worker thread
         try {
             if (wsMsg.conn) {
-                wsMsg.conn->send_text(wsMsg.message);
+                // BUG FIX: Create a local copy of the string to ensure it stays alive
+                // during async operations. The string is copied here, not just referenced.
+                std::string messageCopy = wsMsg.message; // Explicit copy
+                
+                // Store in pending messages to keep it alive longer (defensive)
+                {
+                    std::lock_guard<std::mutex> lock(m_pendingMsgMutex);
+                    m_pendingMessages.push_back(messageCopy);
+                }
+                
+                // Send using the local copy - ASIO will make its own copy internally
+                wsMsg.conn->send_text(messageCopy);
+                
+                // Cleanup old messages occasionally (simple counter to avoid locking every time)
+                static int sendCount = 0;
+                if (++sendCount % 100 == 0) {
+                     CleanupPendingMessages();
+                }
             }
         } catch (const std::exception& e) {
             std::cerr << "Error in WsWorker send: " << e.what() << std::endl;
@@ -266,9 +298,7 @@ void NetworkUtils::WsWorker() {
 
 void NetworkUtils::CleanupPendingMessages() {
     std::lock_guard<std::mutex> lock(m_pendingMsgMutex);
-    // Clear old messages - in a real implementation we'd use a more sophisticated
-    // approach to track when messages are actually sent. For now, we just keep
-    // a reasonable number of recent messages.
+    // Keep last 1000 messages
     while (m_pendingMessages.size() > 1000) {
         m_pendingMessages.pop_front();
     }
