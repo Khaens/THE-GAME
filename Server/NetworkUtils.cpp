@@ -32,7 +32,6 @@ void NetworkUtils::BroadcastGameStateLocked(const std::string& lobby_id, crow::w
     Game* game = lobby.GetGame();
     if (!game) return;
 
-    // Lock game state to prevent concurrent modification during iteration
     std::lock_guard<std::mutex> game_lock(game->GetStateMutex());
 
     crow::json::wvalue state_base;
@@ -94,7 +93,6 @@ void NetworkUtils::BroadcastGameStateLocked(const std::string& lobby_id, crow::w
             std::vector<std::string> hand_cards;
             for (const auto& card : players[i]->GetHand()) {
                 if (card) {
-                    // Copy card value to avoid invalidated references
                     hand_cards.push_back(std::string(card->GetCardValue()));
                 }
             }
@@ -132,10 +130,8 @@ void NetworkUtils::BroadcastGameStateLocked(const std::string& lobby_id, crow::w
             players_json.push_back(std::move(player_val));
         } catch (const std::exception& e) {
             std::cerr << "Error serializing player " << i << " in BroadcastGameState: " << e.what() << std::endl;
-            // Continue with other players
         } catch (...) {
             std::cerr << "Unknown error serializing player " << i << " in BroadcastGameState" << std::endl;
-            // Continue with other players
         }
     }
     state_base["players"] = std::move(players_json);
@@ -145,11 +141,9 @@ void NetworkUtils::BroadcastGameStateLocked(const std::string& lobby_id, crow::w
     std::string msg = state_base.dump();
 
     if (lobby_connections.find(lobby_id) != lobby_connections.end()) {
-        // If targetConn is specified, send only to it
         if (targetConn) {
             SafeSendText(targetConn, msg);
         } 
-        // Otherwise broadcast to all
         else {
             try {
                 for (auto* conn : lobby_connections[lobby_id]) {
@@ -162,10 +156,6 @@ void NetworkUtils::BroadcastGameStateLocked(const std::string& lobby_id, crow::w
             }
         }
     }
-    
-    // NOTE: Do NOT cleanup pending messages here - the buffers must live until ASIO
-    // completes the async write operations. Cleaning up too early causes crashes.
-    // Memory will be cleaned up when the server shuts down.
 }
 
 void NetworkUtils::BroadcastAchievement(const std::string& lobby_id, int user_id, const std::string& achievement_key) {
@@ -215,7 +205,6 @@ void NetworkUtils::ChatWorker() {
             chatQueue.pop();
             lock.unlock(); 
 
-            // Broadcast via SafeSendText (routes through WsWorker)
             {
                 std::lock_guard<std::mutex> ws_lock(ws_mutex);
                 auto it = lobby_connections.find(msg.lobby_id);
@@ -234,7 +223,6 @@ void NetworkUtils::ChatWorker() {
 void NetworkUtils::SafeSendText(crow::websocket::connection* conn, const std::string& msg) {
     if (!conn) return;
     
-    // Queue the message for the WsWorker to send
     {
         std::lock_guard<std::mutex> lock(wsSendMutex);
         wsQueue.push({conn, msg});
@@ -256,7 +244,6 @@ void NetworkUtils::WsWorker() {
             wsQueue.pop();
         }
         
-        // Validate connection is still alive before sending
         bool isValid = false;
         {
             std::lock_guard<std::mutex> lock(m_validConnMutex);
@@ -264,27 +251,19 @@ void NetworkUtils::WsWorker() {
         }
         
         if (!isValid) {
-            // Connection closed, skip this message
             continue;
         }
         
-        // Send the message from this single worker thread
         try {
             if (wsMsg.conn) {
-                // BUG FIX: Create a local copy of the string to ensure it stays alive
-                // during async operations. The string is copied here, not just referenced.
-                std::string messageCopy = wsMsg.message; // Explicit copy
-                
-                // Store in pending messages to keep it alive longer (defensive)
+                std::string messageCopy = wsMsg.message; 
                 {
                     std::lock_guard<std::mutex> lock(m_pendingMsgMutex);
                     m_pendingMessages.push_back(messageCopy);
                 }
                 
-                // Send using the local copy - ASIO will make its own copy internally
                 wsMsg.conn->send_text(messageCopy);
                 
-                // Cleanup old messages occasionally (simple counter to avoid locking every time)
                 static int sendCount = 0;
                 if (++sendCount % 100 == 0) {
                      CleanupPendingMessages();
@@ -298,7 +277,6 @@ void NetworkUtils::WsWorker() {
 
 void NetworkUtils::CleanupPendingMessages() {
     std::lock_guard<std::mutex> lock(m_pendingMsgMutex);
-    // Keep last 1000 messages
     while (m_pendingMessages.size() > 1000) {
         m_pendingMessages.pop_front();
     }

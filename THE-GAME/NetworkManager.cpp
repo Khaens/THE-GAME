@@ -203,7 +203,7 @@ std::optional<LobbyStatus> NetworkManager::getLobbyStatus(const std::string& lob
         
         if (data.has("name")) status.name = data["name"].s();
         if (data.has("remaining_seconds")) status.remaining_seconds = static_cast<int>(data["remaining_seconds"].i());
-        else status.remaining_seconds = 60; // Default fallback
+        else status.remaining_seconds = 60; 
 
         return status;
     }
@@ -222,7 +222,7 @@ QString NetworkManager::startGame(const std::string& lobby_id) {
 
     if (response.status_code == 0) return "Server invalid/offline";
     
-    if (response.status_code == 200) return ""; // Success
+    if (response.status_code == 200) return "";
 
     auto data = crow::json::load(response.text);
     if (!data) return "Invalid response from server";

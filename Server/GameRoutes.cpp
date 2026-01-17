@@ -11,7 +11,6 @@ void GameRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtils
     CROW_WEBSOCKET_ROUTE(app, "/ws/game")
         .onopen([&networkUtils](crow::websocket::connection& conn) {
             std::cout << "New Game WebSocket connection: " << &conn << std::endl;
-            // Register this connection as valid
             {
                 std::lock_guard<std::mutex> lock(networkUtils.m_validConnMutex);
                 networkUtils.m_validConnections.insert(&conn);
@@ -20,16 +19,13 @@ void GameRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtils
         .onclose([&networkUtils](crow::websocket::connection& conn, const std::string& reason, uint16_t) {
             std::cout << "Game WebSocket closed: " << &conn << std::endl;
             
-            // First, mark connection as invalid to prevent WsWorker from sending to it
             {
                 std::lock_guard<std::mutex> lock(networkUtils.m_validConnMutex);
                 networkUtils.m_validConnections.erase(&conn);
             }
             
-            // Then remove from lobby connections
             std::lock_guard<std::mutex> lock(networkUtils.ws_mutex);
             for (auto& [lobby_id, connections] : networkUtils.lobby_connections) {
-                // Use erase-remove idiom to safely remove all occurrences
                 connections.erase(
                     std::remove(connections.begin(), connections.end(), &conn),
                     connections.end()
@@ -195,7 +191,6 @@ void GameRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtils
                         }
                     }
 
-                     // Check for and broadcast newly unlocked achievements
                      auto newlyUnlocked = game->UnlockAchievements();
                      for (const auto& pair : newlyUnlocked) {
                          networkUtils.BroadcastAchievement(lid, pair.first, pair.second);

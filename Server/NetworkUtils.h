@@ -46,12 +46,9 @@ public:
     std::mutex chatMutex;
     std::condition_variable chatCv;
 
-    // Persistent message buffer storage for async sends
-    // This keeps strings alive until ASIO completes the write
     std::list<std::string> m_pendingMessages;
     std::mutex m_pendingMsgMutex;
 
-    // Unified WebSocket send queue - ALL sends go through this
     std::queue<WsMessage> wsQueue;
     std::mutex wsSendMutex;
     std::condition_variable wsSendCv;
@@ -68,12 +65,10 @@ public:
     void BroadcastAchievement(const std::string& lobby_id, int user_id, const std::string& achievement_key);
     void ChatWorker();
     
-    // Helper to start the worker thread
     void StartChatWorker();
-    void StartWsWorker(); // Start the unified WS worker
-    void WsWorker(); // The unified WS send worker thread
+    void StartWsWorker(); 
+    void WsWorker(); 
     
-    // Safe async message send (keeps buffer alive)
     void SafeSendText(crow::websocket::connection* conn, const std::string& msg);
-    void CleanupPendingMessages(); // Call periodically to clear sent messages
+    void CleanupPendingMessages();
 };

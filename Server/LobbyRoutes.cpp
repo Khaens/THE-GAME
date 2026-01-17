@@ -294,7 +294,6 @@ void LobbyRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtil
     CROW_WEBSOCKET_ROUTE(app, "/ws/lobby")
         .onopen([&networkUtils](crow::websocket::connection& conn) {
             std::cout << "New Lobby WebSocket connection: " << &conn << std::endl;
-            // Register this connection as valid
             {
                 std::lock_guard<std::mutex> lock(networkUtils.m_validConnMutex);
                 networkUtils.m_validConnections.insert(&conn);
@@ -302,17 +301,13 @@ void LobbyRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtil
         })
         .onclose([&networkUtils](crow::websocket::connection& conn, const std::string& reason, uint16_t) {
             std::cout << "Lobby WebSocket closed: " << &conn << std::endl;
-            
-            // First, mark connection as invalid
             {
                 std::lock_guard<std::mutex> lock(networkUtils.m_validConnMutex);
                 networkUtils.m_validConnections.erase(&conn);
             }
             
-            // Then remove from lobby update connections
             std::lock_guard<std::mutex> lock(networkUtils.lobby_ws_mutex);
             for (auto& [lobby_id, connections] : networkUtils.lobby_update_connections) {
-                // Use erase-remove idiom to safely remove all occurrences
                 connections.erase(
                     std::remove(connections.begin(), connections.end(), &conn),
                     connections.end()
