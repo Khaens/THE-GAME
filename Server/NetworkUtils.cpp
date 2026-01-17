@@ -158,21 +158,7 @@ void NetworkUtils::BroadcastGameStateLocked(const std::string& lobby_id, crow::w
     }
 }
 
-void NetworkUtils::BroadcastAchievement(const std::string& lobby_id, int user_id, const std::string& achievement_key) {
-    crow::json::wvalue msg;
-    msg["type"] = "achievement_unlocked";
-    msg["user_id"] = user_id;
-    msg["achievement_key"] = achievement_key;
 
-    std::string msg_str = msg.dump();
-    std::lock_guard<std::mutex> lock(ws_mutex);
-
-    if (lobby_connections.find(lobby_id) != lobby_connections.end()) {
-        for (auto* conn : lobby_connections[lobby_id]) {
-            SafeSendText(conn, msg_str);
-        }
-    }
-}
 
 std::string NetworkUtils::CensorMessage(const std::string& input) {
     std::string result = input;

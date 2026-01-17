@@ -191,10 +191,7 @@ void GameRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtils
                         }
                     }
 
-                     auto newlyUnlocked = game->UnlockAchievements();
-                     for (const auto& pair : newlyUnlocked) {
-                         networkUtils.BroadcastAchievement(lid, pair.first, pair.second);
-                     }
+                     game->UnlockAchievements();
                  }
                  
                  if (type == "join_game") {
