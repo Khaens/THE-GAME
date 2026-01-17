@@ -15,6 +15,10 @@ void Lobby::JoinLobby(int userId)
         }
     }
 
+    if (m_status == LobbyStatus::Started) {
+        throw std::runtime_error("Game has already started");
+    }
+
     if (static_cast<int>(m_Users.size()) >= m_maxPlayers) {
         throw std::runtime_error("Lobby is full");
     }
@@ -35,6 +39,10 @@ void Lobby::JoinLobby(const std::string& playerName)
         if (user.GetUsername() == playerName) {
             throw std::runtime_error("Player already in lobby");
         }
+    }
+
+    if (m_status == LobbyStatus::Started) {
+        throw std::runtime_error("Game has already started");
     }
 
     if (static_cast<int>(m_Users.size()) >= m_maxPlayers) {

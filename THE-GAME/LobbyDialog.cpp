@@ -223,16 +223,16 @@ void LobbyDialog::onJoinLobbyClicked()
         QString lobbyCode = dialog.getLobbyCode();
         std::string code_to_join = lobbyCode.toStdString();
 
-        bool success = m_networkManager->joinLobby(m_userId, code_to_join);
+        LobbyResponse response = m_networkManager->joinLobby(m_userId, code_to_join);
 
-        if (success) {
+        if (response.success) {
             hideOverlay();
 
             // Create and show LobbyRoomDialog
             LobbyRoomDialog* lobbyRoom = new LobbyRoomDialog(
                 m_userId,
-                QString::fromStdString(code_to_join), // Use code as ID
-                "Joined Lobby", // Lobby name not available from join response
+                QString::fromStdString(response.lobby_id), 
+                QString::fromStdString(response.lobby_id), // Use Lobby ID as name for now, or fetch it
                 lobbyCode,
                 false,  // isHost = false for joiner
                 m_networkManager,
@@ -246,8 +246,10 @@ void LobbyDialog::onJoinLobbyClicked()
             delete lobbyRoom;
         }
         else {
-            QMessageBox::warning(this, "Error",
-                "Failed to join lobby. Invalid code or lobby is full.");
+            QString errorMsg = QString::fromStdString(response.error_message);
+            if (errorMsg.isEmpty()) errorMsg = "Failed to join lobby. Invalid code or lobby is full.";
+            
+            QMessageBox::warning(this, "Error", errorMsg);
         }
     }
 }

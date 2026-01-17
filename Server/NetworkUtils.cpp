@@ -82,6 +82,17 @@ void NetworkUtils::BroadcastGameStateLocked(const std::string& lobby_id, crow::w
         }
         player_val["hand"] = std::move(hand_cards); 
 
+        // Add Ability
+        std::string abilityName = "Unknown";
+        switch (players[i]->GetAbilityType()) {
+            case AbilityType::HarryPotter: abilityName = "HarryPotter"; break;
+            case AbilityType::Gambler: abilityName = "Gambler"; break;
+            case AbilityType::TaxEvader: abilityName = "TaxEvader"; break;
+            case AbilityType::Soothsayer: abilityName = "Soothsayer"; break;
+            case AbilityType::Peasant: abilityName = "Peasant"; break;
+        }
+        player_val["ability"] = abilityName; 
+
         players_json.push_back(std::move(player_val));
     }
     state_base["players"] = std::move(players_json);

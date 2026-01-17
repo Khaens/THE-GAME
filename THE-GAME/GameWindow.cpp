@@ -12,6 +12,7 @@
 #include <QEasingCurve>
 #include <QTimer>
 #include <QMouseEvent>
+#include <QPainterPath>
 #include <QDebug>
 #include <QBuffer>
 #include <QJsonObject>
@@ -61,6 +62,24 @@ GameWindow::GameWindow(QWidget* parent)
         m_turnLabel->setVisible(true);
     } else {
         qDebug() << "Warning: turnLabel not found in UI!";
+    }
+
+    // Chat Setup
+    if (ui->chatHistory) {
+        ui->chatHistory->hide(); // Hide original ListWidget
+    }
+    
+    // Create new TextEdit for Chat
+    if (ui->chatWidget) {
+        m_chatDisplay = new QTextEdit(ui->chatWidget);
+        m_chatDisplay->setReadOnly(true);
+        m_chatDisplay->setFrameShape(QFrame::NoFrame);
+        // Style: Transparent background, white text
+        m_chatDisplay->setStyleSheet("background-color: transparent; color: white; font-size: 14px;");
+        m_chatDisplay->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+        m_chatDisplay->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        m_chatDisplay->setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
+        m_chatDisplay->show();
     }
 }
 
@@ -130,7 +149,65 @@ void GameWindow::showOverlay()
 
 void GameWindow::hideOverlay()
 {
+    resetGameState();
     hide();
+}
+
+void GameWindow::resetGameState()
+{
+    // Clear Hand
+    if (ui) {
+        if (ui->hand1) ui->hand1->setVisible(false);
+        if (ui->hand2) ui->hand2->setVisible(false);
+        if (ui->hand3) ui->hand3->setVisible(false);
+        if (ui->hand4) ui->hand4->setVisible(false);
+        if (ui->hand5) ui->hand5->setVisible(false);
+        if (ui->hand6) ui->hand6->setVisible(false);
+        
+        // Reset Piles to initial state (hidden images)
+        if (ui->ascPile1) ui->ascPile1->setVisible(false);
+        if (ui->ascPile2) ui->ascPile2->setVisible(false);
+        if (ui->descPile1) ui->descPile1->setVisible(false);
+        if (ui->descPile2) ui->descPile2->setVisible(false);
+        
+        // Reset BeerMeter PFP Circles
+        if (ui->pfpCircle1) ui->pfpCircle1->clear();
+        if (ui->pfpCircle2) ui->pfpCircle2->clear();
+        if (ui->pfpCircle3) ui->pfpCircle3->clear();
+        if (ui->pfpCircle4) ui->pfpCircle4->clear();
+        if (ui->pfpCircle5) ui->pfpCircle5->clear();
+
+        // Chat
+        // Chat
+        // if (ui->chatHistory) ui->chatHistory->clear();
+        if (m_chatDisplay) m_chatDisplay->clear();
+        
+        // Ability Button
+        if (ui->abilityButton) ui->abilityButton->setText("ABILITY");
+
+        // Turn Label
+        if (m_turnLabel) {
+             m_turnLabel->setText(""); 
+        }
+    }
+
+    // Logic State
+    m_isMyTurn = false;
+    m_cardsPlayedThisTurn = 0;
+    m_deckCount = 0;
+    
+    // Reset Pile Values
+    m_pileTopValues[0] = 1;
+    m_pileTopValues[1] = 1;
+    m_pileTopValues[2] = 100;
+    m_pileTopValues[3] = 100;
+    
+    m_lastPileTops[0].clear();
+    m_lastPileTops[1].clear();
+    m_lastPileTops[2].clear();
+    m_lastPileTops[3].clear();
+
+    clearCardSelection();
 }
 
 void GameWindow::resizeEvent(QResizeEvent* event)
@@ -209,6 +286,22 @@ void GameWindow::resizeUI()
     if (ui->hand5) ui->hand5->setGeometry(scaleRect(840, 630, 150, 225));
     if (ui->hand6) ui->hand6->setGeometry(scaleRect(940, 630, 150, 225));
     
+    // PFP Circles Geometry (ensure aspect ratio or correct scale)
+    // BeerMeter: (1185, 9, 141, 750)
+    // The circles in the design are at X=1220 (offset 35 from 1185)
+    // Spacing Y seems to be 150, 250, 350, 450, 550
+    // To fix offset, we should ensure they scale exactly with the BeerMeter
+    
+    auto scalePfp = [&](int startY) {
+         return scaleRect(1215, startY, 80, 80);
+    };
+
+    if (ui->pfpCircle5) ui->pfpCircle5->setGeometry(scalePfp(170));
+    if (ui->pfpCircle4) ui->pfpCircle4->setGeometry(scalePfp(258));
+    if (ui->pfpCircle3) ui->pfpCircle3->setGeometry(scalePfp(346));
+    if (ui->pfpCircle2) ui->pfpCircle2->setGeometry(scalePfp(434));
+    if (ui->pfpCircle1) ui->pfpCircle1->setGeometry(scalePfp(522));
+    
     // New Piles (User-defined in .ui)
     // AscPile1: Base 275
     bool hasCard1 = !ui->ascPile1->pixmap().isNull();
@@ -235,7 +328,6 @@ void GameWindow::resizeUI()
     if (ui->turnLabel) {
         ui->turnLabel->setGeometry(scaleRect(20, 280, 220, 100));
         ui->turnLabel->setStyleSheet("border-image: url(Resources/TextBox_1-2_Small.png); background-color: transparent; border: none;");
-        ui->turnLabel->setText(""); // Clear text as it's a background container now
         ui->turnLabel->lower(); // Put behind pfp/username
     }
     
@@ -243,6 +335,7 @@ void GameWindow::resizeUI()
     // Rect relative to turnLabel roughly (30, 310, 40, 40) - Smaller and better centered
     if (ui->pfpLabel) {
         ui->pfpLabel->setGeometry(scaleRect(30, 310, 40, 40));
+        ui->pfpLabel->setScaledContents(true);
         // Circular styling (placeholder until image loading)
         ui->pfpLabel->setStyleSheet(R"(
             QLabel {
@@ -296,6 +389,30 @@ void GameWindow::resizeUI()
         // Text is set in UI file ("END TURN")
     }
 
+    // Ability Button Styling
+    if (ui->abilityButton) {
+        ui->abilityButton->setGeometry(scaleRect(20, 420, 200, 70));
+        ui->abilityButton->setCursor(Qt::PointingHandCursor);
+        ui->abilityButton->setStyleSheet(R"(
+            QPushButton {
+                border-image: url(Resources/Button.png);
+                font-family: 'Jersey 15';
+                font-size: 30px;
+                color: white;
+                font-weight: bold;
+                padding-bottom: 5px;
+            }
+            QPushButton:pressed {
+                border-image: url(Resources/Button_Pressed.png);
+                padding-top: 5px;
+            }
+            QPushButton:disabled {
+                opacity: 0.5;
+                color: rgba(255, 255, 255, 0.5);
+            }
+        )");
+    }
+
     // Pile Light Indicators (to the left of each pile)
     if (ui->asc1Light) ui->asc1Light->setGeometry(scaleRect(255, 50, 10, 225));
     if (ui->asc2Light) ui->asc2Light->setGeometry(scaleRect(580, 50, 10, 225));
@@ -319,7 +436,13 @@ void GameWindow::resizeUI()
         ui->chatWidget->setGeometry(finalRect);
         
         // Ensure it's above other things if needed
+        // Ensure it's above other things if needed
         ui->chatWidget->raise();
+        
+        // Match m_chatDisplay to ui->chatHistory geometry if possible, or just fill chatWidget minus input
+        if (m_chatDisplay && ui->chatHistory) {
+             m_chatDisplay->setGeometry(ui->chatHistory->geometry());
+        }
     }
 }
 
@@ -430,7 +553,7 @@ bool GameWindow::eventFilter(QObject *obj, QEvent *event)
             
             // Toggle selection: if clicking the same card, deselect it
             if (m_selectedCardWidget == clickedCard) {
-                clearCardSelection();
+                clearCardSelection(); 
                 qDebug() << "Deselected card";
             } else {
                 // Clear previous selection first
@@ -439,6 +562,23 @@ bool GameWindow::eventFilter(QObject *obj, QEvent *event)
                 // Select new card
                 m_selectedCardWidget = clickedCard;
                 m_selectedCardImagePath = "Resources/" + QString::number(cardValue) + ".png";
+                
+                // Ensure card is animated UP (in case it was down from a deselect or otherwise)
+                float scaleY = static_cast<float>(height()) / 768.0f;
+                int baseY = static_cast<int>(630 * scaleY);
+                int offset = static_cast<int>(50 * scaleY);
+                int targetY = baseY - offset;
+                
+                QRect currentGeom = m_selectedCardWidget->geometry();
+                
+                // Only animate if not already up (tolerance of 1-2 pixels)
+                if (abs(currentGeom.y() - targetY) > 2) {
+                    QPropertyAnimation* anim = new QPropertyAnimation(m_selectedCardWidget, "geometry");
+                    anim->setDuration(100);
+                    anim->setStartValue(currentGeom);
+                    anim->setEndValue(QRect(currentGeom.x(), targetY, currentGeom.width(), currentGeom.height()));
+                    anim->start(QAbstractAnimation::DeleteWhenStopped);
+                }
                 
                 // Card stays elevated (Leave event won't animate it down)
                 
@@ -628,7 +768,7 @@ void GameWindow::toggleChat()
 
     // Design dimensions
     int h = 200;
-    int x = 140; 
+    int x = 120; // Corrected to match initial geometry
     int w = 300;
     int peekAmount = 40;
 
@@ -667,13 +807,14 @@ void GameWindow::initialize(NetworkManager* networkManager, int userId, const st
 
         m_networkManager->connectToGame(m_lobbyId, m_userId);
     }
+    
+    // Ensure state is clean before starting new game
+    resetGameState();
 }
 
 void GameWindow::onGameConnected()
 {
     qDebug() << "GameWindow: Connected to Game WebSocket";
-    // Send join game message is handled by NetworkManager::onConnected automatically if members are set
-    // But NetworkManager::connectToGame sets them, so it should be fine.
 }
 
 void GameWindow::onGameMessageReceived(const QJsonObject& message)
@@ -687,10 +828,14 @@ void GameWindow::onGameMessageReceived(const QJsonObject& message)
         QString username = message["username"].toString();
         QString msg = message["message"].toString();
         
-        QListWidgetItem* item = new QListWidgetItem(username + ": " + msg);
-        // Optional: Set icon based on user
-        ui->chatHistory->addItem(item);
-        ui->chatHistory->scrollToBottom();
+        if (m_chatDisplay) {
+            // Bold username, normal message
+            // We can use HTML
+            QString html = QString("<b>%1:</b><br>%2").arg(username).arg(msg);
+            m_chatDisplay->append(html);
+            // Auto scroll is built-in usually, but to be sure:
+            m_chatDisplay->moveCursor(QTextCursor::End);
+        }
     }
     else if (type == "game_over") {
         QString result = message["result"].toString(); // "won" or "lost"
@@ -709,7 +854,6 @@ void GameWindow::onGameMessageReceived(const QJsonObject& message)
     }
     else if (type == "error") {
         QString errorMsg = message["message"].toString();
-        // Ignore "not your turn" errors for now or show them subtly
         qDebug() << "Game Error:" << errorMsg;
     }
 }
@@ -750,12 +894,91 @@ void GameWindow::handleGameState(const QJsonObject& state)
         QJsonArray players = state["players"].toArray();
         QJsonArray myHand;
         
+        // --- BeerMeter and PFP Logic ---
+        int playerCount = players.size();
+        
+        // 1. Update BeerMeter Image
+        if (ui->beerLabel) {
+            QString beerImg = "Resources/BeerMeter2TableMC.png"; // Default fallback
+            
+            if (playerCount == 5) {
+                beerImg = "Resources/BeerMeter1TableMC.png";
+            } else if (playerCount == 4) {
+                beerImg = "Resources/BeerMeter2TableMC.png";
+            } else if (playerCount == 3) {
+                beerImg = "Resources/BeerMeter3TableMC.png";
+            } else if (playerCount == 2) {
+                beerImg = "Resources/BeerMeter4TableMC.png";
+            }
+            
+            QPixmap pm(beerImg);
+            if (!pm.isNull()) {
+                ui->beerLabel->setPixmap(pm);
+                ui->beerLabel->setScaledContents(true);
+            }
+        }
+        
+        // 2. Update PFP Circles
+        // Helper to get circle widget by index 0-4 -> pfpCircle1-5
+        auto getCircle = [this](int idx) -> QLabel* {
+            switch(idx) {
+                case 0: return ui->pfpCircle1;
+                case 1: return ui->pfpCircle2;
+                case 2: return ui->pfpCircle3;
+                case 3: return ui->pfpCircle4;
+                case 4: return ui->pfpCircle5;
+                default: return nullptr;
+            }
+        };
+
+        // Clear all circles first
+        for (int i = 0; i < 5; i++) {
+            if (QLabel* c = getCircle(i)) c->clear();
+        }
+
+        // Fill circles
+        for (int i = 0; i < playerCount && i < 5; ++i) {
+             QJsonObject p = players[i].toObject();
+             int pid = p["user_id"].toInt();
+             
+             if (QLabel* circle = getCircle(i)) {
+                 QPixmap avatar = UiUtils::GetAvatar(pid, m_networkManager);
+                 if (!avatar.isNull()) {
+                     // Make it circular? UiUtils::GetAvatar usually returns a square.
+                     // We can just set it for now or mask it.
+                     // Ideally we mask it to be a circle.
+                     QPixmap circularAvatar(75, 75);
+                     circularAvatar.fill(Qt::transparent);
+                     QPainter painter(&circularAvatar);
+                     painter.setRenderHint(QPainter::Antialiasing);
+                     painter.setRenderHint(QPainter::SmoothPixmapTransform);
+                     QPainterPath path;
+                     path.addEllipse(0, 0, 75, 75);
+                     painter.setClipPath(path);
+                     painter.drawPixmap(0, 0, 75, 75, avatar);
+                     
+                     circle->setPixmap(circularAvatar);
+                     circle->setScaledContents(true);
+                     circle->setVisible(true);
+                 }
+             }
+        }
+        // -------------------------------
+
         for (const auto& p : players) {
             QJsonObject player = p.toObject();
             if (player["user_id"].toInt() == m_userId) {
                 if (player.contains("hand")) {
                     updateHand(player["hand"].toArray());
                 }
+                // --- Ability Name Update ---
+                if (player.contains("ability")) {
+                    QString abilityName = player["ability"].toString();
+                    if (ui->abilityButton) {
+                        ui->abilityButton->setText(abilityName);
+                    }
+                }
+                // ---------------------------
             }
         }
         updateOpponents(players);

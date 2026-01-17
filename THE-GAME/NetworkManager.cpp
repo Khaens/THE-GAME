@@ -31,10 +31,12 @@ void NetworkManager::checkServerStatus() {
     if (isOnline && !m_serverAvailable) {
         qDebug() << "Server is now ONLINE!";
         m_serverAvailable = true;
+        emit serverStatusChanged(true);
     }
     else if (!isOnline && m_serverAvailable) {
         qDebug() << "Server went OFFLINE!";
         m_serverAvailable = false;
+        emit serverStatusChanged(false);
     }
 }
 
@@ -143,7 +145,7 @@ LobbyResponse NetworkManager::createLobby(int user_id, const std::string& name, 
     return LobbyResponse{ false, "", 0, 0 };
 }
 
-bool NetworkManager::joinLobby(int user_id, const std::string& lobby_id) {
+LobbyResponse NetworkManager::joinLobby(int user_id, const std::string& lobby_id) {
     crow::json::wvalue payload;
     payload["user_id"] = user_id;
     payload["lobby_id"] = lobby_id;
@@ -154,7 +156,32 @@ bool NetworkManager::joinLobby(int user_id, const std::string& lobby_id) {
         cpr::Header{ {"Content-Type", "application/json"} }
     );
 
-    return response.status_code == 200;
+    if (response.status_code == 0) {
+        return LobbyResponse{ false, "", 0, 0, "Server invalid/offline" };
+    }
+
+    auto data = crow::json::load(response.text);
+    if (!data) {
+        return LobbyResponse{ false, "", 0, 0, "Invalid response" };
+    }
+
+    if (response.status_code == 200) {
+        return LobbyResponse{
+            true,
+            data["lobby_id"].s(),
+            static_cast<int>(data["max_players"].i()),
+            static_cast<int>(data["current_players"].i()),
+            ""
+        };
+    }
+
+    return LobbyResponse{
+        false,
+        "",
+        0,
+        0,
+        data.has("error_message") ? (std::string)data["error_message"].s() : std::string("Failed to join")
+    };
 }
 
 std::optional<LobbyStatus> NetworkManager::getLobbyStatus(const std::string& lobby_id) {

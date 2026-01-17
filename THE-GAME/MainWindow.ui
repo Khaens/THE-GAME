@@ -141,6 +141,19 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayoutBottom">
       <item>
+       <widget class="QLabel" name="connectionStatus">
+        <property name="minimumSize">
+         <size>
+          <width>200</width>
+          <height>50</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
        <spacer name="bottomSpacer">
         <property name="orientation">
          <enum>Qt::Orientation::Horizontal</enum>

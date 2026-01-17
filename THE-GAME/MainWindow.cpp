@@ -29,6 +29,17 @@ MainWindow::MainWindow(QWidget* parent)
 
 	m_networkManager = std::make_shared<NetworkManager>(SERVER_URL);
 
+    // Connection Status handling
+    connect(m_networkManager.get(), &NetworkManager::serverStatusChanged, this, [this](bool isOnline) {
+        if (isOnline) {
+            ui->connectionStatus->setText("CONNECTED");
+            ui->connectionStatus->setStyleSheet("color: #00FF00; font-weight: bold; font-size: 16px;");
+        } else {
+            ui->connectionStatus->setText("DISCONNECTED");
+            ui->connectionStatus->setStyleSheet("color: #FF0000; font-weight: bold; font-size: 16px;");
+        }
+    });
+
     // Create overlay dialogs
     m_helpDialog = new HelpDialog(this);
     m_settingsDialog = new SettingsDialog(this);

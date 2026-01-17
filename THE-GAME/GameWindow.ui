@@ -601,6 +601,120 @@
      <string/>
     </property>
    </widget>
+   <widget class="QPushButton" name="abilityButton">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>420</y>
+      <width>200</width>
+      <height>70</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>200</width>
+      <height>70</height>
+     </size>
+    </property>
+    <property name="text">
+     <string>ABILITY</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="pfpCircle5">
+    <property name="geometry">
+     <rect>
+      <x>1215</x>
+      <y>170</y>
+      <width>80</width>
+      <height>80</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>80</width>
+      <height>80</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="pfpCircle4">
+    <property name="geometry">
+     <rect>
+      <x>1215</x>
+      <y>258</y>
+      <width>80</width>
+      <height>80</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>80</width>
+      <height>80</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="pfpCircle3">
+    <property name="geometry">
+     <rect>
+      <x>1215</x>
+      <y>346</y>
+      <width>80</width>
+      <height>80</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>80</width>
+      <height>80</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="pfpCircle2">
+    <property name="geometry">
+     <rect>
+      <x>1215</x>
+      <y>434</y>
+      <width>80</width>
+      <height>80</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>80</width>
+      <height>80</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="pfpCircle1">
+    <property name="geometry">
+     <rect>
+      <x>1215</x>
+      <y>522</y>
+      <width>80</width>
+      <height>80</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>80</width>
+      <height>80</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>

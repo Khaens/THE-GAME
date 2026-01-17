@@ -3,6 +3,7 @@
 #include "ui_GameWindow.h"
 #include "NetworkManager.h"
 #include <QLabel> // Added for QLabel
+#include <QTextEdit>
 #include "WinDialog.h"
 #include "LossDialog.h"
 
@@ -44,6 +45,7 @@ private:
     void toggleChat();
     void sendMessage();
     bool m_isChatOpen = false;
+    QTextEdit* m_chatDisplay = nullptr;
 
     // Card Selection State
     QWidget* m_selectedCardWidget = nullptr;
@@ -77,4 +79,7 @@ private:
     void updatePileClickability();
     void clearCardSelection();
     void updateEndTurnButtonState();
+    
+    // Helper to reset state
+    void resetGameState();
 };
