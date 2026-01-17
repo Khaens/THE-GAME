@@ -459,12 +459,16 @@ void LobbyRoomDialog::onStartGameClicked()
     if (reply == QMessageBox::Yes) {
         stopCountdownTimer();
         
-        if (m_networkManager->startGame(m_lobbyId.toStdString())) {
+        QString errorMsg = m_networkManager->startGame(m_lobbyId.toStdString());
+        
+        if (errorMsg.isEmpty()) {
+             // Success
              m_networkManager->disconnectFromLobby();
              emit gameStarted(m_lobbyId);
              accept(); // Close lobby dialog
         } else {
-             QMessageBox::warning(this, "Error", "Failed to start game. Please try again.");
+             QMessageBox::warning(this, "Error", errorMsg);
+             // Restart countdown if failed? Optional, but good for UX if it was just a timing issue
         }
     }
 }

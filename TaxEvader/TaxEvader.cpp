@@ -36,45 +36,50 @@ void TaxEvader::SetTaxActive(bool state)
 
 const bool TaxEvader::HPActive()
 {
-    throw std::runtime_error("TaxEvader called HP function");
+	return false;
 }
 
 const bool TaxEvader::GetHPFlag() const
 {
-    throw std::runtime_error("TaxEvader called HP function");
+	return false;
 }
 
 void TaxEvader::SetHPFlag(bool state)
 {
-    throw std::runtime_error("TaxEvader called HP function");
+	// No-op
 }
 
 void TaxEvader::SetHPActive(bool state)
 {
-    throw std::runtime_error("TaxEvader called HP function");
+	// No-op
 }
 
 const size_t TaxEvader::GetGamblerUses()
 {
-    throw std::runtime_error("TaxEvader called Gambler function");
+	return 0;
 }
 
 const bool TaxEvader::GActive()
 {
-    throw std::runtime_error("TaxEvader called Gambler function");
+	return false;
 }
 
 void TaxEvader::SetGActive(bool state)
 {
-    throw std::runtime_error("TaxEvader called Gambler function");
+	// No-op
 }
 
 const bool TaxEvader::IsSoothActive()
 {
-    throw std::runtime_error("TaxEvader called Soothsayer function");
+	return false;
 }
 
 void TaxEvader::SetSoothState(bool state)
 {
-    throw std::runtime_error("TaxEvader called Soothsayer function");
+	// No-op
+}
+
+const size_t TaxEvader::GetSoothsayerUses()
+{
+	return 0; // TaxEvader doesn't have soothsayer uses
 }

@@ -15,6 +15,9 @@ int main() {
     
     // Start Chat Worker
     networkUtils.StartChatWorker();
+    
+    // Start WebSocket Send Worker (all WS sends go through this thread)
+    networkUtils.StartWsWorker();
 
     // Register Routes (const instances as requested)
     const AuthRoutes authRoutes(app, db.get(), networkUtils);

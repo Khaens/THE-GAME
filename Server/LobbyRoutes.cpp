@@ -106,9 +106,7 @@ void LobbyRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtil
         
         std::string update_msg = update.dump();
         for (auto* conn : networkUtils.lobby_update_connections[lobby_id]) {
-            if (conn) {
-                conn->send_text(update_msg);
-            }
+            networkUtils.SafeSendText(conn, update_msg);
         }
 
         crow::json::wvalue response;
@@ -198,9 +196,7 @@ void LobbyRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtil
         update["lobby_id"] = lobby_id;
         std::string update_msg = update.dump();
         for (auto* conn : networkUtils.lobby_update_connections[lobby_id]) {
-            if (conn) {
-                conn->send_text(update_msg);
-            }
+            networkUtils.SafeSendText(conn, update_msg);
         }
         
         crow::json::wvalue response;
@@ -247,9 +243,7 @@ void LobbyRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtil
             std::string update_msg = update.dump();
             
             for (auto* conn : networkUtils.lobby_update_connections[lobby_id]) {
-                if (conn) {
-                    conn->send_text(update_msg);
-                }
+                networkUtils.SafeSendText(conn, update_msg);
             }
           
             networkUtils.lobby_update_connections[lobby_id].clear();
@@ -283,9 +277,7 @@ void LobbyRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtil
             std::string update_msg = update.dump();
             
             for (auto* conn : networkUtils.lobby_update_connections[lobby_id]) {
-                if (conn) {
-                    conn->send_text(update_msg);
-                }
+                networkUtils.SafeSendText(conn, update_msg);
             }
             
             std::cout << "Player " << user_id << " left lobby " << lobby_id << std::endl;
@@ -300,11 +292,24 @@ void LobbyRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtil
 
     // LOBBY WEBSOCKET
     CROW_WEBSOCKET_ROUTE(app, "/ws/lobby")
-        .onopen([](crow::websocket::connection& conn) {
-            std::cout << "New Lobby WebSocket connection" << std::endl;
+        .onopen([&networkUtils](crow::websocket::connection& conn) {
+            std::cout << "New Lobby WebSocket connection: " << &conn << std::endl;
+            // Register this connection as valid
+            {
+                std::lock_guard<std::mutex> lock(networkUtils.m_validConnMutex);
+                networkUtils.m_validConnections.insert(&conn);
+            }
         })
         .onclose([&networkUtils](crow::websocket::connection& conn, const std::string& reason, uint16_t) {
             std::cout << "Lobby WebSocket closed: " << &conn << std::endl;
+            
+            // First, mark connection as invalid
+            {
+                std::lock_guard<std::mutex> lock(networkUtils.m_validConnMutex);
+                networkUtils.m_validConnections.erase(&conn);
+            }
+            
+            // Then remove from lobby update connections
             std::lock_guard<std::mutex> lock(networkUtils.lobby_ws_mutex);
             for (auto& [lobby_id, connections] : networkUtils.lobby_update_connections) {
                 auto it = std::find(connections.begin(), connections.end(), &conn);
@@ -350,7 +355,7 @@ void LobbyRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtil
                              int elapsed_seconds = std::chrono::duration_cast<std::chrono::seconds>(duration).count();
                              int remaining = std::max(0, 60 - elapsed_seconds);
                              update["remaining_seconds"] = remaining;
-                             conn.send_text(update.dump());
+                             networkUtils.SafeSendText(&conn, update.dump());
                          }
                      }
                  }

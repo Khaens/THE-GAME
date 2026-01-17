@@ -33,6 +33,7 @@
     <ClCompile Include="SettingsDialog.cpp" />
     <ClCompile Include="UiUtils.cpp" />
     <ClCompile Include="WinDialog.cpp" />
+    <ClCompile Include="PeasantDialog.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="AccountDialog.h" />
@@ -53,6 +54,7 @@
     <QtMoc Include="LobbyRoomDialog.h" />
     <QtMoc Include="GameWindow.h" />
     <QtMoc Include="NetworkManager.h" />
+    <QtMoc Include="PeasantDialog.h" />
     <ClInclude Include="UiUtils.h" />
   </ItemGroup>
   <ItemGroup>

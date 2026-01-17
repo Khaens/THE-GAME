@@ -43,6 +43,7 @@ public:
 
 	virtual void SetPlayerIndex(size_t index) = 0;
 	virtual size_t GetPlayerIndex() const = 0;
+	virtual const size_t GetSoothsayerUses() = 0;
 };
 
 

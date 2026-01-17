@@ -2,6 +2,7 @@
 #include <iostream>
 #include <regex>
 #include <thread>
+#include <list>
 #include "GameServer.h"
 
 NetworkUtils::NetworkUtils() {
@@ -10,6 +11,12 @@ NetworkUtils::NetworkUtils() {
 void NetworkUtils::StartChatWorker() {
     std::thread([this]() {
         this->ChatWorker();
+    }).detach();
+}
+
+void NetworkUtils::StartWsWorker() {
+    std::thread([this]() {
+        this->WsWorker();
     }).detach();
 }
 
@@ -62,6 +69,9 @@ void NetworkUtils::BroadcastGameStateLocked(const std::string& lobby_id, crow::w
         state_base["current_turn_player_id"] = -1;
     }
 
+    // Context Info
+    state_base["current_required"] = game->GetCtx().currentRequired;
+
     // Players info & Hands
     std::vector<crow::json::wvalue> players_json;
     const auto& players = game->GetPlayers();
@@ -91,7 +101,25 @@ void NetworkUtils::BroadcastGameStateLocked(const std::string& lobby_id, crow::w
             case AbilityType::Soothsayer: abilityName = "Soothsayer"; break;
             case AbilityType::Peasant: abilityName = "Peasant"; break;
         }
-        player_val["ability"] = abilityName; 
+        player_val["ability"] = abilityName;
+        
+        // Ability Active States
+        player_val["is_hp_active"] = players[i]->HPActive();
+        player_val["is_sooth_active"] = players[i]->IsSoothActive();
+        player_val["is_tax_active"] = players[i]->IsTaxActive();
+        
+        // Can player use their ability? (checked against game context)
+        player_val["can_use_ability"] = players[i]->CanUseAbility(game->GetCtx());
+        
+        // For Gambler, also send uses left
+        if (players[i]->GetAbilityType() == AbilityType::Gambler) {
+            player_val["gambler_uses_left"] = (int)players[i]->GetGamblerUses();
+        }
+        
+        // For Soothsayer, also send uses left
+        if (players[i]->GetAbilityType() == AbilityType::Soothsayer) {
+            player_val["soothsayer_uses_left"] = (int)players[i]->GetSoothsayerUses();
+        }
 
         players_json.push_back(std::move(player_val));
     }
@@ -104,15 +132,13 @@ void NetworkUtils::BroadcastGameStateLocked(const std::string& lobby_id, crow::w
     if (lobby_connections.find(lobby_id) != lobby_connections.end()) {
         // If targetConn is specified, send only to it
         if (targetConn) {
-            targetConn->send_text(std::string(msg));
+            SafeSendText(targetConn, msg);
         } 
         // Otherwise broadcast to all
         else {
             try {
                 for (auto* conn : lobby_connections[lobby_id]) {
-                    if (conn) {
-                        conn->send_text(std::string(msg)); 
-                    }
+                    SafeSendText(conn, msg); 
                 }
             } catch (const std::exception& e) {
                 std::cerr << "Error broadcasting game state to lobby " << lobby_id << ": " << e.what() << std::endl;
@@ -121,6 +147,10 @@ void NetworkUtils::BroadcastGameStateLocked(const std::string& lobby_id, crow::w
             }
         }
     }
+    
+    // NOTE: Do NOT cleanup pending messages here - the buffers must live until ASIO
+    // completes the async write operations. Cleaning up too early causes crashes.
+    // Memory will be cleaned up when the server shuts down.
 }
 
 void NetworkUtils::BroadcastAchievement(const std::string& lobby_id, int user_id, const std::string& achievement_key) {
@@ -134,9 +164,7 @@ void NetworkUtils::BroadcastAchievement(const std::string& lobby_id, int user_id
 
     if (lobby_connections.find(lobby_id) != lobby_connections.end()) {
         for (auto* conn : lobby_connections[lobby_id]) {
-            if (conn) {
-                conn->send_text(msg_str);
-            }
+            SafeSendText(conn, msg_str);
         }
     }
 }
@@ -172,22 +200,76 @@ void NetworkUtils::ChatWorker() {
             chatQueue.pop();
             lock.unlock(); 
 
-            // Broadcast
+            // Broadcast via SafeSendText (routes through WsWorker)
             {
                 std::lock_guard<std::mutex> ws_lock(ws_mutex);
                 auto it = lobby_connections.find(msg.lobby_id);
                 if (it != lobby_connections.end()) {
-                    try {
-                        for (auto* conn : it->second) {
-                            if (conn) conn->send_text(msg.message_json);
-                        }
-                    } catch (const std::exception& e) {
-                        std::cerr << "Error broadcasting chat to lobby " << msg.lobby_id << ": " << e.what() << std::endl;
+                    for (auto* conn : it->second) {
+                        SafeSendText(conn, msg.message_json);
                     }
                 }
             }
 
             lock.lock(); 
         }
+    }
+}
+
+void NetworkUtils::SafeSendText(crow::websocket::connection* conn, const std::string& msg) {
+    if (!conn) return;
+    
+    // Queue the message for the WsWorker to send
+    {
+        std::lock_guard<std::mutex> lock(wsSendMutex);
+        wsQueue.push({conn, msg});
+    }
+    wsSendCv.notify_one();
+}
+
+void NetworkUtils::WsWorker() {
+    while (m_wsWorkerRunning) {
+        WsMessage wsMsg;
+        
+        {
+            std::unique_lock<std::mutex> lock(wsSendMutex);
+            wsSendCv.wait(lock, [this]{ return !wsQueue.empty() || !m_wsWorkerRunning; });
+            
+            if (!m_wsWorkerRunning && wsQueue.empty()) break;
+            
+            wsMsg = std::move(wsQueue.front());
+            wsQueue.pop();
+        }
+        
+        // Validate connection is still alive before sending
+        bool isValid = false;
+        {
+            std::lock_guard<std::mutex> lock(m_validConnMutex);
+            isValid = m_validConnections.count(wsMsg.conn) > 0;
+        }
+        
+        if (!isValid) {
+            // Connection closed, skip this message
+            continue;
+        }
+        
+        // Send the message from this single worker thread
+        try {
+            if (wsMsg.conn) {
+                wsMsg.conn->send_text(wsMsg.message);
+            }
+        } catch (const std::exception& e) {
+            std::cerr << "Error in WsWorker send: " << e.what() << std::endl;
+        }
+    }
+}
+
+void NetworkUtils::CleanupPendingMessages() {
+    std::lock_guard<std::mutex> lock(m_pendingMsgMutex);
+    // Clear old messages - in a real implementation we'd use a more sophisticated
+    // approach to track when messages are actually sent. For now, we just keep
+    // a reasonable number of recent messages.
+    while (m_pendingMessages.size() > 1000) {
+        m_pendingMessages.pop_front();
     }
 }

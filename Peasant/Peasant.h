@@ -26,6 +26,7 @@ public:
 	void SetTaxActive(bool state) override;
 
 	const bool IsSoothActive() override;
-	void SetSoothState(bool state) override; 
+	void SetSoothState(bool state) override;
+	const size_t GetSoothsayerUses() override;
 };
 

@@ -715,6 +715,766 @@
      <string/>
     </property>
    </widget>
+   <widget class="QLabel" name="soothsayer5">
+    <property name="geometry">
+     <rect>
+      <x>935</x>
+      <y>170</y>
+      <width>250</width>
+      <height>80</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>250</width>
+      <height>80</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ssUser5">
+    <property name="geometry">
+     <rect>
+      <x>945</x>
+      <y>175</y>
+      <width>200</width>
+      <height>15</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>200</width>
+      <height>15</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ssCard5_1">
+    <property name="geometry">
+     <rect>
+      <x>945</x>
+      <y>200</y>
+      <width>30</width>
+      <height>45</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>30</width>
+      <height>45</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ssCard5_2">
+    <property name="geometry">
+     <rect>
+      <x>985</x>
+      <y>200</y>
+      <width>30</width>
+      <height>45</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>30</width>
+      <height>45</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ssCard5_3">
+    <property name="geometry">
+     <rect>
+      <x>1025</x>
+      <y>200</y>
+      <width>30</width>
+      <height>45</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>30</width>
+      <height>45</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ssCard5_4">
+    <property name="geometry">
+     <rect>
+      <x>1065</x>
+      <y>200</y>
+      <width>30</width>
+      <height>45</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>30</width>
+      <height>45</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ssCard5_5">
+    <property name="geometry">
+     <rect>
+      <x>1105</x>
+      <y>200</y>
+      <width>30</width>
+      <height>45</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>30</width>
+      <height>45</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ssCard5_6">
+    <property name="geometry">
+     <rect>
+      <x>1145</x>
+      <y>200</y>
+      <width>30</width>
+      <height>45</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>30</width>
+      <height>45</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="soothsayer4">
+    <property name="geometry">
+     <rect>
+      <x>935</x>
+      <y>258</y>
+      <width>250</width>
+      <height>80</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>250</width>
+      <height>80</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ssUser4">
+    <property name="geometry">
+     <rect>
+      <x>945</x>
+      <y>263</y>
+      <width>200</width>
+      <height>15</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>200</width>
+      <height>15</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ssCard4_1">
+    <property name="geometry">
+     <rect>
+      <x>945</x>
+      <y>288</y>
+      <width>30</width>
+      <height>45</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>30</width>
+      <height>45</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ssCard4_2">
+    <property name="geometry">
+     <rect>
+      <x>985</x>
+      <y>288</y>
+      <width>30</width>
+      <height>45</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>30</width>
+      <height>45</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ssCard4_3">
+    <property name="geometry">
+     <rect>
+      <x>1025</x>
+      <y>288</y>
+      <width>30</width>
+      <height>45</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>30</width>
+      <height>45</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ssCard4_4">
+    <property name="geometry">
+     <rect>
+      <x>1065</x>
+      <y>288</y>
+      <width>30</width>
+      <height>45</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>30</width>
+      <height>45</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ssCard4_5">
+    <property name="geometry">
+     <rect>
+      <x>1105</x>
+      <y>288</y>
+      <width>30</width>
+      <height>45</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>30</width>
+      <height>45</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ssCard4_6">
+    <property name="geometry">
+     <rect>
+      <x>1145</x>
+      <y>288</y>
+      <width>30</width>
+      <height>45</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>30</width>
+      <height>45</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="soothsayer3">
+    <property name="geometry">
+     <rect>
+      <x>935</x>
+      <y>346</y>
+      <width>250</width>
+      <height>80</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>250</width>
+      <height>80</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ssUser3">
+    <property name="geometry">
+     <rect>
+      <x>945</x>
+      <y>351</y>
+      <width>200</width>
+      <height>15</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>200</width>
+      <height>15</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ssCard3_1">
+    <property name="geometry">
+     <rect>
+      <x>945</x>
+      <y>376</y>
+      <width>30</width>
+      <height>45</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>30</width>
+      <height>45</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ssCard3_2">
+    <property name="geometry">
+     <rect>
+      <x>985</x>
+      <y>376</y>
+      <width>30</width>
+      <height>45</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>30</width>
+      <height>45</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ssCard3_3">
+    <property name="geometry">
+     <rect>
+      <x>1025</x>
+      <y>376</y>
+      <width>30</width>
+      <height>45</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>30</width>
+      <height>45</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ssCard3_4">
+    <property name="geometry">
+     <rect>
+      <x>1065</x>
+      <y>376</y>
+      <width>30</width>
+      <height>45</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>30</width>
+      <height>45</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ssCard3_5">
+    <property name="geometry">
+     <rect>
+      <x>1105</x>
+      <y>376</y>
+      <width>30</width>
+      <height>45</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>30</width>
+      <height>45</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ssCard3_6">
+    <property name="geometry">
+     <rect>
+      <x>1145</x>
+      <y>376</y>
+      <width>30</width>
+      <height>45</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>30</width>
+      <height>45</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="soothsayer2">
+    <property name="geometry">
+     <rect>
+      <x>935</x>
+      <y>434</y>
+      <width>250</width>
+      <height>80</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>250</width>
+      <height>80</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ssUser2">
+    <property name="geometry">
+     <rect>
+      <x>945</x>
+      <y>439</y>
+      <width>200</width>
+      <height>15</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>200</width>
+      <height>15</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ssCard2_1">
+    <property name="geometry">
+     <rect>
+      <x>945</x>
+      <y>464</y>
+      <width>30</width>
+      <height>45</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>30</width>
+      <height>45</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ssCard2_2">
+    <property name="geometry">
+     <rect>
+      <x>985</x>
+      <y>464</y>
+      <width>30</width>
+      <height>45</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>30</width>
+      <height>45</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ssCard2_3">
+    <property name="geometry">
+     <rect>
+      <x>1025</x>
+      <y>464</y>
+      <width>30</width>
+      <height>45</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>30</width>
+      <height>45</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ssCard2_4">
+    <property name="geometry">
+     <rect>
+      <x>1065</x>
+      <y>464</y>
+      <width>30</width>
+      <height>45</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>30</width>
+      <height>45</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ssCard2_5">
+    <property name="geometry">
+     <rect>
+      <x>1105</x>
+      <y>464</y>
+      <width>30</width>
+      <height>45</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>30</width>
+      <height>45</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ssCard2_6">
+    <property name="geometry">
+     <rect>
+      <x>1145</x>
+      <y>464</y>
+      <width>30</width>
+      <height>45</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>30</width>
+      <height>45</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="soothsayer1">
+    <property name="geometry">
+     <rect>
+      <x>935</x>
+      <y>522</y>
+      <width>250</width>
+      <height>80</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>250</width>
+      <height>80</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ssUser1">
+    <property name="geometry">
+     <rect>
+      <x>945</x>
+      <y>527</y>
+      <width>200</width>
+      <height>15</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>200</width>
+      <height>15</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ssCard1_1">
+    <property name="geometry">
+     <rect>
+      <x>945</x>
+      <y>552</y>
+      <width>30</width>
+      <height>45</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>30</width>
+      <height>45</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ssCard1_2">
+    <property name="geometry">
+     <rect>
+      <x>985</x>
+      <y>552</y>
+      <width>30</width>
+      <height>45</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>30</width>
+      <height>45</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ssCard1_3">
+    <property name="geometry">
+     <rect>
+      <x>1025</x>
+      <y>552</y>
+      <width>30</width>
+      <height>45</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>30</width>
+      <height>45</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ssCard1_4">
+    <property name="geometry">
+     <rect>
+      <x>1065</x>
+      <y>552</y>
+      <width>30</width>
+      <height>45</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>30</width>
+      <height>45</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ssCard1_5">
+    <property name="geometry">
+     <rect>
+      <x>1105</x>
+      <y>552</y>
+      <width>30</width>
+      <height>45</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>30</width>
+      <height>45</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ssCard1_6">
+    <property name="geometry">
+     <rect>
+      <x>1145</x>
+      <y>552</y>
+      <width>30</width>
+      <height>45</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>30</width>
+      <height>45</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>

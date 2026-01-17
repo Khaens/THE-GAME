@@ -30,6 +30,7 @@ protected:
 
 private slots:
     void onBackButtonClicked();
+    void onAbilityButtonClicked();
     void onGameConnected();
     void onGameMessageReceived(const QJsonObject& message);
 
@@ -58,11 +59,17 @@ private:
     int m_userId = -1;
     std::string m_lobbyId;
     std::string m_username;
+    bool m_wasSoothActive = false;
 
     void handleGameState(const QJsonObject& state);
     void updateHand(const QJsonArray& hand);
     void updatePiles(const QJsonArray& piles);
     void updateOpponents(const QJsonArray& players);
+    void updateSoothsayerView(const QJsonArray& players);
+    void hideSoothsayerPanels();
+
+    // Helper for UI scaling
+    QRect scaleRect(int x, int y, int w, int h) const;
 
     QLabel* m_turnLabel = nullptr; // New label for turn indication
     int m_lastTurnUserId = -1;
@@ -70,15 +77,21 @@ private:
 
     // Turn and Pile State for Client-Side Validation
     bool m_isMyTurn = false;
+    bool m_isHPMode = false;
     int m_cardsPlayedThisTurn = 0; // Track number of cards played in current turn
     int m_pileTopValues[4] = { 1, 1, 100, 100 }; // Current top card values [asc1, asc2, desc1, desc2]
     int m_deckCount = 0; // Updated from server state. Default 0 safe for start.
+    int m_requiredCards = 2; // Server dictates this (2 normally, 1 for Gambler, 0 for TaxEvader, etc)
+    bool m_canUseAbility = true; // Server tells us if ability can be used
+    QString m_myAbilityName; // Track our ability type
+    int m_gamblerUsesLeft = 3; // Gambler uses remaining
+    bool m_abilityUsedThisTurn = false; // Client-side: block after one use per turn
 
-    // Card Placement Validation
     bool canPlaceCardOnPile(int cardValue, int pileIndex) const;
     void updatePileClickability();
     void clearCardSelection();
     void updateEndTurnButtonState();
+    void updateAbilityButtonState();
     
     // Helper to reset state
     void resetGameState();

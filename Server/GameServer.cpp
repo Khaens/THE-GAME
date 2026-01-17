@@ -206,6 +206,10 @@ Info Game::EndTurn(size_t playerIndex)
 		m_players[m_ctx.GamblerPlayerIndex]->GActive()) {
 		GetCurrentPlayer().SetGActive(false);
 	}
+	// Reset Soothsayer active state
+	if (m_players[playerIndex]->IsSoothActive()) {
+		m_players[playerIndex]->SetSoothState(false);
+	}
 	CheckAchievements(GetCurrentPlayer());
 	m_gameStats[m_players[playerIndex]->GetID()].placed7 = false;
 	m_gameStats[m_players[playerIndex]->GetID()].placed6 = false;

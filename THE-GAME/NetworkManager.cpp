@@ -211,7 +211,7 @@ std::optional<LobbyStatus> NetworkManager::getLobbyStatus(const std::string& lob
     return std::nullopt;
 }
 
-bool NetworkManager::startGame(const std::string& lobby_id) {
+QString NetworkManager::startGame(const std::string& lobby_id) {
     crow::json::wvalue payload;
     
     auto response = cpr::Post(
@@ -220,8 +220,18 @@ bool NetworkManager::startGame(const std::string& lobby_id) {
         cpr::Header{ {"Content-Type", "application/json"} }
     );
 
-    if (response.status_code == 0) return false;
-    return response.status_code == 200;
+    if (response.status_code == 0) return "Server invalid/offline";
+    
+    if (response.status_code == 200) return ""; // Success
+
+    auto data = crow::json::load(response.text);
+    if (!data) return "Invalid response from server";
+    
+    if (data.has("error_message")) {
+        return QString::fromStdString(data["error_message"].s());
+    }
+    
+    return "Failed to start game (Unknown Error)";
 }
 
 bool NetworkManager::leaveLobby(int user_id, const std::string& lobby_id) {

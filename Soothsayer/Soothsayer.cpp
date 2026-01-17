@@ -30,45 +30,50 @@ void Soothsayer::SetSoothState(bool state)
 
 const bool Soothsayer::HPActive()
 {
-	throw std::runtime_error("Soothsayer called HP function");
+	return false;
 }
 
 const bool Soothsayer::GetHPFlag() const
 {
-	throw std::runtime_error("Soothsayer called HP function");
+	return false;
 }
 
 void Soothsayer::SetHPFlag(bool state)
 {
-	throw std::runtime_error("Soothsayer called HP function");
+	// No-op
 }
 
 void Soothsayer::SetHPActive(bool state)
 {
-	throw std::runtime_error("Soothsayer called HP function");
+	// No-op
 }
 
 const size_t Soothsayer::GetGamblerUses()
 {
-	throw std::runtime_error("Soothsayer called Gambler function");
+	return 0;
 }
 
 const bool Soothsayer::GActive()
 {
-	throw std::runtime_error("Soothsayer called Gambler function");
+	return false;
 }
 
 void Soothsayer::SetGActive(bool state)
 {
-	throw std::runtime_error("Soothsayer called Gambler function");
+	// No-op
 }
 
 const bool Soothsayer::IsTaxActive()
 {
-	throw std::runtime_error("Soothsayer called TaxEvader function");
+	return false;
 }
 
 void Soothsayer::SetTaxActive(bool state)
 {
-	throw std::runtime_error("Soothsayer called TaxEvader function");
+	// No-op
+}
+
+const size_t Soothsayer::GetSoothsayerUses()
+{
+	return m_usesLeft;
 }

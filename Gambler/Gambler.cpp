@@ -35,47 +35,51 @@ const bool Gambler::GActive()
 
 const size_t Gambler::GetGamblerUses()
 {
-	if (m_uses > 0) m_uses--;
-	return m_uses > 0 ? m_uses + 1 : m_uses;
+	// Return uses remaining, no side effects
+	return m_usesLeft;
 }
 
 const bool Gambler::HPActive()
 {
-	throw std::runtime_error("Gambler called HP function");
+	return false;
 }
 
 const bool Gambler::GetHPFlag() const
 {
-	throw std::runtime_error("Gambler called HP function");
 	return false;
 }
 
 void Gambler::SetHPFlag(bool state)
 {
-	throw std::runtime_error("Gambler called HP function");
+	// No-op
 }
 
 void Gambler::SetHPActive(bool state)
 {
-	throw std::runtime_error("Gambler called HP function");
+	// No-op
 }
 
 const bool Gambler::IsTaxActive()
 {
-	throw std::runtime_error("Gambler called TaxEvader function");
+	return false;
 }
 
 void Gambler::SetTaxActive(bool state)
 {
-	throw std::runtime_error("Gambler called TaxEvader function");
+	// No-op
 }
 
 const bool Gambler::IsSoothActive()
 {
-	throw std::runtime_error("Gambler called Soothsayer function");
+	return false;
 }
 
 void Gambler::SetSoothState(bool state)
 {
-	throw std::runtime_error("Gambler called Soothsayer function");
+	// No-op
+}
+
+const size_t Gambler::GetSoothsayerUses()
+{
+	return 0; // Gambler doesn't have soothsayer uses
 }

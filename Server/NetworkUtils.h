@@ -7,12 +7,19 @@
 #include <queue>
 #include <condition_variable>
 #include <memory>
+#include <set>
 #include "Lobby.h"
 
 // Struct for chat messages
 struct ChatMessage {
     std::string lobby_id;
     std::string message_json; 
+};
+
+// Struct for ALL websocket messages (unified queue)
+struct WsMessage {
+    crow::websocket::connection* conn;
+    std::string message;
 };
 
 class NetworkUtils {
@@ -39,6 +46,21 @@ public:
     std::mutex chatMutex;
     std::condition_variable chatCv;
 
+    // Persistent message buffer storage for async sends
+    // This keeps strings alive until ASIO completes the write
+    std::list<std::string> m_pendingMessages;
+    std::mutex m_pendingMsgMutex;
+
+    // Unified WebSocket send queue - ALL sends go through this
+    std::queue<WsMessage> wsQueue;
+    std::mutex wsSendMutex;
+    std::condition_variable wsSendCv;
+    bool m_wsWorkerRunning = true;
+    
+    // Track valid connections to avoid sending to closed ones
+    std::set<crow::websocket::connection*> m_validConnections;
+    std::mutex m_validConnMutex;
+
     // --- Helper Functions ---
     void BroadcastGameState(const std::string& lobby_id, crow::websocket::connection* targetConn = nullptr);
     void BroadcastGameStateLocked(const std::string& lobby_id, crow::websocket::connection* targetConn = nullptr);
@@ -48,4 +70,10 @@ public:
     
     // Helper to start the worker thread
     void StartChatWorker();
+    void StartWsWorker(); // Start the unified WS worker
+    void WsWorker(); // The unified WS send worker thread
+    
+    // Safe async message send (keeps buffer alive)
+    void SafeSendText(crow::websocket::connection* conn, const std::string& msg);
+    void CleanupPendingMessages(); // Call periodically to clear sent messages
 };

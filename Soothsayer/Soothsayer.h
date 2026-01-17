@@ -25,6 +25,8 @@ public:
     const bool IsTaxActive() override;
     void SetTaxActive(bool state) override;
 
+    const size_t GetSoothsayerUses() override;
+
 private:
     bool m_active = false;
     uint8_t m_usesLeft = 2;

@@ -25,6 +25,7 @@ public:
 
 	const bool IsSoothActive() override;
 	void SetSoothState(bool state) override;
+	const size_t GetSoothsayerUses() override;
 private:
 	bool m_canUse = true;
 	bool m_active = false;

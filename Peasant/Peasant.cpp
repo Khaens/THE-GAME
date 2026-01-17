@@ -18,58 +18,60 @@ bool Peasant::CanUseAbility(TurnContext& ctx) const
 
 const bool Peasant::HPActive()
 {
-	throw std::runtime_error("Peasant called HP function");
+	return false;
 }
 
 const bool Peasant::GetHPFlag() const
 {
-	throw std::runtime_error("Peasant called HP function");
+	return false;
 }
 
 void Peasant::SetHPFlag(bool state)
 {
-	throw std::runtime_error("Peasant called HP function");
+	// No-op
 }
 
 void Peasant::SetHPActive(bool state)
 {
-	throw std::runtime_error("Peasant called HP function");
+	// No-op
 }
 
 const size_t Peasant::GetGamblerUses()
 {
-	throw std::runtime_error("Peasant called Gambler function");
+	return 0;
 }
 
 const bool Peasant::GActive()
 {
-	throw std::runtime_error("Peasant called Gambler function");
+	return false;
 }
 
 void Peasant::SetGActive(bool state)
 {
-	throw std::runtime_error("Peasant called Gambler function");
+	// No-op
 }
 
 const bool Peasant::IsTaxActive()
 {
-	throw std::runtime_error("Peasant called TaxEvader function");
+	return false;
 }
 
 void Peasant::SetTaxActive(bool state)
 {
-	throw std::runtime_error("Peasant called TaxEvader function");
+	// No-op
 }
 
 const bool Peasant::IsSoothActive()
 {
-	throw std::runtime_error("Peasant called Soothsayer function");
+	return false;
 }
 
 void Peasant::SetSoothState(bool state)
 {
-	throw std::runtime_error("Peasant called Soothsayer function");
+	// No-op
 }
 
-
-
+const size_t Peasant::GetSoothsayerUses()
+{
+	return 0; // Peasant doesn't have soothsayer uses
+}

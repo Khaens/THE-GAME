@@ -19,6 +19,7 @@
 #include <QJsonArray>
 #include <QMessageBox>
 #include <QListWidgetItem>
+#include "PeasantDialog.h"
 
 GameWindow::GameWindow(QWidget* parent)
     : QWidget(parent)
@@ -49,10 +50,15 @@ GameWindow::GameWindow(QWidget* parent)
     
     loadGameImage();
     
+    
     // Attempt to connect end turn button if it exists (user added in Designer)
     QPushButton* endTurnBtn = findChild<QPushButton*>("endTurnButton");
     if (endTurnBtn) {
         connect(endTurnBtn, &QPushButton::clicked, this, &GameWindow::sendEndTurnAction);
+    }
+
+    if (ui->abilityButton) {
+        connect(ui->abilityButton, &QPushButton::clicked, this, &GameWindow::onAbilityButtonClicked);
     }
     
     // Connect to Turn Label defined in Designer
@@ -193,6 +199,8 @@ void GameWindow::resetGameState()
 
     // Logic State
     m_isMyTurn = false;
+    m_isHPMode = false;
+    m_wasSoothActive = false;
     m_cardsPlayedThisTurn = 0;
     m_deckCount = 0;
     
@@ -222,10 +230,10 @@ void GameWindow::resizeEvent(QResizeEvent* event)
     QWidget::resizeEvent(event);
 }
 
-void GameWindow::resizeUI()
-{
-    if (!ui) return;
 
+
+QRect GameWindow::scaleRect(int x, int y, int w, int h) const
+{
     // Design resolution
     const float designW = 1366.0f;
     const float designH = 768.0f;
@@ -238,15 +246,21 @@ void GameWindow::resizeUI()
     float scaleX = currentW / designW;
     float scaleY = currentH / designH;
 
-    // Helper to scale rects
-    auto scaleRect = [&](int x, int y, int w, int h) -> QRect {
-        return QRect(
-            static_cast<int>(x * scaleX),
-            static_cast<int>(y * scaleY),
-            static_cast<int>(w * scaleX),
-            static_cast<int>(h * scaleY)
-        );
-    };
+    return QRect(
+        static_cast<int>(x * scaleX),
+        static_cast<int>(y * scaleY),
+        static_cast<int>(w * scaleX),
+        static_cast<int>(h * scaleY)
+    );
+}
+
+void GameWindow::resizeUI()
+{
+    if (!ui) return;
+
+    const float designH = 768.0f;
+    
+    // Member function scaleRect is now available to use directly.
 
     // Apply scaling to all known widgets
     // Coordinates taken from UI design (approximate based on user's successful windowed view)
@@ -438,10 +452,67 @@ void GameWindow::resizeUI()
         // Ensure it's above other things if needed
         // Ensure it's above other things if needed
         ui->chatWidget->raise();
+    }
         
-        // Match m_chatDisplay to ui->chatHistory geometry if possible, or just fill chatWidget minus input
-        if (m_chatDisplay && ui->chatHistory) {
-             m_chatDisplay->setGeometry(ui->chatHistory->geometry());
+    // 7) Soothsayer Panels
+    // Base Design: Panel(935, Y, 250, 80). Circles at X=1215. Panel Right Edge at 1185 (Gap 30).
+    // Y positions correspond to pfpCircles.
+    // Circle Ys (Design): 522, 434, 346, 258, 170. (Indices 1 to 5)
+    // Note: pfpCircle1 is at 522. pfpCircle5 is at 170.
+    
+    // Design constants needed again since they were local to original resizeUI
+    // const float designH = 768.0f; // Already defined at top of function
+
+    int pfpY[5] = { 522, 434, 346, 258, 170 }; // Y for 1, 2, 3, 4, 5
+    
+    // We want to hide them initially (Off-screen Right).
+    // On-screen X: 935 scaled. Off-screen X: 1366 scaled.
+    // However, if we move them off-screen, the animation manages the transition.
+    // resizeUI's job is to ensure they are scaled correctly.
+    // If we just scale them to "Hidden" by default, they will disappear if we resize window during animation?
+    // Let's rely on 'm_wasSoothActive' (synced with state).
+    bool showSooth = (m_networkManager && m_wasSoothActive); 
+    
+    // NOTE: individual player visibility is handled in updateSoothsayerView, but here we set global position
+    // If showSooth is true, we place them at TARGET. If false, HIDDEN.
+    // When strictly resizing, we snap to state.
+    
+    for(int i=1; i<=5; ++i) {
+        QWidget* panel = findChild<QWidget*>(QString("soothsayer%1").arg(i));
+        if(!panel) continue;
+        
+        // Base Design Geometry
+        int designX = 935;
+        int designY = pfpY[i-1];
+        int designW = 250;
+        int designH_Panel = 80;
+        
+        QRect targetRect = scaleRect(designX, designY, designW, designH_Panel);
+        QRect hiddenRect = scaleRect(1366, designY, designW, designH_Panel); // Off-screen right
+        
+        // Set background image for the panel
+        panel->setStyleSheet("background-image: url(Resources/TextBox_1-2_Small.png); background-repeat: no-repeat; background-position: center;");
+        
+        if (showSooth) {
+             panel->setGeometry(targetRect);
+        } else {
+             panel->setGeometry(hiddenRect);
+        }
+        
+        // Scale Inner Children (User Label, Cards) relative to GLOBAL Form coordinates
+        // Since they are siblings in XML, we scale them independently relative to Form
+        
+        // Decide Base X based on Active state to keep them relative to panel
+        // If panel is hidden (1366), children should be at 1366 + relative.
+        // If panel is target (935), children should be at 935 + relative.
+        int baseX = showSooth ? designX : 1366;
+        
+        QWidget* userLbl = findChild<QWidget*>(QString("ssUser%1").arg(i));
+        if(userLbl) userLbl->setGeometry(scaleRect(baseX + 10, designY + 5, 200, 15));
+        
+        for(int c=1; c<=6; ++c) {
+             QWidget* cardLbl = findChild<QWidget*>(QString("ssCard%1_%2").arg(i).arg(c));
+             if(cardLbl) cardLbl->setGeometry(scaleRect(baseX + 10 + (c-1)*40, designY + 30, 30, 45));
         }
     }
 }
@@ -888,6 +959,15 @@ void GameWindow::handleGameState(const QJsonObject& state)
              }
         }
     }
+    
+    // Update Required Cards (from Server)
+    if (state.contains("current_required")) {
+        int oldReq = m_requiredCards;
+        m_requiredCards = state["current_required"].toInt();
+        if (oldReq != m_requiredCards) {
+            updateEndTurnButtonState();
+        }
+    }
 
     // Update My Hand and Opponents
     if (state.contains("players")) {
@@ -974,14 +1054,58 @@ void GameWindow::handleGameState(const QJsonObject& state)
                 // --- Ability Name Update ---
                 if (player.contains("ability")) {
                     QString abilityName = player["ability"].toString();
-                    if (ui->abilityButton) {
-                        ui->abilityButton->setText(abilityName);
+                    m_myAbilityName = abilityName; // Store for Peasant check
+                    
+                    // For Gambler, also get uses left
+                    if (abilityName == "Gambler" && player.contains("gambler_uses_left")) {
+                        m_gamblerUsesLeft = player["gambler_uses_left"].toInt();
+                        if (ui->abilityButton) {
+                            ui->abilityButton->setText(QString("Gambler\n(%1 left)").arg(m_gamblerUsesLeft));
+                        }
+                    } 
+                    // For Soothsayer, also get uses left
+                    else if (abilityName == "Soothsayer" && player.contains("soothsayer_uses_left")) {
+                        int soothUsesLeft = player["soothsayer_uses_left"].toInt();
+                        if (ui->abilityButton) {
+                            ui->abilityButton->setText(QString("Soothsayer\n(%1 left)").arg(soothUsesLeft));
+                        }
+                    } else {
+                        if (ui->abilityButton) {
+                            ui->abilityButton->setText(abilityName);
+                        }
                     }
                 }
+                
+                // Ability Flags
+                if (player.contains("is_hp_active")) {
+                    m_isHPMode = player["is_hp_active"].toBool();
+                }
+                
+
+                
+                // Ability usability flag from server (default to false if not present)
+                m_canUseAbility = player.value("can_use_ability").toBool(false);
                 // ---------------------------
             }
         }
         updateOpponents(players);
+
+        // Check if ANY player has Soothsayer active
+        bool anySoothActive = false;
+        for (const auto& p : players) {
+            if (p.toObject().value("is_sooth_active").toBool()) {
+                anySoothActive = true;
+                break;
+            }
+        }
+        
+        // Update view if active, or hide if it WAS active but now isn't
+        if (anySoothActive) {
+            updateSoothsayerView(players);
+        } else if (m_wasSoothActive) {
+            m_wasSoothActive = false;
+            hideSoothsayerPanels();
+        }
     }
 
     // Turn indication
@@ -996,6 +1120,7 @@ void GameWindow::handleGameState(const QJsonObject& state)
         // If turn changed, reset counter
         if (m_isMyTurn && !wasMyTurn) {
             m_cardsPlayedThisTurn = 0;
+            m_abilityUsedThisTurn = false;
         }
 
         if (ui->usernameLabel) {
@@ -1044,6 +1169,9 @@ void GameWindow::handleGameState(const QJsonObject& state)
         
         // Update End Turn Button State based on new rules
         updateEndTurnButtonState();
+        
+        // Update Ability Button State (disabled when not turn or used)
+        updateAbilityButtonState();
 
         // Update pile clickability when turn changes
         if (wasMyTurn != m_isMyTurn) {
@@ -1051,6 +1179,11 @@ void GameWindow::handleGameState(const QJsonObject& state)
             // Clear selection when turn ends
             if (!m_isMyTurn) {
                 clearCardSelection();
+                // Also hide Soothsayer panels when our turn ends
+                if (m_wasSoothActive) {
+                    m_wasSoothActive = false;
+                    hideSoothsayerPanels();
+                }
             }
         }
         
@@ -1064,13 +1197,10 @@ void GameWindow::updateEndTurnButtonState()
 {
     if (!ui->endTurnButton) return;
 
-    // Logic: Enabled ONLY if it's my turn AND I've played at least 2 cards
-    // OR if deck is empty/almost empty (Endgame Condition)
-    // Rule: If deck has 1 or 0 cards, minimum required is 1 card.
+    // Logic: Enabled ONLY if it's my turn AND I've played at least the REQUIRED cards
+    // The server tells us 'current_required', which accounts for Deck size AND Abilities (Gambler/TaxEvader)
     
-    int requiredCards = (m_deckCount <= 1) ? 1 : 2;
-    
-    bool canEnd = m_isMyTurn && (m_cardsPlayedThisTurn >= requiredCards);
+    bool canEnd = m_isMyTurn && (m_cardsPlayedThisTurn >= m_requiredCards);
     
     // Visual transparency update
     if (canEnd) {
@@ -1108,6 +1238,46 @@ void GameWindow::updateEndTurnButtonState()
          // Let's rely on setEnabled(false) visual + dim text.
     }
 }    
+
+void GameWindow::updateAbilityButtonState()
+{
+    if (!ui->abilityButton) return;
+    
+    // Ability is usable ONLY if: 1) It's my turn, 2) Server says we can use it, 3) Not already used this turn
+    bool canUse = m_isMyTurn && m_canUseAbility && !m_abilityUsedThisTurn;
+    
+    if (canUse) {
+        ui->abilityButton->setEnabled(true);
+        ui->abilityButton->setCursor(Qt::PointingHandCursor);
+        ui->abilityButton->setStyleSheet(R"(
+            QPushButton {
+                border-image: url(Resources/Button.png);
+                font-family: 'Jersey 15';
+                font-size: 30px;
+                color: white;
+                font-weight: bold;
+                padding-bottom: 5px;
+            }
+            QPushButton:pressed {
+                border-image: url(Resources/Button_Pressed.png);
+                padding-top: 5px;
+            }
+        )");
+    } else {
+        ui->abilityButton->setEnabled(false);
+        ui->abilityButton->setCursor(Qt::ForbiddenCursor);
+        ui->abilityButton->setStyleSheet(R"(
+            QPushButton {
+                border-image: url(Resources/Button.png);
+                font-family: 'Jersey 15';
+                font-size: 30px;
+                color: rgba(255, 255, 255, 0.5);
+                font-weight: bold;
+                padding-bottom: 5px;
+            }
+        )");
+    }
+}
 
 
 void GameWindow::updatePiles(const QJsonArray& piles)
@@ -1251,6 +1421,8 @@ bool GameWindow::canPlaceCardOnPile(int cardValue, int pileIndex) const
     // Piles 2 and 3 are descending (start at 100, go down OR exactly +10)
     bool isAscending = (pileIndex < 2);
     
+    if (m_isHPMode) return true; // Harry Potter can place anywhere
+
     if (isAscending) {
         // Ascending: card must be higher OR exactly 10 less
         return (cardValue > topValue) || (cardValue == topValue - 10);
@@ -1301,6 +1473,11 @@ void GameWindow::updatePileClickability()
                 lightColor = "background-color: #9B30FF; border-radius: 3px;";
                 if (pileLabels[i]) pileLabels[i]->setCursor(Qt::PointingHandCursor);
                 if (basePileLabels[i]) basePileLabels[i]->setCursor(Qt::PointingHandCursor);
+            } else if (m_isHPMode) {
+                 // Purple for Harry Potter Mode (Everything valid)
+                lightColor = "background-color: #9B30FF; border-radius: 3px;";
+                if (pileLabels[i]) pileLabels[i]->setCursor(Qt::PointingHandCursor);
+                if (basePileLabels[i]) basePileLabels[i]->setCursor(Qt::PointingHandCursor);
             } else if (canPlace) {
                 // Green for valid regular move
                 lightColor = "background-color: #00FF00; border-radius: 3px;";
@@ -1338,4 +1515,240 @@ void GameWindow::clearCardSelection()
     
     // Reset pile light indicators
     updatePileClickability();
+}
+
+void GameWindow::onAbilityButtonClicked()
+{
+    // Prevent ability usage if not my turn
+    if (!m_isMyTurn) {
+         return;
+    }
+    
+    // Check for Peasant - show dialog instead of sending to server
+    if (m_myAbilityName == "Peasant") {
+        PeasantDialog dialog(this);
+        dialog.exec();
+        return;
+    }
+
+    if (m_networkManager) {
+        QJsonObject action;
+        action["type"] = "game_action";
+        action["action"] = "use_ability";
+        action["lobby_id"] = QString::fromStdString(m_lobbyId);
+        action["user_id"] = m_userId;
+        
+        m_networkManager->sendGameAction(action);
+        qDebug() << "Sent use_ability action to server";
+        
+        // For Gambler and Soothsayer, block further uses this turn
+        if (m_myAbilityName == "Gambler" || m_myAbilityName == "Soothsayer") {
+            m_abilityUsedThisTurn = true;
+            updateAbilityButtonState(); // Disable button immediately
+        }
+    }
+}
+
+void GameWindow::updateSoothsayerView(const QJsonArray& players)
+{
+    // Determine active state change
+    bool isActive = false;
+    for(const auto& p : players) {
+         // Check if ANY player has Soothsayer active
+         if (p.toObject().value("is_sooth_active").toBool()) {
+             isActive = true;
+             break;
+         }
+    }
+    
+    if (isActive == m_wasSoothActive) {
+        // No state change
+        // If Active, we just update the data (hands) without re-animating
+        if (isActive) {
+             for (int i = 0; i < players.size() && i < 5; ++i) {
+                QJsonObject player = players[i].toObject();
+                int pid = player["user_id"].toInt();
+                if (pid == m_userId) continue;
+
+                int uiIndex = i + 1;
+                // Just update text/cards
+                QWidget* userLbl = findChild<QWidget*>(QString("ssUser%1").arg(uiIndex));
+                if (userLbl) dynamic_cast<QLabel*>(userLbl)->setText(player["username"].toString());
+                
+                QJsonArray hand = player["hand"].toArray();
+                for(int c=1; c<=6; ++c) {
+                    QLabel* cardLbl = findChild<QLabel*>(QString("ssCard%1_%2").arg(uiIndex).arg(c));
+                    if(cardLbl) {
+                        if (c <= hand.size()) {
+                            QString val = hand[c-1].toString();
+                            // In Qt resource system, assuming prefix is :/cards/Resources or similar
+                            // Actually, based on previous code, load logic:
+                            QPixmap px(QString("Resources/%1.png").arg(val));
+                            if(px.isNull()) px = QPixmap("Resources/Card_Back.png");
+                            cardLbl->setPixmap(px);
+                            cardLbl->setScaledContents(true);
+                            cardLbl->show();
+                        } else {
+                            cardLbl->hide();
+                        }
+                    }
+                }
+             }
+        }
+        return; 
+    }
+    
+    m_wasSoothActive = isActive;
+    
+    // Animation Duration
+    int dur = 600;
+
+    for (int i = 0; i < players.size() && i < 5; ++i) {
+        QJsonObject player = players[i].toObject();
+        int pid = player["user_id"].toInt();
+        
+        // Mapping: players[i] corresponds to pfpCircle(i+1) -> soothsayer(i+1)
+        int uiIndex = i + 1;
+        
+        QWidget* panel = findChild<QWidget*>(QString("soothsayer%1").arg(uiIndex));
+        QWidget* userLbl = findChild<QWidget*>(QString("ssUser%1").arg(uiIndex));
+        if (!panel || !userLbl) continue;
+        
+        // Group all widgets for this panel (Panel + User + Cards)
+        QList<QWidget*> widgets;
+        widgets << panel << userLbl;
+        for(int c=1; c<=6; ++c) widgets << findChild<QWidget*>(QString("ssCard%1_%2").arg(uiIndex).arg(c));
+
+        // Start/End Geometry Logic
+        // Design: X=935. Hidden: X=1366.
+        int designY = 522 - (i)*88; // 522, 434, etc. matches resizeUI logic
+        QRect panelTarget = scaleRect(935, designY, 250, 80);
+        QRect panelHidden = scaleRect(1366, designY, 250, 80);
+        
+        if (isActive && pid != m_userId) {
+            // SHOW
+            // Populate Data
+            dynamic_cast<QLabel*>(userLbl)->setText(player["username"].toString());
+            QJsonArray hand = player["hand"].toArray();
+            for(int c=1; c<=6; ++c) {
+                QLabel* cardLbl = findChild<QLabel*>(QString("ssCard%1_%2").arg(uiIndex).arg(c));
+                if(cardLbl) {
+                    if (c <= hand.size()) {
+                        QString val = hand[c-1].toString();
+                        QString path = QString(":/cards/Resources/%1.png").arg(val); // Standard path assumption
+                        QPixmap pm(path);
+                        if(pm.isNull()) pm.load(QString("Resources/%1.png").arg(val)); // Fallback
+                        cardLbl->setPixmap(pm.scaled(cardLbl->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+                        cardLbl->show();
+                    } else {
+                        cardLbl->clear();
+                    }
+                }
+            }
+            
+            // Animate In: Move from Hidden to Target
+            // We animate the "Relative Shift" or absolute? Absolute is safer.
+            // Problem: User label and cards have DIFFERENT target rects.
+            // We need to calculate the "Shift" (Delta).
+            // Delta = TargetX - HiddenX = 935 - 1366 = -431 (scaled).
+            
+            // To animate all sibling widgets together, we can use a QParallelAnimationGroup.
+            QParallelAnimationGroup* group = new QParallelAnimationGroup(this);
+            
+            for(QWidget* w : widgets) {
+                if(!w) continue;
+                QRect endGeo = w->geometry(); 
+                // Wait, if it's already on screen, endGeo is current.
+                // We want to force it to Target position.
+                // Re-calculate target for this specific widget.
+                // Relative to PanelTarget:
+                int relX = 0; // relative to 935
+                if (w == panel) relX = 0;
+                else if (w == userLbl) relX = 10;
+                else {
+                    // Check valid card
+                     QString name = w->objectName();
+                     int cIdx = name.right(1).toInt();
+                     relX = 10 + (cIdx-1)*40;
+                }
+                
+                int finalX = scaleRect(935 + relX, 0, 0, 0).x();
+                int finalY = w->geometry().y(); // Trust current Y from resizeUI? Yes.
+                
+                QRect startG(scaleRect(1366 + relX, 0, 0, 0).x(), finalY, w->width(), w->height());
+                QRect endG(finalX, finalY, w->width(), w->height());
+                
+                w->show(); // Ensure visible
+                
+                QPropertyAnimation* anim = new QPropertyAnimation(w, "geometry");
+                anim->setDuration(dur);
+                anim->setStartValue(startG);
+                anim->setEndValue(endG);
+                anim->setEasingCurve(QEasingCurve::OutCubic);
+                group->addAnimation(anim);
+            }
+            group->start(QAbstractAnimation::DeleteWhenStopped);
+            
+        } else {
+            // HIDE
+            // Animate Out: Move from Current to Hidden
+             QParallelAnimationGroup* group = new QParallelAnimationGroup(this);
+             for(QWidget* w : widgets) {
+                if(!w) continue;
+                QRect startG = w->geometry();
+                // Calc Hidden X
+                 int relX = 0;
+                 if (w == panel) relX = 0;
+                 else if (w == userLbl) relX = 10;
+                 else {
+                     QString name = w->objectName();
+                     int cIdx = name.right(1).toInt();
+                     relX = 10 + (cIdx-1)*40;
+                 }
+                int hiddenX = scaleRect(1366 + relX, 0, 0, 0).x();
+                
+                QRect endG(hiddenX, startG.y(), w->width(), w->height());
+                
+                QPropertyAnimation* anim = new QPropertyAnimation(w, "geometry");
+                anim->setDuration(dur);
+                anim->setStartValue(startG);
+                anim->setEndValue(endG);
+                anim->setEasingCurve(QEasingCurve::InCubic);
+                group->addAnimation(anim);
+             }
+              group->start(QAbstractAnimation::DeleteWhenStopped);
+        }
+    }
+}
+
+void GameWindow::hideSoothsayerPanels()
+{
+    // Quick hide animation for all Soothsayer panels
+    int dur = 400;
+    
+    for (int i = 1; i <= 5; ++i) {
+        QWidget* panel = findChild<QWidget*>(QString("soothsayer%1").arg(i));
+        QWidget* userLbl = findChild<QWidget*>(QString("ssUser%1").arg(i));
+        if (!panel) continue;
+        
+        QList<QWidget*> widgets;
+        widgets << panel << userLbl;
+        for(int c=1; c<=6; ++c) widgets << findChild<QWidget*>(QString("ssCard%1_%2").arg(i).arg(c));
+        
+        QParallelAnimationGroup* group = new QParallelAnimationGroup(this);
+        for(QWidget* w : widgets) {
+            if(!w) continue;
+            QRect startG = w->geometry();
+            int hiddenX = scaleRect(1366, 0, 0, 0).x();
+            QRect endG(hiddenX, startG.y(), w->width(), w->height());
+            
+            QPropertyAnimation* anim = new QPropertyAnimation(w, "geometry");
+            anim->setDuration(dur);
+            anim->setStartValue(startG);
+            anim->setEndValue(endG);
+            anim->setEasingCurve(QEasingCurve::InCubic);
+            group->addAnimation(anim);
+        }
+        group->start(QAbstractAnimation::DeleteWhenStopped);
+    }
 }

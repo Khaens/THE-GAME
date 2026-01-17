@@ -9,11 +9,24 @@ GameRoutes::GameRoutes(crow::SimpleApp& app, Database* db, NetworkUtils& network
 void GameRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtils& networkUtils) {
     
     CROW_WEBSOCKET_ROUTE(app, "/ws/game")
-        .onopen([](crow::websocket::connection& conn) {
-            std::cout << "New Game WebSocket connection" << std::endl;
+        .onopen([&networkUtils](crow::websocket::connection& conn) {
+            std::cout << "New Game WebSocket connection: " << &conn << std::endl;
+            // Register this connection as valid
+            {
+                std::lock_guard<std::mutex> lock(networkUtils.m_validConnMutex);
+                networkUtils.m_validConnections.insert(&conn);
+            }
         })
         .onclose([&networkUtils](crow::websocket::connection& conn, const std::string& reason, uint16_t) {
             std::cout << "Game WebSocket closed: " << &conn << std::endl;
+            
+            // First, mark connection as invalid to prevent WsWorker from sending to it
+            {
+                std::lock_guard<std::mutex> lock(networkUtils.m_validConnMutex);
+                networkUtils.m_validConnections.erase(&conn);
+            }
+            
+            // Then remove from lobby connections
             std::lock_guard<std::mutex> lock(networkUtils.ws_mutex);
             for (auto& [lobby_id, connections] : networkUtils.lobby_connections) {
                 auto it = std::find(connections.begin(), connections.end(), &conn);
@@ -117,7 +130,13 @@ void GameRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtils
                      } 
                      else if (action == "use_ability") {
                          result = game->UseAbility(player_idx);
-                         if (result == Info::ABILITY_USED || result == Info::TAX_ABILITY_USED || result == Info::PEASANT_ABILITY_USED || result == Info::TURN_ENDED) {
+                         if (result == Info::ABILITY_USED || 
+                             result == Info::TAX_ABILITY_USED || 
+                             result == Info::PEASANT_ABILITY_USED || 
+                             result == Info::SOOTHSAYER_ABILITY_USED ||
+                             result == Info::GAMBLER_ABILITY_USED ||
+                             result == Info::HARRY_POTTER_ABILITY_USED ||
+                             result == Info::TURN_ENDED) {
                              state_changed = true;
                          }
                      }
@@ -143,7 +162,7 @@ void GameRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtils
                              std::lock_guard<std::mutex> ws_lock(networkUtils.ws_mutex);
                              if (networkUtils.lobby_connections.find(lid) != networkUtils.lobby_connections.end()) {
                                  for(auto* c : networkUtils.lobby_connections[lid]) {
-                                     if(c) c->send_text(msg);
+                                     networkUtils.SafeSendText(c, msg);
                                  }
                                  networkUtils.lobby_connections.erase(lid);
                              }
@@ -166,7 +185,7 @@ void GameRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtils
                          err["type"] = "error";
                          if (result == Info::CARD_NOT_PLAYABLE) err["message"] = "Card not playable";
                          if (result == Info::NOT_CURRENT_PLAYER_TURN) err["message"] = "Not your turn";
-                         conn.send_text(err.dump());
+                         networkUtils.SafeSendText(&conn, err.dump());
                      }
 
                      if (result != Info::GAME_WON && result != Info::GAME_LOST) {

@@ -43,7 +43,7 @@ public:
     const int GetID() override;
 
     const bool IsTaxActive() override;
-    virtual void SetTaxActive(bool state) override;
+    void SetTaxActive(bool state) override;
 
     const bool HPActive() override;
     const bool GetHPFlag() const override;
@@ -55,7 +55,8 @@ public:
     void SetGActive(bool state) override;
 
     void SetSoothState(bool state) override;
-	virtual bool IsSoothActive() override;
+	bool IsSoothActive() override;
+    const size_t GetSoothsayerUses() override;
 };
 
 
@@ -249,4 +250,10 @@ template<typename Ability>
 inline bool Player<Ability>::IsSoothActive()
 {
 	return ability.IsSoothActive();
+}
+
+template<typename Ability>
+inline const size_t Player<Ability>::GetSoothsayerUses()
+{
+    return ability.GetSoothsayerUses();
 }
