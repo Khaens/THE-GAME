@@ -239,7 +239,10 @@ Info Game::EndTurn(size_t playerIndex)
 	if (m_players[playerIndex]->IsSoothActive()) {
 		m_players[playerIndex]->SetSoothState(false);
 	}
-	if (m_players[playerIndex]->HPActive()) m_players[playerIndex]->SetSameTurn(false);
+	if (m_players[playerIndex]->HPActive()) {
+		m_players[playerIndex]->SetSameTurn(false);
+		m_players[playerIndex]->SetHPActive(false);
+	}
 	CheckAchievements(GetCurrentPlayer());
 	m_gameStats[m_players[playerIndex]->GetID()].placed7 = false;
 	m_gameStats[m_players[playerIndex]->GetID()].placed6 = false;
