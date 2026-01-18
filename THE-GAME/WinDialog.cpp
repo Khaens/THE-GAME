@@ -7,7 +7,6 @@ WinDialog::WinDialog(QWidget *parent)
 {
     setupUi();
     
-    // Window Settings
     setWindowFlags(Qt::FramelessWindowHint | Qt::Dialog);
     setAttribute(Qt::WA_TranslucentBackground);
     setModal(true);
@@ -17,12 +16,10 @@ void WinDialog::setupUi()
 {
     resize(500, 400);
 
-    // Main Layout (centered)
     QVBoxLayout* mainLayout = new QVBoxLayout(this);
     mainLayout->setContentsMargins(50, 50, 50, 50);
     mainLayout->setAlignment(Qt::AlignCenter);
 
-    // Background Container (to apply image)
     QWidget* container = new QWidget(this);
     container->setObjectName("container");
     container->setStyleSheet(R"(
@@ -36,7 +33,6 @@ void WinDialog::setupUi()
     containerLayout->setContentsMargins(40, 60, 40, 60);
     containerLayout->setSpacing(20);
 
-    // Title
     m_titleLabel = new QLabel("VICTORY!", container);
     m_titleLabel->setAlignment(Qt::AlignCenter);
     m_titleLabel->setStyleSheet(R"(
@@ -49,7 +45,6 @@ void WinDialog::setupUi()
         }
     )");
 
-    // Message
     m_messageLabel = new QLabel("You have beaten The Game!", container);
     m_messageLabel->setAlignment(Qt::AlignCenter);
     m_messageLabel->setWordWrap(true);
@@ -62,7 +57,6 @@ void WinDialog::setupUi()
         }
     )");
 
-    // Back Button
     m_backButton = new QPushButton("BACK TO MENU", container);
     m_backButton->setCursor(Qt::PointingHandCursor);
     m_backButton->setFixedHeight(60);

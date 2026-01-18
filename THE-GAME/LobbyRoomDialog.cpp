@@ -36,20 +36,17 @@ LobbyRoomDialog::LobbyRoomDialog(int userId, const QString& lobbyId,
     setupStyle();
     setupConnections();
     
-    // Connect to lobby WebSocket for real-time updates
+    
     connect(m_networkManager, &NetworkManager::lobbyConnected, this, [this]() {
         qDebug() << "Connected to lobby WebSocket";
-        // Fetch initial player list
         fetchLobbyPlayers();
     });
     
     connect(m_networkManager, &NetworkManager::lobbyMessageReceived, this, 
         &LobbyRoomDialog::handleLobbyWebSocketMessage);
     
-    // Connect to lobby WebSocket
     m_networkManager->connectToLobby(m_lobbyId.toStdString());
     
-    // Also fetch initial status
     fetchLobbyStatus();
     fetchLobbyPlayers();
     
@@ -61,7 +58,6 @@ void LobbyRoomDialog::setupUI()
     QVBoxLayout* mainLayout = new QVBoxLayout(this);
     mainLayout->setContentsMargins(30, 15, 30, 15);
 
-    // Content container
     m_contentContainer = new QWidget(this);
     m_contentContainer->setObjectName("lobbyRoomContainer");
     m_contentContainer->setFixedSize(700, 650);  // Increased height for countdown
@@ -156,7 +152,6 @@ void LobbyRoomDialog::setupUI()
 
     containerLayout->addWidget(infoWidget);
 
-    // NEW: Countdown Section
     m_countdownLabel = new QLabel("Game starts in: 60s", m_contentContainer);
     m_countdownLabel->setAlignment(Qt::AlignCenter);
     m_countdownLabel->setStyleSheet("font-size: 18px; font-weight: bold; color: #f3d05a;");
@@ -180,7 +175,6 @@ void LobbyRoomDialog::setupUI()
     )");
     containerLayout->addWidget(m_countdownBar);
 
-    // Players List Section
     QLabel* playersTitle = new QLabel("PLAYERS", m_contentContainer);
     playersTitle->setAlignment(Qt::AlignCenter);
     playersTitle->setStyleSheet("font-size: 20px; font-weight: bold; color: #f3d05a; margin-top: 10px;");
@@ -225,7 +219,6 @@ void LobbyRoomDialog::setupUI()
 
     containerLayout->addStretch();
 
-    // Buttons Section - ONLY LEAVE and START GAME (for host)
     QHBoxLayout* buttonLayout = new QHBoxLayout();
     buttonLayout->setSpacing(15);
 
@@ -253,7 +246,7 @@ void LobbyRoomDialog::setupUI()
         }
     )");
     m_startGameButton->setVisible(m_isHost);
-    m_startGameButton->setEnabled(false); // Disabled until we have at least 2 players
+    m_startGameButton->setEnabled(false); 
 
     m_leaveButton = new QPushButton("LEAVE LOBBY", m_contentContainer);
     m_leaveButton->setFixedSize(200, 45);
@@ -282,7 +275,6 @@ void LobbyRoomDialog::setupUI()
 
     containerLayout->addLayout(buttonLayout);
 
-    // Center the container
     QVBoxLayout* centerLayout = new QVBoxLayout();
     QHBoxLayout* horizontalCenter = new QHBoxLayout();
     horizontalCenter->addStretch();
@@ -298,7 +290,6 @@ void LobbyRoomDialog::setupUI()
 
 void LobbyRoomDialog::setupStyle()
 {
-    // Match the same style as CreateLobbyDialog
     m_contentContainer->setStyleSheet(R"(
         #lobbyRoomContainer {
             background-color: transparent;
@@ -325,7 +316,7 @@ void LobbyRoomDialog::startRefreshTimer()
         m_refreshTimer = new QTimer(this);
         connect(m_refreshTimer, &QTimer::timeout, this, &LobbyRoomDialog::refreshLobbyStatus);
     }
-    m_refreshTimer->start(5000); // Refresh every 5 seconds (just as backup)
+    m_refreshTimer->start(5000); 
 }
 
 void LobbyRoomDialog::stopRefreshTimer()
@@ -335,7 +326,6 @@ void LobbyRoomDialog::stopRefreshTimer()
     }
 }
 
-// NEW: Start the 60-second countdown
 void LobbyRoomDialog::startCountdownTimer()
 {
     if (!m_countdownTimer) {
@@ -345,7 +335,6 @@ void LobbyRoomDialog::startCountdownTimer()
     m_countdownTimer->start(1000); // Update every second
 }
 
-// NEW: Stop the countdown
 void LobbyRoomDialog::stopCountdownTimer()
 {
     if (m_countdownTimer && m_countdownTimer->isActive()) {
@@ -363,7 +352,6 @@ void LobbyRoomDialog::updateCountdown()
     // Update progress bar
     m_countdownBar->setValue(m_countdownSeconds);
 
-    // Change color when getting close to 0
     if (m_countdownSeconds <= 10) {
         m_countdownLabel->setStyleSheet("font-size: 18px; font-weight: bold; color: #e03434;");
         m_countdownBar->setStyleSheet(R"(
@@ -393,7 +381,6 @@ void LobbyRoomDialog::updateCountdown()
         )");
     }
 
-    // When countdown reaches 0, start game automatically
     if (m_countdownSeconds <= 0) {
         stopCountdownTimer();
 
@@ -401,7 +388,6 @@ void LobbyRoomDialog::updateCountdown()
              onStartGameClicked();
         }
         else {
-            // Reset countdown if not enough players
             m_countdownSeconds = 60;
             m_countdownLabel->setText("Game starts in: 60s (Need more players)");
             m_countdownLabel->setStyleSheet("font-size: 18px; font-weight: bold; color: #f3d05a;");
@@ -417,7 +403,7 @@ void LobbyRoomDialog::updateCountdown()
                     border-radius: 8px;
                 }
             )");
-            startCountdownTimer(); // Restart the countdown
+            startCountdownTimer(); 
         }
     }
 }
@@ -427,13 +413,11 @@ void LobbyRoomDialog::onLeaveClicked()
     stopRefreshTimer();
     stopCountdownTimer();
     
-    // Disconnect from lobby WebSocket
     m_networkManager->disconnectFromLobby();
 
-    // Send leave request to server
     m_networkManager->leaveLobby(m_userId, m_lobbyId.toStdString());
 
-    reject(); // Close the dialog
+    reject(); 
 }
 
 void LobbyRoomDialog::onStartGameClicked()
@@ -462,13 +446,11 @@ void LobbyRoomDialog::onStartGameClicked()
         QString errorMsg = m_networkManager->startGame(m_lobbyId.toStdString());
         
         if (errorMsg.isEmpty()) {
-             // Success
              m_networkManager->disconnectFromLobby();
              emit gameStarted(m_lobbyId);
-             accept(); // Close lobby dialog
+             accept();
         } else {
              QMessageBox::warning(this, "Error", errorMsg);
-             // Restart countdown if failed? Optional, but good for UX if it was just a timing issue
         }
     }
 }
@@ -477,8 +459,6 @@ void LobbyRoomDialog::onCopyCodeClicked()
 {
     QClipboard* clipboard = QApplication::clipboard();
     clipboard->setText(m_lobbyCode);
-
-    // Visual feedback with matching colors
     QString originalText = m_copyCodeButton->text();
     m_copyCodeButton->setText("Copied!");
     m_copyCodeButton->setStyleSheet(R"(
@@ -492,12 +472,10 @@ void LobbyRoomDialog::onCopyCodeClicked()
         }
     )");
 
-    // Use QPointer to safely check if dialog still exists
     QPointer<LobbyRoomDialog> dialogPtr(this);
     QPointer<QPushButton> buttonPtr(m_copyCodeButton);
     
     QTimer::singleShot(1500, [dialogPtr, buttonPtr, originalText]() {
-        // Check if dialog and button still exist before accessing
         if (dialogPtr && buttonPtr) {
             buttonPtr->setText(originalText);
             buttonPtr->setStyleSheet(R"(
@@ -547,15 +525,12 @@ void LobbyRoomDialog::fetchLobbyPlayers()
         info.isHost = player.is_host;
         m_players.append(info);
     }
-    
-    // Update player count label
     if (m_playerCountLabel) {
         m_playerCountLabel->setText(QString("Players: %1/%2")
             .arg(m_players.size())
             .arg(m_maxPlayers));
     }
     
-    // Update START GAME button state
     if (m_isHost) {
         m_startGameButton->setEnabled(m_players.size() >= 2);
     }
@@ -565,34 +540,27 @@ void LobbyRoomDialog::fetchLobbyPlayers()
 
 void LobbyRoomDialog::handleLobbyUpdate(const LobbyStatus& status)
 {
-    // Store max_players for later use
     m_maxPlayers = status.max_players;
 
-    // Helper: Update Name
     if (!status.name.empty()) {
         m_lobbyName = QString::fromStdString(status.name);
         if(m_lobbyNameLabel) m_lobbyNameLabel->setText(m_lobbyName);
     }
-    
-    // Helper: Sync Timer
+   
     if (status.remaining_seconds >= 0) {
         m_countdownSeconds = status.remaining_seconds;
         if(m_countdownBar) m_countdownBar->setValue(m_countdownSeconds);
-        // Force update of label immediately
         if(m_countdownLabel) m_countdownLabel->setText(QString("Game starts in: %1s").arg(m_countdownSeconds));
     }
 
-    // Update player count label
     if (m_playerCountLabel) {
         m_playerCountLabel->setText(QString("Players: %1/%2")
             .arg(status.current_players)
             .arg(status.max_players));
     }
 
-    // Fetch updated player list when status changes
     fetchLobbyPlayers();
 
-    // Check if game has started
     if (status.game_started) {
         stopRefreshTimer();
         stopCountdownTimer();
@@ -613,7 +581,6 @@ void LobbyRoomDialog::handleLobbyWebSocketMessage(const QJsonObject& message)
         int current_players = message["current_players"].toInt();
         int max_players = message["max_players"].toInt();
         
-        // Update player count
         m_maxPlayers = max_players; // Sync max players
         if (m_playerCountLabel) {
             m_playerCountLabel->setText(QString("Players: %1/%2")
@@ -621,13 +588,11 @@ void LobbyRoomDialog::handleLobbyWebSocketMessage(const QJsonObject& message)
                 .arg(max_players));
         }
         
-        // Update Name if present
         if (message.contains("name")) {
             m_lobbyName = message["name"].toString();
             if(m_lobbyNameLabel) m_lobbyNameLabel->setText(m_lobbyName);
         }
 
-        // Update Timer if present
         if (message.contains("remaining_seconds")) {
             int rem = message["remaining_seconds"].toInt();
             m_countdownSeconds = rem;
@@ -635,14 +600,11 @@ void LobbyRoomDialog::handleLobbyWebSocketMessage(const QJsonObject& message)
              if(m_countdownLabel) m_countdownLabel->setText(QString("Game starts in: %1s").arg(m_countdownSeconds));
         }
         
-        // Fetch updated player list to get all players with correct info
         fetchLobbyPlayers();
         
-        // Also update status
         fetchLobbyStatus();
     }
     else if (type == "lobby_state") {
-        // Initial state received
         int current_players = message["current_players"].toInt();
         int max_players = message["max_players"].toInt();
         bool game_started = message["game_started"].toBool();
@@ -655,13 +617,11 @@ void LobbyRoomDialog::handleLobbyWebSocketMessage(const QJsonObject& message)
                 .arg(max_players));
         }
 
-        // Update Name if present
         if (message.contains("name")) {
             m_lobbyName = message["name"].toString();
             if(m_lobbyNameLabel) m_lobbyNameLabel->setText(m_lobbyName);
         }
 
-        // Update Timer if present
         if (message.contains("remaining_seconds")) {
             int rem = message["remaining_seconds"].toInt();
             m_countdownSeconds = rem;
@@ -692,14 +652,12 @@ void LobbyRoomDialog::handleLobbyWebSocketMessage(const QJsonObject& message)
         int current_players = message["current_players"].toInt();
         int max_players = message["max_players"].toInt();
         
-        // Update player count
         if (m_playerCountLabel) {
             m_playerCountLabel->setText(QString("Players: %1/%2")
                 .arg(current_players)
                 .arg(max_players));
         }
         
-        // Fetch updated player list
         fetchLobbyPlayers();
     }
     else if (type == "lobby_closed") {
@@ -720,7 +678,6 @@ void LobbyRoomDialog::updatePlayerList(const QVector<PlayerInfo>& players)
     for (const auto& player : players) {
         QString playerText = player.username;
 
-        // Add host indicator
         if (player.isHost) {
             playerText += " [HOST]";
         }
@@ -728,15 +685,12 @@ void LobbyRoomDialog::updatePlayerList(const QVector<PlayerInfo>& players)
         QListWidgetItem* item = new QListWidgetItem(playerText, m_playerListWidget);
         item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter); 
 
-        // Set Icon (PFP) using UiUtils
         QPixmap avatar = UiUtils::GetAvatar(player.userId, m_networkManager);
         if (!avatar.isNull()) {
             item->setIcon(QIcon(avatar));
         }
 
-        // Set different colors based on status
         if (player.userId == m_userId) {
-            // Current user - highlighted
             item->setBackground(QColor(243, 208, 90, 50));
             item->setForeground(QColor(255, 255, 255));
             QFont font = item->font();
@@ -744,11 +698,9 @@ void LobbyRoomDialog::updatePlayerList(const QVector<PlayerInfo>& players)
             item->setFont(font);
         }
         else if (player.isHost) {
-            // Host - gold color
             item->setForeground(QColor(243, 208, 90));
         }
         else {
-            // Other players - white
             item->setForeground(QColor(255, 255, 255));
         }
     }

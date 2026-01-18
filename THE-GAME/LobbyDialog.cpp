@@ -25,8 +25,6 @@ LobbyDialog::LobbyDialog(QWidget* parent)
     setWindowFlags(Qt::Widget);
     setAttribute(Qt::WA_TranslucentBackground);
 
-    // NetworkManager will be set via setNetworkManager()
-
     setupUI();
     setupStyle();
     hide();
@@ -45,22 +43,18 @@ void LobbyDialog::setupUI()
     containerLayout->setSpacing(15);
     containerLayout->setContentsMargins(30, 30, 30, 30);
 
-    // Title
     QLabel* titleLabel = new QLabel("GAME LOBBIES", m_contentContainer);
     titleLabel->setAlignment(Qt::AlignCenter);
     titleLabel->setStyleSheet("font-size: 28px; font-weight: bold; color: #f3d05a; margin-bottom: 10px;");
     containerLayout->addWidget(titleLabel);
 
-    // Layout pentru butoane (vertical, unul sub altul)
     QVBoxLayout* buttonsLayout = new QVBoxLayout();
     buttonsLayout->setSpacing(15);
 
-    // 1. CREATE LOBBY Button
     m_createLobbyButton = new QPushButton("CREATE LOBBY", m_contentContainer);
     m_createLobbyButton->setFixedSize(300, 55);
     m_createLobbyButton->setCursor(Qt::PointingHandCursor);
 
-    // 2. JOIN LOBBY Button
     m_joinLobbyButton = new QPushButton("JOIN LOBBY", m_contentContainer);
     m_joinLobbyButton->setFixedSize(300, 55);
     m_joinLobbyButton->setCursor(Qt::PointingHandCursor);
@@ -70,7 +64,6 @@ void LobbyDialog::setupUI()
 
     containerLayout->addLayout(buttonsLayout);
 
-    // Buton Inapoi
     QPushButton* backButton = new QPushButton("BACK", m_contentContainer);
     backButton->setObjectName("BACK");
     backButton->setFixedSize(150, 40);
@@ -83,7 +76,6 @@ void LobbyDialog::setupUI()
     backButtonLayout->addStretch();
     containerLayout->addLayout(backButtonLayout);
 
-    // Centrare
     QHBoxLayout* centerLayout = new QHBoxLayout();
     centerLayout->addStretch();
     centerLayout->addWidget(m_contentContainer);
@@ -93,7 +85,6 @@ void LobbyDialog::setupUI()
     mainLayout->addLayout(centerLayout);
     mainLayout->addStretch();
 
-    // Conectam sloturile
     connect(m_createLobbyButton, &QPushButton::clicked, this, &LobbyDialog::onCreateLobbyClicked);
     connect(m_joinLobbyButton, &QPushButton::clicked, this, &LobbyDialog::onJoinLobbyClicked);
 }
@@ -108,7 +99,6 @@ void LobbyDialog::setupStyle()
     )"
     );
 
-    // Stiluri pentru butoanele de lobby
     QString lobbyButtonStyle = R"(
         QPushButton {
             background-color: #f3d05a;
@@ -129,7 +119,6 @@ void LobbyDialog::setupStyle()
     m_createLobbyButton->setStyleSheet(lobbyButtonStyle);
     m_joinLobbyButton->setStyleSheet(lobbyButtonStyle);
 
-    // Stil pentru butonul "BACK"
     m_contentContainer->findChild<QPushButton*>("BACK")->setStyleSheet(R"(
         QPushButton {
             background-color: #654b1f;
@@ -175,7 +164,7 @@ void LobbyDialog::onCreateLobbyClicked()
             m_userId,
             lobbyName.toStdString(),
             maxPlayers,
-            ""  // Password no longer used - server generates lobby ID
+            ""  
         );
 
         if (lobbyResponse.success) {
@@ -184,18 +173,16 @@ void LobbyDialog::onCreateLobbyClicked()
             QString serverLobbyId = QString::fromStdString(lobbyResponse.lobby_id);
             qDebug() << "Lobby created successfully! Lobby ID:" << serverLobbyId;
 
-            // Create and show LobbyRoomDialog - use SERVER's lobby_id as the code
             LobbyRoomDialog* lobbyRoom = new LobbyRoomDialog(
                 m_userId,
-                serverLobbyId,  // lobby_id from server
+                serverLobbyId,  
                 lobbyName,
-                serverLobbyId,  // Use server's ID as the shareable code
-                true,  // isHost = true for creator
+                serverLobbyId, 
+                true, 
                 m_networkManager,
                 parentWidget()
             );
 
-            // CONNECT THE SIGNAL
             connect(lobbyRoom, &LobbyRoomDialog::gameStarted, this, &LobbyDialog::onGameStarted);
 
             lobbyRoom->exec();
@@ -228,18 +215,16 @@ void LobbyDialog::onJoinLobbyClicked()
         if (response.success) {
             hideOverlay();
 
-            // Create and show LobbyRoomDialog
             LobbyRoomDialog* lobbyRoom = new LobbyRoomDialog(
                 m_userId,
                 QString::fromStdString(response.lobby_id), 
-                QString::fromStdString(response.lobby_id), // Use Lobby ID as name for now, or fetch it
+                QString::fromStdString(response.lobby_id),
                 lobbyCode,
-                false,  // isHost = false for joiner
+                false,  
                 m_networkManager,
                 parentWidget()
             );
 
-            // CONNECT THE SIGNAL
             connect(lobbyRoom, &LobbyRoomDialog::gameStarted, this, &LobbyDialog::onGameStarted);
 
             lobbyRoom->exec();
@@ -254,10 +239,8 @@ void LobbyDialog::onJoinLobbyClicked()
     }
 }
 
-// NEW METHOD: Handle game started signal
 void LobbyDialog::onGameStarted(const QString& lobbyId)
 {
-    // Forward the signal to MainWindow
     emit gameStartedFromLobby(lobbyId); 
 }
 

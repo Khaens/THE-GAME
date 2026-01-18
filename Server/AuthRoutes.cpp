@@ -185,4 +185,48 @@ void AuthRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtils
         }
     });
 
+    // GET STATISTICS
+    CROW_ROUTE(app, "/api/user/<int>/statistics")
+        .methods(crow::HTTPMethod::GET)
+        ([db](int user_id) {
+        try {
+            StatisticsModel stats = db->GetStatisticsByUserId(user_id);
+            
+            crow::json::wvalue response;
+            response["success"] = true;
+            response["games_won"] = stats.GetGamesWon();
+            response["games_played"] = stats.GetGamesPlayed();
+            response["win_rate"] = stats.GetWinRate();
+            response["performance_score"] = stats.GetPerformanceScore();
+            
+            return crow::response(200, response);
+        } catch (const std::exception& e) {
+             crow::json::wvalue response;
+             response["success"] = false;
+             response["error"] = e.what();
+             return crow::response(500, response);
+        }
+    });
+
+    // GET PLAYTIME
+    CROW_ROUTE(app, "/api/user/<int>/playtime")
+        .methods(crow::HTTPMethod::GET)
+        ([db](int user_id) {
+        try {
+            PlaytimeModel playtime = db->GetPlaytimeByUserId(user_id);
+            
+            crow::json::wvalue response;
+            response["success"] = true;
+            response["seconds"] = playtime.GetSeconds();
+            response["hours"] = playtime.GetTotalHours();
+            
+            return crow::response(200, response);
+        } catch (const std::exception& e) {
+             crow::json::wvalue response;
+             response["success"] = false;
+             response["error"] = e.what();
+             return crow::response(500, response);
+        }
+    });
+
 }

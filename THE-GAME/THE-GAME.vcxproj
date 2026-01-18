@@ -32,6 +32,7 @@
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="NetworkManager.cpp" />
     <ClCompile Include="SettingsDialog.cpp" />
+    <ClCompile Include="StatisticsDialog.cpp" />
     <ClCompile Include="UiUtils.cpp" />
     <ClCompile Include="WinDialog.cpp" />
     <ClCompile Include="PeasantDialog.cpp" />
@@ -57,6 +58,7 @@
     <QtMoc Include="NetworkManager.h" />
     <QtMoc Include="PeasantDialog.h" />
     <QtMoc Include="AchievementsDialog.h" />
+    <QtMoc Include="StatisticsDialog.h" />
     <ClInclude Include="UiUtils.h" />
   </ItemGroup>
   <ItemGroup>

@@ -53,6 +53,7 @@ private:
 	std::unordered_map<int, GameStatistics> m_gameStats;
 	std::unordered_map<int, int> m_remainingCards;
 	mutable std::mutex m_stateMutex;
+    std::chrono::steady_clock::time_point m_gameStartTime;
 
 public:
 	Game(std::vector<UserModel>& users, Database& db);

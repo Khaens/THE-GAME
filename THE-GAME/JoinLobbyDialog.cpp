@@ -41,9 +41,9 @@ void JoinLobbyDialog::setupUI()
 
     // Code Input
     m_codeInput = new QLineEdit(m_contentContainer);
-    m_codeInput->setPlaceholderText("XXXXXX");
+    m_codeInput->setPlaceholderText("XXXX");
     m_codeInput->setAlignment(Qt::AlignCenter);
-    m_codeInput->setMaxLength(6);
+    m_codeInput->setMaxLength(4);
     m_codeInput->setStyleSheet(R"(
         QLineEdit {
             background-color: #deaf11;
@@ -146,7 +146,6 @@ void JoinLobbyDialog::onAccept()
     m_lobbyCode = m_codeInput->text().toUpper().trimmed();
 
     if (m_lobbyCode.isEmpty()) {
-        // visual feedback instead of QMessageBox
         m_codeInput->setStyleSheet(R"(
             QLineEdit {
                 background-color: #deaf11;

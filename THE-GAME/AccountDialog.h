@@ -10,6 +10,7 @@
 #include <memory>
 
 class NetworkManager;
+class StatisticsDialog;
 
 class AccountDialog : public QWidget
 {
@@ -63,6 +64,7 @@ private:
     QPushButton* m_changeProfilePicButton;
     QPushButton* m_logoutButton;
     QPushButton* m_achievementsButton;
+    QPushButton* m_statisticsButton;
 
     // Session data
     bool m_isLoggedIn;
@@ -71,6 +73,9 @@ private:
 
     // Network
     std::shared_ptr<NetworkManager> m_networkManager;
+
+    // Dialogs
+    StatisticsDialog* m_statisticsDialog;
 
 private slots:
     void onLoginClicked();
@@ -82,4 +87,5 @@ private slots:
     void onToggleRegisterPasswordVisibility();
     void onChangeProfilePicClicked();
     void onAchievementsClicked();
+    void onStatisticsClicked();
 };

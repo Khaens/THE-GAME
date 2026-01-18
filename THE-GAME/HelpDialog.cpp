@@ -32,8 +32,8 @@ void HelpDialog::setupUI()
     m_contentContainer->setFixedSize(1125, 750);
 
     QVBoxLayout* containerLayout = new QVBoxLayout(m_contentContainer);
-    containerLayout->setSpacing(10);  // Reduced spacing between elements
-    containerLayout->setContentsMargins(40, 40, 40, 40);  // More balanced margins
+    containerLayout->setSpacing(10);
+    containerLayout->setContentsMargins(40, 40, 40, 40);
 
     QLabel* titleLabel = new QLabel("HELP - THE GAME", m_contentContainer);
     titleLabel->setAlignment(Qt::AlignCenter);
@@ -50,7 +50,7 @@ void HelpDialog::setupUI()
 
     m_rulesText = new QTextBrowser(m_contentContainer);
     m_rulesText->setOpenExternalLinks(false);
-    m_rulesText->setFixedSize(750, 500);  // Increased width to use more space
+    m_rulesText->setFixedSize(750, 500);
 
     m_rulesText->setStyleSheet(R"(
         QTextBrowser {
@@ -80,7 +80,7 @@ void HelpDialog::setupUI()
     )");
     containerLayout->addWidget(m_rulesText, 0, Qt::AlignCenter);
 
-    containerLayout->addSpacing(10);  // Small fixed space before button
+    containerLayout->addSpacing(10);
 
     QPushButton* backButton = new QPushButton("BACK", m_contentContainer);
     backButton->setFixedSize(110, 55);
@@ -111,7 +111,6 @@ void HelpDialog::setupUI()
     buttonLayout->addStretch();
     containerLayout->addLayout(buttonLayout);
 
-    // Center the container
     QHBoxLayout* centerLayout = new QHBoxLayout();
     centerLayout->addStretch();
     centerLayout->addWidget(m_contentContainer);

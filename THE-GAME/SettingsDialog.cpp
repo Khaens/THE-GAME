@@ -25,11 +25,9 @@ SettingsDialog::SettingsDialog(QWidget* parent)
 
 void SettingsDialog::setupUI()
 {
-    // Layout principal
     QVBoxLayout* mainLayout = new QVBoxLayout(this);
     mainLayout->setContentsMargins(0, 0, 0, 0);
 
-    // Container central
     m_contentContainer = new QWidget(this);
     m_contentContainer->setObjectName("settingsContainer");
     m_contentContainer->setFixedSize(600, 300);

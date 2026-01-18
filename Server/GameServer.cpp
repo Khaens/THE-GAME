@@ -119,6 +119,7 @@ void Game::StartGame()
 	m_wholeDeck.ShuffleDeck();
 	Round::FirstRoundDealing(*this);
 	m_currentPlayerIndex = WhoStartsFirst();
+    m_gameStartTime = std::chrono::steady_clock::now();
 }
 
 
@@ -375,10 +376,18 @@ void Game::CheckAchievements(IPlayer& currentPlayer)
 
 void Game::UpdateGameStats(bool won)
 {
+    auto endTime = std::chrono::steady_clock::now();
+    long long seconds = std::chrono::duration_cast<std::chrono::seconds>(endTime - m_gameStartTime).count();
+
 	for (const auto& player : m_players) {
 		int userId = player->GetID();
         const std::string& username = player->GetUsername();
 		try {
+            // Update Playtime
+            PlaytimeModel pt = m_database.GetPlaytimeByUserId(userId);
+            pt.SetSeconds(pt.GetSeconds() + static_cast<int>(seconds));
+            m_database.UpdatePlaytime(pt);
+
 			StatisticsModel stats = m_database.GetStatisticsByUserId(userId);
 			
 			if (won) {
@@ -387,16 +396,25 @@ void Game::UpdateGameStats(bool won)
 			
 			stats.SetGamesPlayed(stats.GetGamesPlayed() + 1);
 			if (won) stats.SetGamesWon(stats.GetGamesWon() + 1);
+            else {
+                 int cardsLeft = player->GetHand().size();
+                 stats.SetTotalCardsLeftInLosses(stats.GetTotalCardsLeftInLosses() + cardsLeft);
+            }
+
 			if (stats.GetGamesPlayed() > 0) {
 				float rawWinRate = ((float)stats.GetGamesWon() / stats.GetGamesPlayed()) * 100.0f;
 				stats.SetWinRate(std::round(rawWinRate * 100.0f) / 100.0f);
 			}
 
+            stats.UpdatePerformanceScore(6); 
+
 			m_database.UpdateStatistics(stats);
 			std::cout << "Updated statistics for user " << username 
 				<< ": Games Played=" << stats.GetGamesPlayed() 
 				<< ", Games Won=" << stats.GetGamesWon() 
-				<< ", Win Rate=" << stats.GetWinRate() << std::endl;
+				<< ", Win Rate=" << stats.GetWinRate() 
+                << ", Performance=" << stats.GetPerformanceScore()
+                << ", Seconds Added=" << seconds << std::endl;
 
 		}
 		catch (const std::exception& e) {

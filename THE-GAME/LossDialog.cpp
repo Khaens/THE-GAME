@@ -6,7 +6,6 @@ LossDialog::LossDialog(QWidget *parent)
 {
     setupUi();
     
-    // Window Settings
     setWindowFlags(Qt::FramelessWindowHint | Qt::Dialog);
     setAttribute(Qt::WA_TranslucentBackground);
     setModal(true);
@@ -16,12 +15,10 @@ void LossDialog::setupUi()
 {
     resize(500, 400);
 
-    // Main Layout
     QVBoxLayout* mainLayout = new QVBoxLayout(this);
     mainLayout->setContentsMargins(50, 50, 50, 50);
     mainLayout->setAlignment(Qt::AlignCenter);
 
-    // Background Container
     QWidget* container = new QWidget(this);
     container->setObjectName("container");
     container->setStyleSheet(R"(
@@ -35,7 +32,6 @@ void LossDialog::setupUi()
     containerLayout->setContentsMargins(40, 60, 40, 60);
     containerLayout->setSpacing(20);
 
-    // Title
     m_titleLabel = new QLabel("GAME OVER", container);
     m_titleLabel->setAlignment(Qt::AlignCenter);
     m_titleLabel->setStyleSheet(R"(
@@ -48,7 +44,6 @@ void LossDialog::setupUi()
         }
     )");
 
-    // Message
     m_messageLabel = new QLabel("The Game has won...", container);
     m_messageLabel->setAlignment(Qt::AlignCenter);
     m_messageLabel->setWordWrap(true);
@@ -61,7 +56,6 @@ void LossDialog::setupUi()
         }
     )");
 
-    // Back Button
     m_backButton = new QPushButton("BACK TO MENU", container);
     m_backButton->setCursor(Qt::PointingHandCursor);
     m_backButton->setFixedHeight(60);

@@ -214,7 +214,7 @@ void CreateLobbyDialog::onAccept()
     }
 
     m_lobbyCreated = true;
-    accept();  // Close dialog immediately - LobbyRoomDialog will show the real code
+    accept(); 
 }
 
 void CreateLobbyDialog::onCancel()

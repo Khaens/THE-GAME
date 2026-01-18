@@ -1,6 +1,7 @@
 ﻿#include "AccountDialog.h"
 #include "NetworkManager.h"
 #include "AchievementsDialog.h"
+#include "StatisticsDialog.h"
 #include <QResizeEvent>
 #include <QMessageBox>
 #include <QPainter>
@@ -16,12 +17,16 @@ AccountDialog::AccountDialog(QWidget* parent)
     , m_isLoggedIn(false)
     , m_currentUserId(-1)
     , m_networkManager(nullptr)
+    , m_statisticsDialog(nullptr)
 {
     setWindowFlags(Qt::Widget);
     setAttribute(Qt::WA_TranslucentBackground);
 
     setupUI();
     setupStyle();
+    
+    m_statisticsDialog = new StatisticsDialog(this);
+    
     hide();
 }
 
@@ -50,10 +55,8 @@ void AccountDialog::setupUI()
     );
     containerLayout->addWidget(titleLabel);
 
-    // Stacked Widget pentru pagini diferite
     m_stackedWidget = new QStackedWidget(m_contentContainer);
 
-    // === LOGIN PAGE ===
     m_loginPage = new QWidget();
     QVBoxLayout* loginLayout = new QVBoxLayout(m_loginPage);
     loginLayout->setSpacing(15);
@@ -87,7 +90,6 @@ void AccountDialog::setupUI()
     )");
     loginLayout->addWidget(m_loginUsernameInput);
 
-    // Container for Password and Eye
     QWidget* passwordContainer = new QWidget();
     passwordContainer->setObjectName("passwordContainer");
     passwordContainer->setStyleSheet(R"(
@@ -99,7 +101,7 @@ void AccountDialog::setupUI()
     )");
     
     QHBoxLayout* passwordLayout = new QHBoxLayout(passwordContainer);
-    passwordLayout->setContentsMargins(0, 0, 15, 0); // small right margin for the eye
+    passwordLayout->setContentsMargins(0, 0, 15, 0); 
     passwordLayout->setSpacing(0);
 
     m_loginPasswordInput = new QLineEdit();
@@ -131,7 +133,6 @@ void AccountDialog::setupUI()
     passwordLayout->addWidget(m_loginPasswordInput);
     passwordLayout->addWidget(m_loginVisibilityButton);
     
-    // Enter key triggers login
     connect(m_loginPasswordInput, &QLineEdit::returnPressed, this, &AccountDialog::onLoginClicked);
     connect(m_loginUsernameInput, &QLineEdit::returnPressed, [this]() {
         m_loginPasswordInput->setFocus();
@@ -194,7 +195,6 @@ void AccountDialog::setupUI()
     loginLayout->addStretch();
     m_stackedWidget->addWidget(m_loginPage);
 
-    // === REGISTER PAGE ===
     m_registerPage = new QWidget();
     QVBoxLayout* registerLayout = new QVBoxLayout(m_registerPage);
     registerLayout->setSpacing(15);
@@ -228,7 +228,6 @@ void AccountDialog::setupUI()
     )");
     registerLayout->addWidget(m_registerUsernameInput);
 
-    // Container for Password and Eye (Register)
     QWidget* regPasswordContainer = new QWidget();
     regPasswordContainer->setObjectName("regPasswordContainer");
     regPasswordContainer->setStyleSheet(R"(
@@ -274,7 +273,6 @@ void AccountDialog::setupUI()
 
     registerLayout->addWidget(regPasswordContainer);
 
-    // Enter key triggers register
     connect(m_registerPasswordInput, &QLineEdit::returnPressed, this, &AccountDialog::onRegisterClicked);
     connect(m_registerUsernameInput, &QLineEdit::returnPressed, [this]() {
         m_registerPasswordInput->setFocus();
@@ -335,20 +333,16 @@ void AccountDialog::setupUI()
     registerLayout->addStretch();
     m_stackedWidget->addWidget(m_registerPage);
 
-    // === PROFILE PAGE ===
     m_profilePage = new QWidget();
     QVBoxLayout* profileLayout = new QVBoxLayout(m_profilePage);
     profileLayout->setSpacing(10);
     profileLayout->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
 
-    // Profile Picture (circle)
     m_profilePicture = new QLabel();
     m_profilePicture->setFixedSize(124, 124);
-    // Remove border from label itself to avoid conflict with manual drawing
     m_profilePicture->setStyleSheet("background-color: transparent;");
     profileLayout->addWidget(m_profilePicture, 0, Qt::AlignCenter);
     
-    // Add spacing between picture and username (Increased again)
     profileLayout->addSpacing(70);
 
     // Username
@@ -363,18 +357,6 @@ void AccountDialog::setupUI()
     )"
     );
     profileLayout->addWidget(m_profileUsername);
-
-    // User ID label
-    QLabel* userIdLabel = new QLabel("User ID: -");
-    userIdLabel->setObjectName("userIdLabel");
-    userIdLabel->setAlignment(Qt::AlignCenter);
-    userIdLabel->setStyleSheet(R"(
-        font-size: 18px;
-        font-family: "Jersey 15";
-        color: #ffffff;
-    )"
-    );
-    profileLayout->addWidget(userIdLabel);
     
     m_changeProfilePicButton = new QPushButton("Add profile picture");
     m_changeProfilePicButton->setFixedHeight(35);
@@ -436,15 +418,38 @@ void AccountDialog::setupUI()
     connect(m_achievementsButton, &QPushButton::clicked, this, &AccountDialog::onAchievementsClicked);
     profileLayout->addWidget(m_achievementsButton);
 
-    // Stats placeholder
-    QLabel* statsLabel = new QLabel("Statistics coming soon...");
-    statsLabel->setAlignment(Qt::AlignCenter);
-    statsLabel->setStyleSheet("font-size: 14px; color: #aaaaaa; font-style: italic;");
-    profileLayout->addWidget(statsLabel);
+    m_statisticsButton = new QPushButton("Statistics");
+    m_statisticsButton->setFixedHeight(35);
+    m_statisticsButton->setCursor(Qt::PointingHandCursor);
+    m_statisticsButton->setStyleSheet(R"(
+        QPushButton {
+            background-color: transparent;
+            color: #f3d05a;
+            border: 2px solid #f3d05a;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            font-family: "Jersey 15";
+            padding: 5px;
+            outline: 0;
+        }
+        QPushButton:hover {
+            background-color: rgba(243, 208, 90, 0.1);
+        }
+        QPushButton:pressed {
+            background-color: rgba(243, 208, 90, 0.2);
+            border: 2px solid #d4b449;
+        }
+        QPushButton:focus {
+            outline: none;
+            border: 2px solid #f3d05a;
+        }
+    )");
+    connect(m_statisticsButton, &QPushButton::clicked, this, &AccountDialog::onStatisticsClicked);
+    profileLayout->addWidget(m_statisticsButton);
 
     profileLayout->addStretch();
 
-    // Logout button
     m_logoutButton = new QPushButton("LOGOUT");
     m_logoutButton->setFixedHeight(45);
     m_logoutButton->setCursor(Qt::PointingHandCursor);
@@ -472,7 +477,6 @@ void AccountDialog::setupUI()
 
     containerLayout->addWidget(m_stackedWidget);
 
-    // Close button
     QPushButton* closeButton = new QPushButton("CLOSE", m_contentContainer);
     closeButton->setFixedSize(110, 55);
     closeButton->setCursor(Qt::PointingHandCursor);
@@ -500,7 +504,6 @@ void AccountDialog::setupUI()
     closeLayout->addStretch();
     containerLayout->addLayout(closeLayout);
 
-    // Centrare container
     QHBoxLayout* centerLayout = new QHBoxLayout();
     centerLayout->addStretch();
     centerLayout->addWidget(m_contentContainer);
@@ -556,6 +559,9 @@ void AccountDialog::showRegisterPage()
 void AccountDialog::setNetworkManager(std::shared_ptr<NetworkManager> networkManager)
 {
     m_networkManager = networkManager;
+    if (m_statisticsDialog) {
+        m_statisticsDialog->setNetworkManager(networkManager);
+    }
 }
 
 void AccountDialog::onChangeProfilePicClicked()
@@ -570,8 +576,6 @@ void AccountDialog::onChangeProfilePicClicked()
 
     QPixmap p(fileName);
     if (!p.isNull()) {
-        // Create circular mask with higher quality manual drawing
-        // Size 120 + 4px border total = 124
         int size = 120;
         int border = 4;
         int totalSize = size + border;
@@ -583,24 +587,19 @@ void AccountDialog::onChangeProfilePicClicked()
         painter.setRenderHint(QPainter::Antialiasing, true);
         painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
         
-        // 1. Draw image cropped to circle
         QPainterPath path;
-        // Inner circle for image
         path.addEllipse(border/2, border/2, size, size);
         painter.setClipPath(path);
         
-        // Scale keeping aspect ratio to fill
         QImage image = p.toImage();
         QImage scaled = image.scaled(size, size, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
         
-        // Center crop
         int x = (scaled.width() - size) / 2;
         int y = (scaled.height() - size) / 2;
         
         painter.drawImage(border/2, border/2, scaled, x, y, size, size);
         
-        // 2. Draw border on top
-        painter.setClipping(false); // Disable clip to draw border
+        painter.setClipping(false); 
         QPen pen(QColor("#f3d05a"));
         pen.setWidth(border);
         painter.setPen(pen);
@@ -610,9 +609,7 @@ void AccountDialog::onChangeProfilePicClicked()
         m_profilePicture->setPixmap(QPixmap::fromImage(outImage));
         m_changeProfilePicButton->setText("Change profile picture");
         
-        // Upload to server
         if (m_networkManager) {
-            // Save QImage to buffer
             QByteArray byteArray;
             QBuffer buffer(&byteArray);
             buffer.open(QIODevice::WriteOnly);
@@ -653,13 +650,10 @@ void AccountDialog::showProfilePage()
     } else {
         m_changeProfilePicButton->setText("Add profile picture");
         
-        // Use a default placeholder logic if we want, but currently just text.
-        // If we want a default circle:
         QPixmap defaultPic(124, 124);
         defaultPic.fill(Qt::transparent);
         QPainter p(&defaultPic);
         p.setRenderHint(QPainter::Antialiasing);
-        // Draw background circle
         p.setBrush(QColor("#deaf11"));
         p.setPen(QPen(QColor("#f3d05a"), 4));
         p.drawEllipse(2, 2, 120, 120);
@@ -821,4 +815,12 @@ void AccountDialog::onAchievementsClicked()
     if (!m_networkManager) return;
     AchievementsDialog dialog(m_networkManager, m_currentUserId, this);
     dialog.exec();
+}
+
+void AccountDialog::onStatisticsClicked()
+{
+    if (!m_statisticsDialog || !m_networkManager) return;
+    m_statisticsDialog->setNetworkManager(m_networkManager);
+    m_statisticsDialog->setUserId(m_currentUserId);
+    m_statisticsDialog->showOverlay();
 }

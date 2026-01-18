@@ -7,39 +7,39 @@ PeasantDialog::PeasantDialog(QWidget* parent)
     setFixedSize(300, 150);
     setModal(true);
     
-    // Remove window frame for cleaner look
     setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint);
     setAttribute(Qt::WA_TranslucentBackground);
     
-    // Main layout
-    QVBoxLayout* layout = new QVBoxLayout(this);
-    layout->setContentsMargins(20, 20, 20, 20);
-    layout->setSpacing(15);
-    
-    // Style the dialog background
-    setStyleSheet(R"(
-        PeasantDialog {
-            background-color: rgba(40, 30, 20, 0.95);
-            border: 2px solid #8B4513;
-            border-radius: 10px;
+    QVBoxLayout* mainLayout = new QVBoxLayout(this);
+    mainLayout->setContentsMargins(0, 0, 0, 0);
+
+    QWidget* container = new QWidget(this);
+    container->setObjectName("container");
+    container->setStyleSheet(R"(
+        #container {
+            border-image: url(Resources/TextBox_1-2.png);
+            background-color: transparent;
         }
     )");
     
-    // Message label
-    QLabel* messageLabel = new QLabel("You're a peasant...\nwhat did you expect?", this);
+    QVBoxLayout* containerLayout = new QVBoxLayout(container);
+    containerLayout->setContentsMargins(20, 20, 20, 20);
+    containerLayout->setSpacing(15);
+    
+    QLabel* messageLabel = new QLabel("You're a peasant...\nwhat did you expect?", container);
     messageLabel->setStyleSheet(R"(
         QLabel {
             color: #f3d05a;
             font-size: 18px;
             font-weight: bold;
             font-family: 'Jersey 15';
+            background: transparent;
         }
     )");
     messageLabel->setAlignment(Qt::AlignCenter);
-    layout->addWidget(messageLabel);
+    containerLayout->addWidget(messageLabel);
     
-    // Button
-    QPushButton* okButton = new QPushButton("oh :(", this);
+    QPushButton* okButton = new QPushButton("oh :(", container);
     okButton->setStyleSheet(R"(
         QPushButton {
             border-image: url(Resources/Button.png);
@@ -55,7 +55,9 @@ PeasantDialog::PeasantDialog(QWidget* parent)
         }
     )");
     okButton->setCursor(Qt::PointingHandCursor);
-    layout->addWidget(okButton, 0, Qt::AlignCenter);
+    containerLayout->addWidget(okButton, 0, Qt::AlignCenter);
     
     connect(okButton, &QPushButton::clicked, this, &QDialog::accept);
+
+    mainLayout->addWidget(container);
 }

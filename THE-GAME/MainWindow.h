@@ -42,16 +42,14 @@ private:
     void setupMenuStyle();
 	void loadBackgroundImage();
 
-    // Overlay dialogs
     HelpDialog* m_helpDialog;
     SettingsDialog* m_settingsDialog;
     AccountDialog* m_accountDialog;
     LobbyDialog* m_lobbyDialog;
-    GameWindow* m_gameWindow;  // Now an overlay
+    GameWindow* m_gameWindow;
 
     QPixmap m_titlePixmap;
     QPixmap m_backgroundPixmap;
 
-    // Network
     std::shared_ptr<NetworkManager> m_networkManager;
 };

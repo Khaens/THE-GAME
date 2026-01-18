@@ -9,19 +9,15 @@ QPixmap UiUtils::GetAvatar(int userId, NetworkManager* networkManager)
 {
     if (userId < 0) return QPixmap();
 
-    // Check cache
     if (s_avatarCache.contains(userId)) {
         return s_avatarCache[userId];
     }
 
     if (!networkManager) return QPixmap();
 
-    // Fetch from server
-    // Note: getProfilePicture is blocking in current NetworkManager implementation.
     QByteArray data = networkManager->getProfilePicture(userId);
     
     if (data.isEmpty()) {
-        // Cache empty placeholder to avoid refetching
         QPixmap empty(1, 1);
         empty.fill(Qt::transparent);
         s_avatarCache.insert(userId, empty);
@@ -32,8 +28,6 @@ QPixmap UiUtils::GetAvatar(int userId, NetworkManager* networkManager)
     p.loadFromData(data);
     if (p.isNull()) return QPixmap();
 
-    // Process to Circle
-    // Standardizing on 120px size for quality, callers can scale down
     int size = 120; 
     int border = 4;
     int totalSize = size + border;
@@ -45,7 +39,6 @@ QPixmap UiUtils::GetAvatar(int userId, NetworkManager* networkManager)
     painter.setRenderHint(QPainter::Antialiasing, true);
     painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
     
-    // 1. Draw image cropped to circle
     QPainterPath path;
     path.addEllipse(border/2, border/2, size, size);
     painter.setClipPath(path);
@@ -58,7 +51,6 @@ QPixmap UiUtils::GetAvatar(int userId, NetworkManager* networkManager)
     
     painter.drawImage(border/2, border/2, scaled, x, y, size, size);
     
-    // 2. Draw border
     painter.setClipping(false);
     QPen pen(QColor("#f3d05a"));
     pen.setWidth(border);

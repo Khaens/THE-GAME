@@ -45,15 +45,14 @@ private:
     void setupConnections();
     void startRefreshTimer();
     void stopRefreshTimer();
-    void startCountdownTimer();  // NEW: Start the 60-second countdown
-    void stopCountdownTimer();   // NEW: Stop the countdown
+    void startCountdownTimer();
+    void stopCountdownTimer();
 
     void fetchLobbyStatus();
     void fetchLobbyPlayers();
     void handleLobbyUpdate(const LobbyStatus& status);
     void handleLobbyWebSocketMessage(const QJsonObject& message);
 
-    // UI Elements
     QWidget* m_contentContainer;
     QLabel* m_titleLabel;
     QLabel* m_lobbyNameLabel;
@@ -63,8 +62,8 @@ private:
     QPushButton* m_startGameButton;
     QPushButton* m_leaveButton;
     QLabel* m_playerCountLabel;
-    QLabel* m_countdownLabel;     // NEW: Shows "Starting in 60s"
-    QProgressBar* m_countdownBar; // NEW: Visual countdown progress bar
+    QLabel* m_countdownLabel;
+    QProgressBar* m_countdownBar;
 
     // Data
     int m_userId;

@@ -66,10 +66,26 @@ public:
     // Achievements
     struct AchievementsData {
         bool success;
-        QJsonObject achievements; // key: achievement_name, value: bool unlocked
+        QJsonObject achievements; 
         std::string error;
     };
     AchievementsData getAchievements(int user_id);
+
+    // Statistics
+    struct StatisticsData {
+        bool success;
+        float performance_score;
+        std::string error;
+    };
+    StatisticsData getStatistics(int user_id);
+
+    // Playtime
+    struct PlaytimeData {
+        bool success;
+        float hours;
+        std::string error;
+    };
+    PlaytimeData getPlaytime(int user_id);
 
     // Profile Picture
     bool uploadProfilePicture(int user_id, const QByteArray& data);

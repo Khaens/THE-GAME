@@ -19,17 +19,14 @@ MainWindow::MainWindow(QWidget* parent)
 {
     ui->setupUi(this);
 
-    // Load background ONCE at startup
     loadBackgroundImage();
 
-    // Remove background styling from centralWidget - we'll paint it ourselves
     ui->centralWidget->setStyleSheet("background-color: transparent;");
 
     setupMenuStyle();
 
 	m_networkManager = std::make_shared<NetworkManager>(SERVER_URL);
 
-    // Connection Status handling
     connect(m_networkManager.get(), &NetworkManager::serverStatusChanged, this, [this](bool isOnline) {
         if (isOnline) {
             ui->connectionStatus->setText("CONNECTED");
@@ -40,7 +37,6 @@ MainWindow::MainWindow(QWidget* parent)
         }
     });
 
-    // Create overlay dialogs
     m_helpDialog = new HelpDialog(this);
     m_settingsDialog = new SettingsDialog(this);
     m_accountDialog = new AccountDialog(this);
@@ -50,7 +46,6 @@ MainWindow::MainWindow(QWidget* parent)
     m_accountDialog->setNetworkManager(m_networkManager);
     m_lobbyDialog->setNetworkManager(m_networkManager.get());
 
-    // Connect buttons
 	connect(m_lobbyDialog, &LobbyDialog::gameStartedFromLobby, this, &MainWindow::showGameOverlay);
     connect(ui->newGameButton, &QPushButton::clicked, this, &MainWindow::onNewGameClicked);
     connect(ui->exitGameButton, &QPushButton::clicked, this, &MainWindow::onExitClicked);
@@ -58,14 +53,11 @@ MainWindow::MainWindow(QWidget* parent)
     connect(ui->settingsButton, &QPushButton::clicked, this, &MainWindow::onSettingsClicked);
     connect(ui->accountButton, &QPushButton::clicked, this, &MainWindow::onAccountClicked);
 
-    // Game Window Back Connection
     connect(m_gameWindow, &GameWindow::backToMenuRequested, this, &MainWindow::onGameBackToMenu);
 
-    // Fullscreen shortcut
     QShortcut* fsShortcut = new QShortcut(QKeySequence(Qt::Key_F11), this);
     connect(fsShortcut, &QShortcut::activated, this, &MainWindow::toggleFullScreen);
 
-    // ESC to exit fullscreen
     QShortcut* escShortcut = new QShortcut(QKeySequence(Qt::Key_Escape), this);
     connect(escShortcut, &QShortcut::activated, this, [this]() {
         if (isFullScreen()) {
@@ -73,7 +65,6 @@ MainWindow::MainWindow(QWidget* parent)
         }
     });
 
-    // Load title image
     QPixmap titlePixmap("Resources/TitleCard.png");
     if (!titlePixmap.isNull()) {
         m_titlePixmap = titlePixmap;
@@ -88,8 +79,6 @@ MainWindow::MainWindow(QWidget* parent)
 
 MainWindow::~MainWindow()
 {
-    // Let Qt's parent-child system handle deletion (base class ~QWidget will delete these)
-    // We nullify strict pointers here to prevent access in resizeEvent during destruction
     m_helpDialog = nullptr;
     m_settingsDialog = nullptr;
     m_accountDialog = nullptr;
@@ -102,12 +91,10 @@ MainWindow::~MainWindow()
 
 void MainWindow::loadBackgroundImage()
 {
-    // Load background image ONCE and cache it
     m_backgroundPixmap = QPixmap("Resources/TableMC.png");
 
     if (m_backgroundPixmap.isNull()) {
         qWarning() << "Failed to load TableMC.png - using fallback color";
-        // Fallback to solid color
         m_backgroundPixmap = QPixmap(1, 1);
         m_backgroundPixmap.fill(QColor("#0d0a47"));
     }
@@ -118,15 +105,12 @@ void MainWindow::loadBackgroundImage()
 
 void MainWindow::paintEvent(QPaintEvent* event)
 {
-    // Custom paint to draw background efficiently
     QPainter painter(this);
 
     if (!m_backgroundPixmap.isNull()) {
-        // Draw the background filling the entire window
         painter.drawPixmap(rect(), m_backgroundPixmap);
     }
     else {
-        // Fallback color
         painter.fillRect(rect(), QColor("#0d0a47"));
     }
 
@@ -229,7 +213,6 @@ void MainWindow::toggleFullScreen()
 
 void MainWindow::resizeEvent(QResizeEvent* event)
 {
-    // Rescale title image
     if (!m_titlePixmap.isNull() && ui->titleLabel) {
         QSize labelSize = ui->titleLabel->size();
         if (labelSize.width() > 0 && labelSize.height() > 0) {
@@ -238,8 +221,6 @@ void MainWindow::resizeEvent(QResizeEvent* event)
             ui->titleLabel->setAlignment(Qt::AlignCenter);
         }
     }
-
-    // Update overlay dialogs
     if (m_helpDialog && m_helpDialog->isVisible()) {
         m_helpDialog->setGeometry(0, 0, width(), height());
     }
@@ -265,10 +246,8 @@ void MainWindow::resizeEvent(QResizeEvent* event)
 
 void MainWindow::showGameOverlay(const QString& lobbyId)
 {
-    // Initialize GameWindow with network manager and details
     if (m_accountDialog && m_gameWindow) {
         int userId = m_accountDialog->getCurrentUserId();
-        // Assuming m_networkManager is shared_ptr, get raw pointer
         m_gameWindow->initialize(m_networkManager.get(), userId, lobbyId.toStdString());
     }
     
@@ -280,13 +259,8 @@ void MainWindow::onGameBackToMenu()
     if (m_gameWindow) {
         m_gameWindow->hideOverlay();
     }
-    // Show main window (it might already be visible behind, but ensure it)
     this->show();
     
-    // Optionally reopen the lobby dialog if that's the desired flow, 
-    // or just sit at the main menu. User asked for "Back to Menu", so Main Menu is safer.
-    // However, if they were in a lobby lobby list, maybe that? Use judgment.
-    // Sticking to Main Menu (close overlays) as requested.
     if (m_lobbyDialog) {
         m_lobbyDialog->hideOverlay();
     }
