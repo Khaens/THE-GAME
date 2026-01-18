@@ -51,6 +51,7 @@ private:
 	TurnContext m_ctx;
 	Database& m_database;
 	std::unordered_map<int, GameStatistics> m_gameStats;
+	std::unordered_map<int, int> m_remainingCards;
 	mutable std::mutex m_stateMutex;
 
 public:
@@ -77,6 +78,8 @@ public:
 	void UpdateGameStats(bool won);
 
 	std::unique_ptr<Card> DrawCard();
+	void UpdateRemainingCards();
+	std::unordered_map<int, int> GetRemainingCards() const;
 
 	size_t GetDeckSize() const;
 	IPlayer& GetCurrentPlayer();

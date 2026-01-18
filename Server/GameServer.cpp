@@ -188,11 +188,13 @@ Info Game::PlaceCard(size_t playerIndex, const Card& card, int pile)
 
 		if (Round::IsGameWon(*this, GetCurrentPlayer())) {
 			UpdateGameStats(true);
+			UpdateRemainingCards();
 			return Info::GAME_WON;
 		}
 
 		if (IsGameOver(GetCurrentPlayer())) {
 			UpdateGameStats(false);
+			UpdateRemainingCards();
 			return Info::GAME_LOST;
 		}
 		return Info::CARD_PLACED;
@@ -249,10 +251,12 @@ Info Game::EndTurn(size_t playerIndex)
 	m_ctx.placedCardsThisTurn = 0;
 	if (IsGameOver(GetCurrentPlayer())) {
 		UpdateGameStats(false);
+		UpdateRemainingCards();
 		return Info::GAME_LOST;
 	}
 	if (Round::IsGameWon(*this, GetCurrentPlayer())) {
 		UpdateGameStats(true);
+		UpdateRemainingCards();
 		return Info::GAME_WON;
 	}
 
@@ -454,6 +458,14 @@ TurnContext& Game::GetCtx()
 std::unique_ptr<Card> Game::DrawCard()
 {
 	return m_wholeDeck.DrawCard();
+}
+
+void Game::UpdateRemainingCards()
+{
+	for(size_t i = 0; i < m_players.size(); i++) {
+		int userId = m_players[i]->GetID();
+		m_remainingCards[userId] = static_cast<int>(m_players[i]->GetHand().size());
+	}
 }
 
 size_t Game::GetDeckSize() const
