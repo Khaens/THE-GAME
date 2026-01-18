@@ -39,6 +39,8 @@ inline auto initStorage(const std::string& path) {
             make_column("games_won", &StatisticsModel::GetGamesWon, &StatisticsModel::SetGamesWon),
             make_column("games_played", &StatisticsModel::GetGamesPlayed, &StatisticsModel::SetGamesPlayed),
             make_column("win_rate", &StatisticsModel::GetWinRate, &StatisticsModel::SetWinRate),
+            make_column("total_cards_left_in_losses", &StatisticsModel::GetTotalCardsLeftInLosses, &StatisticsModel::SetTotalCardsLeftInLosses),
+            make_column("performance_score", &StatisticsModel::GetPerformanceScore, &StatisticsModel::SetPerformanceScore),
             foreign_key(&StatisticsModel::GetUserId).references(&UserModel::GetId).on_delete.cascade()),
         make_table("playtimes",
             make_column("id", &PlaytimeModel::GetId, &PlaytimeModel::SetId, primary_key().autoincrement()),
