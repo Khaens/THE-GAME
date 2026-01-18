@@ -240,13 +240,13 @@ Info Game::EndTurn(size_t playerIndex)
 	NextPlayer();
 	Round::UpdateContext(*this, m_ctx, GetCurrentPlayer());
 	m_ctx.placedCardsThisTurn = 0;
-	if (Round::IsGameWon(*this, GetCurrentPlayer())) {
-		UpdateGameStats(true);
-		return Info::GAME_WON;
-	}
 	if (IsGameOver(GetCurrentPlayer())) {
 		UpdateGameStats(false);
 		return Info::GAME_LOST;
+	}
+	if (Round::IsGameWon(*this, GetCurrentPlayer())) {
+		UpdateGameStats(true);
+		return Info::GAME_WON;
 	}
 
 	m_wholeDeck.ShuffleDeck();

@@ -16,7 +16,6 @@ public:
 	Deck();  
 	~Deck();  
     
-    // Rule of 5 for Deck (needed because of user-defined Dtor blocking implicit moves)  
     Deck(Deck&&) = default;  
     Deck& operator=(Deck&&) = default;  
     Deck(const Deck&) = delete;  

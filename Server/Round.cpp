@@ -78,7 +78,6 @@ void Round::UpdateContext(Game& game, TurnContext& m_ctx, IPlayer& currentPlayer
 	if (m_ctx.endgame) m_ctx.baseRequired = 1;
 	else m_ctx.baseRequired = 2;
 	if (m_ctx.endgame && currentPlayer.GetPlayerIndex() == m_ctx.GamblerPlayerIndex) {
-		// If gambler has penalty turns remaining, force 2 cards (if player has more than 1 card)
 		if (m_ctx.GamblerEndgamePenaltyTurns > 0 && currentPlayer.GetHand().size() > 1) {
 			m_ctx.currentRequired = 2;
 		}
