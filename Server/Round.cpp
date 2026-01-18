@@ -75,7 +75,7 @@ int Round::GetNrOfPlayableCardsInHand(Game& game, TurnContext& m_ctx)
 void Round::UpdateContext(Game& game, TurnContext& m_ctx, IPlayer& currentPlayer)
 {
 	if (game.GetDeckSize() == 0) m_ctx.endgame = true;
-	if (m_ctx.endgame) m_ctx.baseRequired = 1;
+	if (m_ctx.endgame || currentPlayer.GActive()) m_ctx.baseRequired = 1;
 	else m_ctx.baseRequired = 2;
 	if (m_ctx.endgame && currentPlayer.GetPlayerIndex() == m_ctx.GamblerPlayerIndex) {
 		if (m_ctx.GamblerEndgamePenaltyTurns > 0 && currentPlayer.GetHand().size() > 1) {
@@ -106,5 +106,6 @@ bool Round::IsGameWon(Game& game, IPlayer& currentPlayer)
 		game.NextPlayer();
 		checks++;
 	}
+	UpdateContext(game, game.GetCtx(), game.GetCurrentPlayer());
 	return gameWon;
 }

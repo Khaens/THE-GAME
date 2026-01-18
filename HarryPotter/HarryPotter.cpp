@@ -6,7 +6,7 @@ AbilityType HarryPotter::GetAbilityType() const
 	return m_type;
 }
 
-void HarryPotter::UseAbility(TurnContext& ctx, size_t currentPIndex) // special round rules for said ability
+void HarryPotter::UseAbility(TurnContext& ctx, size_t currentPIndex)
 {
 	ctx.HPplayerIndex = currentPIndex;
 	m_active = true;
@@ -52,7 +52,6 @@ const bool HarryPotter::GActive()
 
 void HarryPotter::SetGActive(bool state)
 {
-	// No-op
 }
 
 const bool HarryPotter::IsTaxActive()
@@ -62,7 +61,6 @@ const bool HarryPotter::IsTaxActive()
 
 void HarryPotter::SetTaxActive(bool state)
 {
-	// No-op
 }
 
 const bool HarryPotter::IsSoothActive()
@@ -72,12 +70,11 @@ const bool HarryPotter::IsSoothActive()
 
 void HarryPotter::SetSoothState(bool state)
 {
-	// No-op
 }
 
 const size_t HarryPotter::GetSoothsayerUses()
 {
-	return 0; // HarryPotter doesn't have soothsayer uses
+	return 0;
 }
 
 const size_t HarryPotter::GetTaxEvaderUses()

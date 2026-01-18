@@ -6,14 +6,15 @@ AbilityType Gambler::GetAbilityType() const
 	return m_type;
 }
 
-void Gambler::UseAbility(TurnContext& ctx, size_t CurrentPIndex)
+void Gambler::UseAbility(TurnContext& ctx, size_t currentPIndex)
 {
-	if (!CanUseAbility(ctx)) return;
-
-	m_usesLeft--;
-	m_uses++;
-	m_active = true;
-	ctx.currentRequired = 1;
+	if (CanUseAbility(ctx)) {
+		m_usesLeft--;
+		ctx.GamblerPlayerIndex = currentPIndex;
+		ctx.currentRequired = ctx.baseRequired - 1;
+		m_active = true;
+		ctx.GamblerEndgamePenaltyTurns++;
+	}
 }
 
 bool Gambler::CanUseAbility(TurnContext& ctx) const

@@ -25,7 +25,5 @@ public:
 	void ShuffleDeck();  
 	std::unique_ptr<Card> DrawCard();  
 	bool IsEmpty() const;  
-	size_t GetSize() const;  
-
-	void ShowDeck() const;  
+	size_t GetSize() const;
 };

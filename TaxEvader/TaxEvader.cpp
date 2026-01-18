@@ -46,12 +46,10 @@ const bool TaxEvader::GetHPFlag() const
 
 void TaxEvader::SetHPFlag(bool state)
 {
-	// No-op
 }
 
 void TaxEvader::SetHPActive(bool state)
 {
-	// No-op
 }
 
 const size_t TaxEvader::GetGamblerUses()
@@ -66,7 +64,6 @@ const bool TaxEvader::GActive()
 
 void TaxEvader::SetGActive(bool state)
 {
-	// No-op
 }
 
 const bool TaxEvader::IsSoothActive()
@@ -76,12 +73,11 @@ const bool TaxEvader::IsSoothActive()
 
 void TaxEvader::SetSoothState(bool state)
 {
-	// No-op
 }
 
 const size_t TaxEvader::GetSoothsayerUses()
 {
-	return 0; // TaxEvader doesn't have soothsayer uses
+	return 0;
 }
 
 const size_t TaxEvader::GetTaxEvaderUses()

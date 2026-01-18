@@ -28,12 +28,10 @@ const bool Peasant::GetHPFlag() const
 
 void Peasant::SetHPFlag(bool state)
 {
-	// No-op
 }
 
 void Peasant::SetHPActive(bool state)
 {
-	// No-op
 }
 
 const size_t Peasant::GetGamblerUses()
@@ -48,7 +46,6 @@ const bool Peasant::GActive()
 
 void Peasant::SetGActive(bool state)
 {
-	// No-op
 }
 
 const bool Peasant::IsTaxActive()
@@ -58,7 +55,6 @@ const bool Peasant::IsTaxActive()
 
 void Peasant::SetTaxActive(bool state)
 {
-	// No-op
 }
 
 const bool Peasant::IsSoothActive()
@@ -68,12 +64,11 @@ const bool Peasant::IsSoothActive()
 
 void Peasant::SetSoothState(bool state)
 {
-	// No-op
 }
 
 const size_t Peasant::GetSoothsayerUses()
 {
-	return 0; // Peasant doesn't have soothsayer uses
+	return 0;
 }
 
 const size_t Peasant::GetTaxEvaderUses()
@@ -88,5 +83,4 @@ bool Peasant::GetSameTurn()
 
 void Peasant::SetSameTurn(bool sameTurn)
 {
-
 }

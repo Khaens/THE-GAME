@@ -57,11 +57,9 @@ public:
 	Game(std::vector<UserModel>& users, Database& db);
 	~Game();
 
-    // Rule of 5: Move Semantics
     Game(Game&& other) noexcept;
     Game& operator=(Game&& other) noexcept;
 
-    // Rule of 5: Delete Copy
     Game(const Game&) = delete;
     Game& operator=(const Game&) = delete;
 

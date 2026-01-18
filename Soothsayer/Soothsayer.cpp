@@ -40,12 +40,10 @@ const bool Soothsayer::GetHPFlag() const
 
 void Soothsayer::SetHPFlag(bool state)
 {
-	// No-op
 }
 
 void Soothsayer::SetHPActive(bool state)
 {
-	// No-op
 }
 
 const size_t Soothsayer::GetGamblerUses()
@@ -60,7 +58,6 @@ const bool Soothsayer::GActive()
 
 void Soothsayer::SetGActive(bool state)
 {
-	// No-op
 }
 
 const bool Soothsayer::IsTaxActive()
@@ -70,7 +67,6 @@ const bool Soothsayer::IsTaxActive()
 
 void Soothsayer::SetTaxActive(bool state)
 {
-	// No-op
 }
 
 const size_t Soothsayer::GetSoothsayerUses()

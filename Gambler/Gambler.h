@@ -35,7 +35,6 @@ public:
 	void SetSameTurn(bool sameTurn) override;
 private:
 	size_t m_usesLeft = 3;
-	size_t m_uses = 0;
 	bool m_active = false;
 	AbilityType m_type = AbilityType::Gambler;
 };
