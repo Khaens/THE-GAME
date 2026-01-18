@@ -30,5 +30,5 @@ public:
 	void SetTotalCardsLeftInLosses(int v);
 	void SetPerformanceScore(float v);
 
-	void StatisticsModel::UpdatePerformanceScore(int maxHandSize);
+	void UpdatePerformanceScore(int maxHandSize);
 };

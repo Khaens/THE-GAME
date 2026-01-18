@@ -241,9 +241,6 @@ Info Game::EndTurn(size_t playerIndex)
 		m_players[playerIndex]->SetSameTurn(false);
 		m_players[playerIndex]->SetHPActive(false);
 	}
-	if(m_players[playerIndex]->GActive()) {
-		m_players[playerIndex]->SetGActive(false);
-	}
 	CheckAchievements(GetCurrentPlayer());
 	m_gameStats[m_players[playerIndex]->GetID()].placed7 = false;
 	m_gameStats[m_players[playerIndex]->GetID()].placed6 = false;

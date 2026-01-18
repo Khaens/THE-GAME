@@ -82,14 +82,13 @@ void Round::UpdateContext(Game& game, TurnContext& m_ctx, IPlayer& currentPlayer
 			m_ctx.currentRequired = 2;
 		}
 	}
-	else if (m_ctx.TaxEvPlayerIndex != -1 && game.GetPlayers()[m_ctx.TaxEvPlayerIndex]->IsTaxActive() &&
-		currentPlayer.GetPlayerIndex() == (m_ctx.TaxEvPlayerIndex + 1) % game.GetPlayers().size()) {
+	else if (m_ctx.TaxEvPlayerIndex != currentPlayer.GetPlayerIndex() &&
+		game.GetPlayers()[m_ctx.TaxEvPlayerIndex]->IsTaxActive()) {
 		m_ctx.currentRequired = m_ctx.baseRequired * 2;
 		game.GetPlayers()[m_ctx.TaxEvPlayerIndex]->SetTaxActive(false);
 	}
 	else m_ctx.currentRequired = m_ctx.baseRequired;
 }
-
 bool Round::IsGameWon(Game& game, IPlayer& currentPlayer)
 {
 	if (game.GetCtx().endgame && currentPlayer.GetHand().size() == 0) currentPlayer.SetFinished(true);
