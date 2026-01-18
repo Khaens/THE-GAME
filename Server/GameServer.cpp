@@ -95,10 +95,7 @@ bool Game::IsGameOver(IPlayer& currentPlayer)
 			return true;
 		}
 	}
-	// Allow player to place 1 card if they only have 1 card but need 2 (gambler penalty case)
 	if (m_ctx.endgame && currentPlayer.GetHand().size() == 1 && m_ctx.currentRequired == 2 && playableCards == 1) {
-		// Allow this - player can place their 1 card
-		return false;
 	}
 	else if (playableCards + m_ctx.placedCardsThisTurn < m_ctx.currentRequired) {
 		std::cout << username << " cannot play the required number of cards (" << m_ctx.currentRequired << ").\n";
@@ -133,8 +130,7 @@ Info Game::PlaceCard(size_t playerIndex, const Card& card, int pile)
 	if (!chosenCard) {
 		return Info::CARD_NOT_PLAYABLE;
 	}
-	
-	// CRITICAL: Copy card value string before removing card from hand to avoid invalidated references
+
 	std::string chosenCardValue = chosenCard->GetCardValue();
 	
 	Pile* chosenPile = Round::GetPile(pile, m_piles);
@@ -146,10 +142,9 @@ Info Game::PlaceCard(size_t playerIndex, const Card& card, int pile)
 	if (Round::CanPlaceCard(*this, chosenCard, chosenPile, m_ctx)) {
         const Card* pileTopCard = chosenPile->GetTopCard();
         if (!pileTopCard) {
-             return Info::PILE_NOT_FOUND; // Or appropriate error
+             return Info::PILE_NOT_FOUND;
         }
         
-        // Copy pile top card value to avoid invalidated references
         std::string pileTopCardValue = pileTopCard->GetCardValue();
 
 		if (m_ctx.HPplayerIndex != -1 && m_players[static_cast<size_t>(m_ctx.HPplayerIndex)]->GetHPFlag()) {
@@ -208,12 +203,8 @@ Info Game::EndTurn(size_t playerIndex)
 		return Info::NOT_CURRENT_PLAYER_TURN;
 	}
 
-	// Allow ending turn with fewer cards if player only had 1 card but needs 2 (gambler penalty case)
-	// If they placed all their cards (hand is empty) but placed less than required, allow it
 	bool canEndWithFewerCards = m_ctx.endgame && 
-	                             playerIndex == m_ctx.GamblerPlayerIndex &&
-	                             m_ctx.GamblerEndgamePenaltyTurns > 0 &&
-	                             m_players[playerIndex]->GetHand().size() == 0 && // All cards placed
+	                             m_players[playerIndex]->GetHand().size() == 0 &&
 	                             m_ctx.placedCardsThisTurn < m_ctx.currentRequired &&
 	                             m_ctx.currentRequired == 2;
 	
@@ -233,12 +224,9 @@ Info Game::EndTurn(size_t playerIndex)
 		m_players[m_ctx.GamblerPlayerIndex]->GActive()) {
 		GetCurrentPlayer().SetGActive(false);
 	}
-	// Decrement gambler endgame penalty turns if in endgame and it was the gambler's turn
-	// The penalty counts even if player only had 1 card (they were required to place 2, but only had 1)
 	if (m_ctx.endgame && playerIndex == m_ctx.GamblerPlayerIndex && m_ctx.GamblerEndgamePenaltyTurns > 0) {
 		m_ctx.GamblerEndgamePenaltyTurns--;
 	}
-	// Reset Soothsayer active state
 	if (m_players[playerIndex]->IsSoothActive()) {
 		m_players[playerIndex]->SetSoothState(false);
 	}
@@ -252,13 +240,13 @@ Info Game::EndTurn(size_t playerIndex)
 	NextPlayer();
 	Round::UpdateContext(*this, m_ctx, GetCurrentPlayer());
 	m_ctx.placedCardsThisTurn = 0;
-	if (IsGameOver(GetCurrentPlayer())) {
-		UpdateGameStats(false);
-		return Info::GAME_LOST;
-	}
 	if (Round::IsGameWon(*this, GetCurrentPlayer())) {
 		UpdateGameStats(true);
 		return Info::GAME_WON;
+	}
+	if (IsGameOver(GetCurrentPlayer())) {
+		UpdateGameStats(false);
+		return Info::GAME_LOST;
 	}
 
 	m_wholeDeck.ShuffleDeck();
@@ -396,7 +384,7 @@ void Game::UpdateGameStats(bool won)
 	}
 }
 
-Info Game::UseAbility(size_t playerIndex) // Sothsayer Ability logic to be implemented
+Info Game::UseAbility(size_t playerIndex)
 {
     std::lock_guard<std::mutex> lock(m_stateMutex);
 	if (m_currentPlayerIndex != playerIndex) {
