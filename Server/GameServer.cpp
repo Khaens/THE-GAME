@@ -381,6 +381,10 @@ void Game::UpdateGameStats(bool won)
 		try {
 			StatisticsModel stats = m_database.GetStatisticsByUserId(userId);
 			
+			if (won) {
+				m_gameStats[userId].wonGame = true;
+			}
+			
 			stats.SetGamesPlayed(stats.GetGamesPlayed() + 1);
 			if (won) stats.SetGamesWon(stats.GetGamesWon() + 1);
 			if (stats.GetGamesPlayed() > 0) {
@@ -409,7 +413,9 @@ Info Game::UseAbility(size_t playerIndex)
 	}
 	IPlayer& currentPlayer = GetCurrentPlayer();
 	if (currentPlayer.CanUseAbility(m_ctx)) {
-		m_gameStats[currentPlayer.GetID()].usedAnyAbility = true;
+		for (size_t i = 0; i < m_players.size(); i++) {
+			m_gameStats[m_players[i]->GetID()].usedAnyAbility = true;
+		}
 		currentPlayer.UseAbility(m_ctx, playerIndex);
 		if (currentPlayer.GetPlayerIndex() == m_ctx.TaxEvPlayerIndex
 			&& currentPlayer.IsTaxActive()) {

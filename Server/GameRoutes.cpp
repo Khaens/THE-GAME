@@ -138,6 +138,8 @@ void GameRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtils
                      }
 
                      if (result == Info::GAME_WON || result == Info::GAME_LOST) {
+                         // [FIX] Ensure achievements are checked/saved BEFORE the game object is destroyed.
+                         game->UnlockAchievements();
                          crow::json::wvalue over_msg;
                          over_msg["type"] = "game_over";
                          over_msg["lobby_id"] = lid;
