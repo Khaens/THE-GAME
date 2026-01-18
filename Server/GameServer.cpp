@@ -468,6 +468,11 @@ void Game::UpdateRemainingCards()
 	}
 }
 
+std::unordered_map<int, int> Game::GetRemainingCards() const
+{
+	return m_remainingCards;
+}
+
 size_t Game::GetDeckSize() const
 {
 	return m_wholeDeck.GetSize();
