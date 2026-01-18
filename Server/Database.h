@@ -4,6 +4,7 @@
 #include "UserModel.h"
 #include "AchievementsModel.h"
 #include "StatisticsModel.h"
+#include "PlaytimeModel.h"
 
 using namespace sqlite_orm;
 
@@ -38,7 +39,12 @@ inline auto initStorage(const std::string& path) {
             make_column("games_won", &StatisticsModel::GetGamesWon, &StatisticsModel::SetGamesWon),
             make_column("games_played", &StatisticsModel::GetGamesPlayed, &StatisticsModel::SetGamesPlayed),
             make_column("win_rate", &StatisticsModel::GetWinRate, &StatisticsModel::SetWinRate),
-            foreign_key(&StatisticsModel::GetUserId).references(&UserModel::GetId).on_delete.cascade())
+            foreign_key(&StatisticsModel::GetUserId).references(&UserModel::GetId).on_delete.cascade()),
+        make_table("playtimes",
+            make_column("id", &PlaytimeModel::GetId, &PlaytimeModel::SetId, primary_key().autoincrement()),
+            make_column("user_id", &PlaytimeModel::GetUserId, &PlaytimeModel::SetUserId),
+            make_column("seconds", &PlaytimeModel::GetSeconds, &PlaytimeModel::SetSeconds),
+            foreign_key(&PlaytimeModel::GetUserId).references(&UserModel::GetId).on_delete.cascade())
         );
     
     storage.on_open = [](sqlite3* db) {
@@ -82,5 +88,8 @@ public:
 
     AchievementsModel GetAchievementsByUserId(int userId);
     std::vector<std::string> UnlockAchievements(int userId, const std::unordered_map<std::string, bool>& achievementConditions);
+
+    PlaytimeModel GetPlaytimeByUserId(int userId);
+    void UpdatePlaytime(const PlaytimeModel& pt);
 };
 

@@ -391,3 +391,30 @@ bool Database::CheckAndUnlockJack(int userId)
     }
     return false;
 }
+
+PlaytimeModel Database::GetPlaytimeByUserId(int userId) {
+    try {
+        auto result = storage.get_all<PlaytimeModel>(where(c(&PlaytimeModel::GetUserId) == userId));
+
+        if (result.empty()) {
+            PlaytimeModel pt(userId);
+            int id = storage.insert(pt);
+            pt.SetId(id);
+            return pt;
+        }
+        return result[0];
+    }
+    catch (std::exception& e) {
+        std::cerr << "Error getting playtime: " << e.what() << std::endl;
+        throw;
+    }
+}
+
+void Database::UpdatePlaytime(const PlaytimeModel& pt) {
+    try {
+        storage.update(pt);
+    }
+    catch (std::exception& e) {
+        std::cerr << "Error updating playtime: " << e.what() << std::endl;
+    }
+}

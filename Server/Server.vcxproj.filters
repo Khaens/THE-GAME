@@ -50,6 +50,7 @@
     <ClCompile Include="Pile.cppm">
       <Filter>Header Files\Game Logic</Filter>
     </ClCompile>
+    <ClCompile Include="PlaytimeModel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DeckServer.h">
@@ -103,6 +104,7 @@
     <ClInclude Include="CardServer.h">
       <Filter>Header Files\Game Logic</Filter>
     </ClInclude>
+    <ClInclude Include="PlaytimeModel.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">

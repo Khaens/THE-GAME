@@ -155,6 +155,7 @@
     <ClCompile Include="PlayerFactory.cpp" />
     <ClCompile Include="PlayerFactory.cppm" />
     <ClCompile Include="PlayerServer.cpp" />
+    <ClCompile Include="PlaytimeModel.cpp" />
     <ClCompile Include="Round.cpp" />
     <ClCompile Include="StatisticsModel.cpp" />
     <ClCompile Include="AuthRoutes.cpp" />
@@ -174,6 +175,7 @@
     <ClInclude Include="Lobby.h" />
     <ClInclude Include="PileType.h" />
     <ClInclude Include="PlayerServer.h" />
+    <ClInclude Include="PlaytimeModel.h" />
     <ClInclude Include="Round.h" />
     <ClInclude Include="StatisticsModel.h" />
     <ClInclude Include="AuthRoutes.h" />
