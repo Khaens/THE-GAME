@@ -306,9 +306,9 @@ static const std::unordered_map<std::string, AchievementChecker> ACHIEVEMENT_CHE
 		int gamesWon = dbStats.GetGamesWon();
 		float winRate = dbStats.GetWinRate();
 
-		if (winRate <= 0.0f || gamesWon == 0) return false;
-		int totalGames = static_cast<int>(gamesWon / winRate);
-		return totalGames == 10 && winRate > 0.80f;
+		if (winRate <= 0.0f || gamesWon <= 0) return false;
+		int totalGames = dbStats.GetGamesPlayed();
+		return totalGames == 10 && winRate > 80.0f;
 	}},
 	{"jack", [](const IPlayer&, const GameStatistics& s, const StatisticsModel&) {
 		return s.playedWithAllAbilities;
@@ -375,8 +375,10 @@ void Game::UpdateGameStats(bool won)
 			
 			stats.SetGamesPlayed(stats.GetGamesPlayed() + 1);
 			if (won) stats.SetGamesWon(stats.GetGamesWon() + 1);
-			if (stats.GetGamesPlayed() > 0) 
-				stats.SetWinRate((float)stats.GetGamesWon() / stats.GetGamesPlayed());
+			if (stats.GetGamesPlayed() > 0) {
+				float rawWinRate = ((float)stats.GetGamesWon() / stats.GetGamesPlayed()) * 100.0f;
+				stats.SetWinRate(std::round(rawWinRate * 100.0f) / 100.0f);
+			}
 
 			m_database.UpdateStatistics(stats);
 			std::cout << "Updated statistics for user " << username 
