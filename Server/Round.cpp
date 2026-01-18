@@ -31,7 +31,7 @@ bool Round::CanPlaceCard(Game& game, const Card* card, Pile* pile, TurnContext& 
 		
 		int top = std::stoi(pileStr);
 		int value = std::stoi(cardStr);
-		if (m_ctx.HPplayerIndex != -1 && m_ctx.HPplayerIndex < game.GetPlayers().size()
+		if (m_ctx.HPplayerIndex != -1
 			&& game.GetPlayers()[m_ctx.HPplayerIndex]->HPActive()) return true;
 
 		if (pile->GetPileType() == PileType::ASCENDING)
@@ -65,7 +65,7 @@ int Round::GetNrOfPlayableCardsInHand(Game& game, TurnContext& m_ctx)
 		Card* card = cardPtr.get();
 		if ((CanPlaceCard(game, card, piles[0], m_ctx) || CanPlaceCard(game, card, piles[1], m_ctx) ||
 			CanPlaceCard(game, card, piles[2], m_ctx) || CanPlaceCard(game, card, piles[3], m_ctx)) ||
-			(m_ctx.HPplayerIndex != -1 && m_ctx.HPplayerIndex < m_players.size() && m_players[m_ctx.HPplayerIndex]->HPActive())) {
+			(m_ctx.HPplayerIndex != -1 && m_players[m_ctx.HPplayerIndex]->HPActive())) {
 			count++;
 		}
 	}
@@ -83,7 +83,7 @@ void Round::UpdateContext(Game& game, TurnContext& m_ctx, IPlayer& currentPlayer
 			m_ctx.currentRequired = 2;
 		}
 	}
-	else if (m_ctx.TaxEvPlayerIndex != -1 && m_ctx.TaxEvPlayerIndex < game.GetPlayers().size() && game.GetPlayers()[m_ctx.TaxEvPlayerIndex]->IsTaxActive() &&
+	else if (m_ctx.TaxEvPlayerIndex != -1 && game.GetPlayers()[m_ctx.TaxEvPlayerIndex]->IsTaxActive() &&
 		currentPlayer.GetPlayerIndex() == (m_ctx.TaxEvPlayerIndex + 1) % game.GetPlayers().size()) {
 		m_ctx.currentRequired = m_ctx.baseRequired * 2;
 		game.GetPlayers()[m_ctx.TaxEvPlayerIndex]->SetTaxActive(false);

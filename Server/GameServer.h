@@ -1,7 +1,7 @@
 #pragma once
 
 constexpr size_t PILES_AMOUNT = 4;
-constexpr int CARD_SET = 100;
+constexpr int CARD_SET = 30;
 constexpr size_t MAX_PLAYERS = 5;
 constexpr size_t MIN_PLAYERS = 2;
 

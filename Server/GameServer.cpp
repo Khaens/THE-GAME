@@ -152,7 +152,7 @@ Info Game::PlaceCard(size_t playerIndex, const Card& card, int pile)
         // Copy pile top card value to avoid invalidated references
         std::string pileTopCardValue = pileTopCard->GetCardValue();
 
-		if (m_ctx.HPplayerIndex != -1 && m_ctx.HPplayerIndex < m_players.size() && m_players[static_cast<size_t>(m_ctx.HPplayerIndex)]->GetHPFlag()) {
+		if (m_ctx.HPplayerIndex != -1 && m_players[static_cast<size_t>(m_ctx.HPplayerIndex)]->GetHPFlag()) {
             try {
 			    if (std::stoi(chosenCardValue) == std::stoi(pileTopCardValue) + 10 &&
 					chosenPile->GetPileType() == PileType::DESCENDING) {
@@ -230,7 +230,6 @@ Info Game::EndTurn(size_t playerIndex)
 		}
 	}
 	if (playerIndex == m_ctx.GamblerPlayerIndex &&
-		m_ctx.GamblerPlayerIndex < m_players.size() &&
 		m_players[m_ctx.GamblerPlayerIndex]->GActive()) {
 		GetCurrentPlayer().SetGActive(false);
 	}
