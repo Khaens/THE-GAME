@@ -57,35 +57,30 @@ private:
     Storage storage;
     std::string dbPath;
 
+    void UpdateUser(const UserModel& user);
+    int InsertStatistics(const StatisticsModel& stats);
+    bool StatisticsExistForUser(int userId);
+    int InsertAchievements(const AchievementsModel& achievements);
+    void UpdateAchievements(const AchievementsModel& achievements);
+    bool AchievementsExistForUser(int userId);
+    bool CheckAndUnlockJack(int userId);
+
 public:
     Database(const std::string& path = "users.db");
-    bool UpdateUsername(int userId, const std::string& newUsername);
-    bool UpdatePassword(int userId, const std::string& oldPassword, const std::string& newPassword);
-    bool UpdatePasswordRecovery(int userId, const std::string& newPassword);
     int InsertUser(const UserModel& user);
     bool VerifyLogin(const std::string& username, const std::string& plainPassword);
     UserModel GetUserByUsername(const std::string& username);
     UserModel GetUserById(int userId);
-    std::vector<UserModel> GetAllUsers();
-    void UpdateUser(const UserModel& user);
-    void DeleteUser(int id);
     bool UserExists(const std::string& username);
     bool UpdateProfileImage(int userId, std::vector<char> imageBuffer);
     std::vector<char> GetProfileImage(int userId);
     bool HasProfileImage(int userId);
     void DeleteProfileImage(int userId);
 
-    int InsertStatistics(const StatisticsModel& stats);
-    bool StatisticsExistForUser(int userId);
     StatisticsModel GetStatisticsByUserId(int userId);
     void UpdateStatistics(const StatisticsModel& statistics);
 
-    int InsertAchievements(const AchievementsModel& achievements);
     AchievementsModel GetAchievementsByUserId(int userId);
-    void UpdateAchievements(const AchievementsModel& achievements);
-    bool AchievementsExistForUser(int userId);
-    std::vector<std::string> GetUnlockedAchievement(int userId);
     std::vector<std::string> UnlockAchievements(int userId, const std::unordered_map<std::string, bool>& achievementConditions);
-    bool CheckAndUnlockJack(int userId);
 };
 

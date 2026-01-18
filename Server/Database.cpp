@@ -34,52 +34,6 @@ static std::string HashPassword(std::string_view password) {
     return std::to_string(hasher(password));
 }
 
-bool Database::UpdateUsername(int userId, const std::string& newUsername) {
-    try {
-        if (UserExists(newUsername)) {
-            return false;
-        }
-
-        UserModel user = storage.get<UserModel>(userId);
-        user.SetUsername(newUsername);
-        UpdateUser(user);
-        return true;
-    }
-    catch (std::exception& e) {
-        std::cerr << "Error updating username: " << e.what() << std::endl;
-        return false;
-    }
-}
-
-bool Database::UpdatePassword(int userId, const std::string& oldPassword, const std::string& newPassword) {
-    try {
-        UserModel user = storage.get<UserModel>(userId);
-        if (HashPassword(oldPassword) != user.GetPassword()) {
-            return false;
-        }
-
-        user.SetPassword(HashPassword(newPassword));
-        UpdateUser(user);
-        return true;
-    }
-    catch (std::exception& e) {
-        std::cerr << "Error updating password: " << e.what() << std::endl;
-        return false;
-    }
-}
-
-bool Database::UpdatePasswordRecovery(int userId, const std::string& newPassword) {
-    try {
-        UserModel user = storage.get<UserModel>(userId);
-        user.SetPassword(HashPassword(newPassword));
-        UpdateUser(user);
-        return true;
-    }
-    catch (std::exception& e) {
-        std::cerr << "Error updating password (recovery): " << e.what() << std::endl;
-        return false;
-    }
-}
 
 int Database::InsertUser(const UserModel& user) {
     try {
@@ -158,23 +112,11 @@ UserModel Database::GetUserById(int userId) {
     }
 }
 
-std::vector<UserModel> Database::GetAllUsers() {
-    return storage.get_all<UserModel>();
-}
 
 void Database::UpdateUser(const UserModel& user) {
     storage.update(user);
 }
 
-void Database::DeleteUser(int id) {
-    try {
-        storage.remove<UserModel>(id);
-        std::cout << "User " << id << " and all associated data deleted via CASCADE." << std::endl;
-    }
-    catch (std::exception& e) {
-        std::cerr << "Error deleting user: " << e.what() << std::endl;
-    }
-}
 
 bool Database::UserExists(const std::string& username) {
     try {
@@ -376,24 +318,6 @@ static const std::unordered_map<std::string, AchievementGetter> ACHIEVEMENT_GETT
     {"sixSeven", &AchievementsModel::GetSixSeven}
 };
 
-std::vector<std::string> Database::GetUnlockedAchievement(int userId)
-{
-    std::vector<std::string> achievedDescriptions;
-
-    if (!AchievementsExistForUser(userId)) {
-        return achievedDescriptions;
-    }
-
-    AchievementsModel achievements = GetAchievementsByUserId(userId);
-
-    for (const auto& [key, getter] : ACHIEVEMENT_GETTERS) {
-        if ((achievements.*getter)()) {
-            achievedDescriptions.push_back(ACHIEVEMENT_DESCRIPTIONS.at(key));
-        }
-    }
-
-    return achievedDescriptions;
-}
 
 
 typedef void (AchievementsModel::* AchievementSetter)(bool);
@@ -432,7 +356,6 @@ std::vector<std::string> Database::UnlockAchievements(int userId, const std::uno
                 auto getterIt = ACHIEVEMENT_GETTERS.find(key);
                 if (getterIt != ACHIEVEMENT_GETTERS.end()) {
                     auto getter = getterIt->second;
-                    // Check if already unlocked
                     if (!(achievements.*getter)()) {
                         auto setter = setterIt->second;
                         (achievements.*setter)(true);

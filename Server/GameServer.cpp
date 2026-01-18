@@ -152,7 +152,7 @@ Info Game::PlaceCard(size_t playerIndex, const Card& card, int pile)
         // Copy pile top card value to avoid invalidated references
         std::string pileTopCardValue = pileTopCard->GetCardValue();
 
-		if (m_ctx.HPplayerIndex != -1 && m_players[static_cast<size_t>(m_ctx.HPplayerIndex)]->HPActive()) {
+		if (m_ctx.HPplayerIndex != -1 && m_ctx.HPplayerIndex < m_players.size() && m_players[static_cast<size_t>(m_ctx.HPplayerIndex)]->GetHPFlag()) {
             try {
 			    if (std::stoi(chosenCardValue) == std::stoi(pileTopCardValue) + 10 &&
 					chosenPile->GetPileType() == PileType::DESCENDING) {
@@ -180,6 +180,9 @@ Info Game::PlaceCard(size_t playerIndex, const Card& card, int pile)
 			m_gameStats[GetCurrentPlayer().GetID()].placed6And7InSameRound = true;
 		chosenPile->PlaceCard(m_players[playerIndex]->RemoveCardFromHand(chosenCard)); 
 		m_ctx.placedCardsThisTurn++;
+
+		if (m_ctx.HPplayerIndex == playerIndex && m_players[playerIndex]->HPActive())
+			m_players[playerIndex]->SetHPActive(false);
 
 		if (Round::IsGameWon(*this, GetCurrentPlayer())) {
 			UpdateGameStats(true);
@@ -227,6 +230,7 @@ Info Game::EndTurn(size_t playerIndex)
 		}
 	}
 	if (playerIndex == m_ctx.GamblerPlayerIndex &&
+		m_ctx.GamblerPlayerIndex < m_players.size() &&
 		m_players[m_ctx.GamblerPlayerIndex]->GActive()) {
 		GetCurrentPlayer().SetGActive(false);
 	}
@@ -239,7 +243,7 @@ Info Game::EndTurn(size_t playerIndex)
 	if (m_players[playerIndex]->IsSoothActive()) {
 		m_players[playerIndex]->SetSoothState(false);
 	}
-	if (m_players[playerIndex]->HPActive()) {
+	if (m_players[playerIndex]->GetHPFlag()) {
 		m_players[playerIndex]->SetSameTurn(false);
 		m_players[playerIndex]->SetHPActive(false);
 	}
