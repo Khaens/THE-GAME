@@ -86,6 +86,10 @@ GameWindow::GameWindow(QWidget* parent)
         m_chatDisplay->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         m_chatDisplay->setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
         m_chatDisplay->show();
+        // Fix: Ensure Chat Display matches the intended area and doesn't block inputs if it defaults to full size
+        if (ui->chatHistory) {
+            m_chatDisplay->setGeometry(ui->chatHistory->geometry());
+        }
     }
 }
 
@@ -1069,6 +1073,13 @@ void GameWindow::handleGameState(const QJsonObject& state)
                         if (ui->abilityButton) {
                             ui->abilityButton->setText(QString("Soothsayer\n(%1 left)").arg(soothUsesLeft));
                         }
+                    } 
+                    // For TaxEvader, also get uses left
+                    else if (abilityName == "TaxEvader" && player.contains("tax_evader_uses_left")) {
+                        m_taxEvaderUsesLeft = player["tax_evader_uses_left"].toInt();
+                        if (ui->abilityButton) {
+                            ui->abilityButton->setText(QString("TaxEvader\n(%1 left)").arg(m_taxEvaderUsesLeft));
+                        }
                     } else {
                         if (ui->abilityButton) {
                             ui->abilityButton->setText(abilityName);
@@ -1541,8 +1552,8 @@ void GameWindow::onAbilityButtonClicked()
         m_networkManager->sendGameAction(action);
         qDebug() << "Sent use_ability action to server";
         
-        // For Gambler and Soothsayer, block further uses this turn
-        if (m_myAbilityName == "Gambler" || m_myAbilityName == "Soothsayer") {
+        // For Gambler, Soothsayer, and TaxEvader, block further uses this turn
+        if (m_myAbilityName == "Gambler" || m_myAbilityName == "Soothsayer" || m_myAbilityName == "TaxEvader") {
             m_abilityUsedThisTurn = true;
             updateAbilityButtonState(); // Disable button immediately
         }

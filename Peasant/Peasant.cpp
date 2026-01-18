@@ -76,6 +76,11 @@ const size_t Peasant::GetSoothsayerUses()
 	return 0; // Peasant doesn't have soothsayer uses
 }
 
+const size_t Peasant::GetTaxEvaderUses()
+{
+	return 0;
+}
+
 bool Peasant::GetSameTurn()
 {
 	return false;

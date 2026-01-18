@@ -63,6 +63,12 @@
     <ClCompile Include="WinDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PeasantDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AchievementsDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="MainWindow.h">
@@ -104,6 +110,9 @@
     <ClInclude Include="UiUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <QtMoc Include="PeasantDialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="MainWindow.ui" />
@@ -534,6 +543,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NetworkConfig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AchievementsDialog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

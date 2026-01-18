@@ -1,5 +1,6 @@
 ﻿#include "AccountDialog.h"
 #include "NetworkManager.h"
+#include "AchievementsDialog.h"
 #include <QResizeEvent>
 #include <QMessageBox>
 #include <QPainter>
@@ -375,7 +376,6 @@ void AccountDialog::setupUI()
     );
     profileLayout->addWidget(userIdLabel);
     
-    // Change Profile Picture Button
     m_changeProfilePicButton = new QPushButton("Add profile picture");
     m_changeProfilePicButton->setFixedHeight(35);
     m_changeProfilePicButton->setCursor(Qt::PointingHandCursor);
@@ -406,7 +406,35 @@ void AccountDialog::setupUI()
     connect(m_changeProfilePicButton, &QPushButton::clicked, this, &AccountDialog::onChangeProfilePicClicked);
     profileLayout->addWidget(m_changeProfilePicButton);
 
-    profileLayout->addSpacing(20);
+    m_achievementsButton = new QPushButton("Achievements");
+    m_achievementsButton->setFixedHeight(35);
+    m_achievementsButton->setCursor(Qt::PointingHandCursor);
+    m_achievementsButton->setStyleSheet(R"(
+        QPushButton {
+            background-color: transparent;
+            color: #f3d05a;
+            border: 2px solid #f3d05a;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            font-family: "Jersey 15";
+            padding: 5px;
+            outline: 0;
+        }
+        QPushButton:hover {
+            background-color: rgba(243, 208, 90, 0.1);
+        }
+        QPushButton:pressed {
+            background-color: rgba(243, 208, 90, 0.2);
+            border: 2px solid #d4b449;
+        }
+        QPushButton:focus {
+            outline: none;
+            border: 2px solid #f3d05a;
+        }
+    )");
+    connect(m_achievementsButton, &QPushButton::clicked, this, &AccountDialog::onAchievementsClicked);
+    profileLayout->addWidget(m_achievementsButton);
 
     // Stats placeholder
     QLabel* statsLabel = new QLabel("Statistics coming soon...");
@@ -786,4 +814,11 @@ void AccountDialog::onToggleRegisterPasswordVisibility()
 void AccountDialog::resizeEvent(QResizeEvent* event)
 {
     QWidget::resizeEvent(event);
+}
+
+void AccountDialog::onAchievementsClicked()
+{
+    if (!m_networkManager) return;
+    AchievementsDialog dialog(m_networkManager, m_currentUserId, this);
+    dialog.exec();
 }

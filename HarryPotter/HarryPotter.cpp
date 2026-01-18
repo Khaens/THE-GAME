@@ -80,6 +80,11 @@ const size_t HarryPotter::GetSoothsayerUses()
 	return 0; // HarryPotter doesn't have soothsayer uses
 }
 
+const size_t HarryPotter::GetTaxEvaderUses()
+{
+	return 0;
+}
+
 bool HarryPotter::GetSameTurn()
 {
 	return m_sameTurn;

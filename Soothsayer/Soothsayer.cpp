@@ -78,6 +78,11 @@ const size_t Soothsayer::GetSoothsayerUses()
 	return m_usesLeft;
 }
 
+const size_t Soothsayer::GetTaxEvaderUses()
+{
+	return 0;
+}
+
 bool Soothsayer::GetSameTurn()
 {
 	return false;

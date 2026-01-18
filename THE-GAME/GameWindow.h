@@ -85,6 +85,7 @@ private:
     bool m_canUseAbility = true; // Server tells us if ability can be used
     QString m_myAbilityName; // Track our ability type
     int m_gamblerUsesLeft = 3; // Gambler uses remaining
+    int m_taxEvaderUsesLeft = 2; // TaxEvader uses remaining
     bool m_abilityUsedThisTurn = false; // Client-side: block after one use per turn
 
     bool canPlaceCardOnPile(int cardValue, int pileIndex) const;

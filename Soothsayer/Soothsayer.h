@@ -27,6 +27,8 @@ public:
 
     const size_t GetSoothsayerUses() override;
 
+    const size_t GetTaxEvaderUses() override;
+
     bool GetSameTurn() override;
     void SetSameTurn(bool sameTurn) override;
 

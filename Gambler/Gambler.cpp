@@ -1,28 +1,27 @@
 #include "Gambler.h"
-#include <stdexcept>
-
+#include <iostream>
 
 AbilityType Gambler::GetAbilityType() const
 {
 	return m_type;
 }
 
-void Gambler::UseAbility(TurnContext& ctx, size_t currentPIndex) //special round rules for said ability
+void Gambler::UseAbility(TurnContext& ctx, size_t CurrentPIndex)
 {
-	if (m_usesLeft > 0 && !ctx.endgame) {
-		m_usesLeft--;
-		ctx.GamblerPlayerIndex = currentPIndex;
-		ctx.currentRequired = ctx.baseRequired - 1;
-		m_uses++;
-		m_active = true;
-		// Track how many endgame penalty turns: each use = 1 penalty turn in endgame
-		ctx.GamblerEndgamePenaltyTurns++;
-	}
+	if (!CanUseAbility(ctx)) return;
+
+	m_usesLeft--;
+	m_uses++;
+	m_active = true;
+	ctx.currentRequired = 1;
 }
 
 bool Gambler::CanUseAbility(TurnContext& ctx) const
 {
-	return (!ctx.endgame && m_usesLeft > 0);
+	if (!ctx.endgame) {
+		return m_usesLeft > 0;
+	}
+	return false;
 }
 
 void Gambler::SetGActive(bool state)
@@ -37,7 +36,6 @@ const bool Gambler::GActive()
 
 const size_t Gambler::GetGamblerUses()
 {
-	// Return uses remaining, no side effects
 	return m_usesLeft;
 }
 
@@ -53,12 +51,10 @@ const bool Gambler::GetHPFlag() const
 
 void Gambler::SetHPFlag(bool state)
 {
-	// No-op
 }
 
 void Gambler::SetHPActive(bool state)
 {
-	// No-op
 }
 
 const bool Gambler::IsTaxActive()
@@ -68,7 +64,6 @@ const bool Gambler::IsTaxActive()
 
 void Gambler::SetTaxActive(bool state)
 {
-	// No-op
 }
 
 const bool Gambler::IsSoothActive()
@@ -78,12 +73,16 @@ const bool Gambler::IsSoothActive()
 
 void Gambler::SetSoothState(bool state)
 {
-	// No-op
 }
 
 const size_t Gambler::GetSoothsayerUses()
 {
-	return 0; // Gambler doesn't have soothsayer uses
+	return 0;
+}
+
+const size_t Gambler::GetTaxEvaderUses()
+{
+	return 0;
 }
 
 bool Gambler::GetSameTurn()
@@ -93,6 +92,4 @@ bool Gambler::GetSameTurn()
 
 void Gambler::SetSameTurn(bool sameTurn)
 {
-	
 }
-

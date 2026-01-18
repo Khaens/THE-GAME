@@ -151,4 +151,38 @@ void AuthRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtils
         response["success"] = true;
         return crow::response(200, response);
     });
+
+    // GET ACHIEVEMENTS
+    CROW_ROUTE(app, "/api/user/<int>/achievements")
+        .methods(crow::HTTPMethod::GET)
+        ([db](int user_id) {
+        try {
+            AchievementsModel ach = db->GetAchievementsByUserId(user_id);
+            
+            crow::json::wvalue response;
+            response["success"] = true;
+            response["all_on_red"] = ach.GetAllOnRed();
+            response["harry_potter"] = ach.GetHarryPotter();
+            response["soothsayer"] = ach.GetSoothsayer();
+            response["tax_evader"] = ach.GetTaxEvader();
+            response["gambler"] = ach.GetGambler();
+            response["peasant"] = ach.GetPeasant();
+            response["serious_player"] = ach.GetSeriousPlayer();
+            response["talented_player"] = ach.GetTalentedPlayer();
+            response["jack"] = ach.GetJack();
+            response["zero_effort"] = ach.GetZeroEffort();
+            response["vanilla_w"] = ach.GetVanillaW();
+            response["high_risk"] = ach.GetHighRisk();
+            response["perfect_game"] = ach.GetPerfectGame();
+            response["six_seven"] = ach.GetSixSeven();
+            
+            return crow::response(200, response);
+        } catch (const std::exception& e) {
+             crow::json::wvalue response;
+             response["success"] = false;
+             response["error"] = e.what();
+             return crow::response(500, response);
+        }
+    });
+
 }

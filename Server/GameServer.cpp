@@ -20,6 +20,13 @@ Game::Game(std::vector<UserModel>& users, Database& db) :
 	for (auto& user : users) {
 		std::unique_ptr<IPlayer> player = PlayerFactory::CreateFromUser(user, abilities[i]);
 		player->SetPlayerIndex(i);
+		
+		if (abilities[i] == AbilityType::HarryPotter) m_ctx.HPplayerIndex = i;
+		else if (abilities[i] == AbilityType::Gambler) m_ctx.GamblerPlayerIndex = i;
+		else if (abilities[i] == AbilityType::TaxEvader) m_ctx.TaxEvPlayerIndex = i;
+		else if (abilities[i] == AbilityType::Soothsayer) m_ctx.SoothPlayerIndex = i;
+		else if (abilities[i] == AbilityType::Peasant) m_ctx.PeasantPlayerIndex = i;
+
 		m_players.push_back(std::move(player));
 		i++;
 	}
@@ -281,8 +288,9 @@ static const std::unordered_map<std::string, AchievementChecker> ACHIEVEMENT_CHE
 	{"vanillaW", [](const IPlayer&, const GameStatistics& s, const StatisticsModel&) {
 		return s.wonGame && !s.usedAnyAbility;
 	}},
-	{"highRisk", [](const IPlayer&, const GameStatistics& s, const StatisticsModel&) {
-		return s.usedGambler && s.usedAllGamblerAbilities;
+	{"highRisk", [](const IPlayer& p, const GameStatistics& s, const StatisticsModel&) {
+		IPlayer& playerRef = const_cast<IPlayer&>(p); 
+		return s.usedGambler && playerRef.GetGamblerUses() == 0;
 	}},
 	{"perfectGame", [](const IPlayer&, const GameStatistics& s, const StatisticsModel&) {
 		return s.wonGame && s.perfectGame;
@@ -354,6 +362,11 @@ void Game::CheckAchievements(IPlayer& currentPlayer)
 	if (currentPlayer.GetPlayerIndex() == m_ctx.PeasantPlayerIndex) {
 		stats.usedPeasant = true;
 	}
+	if (m_ctx.endgame && currentPlayer.GetPlayerIndex() == m_ctx.GamblerPlayerIndex) {
+		if (m_ctx.placedCardsThisTurn < 2) {
+			stats.atLeastTwoCardsInEndgame = false;
+		}
+	}
 }
 
 void Game::UpdateGameStats(bool won)
@@ -391,11 +404,12 @@ Info Game::UseAbility(size_t playerIndex)
 		return Info::NOT_CURRENT_PLAYER_TURN;
 	}
 	IPlayer& currentPlayer = GetCurrentPlayer();
-	m_gameStats[currentPlayer.GetID()].usedAnyAbility = true;
 	if (currentPlayer.CanUseAbility(m_ctx)) {
+		m_gameStats[currentPlayer.GetID()].usedAnyAbility = true;
 		currentPlayer.UseAbility(m_ctx, playerIndex);
 		if (currentPlayer.GetPlayerIndex() == m_ctx.TaxEvPlayerIndex
 			&& currentPlayer.IsTaxActive()) {
+			m_gameStats[currentPlayer.GetID()].taxEvaderUses++;
 			return Info::TAX_ABILITY_USED;
 		}
 		if (m_ctx.PeasantAbilityUse) {

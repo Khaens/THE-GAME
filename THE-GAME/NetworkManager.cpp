@@ -246,7 +246,36 @@ bool NetworkManager::leaveLobby(int user_id, const std::string& lobby_id) {
     );
 
     if (response.status_code == 0) return false;
+    if (response.status_code == 0) return false;
     return response.status_code == 200;
+}
+
+NetworkManager::AchievementsData NetworkManager::getAchievements(int user_id) {
+    auto response = cpr::Get(
+        cpr::Url{ baseUrl + "/api/user/" + std::to_string(user_id) + "/achievements" }
+    );
+
+    if (response.status_code == 0) {
+        return { false, {}, "Server invalid/offline" };
+    }
+
+    if (response.status_code == 200) {
+        auto data = crow::json::load(response.text);
+        if (!data) return { false, {}, "Invalid response" };
+
+        QJsonObject achObj;
+        // Map crow json keys to QJsonObject
+        // Assuming keys are standard strings from AuthRoutes
+        std::vector<std::string> keys = data.keys();
+        for(const auto& key : keys) {
+            if (key == "success" || key == "error") continue;
+            achObj[QString::fromStdString(key)] = data[key].b();
+        }
+        
+        return { true, achObj, "" };
+    }
+
+    return { false, {}, "Failed to fetch achievements" };
 }
 
 bool NetworkManager::uploadProfilePicture(int user_id, const QByteArray& data) {

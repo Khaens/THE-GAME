@@ -284,23 +284,6 @@ bool Database::AchievementsExistForUser(int userId) {
 
 typedef bool (AchievementsModel::* AchievementGetter)() const;
 
-static const std::unordered_map<std::string, std::string> ACHIEVEMENT_DESCRIPTIONS = {
-    {"allOnRed", "ALL ON RED: You played as the Gambler and always placed at least 2 cards in every endgame round."},
-    {"harryPotter", "HARRY POTTER: Played a game with the Harry Potter ability"},
-    {"soothsayer", "SOOTHSAYER: Played a game with the Soothsayer ability"},
-    {"taxEvader", "TAX EVADER: Played a game with the Tax Evader ability"},
-    {"gambler", "GAMBLER: Played a game with the Gambler ability"},
-    {"peasant", "PEASANT: Played a game as a Peasant (not used any ability)"},
-    {"seriousPlayer", "SERIOUS PLAYER: You've won 5 games. Keep it up!"},
-    {"talentedPlayer", "TALENTED PLAYER: You've won 8 or more games in your first ever 10 games. Keep it up!"},
-    {"jack", "MASTER OF ALL TRADES: Played at least one game with all abilities. You are a truly versatile player!"},
-    {"zeroEffort", "ZERO EFFORT: Won after using the Tax Evader ability at least 5 times. Laziness is the key to success."},
-    {"vanillaW", "VANILLA VICTORY: Your team won without using any special abilities. Pure skill!"},
-    {"highRisk", "HIGH-RISK, HIGH-REWARD: You played as the Gambler and utilised all your ability uses."},
-    {"perfectGame", "PERFECT GAME: Won the game and always played cards with a maximum difference of 3 points between them throughout the entire match."},
-    {"sixSeven", "SIX-SEVEN: You placed both 6 and 7 in a single round."}
-};
-
 static const std::unordered_map<std::string, AchievementGetter> ACHIEVEMENT_GETTERS = {
     {"allOnRed", &AchievementsModel::GetAllOnRed},
     {"harryPotter", &AchievementsModel::GetHarryPotter},

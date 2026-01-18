@@ -38,6 +38,8 @@ public:
 	virtual void SetSoothState(bool state) = 0;
 	virtual const size_t GetSoothsayerUses() = 0;
 
+	virtual const size_t GetTaxEvaderUses() = 0;
+
 	virtual bool GetSameTurn() = 0;
 	virtual void SetSameTurn(bool sameTurn) = 0;
 };

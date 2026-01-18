@@ -63,6 +63,14 @@ public:
     QString startGame(const std::string& lobby_id);
     bool leaveLobby(int user_id, const std::string& lobby_id);
 
+    // Achievements
+    struct AchievementsData {
+        bool success;
+        QJsonObject achievements; // key: achievement_name, value: bool unlocked
+        std::string error;
+    };
+    AchievementsData getAchievements(int user_id);
+
     // Profile Picture
     bool uploadProfilePicture(int user_id, const QByteArray& data);
     QByteArray getProfilePicture(int user_id);

@@ -84,6 +84,11 @@ const size_t TaxEvader::GetSoothsayerUses()
 	return 0; // TaxEvader doesn't have soothsayer uses
 }
 
+const size_t TaxEvader::GetTaxEvaderUses()
+{
+	return m_uses;
+}
+
 bool TaxEvader::GetSameTurn()
 {
 	return false;

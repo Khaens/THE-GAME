@@ -58,6 +58,8 @@ public:
 	bool IsSoothActive() override;
     const size_t GetSoothsayerUses() override;
 
+    const size_t GetTaxEvaderUses() override;
+
     bool GetSameTurn() override;
     void SetSameTurn(bool sameTurn) override;
 };
@@ -259,6 +261,12 @@ template<typename Ability>
 inline const size_t Player<Ability>::GetSoothsayerUses()
 {
     return ability.GetSoothsayerUses();
+}
+
+template<typename Ability>
+inline const size_t Player<Ability>::GetTaxEvaderUses()
+{
+    return ability.GetTaxEvaderUses();
 }
 
 template<typename Ability>

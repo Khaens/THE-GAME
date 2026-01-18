@@ -127,6 +127,11 @@ void NetworkUtils::BroadcastGameStateLocked(const std::string& lobby_id, crow::w
             player_val["soothsayer_uses_left"] = (int)players[i]->GetSoothsayerUses();
         }
 
+        // For TaxEvader, also send uses left
+        if (players[i]->GetAbilityType() == AbilityType::TaxEvader) {
+            player_val["tax_evader_uses_left"] = (int)players[i]->GetTaxEvaderUses();
+        }
+
             players_json.push_back(std::move(player_val));
         } catch (const std::exception& e) {
             std::cerr << "Error serializing player " << i << " in BroadcastGameState: " << e.what() << std::endl;

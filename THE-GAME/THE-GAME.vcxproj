@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AccountDialog.cpp" />
+    <ClCompile Include="AchievementsDialog.cpp" />
     <ClCompile Include="CreateLobbyDialog.cpp" />
     <ClCompile Include="GameWindow.cpp" />
     <ClCompile Include="HelpDialog.cpp" />
@@ -55,6 +56,7 @@
     <QtMoc Include="GameWindow.h" />
     <QtMoc Include="NetworkManager.h" />
     <QtMoc Include="PeasantDialog.h" />
+    <QtMoc Include="AchievementsDialog.h" />
     <ClInclude Include="UiUtils.h" />
   </ItemGroup>
   <ItemGroup>
