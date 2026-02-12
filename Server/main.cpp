@@ -8,6 +8,9 @@
 
 int main() {
     crow::SimpleApp app;
+
+    //db->RestoreFromBackup("backups/pre_sync_20260212_203459.db");
+
     auto db = std::make_unique<Database>("users.db");
     
     // Centralized access to globals and helpers

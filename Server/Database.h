@@ -47,12 +47,12 @@ inline auto initStorage(const std::string& path) {
             make_column("user_id", &PlaytimeModel::GetUserId, &PlaytimeModel::SetUserId),
             make_column("seconds", &PlaytimeModel::GetSeconds, &PlaytimeModel::SetSeconds),
             foreign_key(&PlaytimeModel::GetUserId).references(&UserModel::GetId).on_delete.cascade())
-        );
-    
+    );
+
     storage.on_open = [](sqlite3* db) {
         sqlite3_exec(db, "PRAGMA foreign_keys = ON", nullptr, nullptr, nullptr);
-    };
-    
+        };
+
     return storage;
 }
 
@@ -93,5 +93,7 @@ public:
 
     PlaytimeModel GetPlaytimeByUserId(int userId);
     void UpdatePlaytime(const PlaytimeModel& pt);
-};
 
+    bool BackupDatabase(const std::string& backupPath) const;
+    bool RestoreFromBackup(const std::string& backupPath);
+};

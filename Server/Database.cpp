@@ -1,9 +1,20 @@
-﻿#include "Database.h"
+﻿#define _CRT_SECURE_NO_WARNINGS
+#include "Database.h"
 #include <iostream>
-#include <tuple>
+#include <fstream>
+#include <filesystem>
+#include <chrono>
 
 Database::Database(const std::string& path) : storage(initStorage(path)), dbPath(path)
 {
+    auto now = std::chrono::system_clock::now();
+    auto time = std::chrono::system_clock::to_time_t(now);
+    std::stringstream ss;
+    ss << "backups/pre_sync_" << std::put_time(std::localtime(&time), "%Y%m%d_%H%M%S") << ".db";
+
+    BackupDatabase(ss.str());
+    std::cout << "[DATABASE] Pre-sync backup created: " << ss.str() << std::endl;
+
     storage.sync_schema();
 
     try {
@@ -55,12 +66,13 @@ int Database::InsertUser(const UserModel& user) {
             InsertStatistics(statistics);
 
             return true;
-        });
+            });
 
         if (result) {
-             return newUserId;
-        } else {
-             return -1;
+            return newUserId;
+        }
+        else {
+            return -1;
         }
     }
     catch (std::exception& e) {
@@ -416,5 +428,62 @@ void Database::UpdatePlaytime(const PlaytimeModel& pt) {
     }
     catch (std::exception& e) {
         std::cerr << "Error updating playtime: " << e.what() << std::endl;
+    }
+}
+
+bool Database::BackupDatabase(const std::string& backupPath) const
+{
+    try {
+        const std::filesystem::path path(backupPath);
+        std::filesystem::create_directories(path.parent_path());
+
+        const std::ifstream source(dbPath, std::ios::binary);
+        if (!source) {
+            std::cerr << "Error: Could not open source database file" << std::endl;
+            return false;
+        }
+
+        std::ofstream dest(backupPath, std::ios::binary);
+        if (!dest) {
+            std::cerr << "Error: Could not create backup file" << std::endl;
+            return false;
+        }
+
+        dest << source.rdbuf();
+
+        std::cout << "Backup created successfully: " << backupPath << std::endl;
+        return true;
+    }
+    catch (std::exception& e) {
+        std::cerr << "Backup error: " << e.what() << std::endl;
+        return false;
+    }
+}
+
+bool Database::RestoreFromBackup(const std::string& backupPath)
+{
+    try {
+        std::ifstream source(backupPath, std::ios::binary);
+        if (!source) {
+            std::cerr << "Error: Could not open backup file" << std::endl;
+            return false;
+        }
+
+        std::ofstream dest(dbPath, std::ios::binary);
+        if (!dest) {
+            std::cerr << "Error: Could not overwrite database file" << std::endl;
+            return false;
+        }
+
+        dest << source.rdbuf();
+        dest.close();
+        source.close();
+
+        std::cout << "Database restored from backup successfully: " << backupPath << std::endl;
+        return true;
+    }
+    catch (std::exception& e) {
+        std::cerr << "Restore error: " << e.what() << std::endl;
+        return false;
     }
 }
