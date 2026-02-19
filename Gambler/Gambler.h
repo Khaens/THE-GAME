@@ -8,6 +8,9 @@
 class __declspec(dllexport) Gambler : public IAbility
 {
 public:
+	Gambler() = default;
+	~Gambler() = default;
+
 	AbilityType GetAbilityType() const override;
 
 	void UseAbility(TurnContext& ctx, size_t currentPIndex) override;

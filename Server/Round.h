@@ -12,9 +12,9 @@ class Round
 public:
 	static void FirstRoundDealing(Game& game);
 	static bool CanPlaceCard(Game& game, const Card* card, Pile* pile, TurnContext& m_ctx);
-	static Pile* GetPile(int pileChoice, const std::array<std::unique_ptr<Pile>, PILES_AMOUNT>& piles);
+	static Pile* GetPile(int pileChoice, const std::array<Pile*, PILES_AMOUNT>& piles);
 	static int GetNrOfPlayableCardsInHand(Game& game, TurnContext& m_ctx);
-	static void UpdateContext(Game& game, TurnContext& m_ctx, IPlayer& currentPlayer);
-	static bool IsGameWon(Game& game, IPlayer& currentPlayer);
+	static void UpdateContext(Game& game, TurnContext& m_ctx, Player& currentPlayer);
+	static bool IsGameWon(Game& game, Player& currentPlayer);
 };
 

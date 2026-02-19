@@ -6,6 +6,9 @@
 class __declspec(dllexport) HarryPotter : public IAbility
 {
 public:
+	HarryPotter() = default;
+	~HarryPotter() = default;
+
 	AbilityType GetAbilityType() const override;
 
 	void UseAbility(TurnContext& ctx, size_t CurrentPIndex) override;

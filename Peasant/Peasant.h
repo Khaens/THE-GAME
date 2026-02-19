@@ -8,6 +8,9 @@ class __declspec(dllexport) Peasant :
 private:
 	AbilityType m_type = AbilityType::Peasant;
 public:
+	Peasant() = default;
+	~Peasant() = default;
+
 	AbilityType GetAbilityType() const override;
 
     void UseAbility(TurnContext& ctx, size_t currentPIndex) override;

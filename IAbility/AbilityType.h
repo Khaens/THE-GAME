@@ -10,5 +10,6 @@ enum class AbilityType {
 	Gambler,
 	TaxEvader,
 	Soothsayer,
-	Peasant
+	Peasant,
+	Undefined
 };

@@ -61,8 +61,8 @@ void NetworkUtils::BroadcastGameStateLocked(const std::string& lobby_id, crow::w
     
     // Turn info
     try {
-        IPlayer& current_player = game->GetCurrentPlayer();
-        state_base["current_turn_player_id"] = current_player.GetID();
+        Player& current_player = game->GetCurrentPlayer();
+        state_base["current_turn_player_id"] = current_player.GetId();
         state_base["current_turn_username"] = std::string(current_player.GetUsername());
     } catch (const std::exception& e) {
         std::cerr << "Error getting current player in BroadcastGameState: " << e.what() << std::endl;
@@ -84,14 +84,14 @@ void NetworkUtils::BroadcastGameStateLocked(const std::string& lobby_id, crow::w
     for (size_t i = 0; i < players.size(); ++i) {
         try {
             crow::json::wvalue player_val;
-            player_val["user_id"] = players[i]->GetID();
-            player_val["username"] = std::string(players[i]->GetUsername());
-            player_val["hand_count"] = (int)players[i]->GetHand().size();
-            player_val["is_finished"] = players[i]->IsFinished();
-            player_val["player_index"] = players[i]->GetPlayerIndex();
+            player_val["user_id"] = players[i].GetId();
+            player_val["username"] = std::string(players[i].GetUsername());
+            player_val["hand_count"] = (int)players[i].GetHand().size();
+            player_val["is_finished"] = players[i].IsFinished();
+            player_val["player_index"] = players[i].GetPlayerIndex();
             
             std::vector<std::string> hand_cards;
-            for (const auto& card : players[i]->GetHand()) {
+            for (const auto& card : players[i].GetHand()) {
                 if (card) {
                     hand_cards.push_back(std::string(card->GetCardValue()));
                 }
@@ -100,7 +100,7 @@ void NetworkUtils::BroadcastGameStateLocked(const std::string& lobby_id, crow::w
 
         // Add Ability
         std::string abilityName = "Unknown";
-        switch (players[i]->GetAbilityType()) {
+        switch (players[i].GetAbilityType()) {
             case AbilityType::HarryPotter: abilityName = "HarryPotter"; break;
             case AbilityType::Gambler: abilityName = "Gambler"; break;
             case AbilityType::TaxEvader: abilityName = "TaxEvader"; break;
@@ -110,26 +110,26 @@ void NetworkUtils::BroadcastGameStateLocked(const std::string& lobby_id, crow::w
         player_val["ability"] = abilityName;
         
         // Ability Active States
-        player_val["is_hp_active"] = players[i]->HPActive();
-        player_val["is_sooth_active"] = players[i]->IsSoothActive();
-        player_val["is_tax_active"] = players[i]->IsTaxActive();
+        player_val["is_hp_active"] = players[i].HPActive();
+        player_val["is_sooth_active"] = players[i].IsSoothActive();
+        player_val["is_tax_active"] = players[i].IsTaxActive();
         
         // Can player use their ability? (checked against game context)
-        player_val["can_use_ability"] = players[i]->CanUseAbility(game->GetCtx());
+        player_val["can_use_ability"] = players[i].CanUseAbility(game->GetCtx());
         
         // For Gambler, also send uses left
-        if (players[i]->GetAbilityType() == AbilityType::Gambler) {
-            player_val["gambler_uses_left"] = (int)players[i]->GetGamblerUses();
+        if (players[i].GetAbilityType() == AbilityType::Gambler) {
+            player_val["gambler_uses_left"] = (int)players[i].GetGamblerUses();
         }
         
         // For Soothsayer, also send uses left
-        if (players[i]->GetAbilityType() == AbilityType::Soothsayer) {
-            player_val["soothsayer_uses_left"] = (int)players[i]->GetSoothsayerUses();
+        if (players[i].GetAbilityType() == AbilityType::Soothsayer) {
+            player_val["soothsayer_uses_left"] = (int)players[i].GetSoothsayerUses();
         }
 
         // For TaxEvader, also send uses left
-        if (players[i]->GetAbilityType() == AbilityType::TaxEvader) {
-            player_val["tax_evader_uses_left"] = (int)players[i]->GetTaxEvaderUses();
+        if (players[i].GetAbilityType() == AbilityType::TaxEvader) {
+            player_val["tax_evader_uses_left"] = (int)players[i].GetTaxEvaderUses();
         }
 
             players_json.push_back(std::move(player_val));

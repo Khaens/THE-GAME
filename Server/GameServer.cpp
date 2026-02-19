@@ -18,8 +18,8 @@ Game::Game(std::vector<UserModel>& users, Database& db) :
 	std::vector<AbilityType> abilities = PlayerFactory::GetRandomUniqueAbilities(users.size());
 	size_t i = 0;
 	for (auto& user : users) {
-		std::unique_ptr<IPlayer> player = PlayerFactory::CreateFromUser(user, abilities[i]);
-		player->SetPlayerIndex(i);
+		Player player = PlayerFactory::CreateFromUser(user, abilities[i]);
+		player.SetPlayerIndex(i);
 		
 		if (abilities[i] == AbilityType::HarryPotter) m_ctx.HPplayerIndex = i;
 		else if (abilities[i] == AbilityType::Gambler) m_ctx.GamblerPlayerIndex = i;
@@ -42,7 +42,7 @@ Game::Game(std::vector<UserModel>& users, Database& db) :
 
 	m_gameStats.reserve(m_numberOfPlayers);
 	for (int i = 0; i < m_numberOfPlayers; i++) {
-		m_gameStats.insert({ m_players[i]->GetID(), GameStatistics() });
+		m_gameStats.insert({ m_players[i].GetID(), GameStatistics() });
 	}
 }
 
@@ -88,7 +88,7 @@ size_t Game::WhoStartsFirst()
 	return randomChoice - 1;
 }
 
-bool Game::IsGameOver(IPlayer& currentPlayer)
+bool Game::IsGameOver(Player& currentPlayer)
 {
 	int playableCards = Round::GetNrOfPlayableCardsInHand(*this, m_ctx);
 
@@ -134,14 +134,14 @@ Info Game::PlaceCard(size_t playerIndex, const Card& card, int pile)
 	if (playerIndex != m_currentPlayerIndex) {
 		return Info::NOT_CURRENT_PLAYER_TURN;
 	}
-	Card* chosenCard = m_players[playerIndex]->GetCardFromHand(card.GetCardValue());
+	Card* chosenCard = m_players[playerIndex].GetCardFromHand(card.GetCardValue());
 	if (!chosenCard) {
 		return Info::CARD_NOT_PLAYABLE;
 	}
 
 	std::string chosenCardValue = chosenCard->GetCardValue();
 	
-	Pile* chosenPile = Round::GetPile(pile, m_piles);
+	Pile* chosenPile = Round::GetPile(pile, GetPiles());
 
 	if (!chosenPile) {
 		return Info::PILE_NOT_FOUND;
@@ -155,15 +155,15 @@ Info Game::PlaceCard(size_t playerIndex, const Card& card, int pile)
         
         std::string pileTopCardValue = pileTopCard->GetCardValue();
 
-		if (m_ctx.HPplayerIndex != -1 && m_players[static_cast<size_t>(m_ctx.HPplayerIndex)]->GetHPFlag()) {
+		if (m_ctx.HPplayerIndex != -1 && m_players[static_cast<size_t>(m_ctx.HPplayerIndex)].GetHPFlag()) {
             try {
 			    if (std::stoi(chosenCardValue) == std::stoi(pileTopCardValue) + 10 &&
 					chosenPile->GetPileType() == PileType::DESCENDING) {
-				    m_players[static_cast<size_t>(m_ctx.HPplayerIndex)]->SetHPFlag(false);
+				    m_players[static_cast<size_t>(m_ctx.HPplayerIndex)].SetHPFlag(false);
 			    }
 				if (std::stoi(chosenCardValue) == std::stoi(pileTopCardValue) - 10 &&
 					chosenPile->GetPileType() == PileType::ASCENDING) {
-					m_players[static_cast<size_t>(m_ctx.HPplayerIndex)]->SetHPFlag(false);
+					m_players[static_cast<size_t>(m_ctx.HPplayerIndex)].SetHPFlag(false);
 				}	
 			}
 			catch (...) {}
@@ -181,11 +181,11 @@ Info Game::PlaceCard(size_t playerIndex, const Card& card, int pile)
 		if (chosenCardValue == "7") m_gameStats[GetCurrentPlayer().GetID()].placed7 = true;
 		if (m_gameStats[GetCurrentPlayer().GetID()].placed6 && m_gameStats[GetCurrentPlayer().GetID()].placed7)
 			m_gameStats[GetCurrentPlayer().GetID()].placed6And7InSameRound = true;
-		chosenPile->PlaceCard(m_players[playerIndex]->RemoveCardFromHand(chosenCard)); 
+		chosenPile->PlaceCard(m_players[playerIndex].RemoveCardFromHand(chosenCard)); 
 		m_ctx.placedCardsThisTurn++;
 
-		if (m_ctx.HPplayerIndex == playerIndex && m_players[playerIndex]->HPActive())
-			m_players[playerIndex]->SetHPActive(false);
+		if (m_ctx.HPplayerIndex == playerIndex && m_players[playerIndex].HPActive())
+			m_players[playerIndex].SetHPActive(false);
 
 		if (Round::IsGameWon(*this, GetCurrentPlayer())) {
 			UpdateGameStats(true);
@@ -214,7 +214,7 @@ Info Game::EndTurn(size_t playerIndex)
 	}
 
 	bool canEndWithFewerCards = m_ctx.endgame && 
-	                             m_players[playerIndex]->GetHand().size() == 0 &&
+	                             m_players[playerIndex].GetHand().size() == 0 &&
 	                             m_ctx.placedCardsThisTurn < m_ctx.currentRequired &&
 	                             m_ctx.currentRequired == 2;
 	
@@ -227,26 +227,26 @@ Info Game::EndTurn(size_t playerIndex)
 	for (int i = 0; i < cardsToDraw; i++) {
 		std::unique_ptr<Card> drawnCard = m_wholeDeck.DrawCard();
 		if (drawnCard) {
-			m_players[playerIndex]->AddCardToHand(std::move(drawnCard));
+			m_players[playerIndex].AddCardToHand(std::move(drawnCard));
 		}
 	}
 	if (playerIndex == m_ctx.GamblerPlayerIndex &&
-		m_players[m_ctx.GamblerPlayerIndex]->GActive()) {
+		m_players[m_ctx.GamblerPlayerIndex].GActive()) {
 		GetCurrentPlayer().SetGActive(false);
 	}
 	if (m_ctx.endgame && playerIndex == m_ctx.GamblerPlayerIndex && m_ctx.GamblerEndgamePenaltyTurns > 0) {
 		m_ctx.GamblerEndgamePenaltyTurns--;
 	}
-	if (m_players[playerIndex]->IsSoothActive()) {
-		m_players[playerIndex]->SetSoothState(false);
+	if (m_players[playerIndex].IsSoothActive()) {
+		m_players[playerIndex].SetSoothState(false);
 	}
-	if (m_players[playerIndex]->GetHPFlag()) {
-		m_players[playerIndex]->SetSameTurn(false);
-		m_players[playerIndex]->SetHPActive(false);
+	if (m_players[playerIndex].GetHPFlag()) {
+		m_players[playerIndex].SetSameTurn(false);
+		m_players[playerIndex].SetHPActive(false);
 	}
 	CheckAchievements(GetCurrentPlayer());
-	m_gameStats[m_players[playerIndex]->GetID()].placed7 = false;
-	m_gameStats[m_players[playerIndex]->GetID()].placed6 = false;
+	m_gameStats[m_players[playerIndex].GetID()].placed7 = false;
+	m_gameStats[m_players[playerIndex].GetID()].placed6 = false;
 	NextPlayer();
 	Round::UpdateContext(*this, m_ctx, GetCurrentPlayer());
 	m_ctx.placedCardsThisTurn = 0;
@@ -266,47 +266,47 @@ Info Game::EndTurn(size_t playerIndex)
 	return Info::TURN_ENDED;
 }
 
-using AchievementChecker = std::function<bool(const IPlayer&, const GameStatistics&, const StatisticsModel&)>;
+using AchievementChecker = std::function<bool(const Player&, const GameStatistics&, const StatisticsModel&)>;
 
 static const std::unordered_map<std::string, AchievementChecker> ACHIEVEMENT_CHECKS = {
-	{"harryPotter", [](const IPlayer&, const GameStatistics& s, const StatisticsModel&) {
+	{"harryPotter", [](const Player&, const GameStatistics& s, const StatisticsModel&) {
 		return s.usedHarryPotter;
 	}},
-	{"soothsayer", [](const IPlayer&, const GameStatistics& s, const StatisticsModel&) {
+	{"soothsayer", [](const Player&, const GameStatistics& s, const StatisticsModel&) {
 		return s.usedSoothsayer;
 	}},
-	{"taxEvader", [](const IPlayer&, const GameStatistics& s, const StatisticsModel&) {
+	{"taxEvader", [](const Player&, const GameStatistics& s, const StatisticsModel&) {
 		return s.usedTaxEvader;
 	}},
-	{"gambler", [](const IPlayer&, const GameStatistics& s, const StatisticsModel&) {
+	{"gambler", [](const Player&, const GameStatistics& s, const StatisticsModel&) {
 		return s.usedGambler;
 	}},
-	{"peasant", [](const IPlayer&, const GameStatistics& s, const StatisticsModel&) {
+	{"peasant", [](const Player&, const GameStatistics& s, const StatisticsModel&) {
 		return s.usedPeasant;
 	}},
-	{"allOnRed", [](const IPlayer& p, const GameStatistics& s, const StatisticsModel&) {
+	{"allOnRed", [](const Player& p, const GameStatistics& s, const StatisticsModel&) {
 		return s.usedGambler && s.atLeastTwoCardsInEndgame && p.IsFinished();
 	}},
-	{"zeroEffort", [](const IPlayer&, const GameStatistics& s, const StatisticsModel&) {
+	{"zeroEffort", [](const Player&, const GameStatistics& s, const StatisticsModel&) {
 		return s.wonGame && s.taxEvaderUses >= 5;
 	}},
-	{"vanillaW", [](const IPlayer&, const GameStatistics& s, const StatisticsModel&) {
+	{"vanillaW", [](const Player&, const GameStatistics& s, const StatisticsModel&) {
 		return s.wonGame && !s.usedAnyAbility;
 	}},
-	{"highRisk", [](const IPlayer& p, const GameStatistics& s, const StatisticsModel&) {
-		IPlayer& playerRef = const_cast<IPlayer&>(p); 
+	{"highRisk", [](const Player& p, const GameStatistics& s, const StatisticsModel&) {
+		Player& playerRef = const_cast<Player&>(p); 
 		return s.usedGambler && playerRef.GetGamblerUses() == 0;
 	}},
-	{"perfectGame", [](const IPlayer&, const GameStatistics& s, const StatisticsModel&) {
+	{"perfectGame", [](const Player&, const GameStatistics& s, const StatisticsModel&) {
 		return s.wonGame && s.perfectGame;
 	}},
-	{"sixSeven", [](const IPlayer&, const GameStatistics& s, const StatisticsModel&) {
+	{"sixSeven", [](const Player&, const GameStatistics& s, const StatisticsModel&) {
 		return s.placed6And7InSameRound;
 	}},
-	{"seriousPlayer", [](const IPlayer&, const GameStatistics&, const StatisticsModel& dbStats) {
+	{"seriousPlayer", [](const Player&, const GameStatistics&, const StatisticsModel& dbStats) {
 		return dbStats.GetGamesWon() >= 5;
 	}},
-	{"talentedPlayer", [](const IPlayer&, const GameStatistics&, const StatisticsModel& dbStats) {
+	{"talentedPlayer", [](const Player&, const GameStatistics&, const StatisticsModel& dbStats) {
 		int gamesWon = dbStats.GetGamesWon();
 		float winRate = dbStats.GetWinRate();
 
@@ -314,7 +314,7 @@ static const std::unordered_map<std::string, AchievementChecker> ACHIEVEMENT_CHE
 		int totalGames = dbStats.GetGamesPlayed();
 		return totalGames == 10 && winRate > 80.0f;
 	}},
-	{"jack", [](const IPlayer&, const GameStatistics& s, const StatisticsModel&) {
+	{"jack", [](const Player&, const GameStatistics& s, const StatisticsModel&) {
 		return s.playedWithAllAbilities;
 	}}
 };
@@ -323,14 +323,14 @@ std::vector<std::pair<int, std::string>> Game::UnlockAchievements()
 {
     std::vector<std::pair<int, std::string>> allNewlyUnlocked;
     for (const auto& player : m_players) {
-        int userId = player->GetID();
+        int userId = player.GetId();
         const GameStatistics& stats = m_gameStats[userId];
         StatisticsModel dbStats = m_database.GetStatisticsByUserId(userId);
 
         std::unordered_map<std::string, bool> achievementConditions;
 
         for (const auto& [achName, checker] : ACHIEVEMENT_CHECKS) {
-            if (checker(*player, stats, dbStats)) {
+            if (checker(player, stats, dbStats)) {
                 achievementConditions[achName] = true;
             }
         }
@@ -342,13 +342,13 @@ std::vector<std::pair<int, std::string>> Game::UnlockAchievements()
             }
             if (!newAchs.empty()) {
                 std::cout << "Unlocked " << newAchs.size()
-                    << " new achievement(s) for " << player->GetUsername() << std::endl;
+                    << " new achievement(s) for " << player.GetUsername() << std::endl;
             }
         }
     }
     return allNewlyUnlocked;
 }
-void Game::CheckAchievements(IPlayer& currentPlayer)
+void Game::CheckAchievements(Player& currentPlayer)
 {
 	int userId = currentPlayer.GetID();
 	GameStatistics& stats = m_gameStats[userId];
@@ -379,9 +379,9 @@ void Game::UpdateGameStats(bool won)
     auto endTime = std::chrono::steady_clock::now();
     long long seconds = std::chrono::duration_cast<std::chrono::seconds>(endTime - m_gameStartTime).count();
 
-	for (const auto& player : m_players) {
-		int userId = player->GetID();
-        const std::string& username = player->GetUsername();
+	for (auto& player : m_players) {
+		int userId = player.GetID();
+        const std::string& username = player.GetUsername();
 		try {
             // Update Playtime
             PlaytimeModel pt = m_database.GetPlaytimeByUserId(userId);
@@ -397,7 +397,7 @@ void Game::UpdateGameStats(bool won)
 			stats.SetGamesPlayed(stats.GetGamesPlayed() + 1);
 			if (won) stats.SetGamesWon(stats.GetGamesWon() + 1);
             else {
-                 int cardsLeft = player->GetHand().size();
+                 int cardsLeft = player.GetHand().size();
                  stats.SetTotalCardsLeftInLosses(stats.GetTotalCardsLeftInLosses() + cardsLeft);
             }
 
@@ -429,10 +429,10 @@ Info Game::UseAbility(size_t playerIndex)
 	if (m_currentPlayerIndex != playerIndex) {
 		return Info::NOT_CURRENT_PLAYER_TURN;
 	}
-	IPlayer& currentPlayer = GetCurrentPlayer();
+	Player& currentPlayer = GetCurrentPlayer();
 	if (currentPlayer.CanUseAbility(m_ctx)) {
 		for (size_t i = 0; i < m_players.size(); i++) {
-			m_gameStats[m_players[i]->GetID()].usedAnyAbility = true;
+			m_gameStats[m_players[i].GetID()].usedAnyAbility = true;
 		}
 		currentPlayer.UseAbility(m_ctx, playerIndex);
 		if (currentPlayer.GetPlayerIndex() == m_ctx.TaxEvPlayerIndex
@@ -466,12 +466,12 @@ Info Game::UseAbility(size_t playerIndex)
 	}
 }
 
-IPlayer& Game::GetCurrentPlayer()
+Player& Game::GetCurrentPlayer()
 {
     if (m_currentPlayerIndex >= m_players.size()) {
         throw std::out_of_range("Current player index out of range");
     }
-	return *m_players[m_currentPlayerIndex];
+	return m_players[m_currentPlayerIndex];
 }
 
 TurnContext& Game::GetCtx()
@@ -487,8 +487,8 @@ std::unique_ptr<Card> Game::DrawCard()
 void Game::UpdateRemainingCards()
 {
 	for(size_t i = 0; i < m_players.size(); i++) {
-		int userId = m_players[i]->GetID();
-		m_remainingCards[userId] = static_cast<int>(m_players[i]->GetHand().size());
+		int userId = m_players[i].GetID();
+		m_remainingCards[userId] = static_cast<int>(m_players[i].GetHand().size());
 	}
 }
 
@@ -502,7 +502,7 @@ size_t Game::GetDeckSize() const
 	return m_wholeDeck.GetSize();
 }
 
-const std::vector<std::unique_ptr<IPlayer>>& Game::GetPlayers()
+std::vector<Player>& Game::GetPlayers()
 {
 	return m_players;
 }

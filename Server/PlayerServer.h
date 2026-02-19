@@ -11,272 +11,63 @@
 #include <string_view>
 #include "TurnContext.h"
 
-template <typename Ability>
+
 class Player :
-	public UserModel, public IPlayer
+    public UserModel
 {
 private:
     std::vector<std::unique_ptr<Card>> m_hand;
-    Ability ability;
+    std::unique_ptr<IAbility> ability;
     size_t m_playerIndex = 10;
     bool m_finished = false;
 public:
     Player() = default;
-    Player(const UserModel& user);
+    Player(const UserModel& user, std::unique_ptr<IAbility> ability);
     ~Player();
 
-    void AddCardToHand(std::unique_ptr<Card> card) override;
-    std::unique_ptr<Card> RemoveCardFromHand(Card* card) override;
-    const std::vector<std::unique_ptr<Card>>& GetHand() const override;
-    Card* ChooseCard(const std::string& cardValue) override;
-    const std::string& GetUsername() const override;
-    void SetPlayerIndex(size_t index) override;
-	size_t GetPlayerIndex() const override;
-    void SetFinished(bool state) override;
-    bool IsFinished() const override;
-    Card* GetCardFromHand(const std::string& cardValue) const override;
+    // Prevent copying (unique_ptr member makes copying invalid)
+    Player(const Player&) = delete;
+    Player& operator=(const Player&) = delete;
 
-    void ShowHand() override;
-    AbilityType GetAbilityType() const override;
-	void UseAbility(TurnContext& ctx, size_t CurrentPIndex) override;
-    bool CanUseAbility(TurnContext& ctx) const override;
-    const int GetID() override;
+    // Explicit move operations so Player is movable into containers like std::vector
+    Player(Player&& other) noexcept;
+    Player& operator=(Player&& other) noexcept;
 
-    const bool IsTaxActive() override;
-    void SetTaxActive(bool state) override;
+    void AddCardToHand(std::unique_ptr<Card> card);
+    std::unique_ptr<Card> RemoveCardFromHand(Card* card);
+    const std::vector<std::unique_ptr<Card>>& GetHand() const;
+    Card* ChooseCard(const std::string& cardValue);
+    const std::string& GetUsername() const;
+    void SetPlayerIndex(size_t index);
+    size_t GetPlayerIndex() const;
+    void SetFinished(bool state);
+    bool IsFinished() const;
+    Card* GetCardFromHand(const std::string& cardValue) const;
 
-    const bool HPActive() override;
-    const bool GetHPFlag() const override;
-    void SetHPFlag(bool state) override;
-    void SetHPActive(bool state) override;
+    void ShowHand();
+    AbilityType GetAbilityType() const;
+    void UseAbility(TurnContext& ctx, size_t CurrentPIndex);
+    bool CanUseAbility(TurnContext& ctx) const;
+    const int GetID();
 
-    const size_t GetGamblerUses() override;
-    const bool GActive() override;
-    void SetGActive(bool state) override;
+    const bool IsTaxActive() const;
+    void SetTaxActive(bool state) const;
 
-    void SetSoothState(bool state) override;
-	bool IsSoothActive() override;
-    const size_t GetSoothsayerUses() override;
+    const bool HPActive() const;
+    const bool GetHPFlag() const;
+    void SetHPFlag(bool state);
+    void SetHPActive(bool state);
 
-    const size_t GetTaxEvaderUses() override;
+    const size_t GetGamblerUses() const;
+    const bool GActive() const;
+    void SetGActive(bool state);
 
-    bool GetSameTurn() override;
-    void SetSameTurn(bool sameTurn) override;
+    void SetSoothState(bool state);
+    bool IsSoothActive() const;
+    const size_t GetSoothsayerUses() const;
+
+    const size_t GetTaxEvaderUses() const;
+
+    bool GetSameTurn();
+    void SetSameTurn(bool sameTurn);
 };
-
-
-template <typename Ability>
-Player<Ability>::Player(const UserModel& user)
-    : UserModel(user)
-{
-}
-
-template<typename Ability>
-Player<Ability>::~Player()
-{
-    m_hand.clear();
-}
-
-template <typename Ability>
-void Player<Ability>::AddCardToHand(std::unique_ptr<Card> card)
-{
-    m_hand.push_back(std::move(card));
-}
-
-template <typename Ability>
-std::unique_ptr<Card> Player<Ability>::RemoveCardFromHand(Card* card)
-{
-    auto it = std::find_if(m_hand.begin(), m_hand.end(),
-        [&card](const std::unique_ptr<Card>& c) { return c.get() == card; });
-
-    if (it != m_hand.end()) {
-        std::unique_ptr<Card> removedCard = std::move(*it);
-        m_hand.erase(it);
-        return removedCard;
-    }
-    return nullptr;
-}
-
-template <typename Ability>
-const std::vector<std::unique_ptr<Card>>& Player<Ability>::GetHand() const
-{
-    return m_hand;
-}
-
-template <typename Ability>
-Card* Player<Ability>::ChooseCard(const std::string& cardValue)
-{
-    auto it = std::find_if(m_hand.begin(), m_hand.end(),
-        [&cardValue](const std::unique_ptr<Card>& c) { return c->GetCardValue() == cardValue; });
-
-    if (it != m_hand.end()) {
-        return it->get();
-    }
-    return nullptr;
-}
-
-template<typename Ability>
-const std::string& Player<Ability>::GetUsername() const
-{
-    return UserModel::GetUsername();
-}
-
-template<typename Ability>
-inline void Player<Ability>::SetPlayerIndex(size_t index)
-{
-	m_playerIndex = index;
-}
-
-template<typename Ability>
-inline size_t Player<Ability>::GetPlayerIndex() const
-{
-    return m_playerIndex;
-}
-
-template<typename Ability>
-inline void Player<Ability>::SetFinished(bool state)
-{
-	m_finished = state;
-}
-
-
-template<typename Ability>
-inline bool Player<Ability>::IsFinished() const
-{
-    return m_finished;
-}
-
-template<typename Ability>
-inline Card* Player<Ability>::GetCardFromHand(const std::string& cardValue) const
-{
-    for (const auto& card : m_hand) {
-        if (card->GetCardValue() == cardValue) {
-            return card.get();
-        }
-    }
-    return nullptr;
-}
-
-template <typename Ability>
-void Player<Ability>::ShowHand()
-{
-    for (const auto& card : m_hand) {
-        std::cout << card->GetCardValue() << " ";
-    }
-    std::cout << std::endl;
-}
-
-template<typename Ability>
-inline AbilityType Player<Ability>::GetAbilityType() const
-{
-    return ability.GetAbilityType();
-}
-
-template<typename Ability>
-void Player<Ability>::UseAbility(TurnContext& ctx, size_t currentPIndex)
-{
-    ability.UseAbility(ctx, currentPIndex);
-}
-
-template<typename Ability>
-bool Player<Ability>::CanUseAbility(TurnContext& ctx) const
-{
-    return ability.CanUseAbility(ctx);
-}
-
-template<typename Ability>
-inline const int Player<Ability>::GetID()
-{
-    return UserModel::GetId();
-}
-
-
-template<typename Ability>
-inline const bool Player<Ability>::IsTaxActive()
-{
-    return ability.IsTaxActive();
-}
-
-template<typename Ability>
-inline void Player<Ability>::SetTaxActive(bool state)
-{
-    ability.SetTaxActive(state);
-}
-
-template<typename Ability>
-inline const bool Player<Ability>::HPActive()
-{
-    return ability.HPActive();
-}
-
-template<typename Ability>
-inline const bool Player<Ability>::GetHPFlag() const
-{
-    return ability.GetHPFlag();
-}
-
-template<typename Ability>
-inline void Player<Ability>::SetHPFlag(bool state)
-{
-    ability.SetHPFlag(state);
-}
-
-template<typename Ability>
-inline void Player<Ability>::SetHPActive(bool state)
-{
-    ability.SetHPActive(state);
-}
-
-template<typename Ability>
-inline const size_t Player<Ability>::GetGamblerUses()
-{
-    return ability.GetGamblerUses();
-}
-
-template<typename Ability>
-inline const bool Player<Ability>::GActive()
-{
-    return ability.GActive();
-}
-
-template<typename Ability>
-inline void Player<Ability>::SetGActive(bool state)
-{
-    ability.SetGActive(state);
-}
-
-template<typename Ability>
-inline void Player<Ability>::SetSoothState(bool state)
-{
-	ability.SetSoothState(state);
-}
-
-template<typename Ability>
-inline bool Player<Ability>::IsSoothActive()
-{
-	return ability.IsSoothActive();
-}
-
-template<typename Ability>
-inline const size_t Player<Ability>::GetSoothsayerUses()
-{
-    return ability.GetSoothsayerUses();
-}
-
-template<typename Ability>
-inline const size_t Player<Ability>::GetTaxEvaderUses()
-{
-    return ability.GetTaxEvaderUses();
-}
-
-template<typename Ability>
-inline bool Player<Ability>::GetSameTurn()
-{
-    return ability.GetSameTurn();
-}
-
-template<typename Ability>
-inline void Player<Ability>::SetSameTurn(bool sameTurn)
-{
-    ability.SetSameTurn(sameTurn);
-}

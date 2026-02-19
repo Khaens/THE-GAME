@@ -15,31 +15,28 @@ import "Soothsayer.h";
 import "UserModel.h";
 import "AbilityType.h";
 
-template class Player<Gambler>;
-template class Player<HarryPotter>;
-template class Player<TaxEvader>;
-template class Player<Soothsayer>;
-template class Player<Peasant>;
 
-std::unique_ptr<IPlayer> PlayerFactory::CreateFromUser(const UserModel& user, AbilityType type)
+Player PlayerFactory::CreateFromUser(const UserModel& user, AbilityType type)
 {
     switch (type) {
     case AbilityType::HarryPotter: {
-        return std::make_unique<Player<HarryPotter>>(user);
+        return Player(user, std::make_unique<HarryPotter>());
     }
     case AbilityType::Gambler: {
-        return std::make_unique<Player<Gambler>>(user);
+        return Player(user, std::make_unique<Gambler>());
     }
     case AbilityType::TaxEvader: {
-        return std::make_unique<Player<TaxEvader>>(user);
+        return Player(user, std::make_unique<TaxEvader>());
     }
     case AbilityType::Soothsayer: {
-        return std::make_unique<Player<Soothsayer>>(user);
+        return Player(user, std::make_unique<Soothsayer>());
     }
     case AbilityType::Peasant: {
-        return std::make_unique<Player<Peasant>>(user);
-	}
-    default: return nullptr;
+        return Player(user, std::make_unique<Peasant>());
+    }
+    default: {
+		throw std::invalid_argument("Invalid ability type");
+    }
     }
 }
 

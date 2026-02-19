@@ -4,6 +4,9 @@
 class __declspec(dllexport) TaxEvader : public IAbility
 {
 public:
+	TaxEvader() = default;
+	~TaxEvader() = default;
+
 	AbilityType GetAbilityType() const override;
 
 	void UseAbility(TurnContext& ctx, size_t CurrentPIndex) override;

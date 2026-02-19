@@ -45,7 +45,7 @@ private:
 	size_t m_numberOfPlayers;
 	size_t m_currentPlayerIndex = 0;
 	size_t m_pileIndex = 0;
-	std::vector<std::unique_ptr<IPlayer>> m_players;
+	std::vector<Player> m_players;
 	std::array<std::unique_ptr<Pile>, PILES_AMOUNT> m_piles;
 	Deck m_wholeDeck;
 	TurnContext m_ctx;
@@ -66,7 +66,7 @@ public:
     Game& operator=(const Game&) = delete;
 
 	size_t WhoStartsFirst();
-	bool IsGameOver(IPlayer& currentPlayer);
+	bool IsGameOver(Player& currentPlayer);
 	void StartGame();
 	void NextPlayer();
 
@@ -75,7 +75,7 @@ public:
 	Info EndTurn(size_t playerIndex);
 
 	std::vector<std::pair<int, std::string>> UnlockAchievements();
-	void CheckAchievements(IPlayer& currentPlayer);
+	void CheckAchievements(Player& currentPlayer);
 	void UpdateGameStats(bool won);
 
 	std::unique_ptr<Card> DrawCard();
@@ -83,9 +83,9 @@ public:
 	std::unordered_map<int, int> GetRemainingCards() const;
 
 	size_t GetDeckSize() const;
-	IPlayer& GetCurrentPlayer();
+	Player& GetCurrentPlayer();
 	TurnContext& GetCtx();
-	const std::vector<std::unique_ptr<IPlayer>>& GetPlayers();
+	std::vector<Player>& GetPlayers();
 	std::array<Pile*, PILES_AMOUNT> GetPiles();
 	Deck& GetDeck();
 	std::mutex& GetStateMutex() { return m_stateMutex; }

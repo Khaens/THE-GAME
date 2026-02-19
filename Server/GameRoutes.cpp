@@ -60,8 +60,8 @@ void GameRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtils
                              
                              const auto& players = game->GetPlayers();
                              for(const auto& p : players) {
-                                 if (p->GetID() == uid) {
-                                     username = std::string(p->GetUsername());
+                                 if (p.GetId() == uid) {
+                                     username = std::string(p.GetUsername());
                                      break;
                                  }
                              }
@@ -99,7 +99,7 @@ void GameRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtils
                      int player_idx = -1;
                      const auto& players = game->GetPlayers();
                      for(size_t i=0; i<players.size(); ++i) {
-                         if(players[i]->GetID() == user_id) {
+                         if(players[i].GetId() == user_id) {
                              player_idx = i;
                              break;
                          }

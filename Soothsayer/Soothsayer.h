@@ -5,6 +5,9 @@ class __declspec(dllexport) Soothsayer :
     public IAbility
 {
 public:
+    Soothsayer() = default;
+	~Soothsayer() = default;
+
 	AbilityType GetAbilityType() const override;
 
     void UseAbility(TurnContext& ctx, size_t currentPIndex) override;

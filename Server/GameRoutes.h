@@ -2,6 +2,7 @@
 #include <crow.h>
 #include "Database.h"
 #include "NetworkUtils.h"
+#include "UserModel.h"
 
 class GameRoutes {
 public:
