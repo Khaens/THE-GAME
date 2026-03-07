@@ -4,18 +4,14 @@
 #include <fstream>
 #include <filesystem>
 #include <chrono>
+#include <sqlite3.h>
+#include <iomanip>
 
 Database::Database(const std::string& path) : storage(initStorage(path)), dbPath(path)
 {
-    auto now = std::chrono::system_clock::now();
-    auto time = std::chrono::system_clock::to_time_t(now);
-    std::stringstream ss;
-    ss << "backups/pre_sync_" << std::put_time(std::localtime(&time), "%Y%m%d_%H%M%S") << ".db";
+    //CreateTimestampedBackup();
 
-    BackupDatabase(ss.str());
-    std::cout << "[DATABASE] Pre-sync backup created: " << ss.str() << std::endl;
-
-    storage.sync_schema();
+    //RunMigrations();
 
     try {
         auto users = storage.get_all<UserModel>();
@@ -44,7 +40,6 @@ static std::string HashPassword(std::string_view password) {
     std::hash<std::string_view> hasher;
     return std::to_string(hasher(password));
 }
-
 
 int Database::InsertUser(const UserModel& user) {
     try {
@@ -310,7 +305,10 @@ static const std::unordered_map<std::string, AchievementGetter> ACHIEVEMENT_GETT
     {"vanillaW", &AchievementsModel::GetVanillaW},
     {"highRisk", &AchievementsModel::GetHighRisk},
     {"perfectGame", &AchievementsModel::GetPerfectGame},
-    {"sixSeven", &AchievementsModel::GetSixSeven}
+    {"sixSeven", &AchievementsModel::GetSixSeven},
+    {"fullHouse", &AchievementsModel::GetFullHouse},
+    {"thePurist", &AchievementsModel::GetThePurist},
+    {"solidarity", &AchievementsModel::GetSolidarity}
 };
 
 
@@ -331,7 +329,10 @@ static const std::unordered_map<std::string, AchievementSetter> ACHIEVEMENT_SETT
     {"vanillaW", &AchievementsModel::SetVanillaW},
     {"highRisk", &AchievementsModel::SetHighRisk},
     {"perfectGame", &AchievementsModel::SetPerfectGame},
-    {"sixSeven", &AchievementsModel::SetSixSeven}
+    {"sixSeven", &AchievementsModel::SetSixSeven},
+    {"fullHouse", &AchievementsModel::SetFullHouse},
+    {"thePurist", &AchievementsModel::SetThePurist},
+    {"solidarity", &AchievementsModel::SetSolidarity}
 };
 
 std::vector<std::string> Database::UnlockAchievements(int userId, const std::unordered_map<std::string, bool>& achievementConditions) {
@@ -486,4 +487,63 @@ bool Database::RestoreFromBackup(const std::string& backupPath)
         std::cerr << "Restore error: " << e.what() << std::endl;
         return false;
     }
+}
+
+void Database::RunMigrations()
+{
+    try {
+        sqlite3* db = nullptr;
+        int rc = sqlite3_open(dbPath.c_str(), &db);
+        if (rc != SQLITE_OK || !db) {
+            return;
+        }
+
+        char* errMsg = nullptr;
+        sqlite3_exec(db, "BEGIN TRANSACTION;", nullptr, nullptr, nullptr);
+
+        const char* migrations[] = {
+            "ALTER TABLE achievements ADD COLUMN full_house INTEGER DEFAULT 0;",
+            "ALTER TABLE achievements ADD COLUMN the_purist INTEGER DEFAULT 0;",
+            "ALTER TABLE achievements ADD COLUMN solidarity INTEGER DEFAULT 0;"
+        };
+
+        for (const auto& migration : migrations) {
+            int migRc = sqlite3_exec(db, migration, nullptr, nullptr, &errMsg);
+            if (migRc != SQLITE_OK) {
+                if (errMsg) {
+                    std::string msg(errMsg);
+                    sqlite3_free(errMsg);
+                    errMsg = nullptr;
+                    if (msg.find("duplicate column name") == std::string::npos) {
+                        sqlite3_exec(db, "ROLLBACK;", nullptr, nullptr, nullptr);
+                        sqlite3_close(db);
+                        return;
+                    }
+                }
+            }
+        }
+
+        sqlite3_exec(db, "COMMIT;", nullptr, nullptr, nullptr);
+        sqlite3_close(db);
+    }
+    catch (...) {
+    }
+}
+
+std::string Database::CreateTimestampedBackup(const std::string& prefix)
+{
+    try {
+        auto now = std::chrono::system_clock::now();
+        auto time = std::chrono::system_clock::to_time_t(now);
+        std::stringstream ss;
+        ss << prefix << std::put_time(std::localtime(&time), "%Y%m%d_%H%M%S") << ".db";
+        auto path = ss.str();
+        if (BackupDatabase(path)) {
+            std::cout << "[DATABASE] Pre-sync backup created: " << path << std::endl;
+            return path;
+        }
+    }
+    catch (...) {
+    }
+    return std::string();
 }

@@ -32,6 +32,9 @@ inline auto initStorage(const std::string& path) {
             make_column("high_risk_high_reward", &AchievementsModel::GetHighRisk, &AchievementsModel::SetHighRisk),
             make_column("perfect_game", &AchievementsModel::GetPerfectGame, &AchievementsModel::SetPerfectGame),
             make_column("sixSeven", &AchievementsModel::GetSixSeven, &AchievementsModel::SetSixSeven),
+            make_column("full_house", &AchievementsModel::GetFullHouse, &AchievementsModel::SetFullHouse),
+            make_column("the_purist", &AchievementsModel::GetThePurist, &AchievementsModel::SetThePurist),
+            make_column("solidarity", &AchievementsModel::GetSolidarity, &AchievementsModel::SetSolidarity),
             foreign_key(&AchievementsModel::GetUserId).references(&UserModel::GetId).on_delete.cascade()),
         make_table("statistics",
             make_column("id", &StatisticsModel::GetId, &StatisticsModel::SetId, primary_key().autoincrement()),
@@ -51,7 +54,7 @@ inline auto initStorage(const std::string& path) {
 
     storage.on_open = [](sqlite3* db) {
         sqlite3_exec(db, "PRAGMA foreign_keys = ON", nullptr, nullptr, nullptr);
-        };
+         };
 
     return storage;
 }
@@ -96,4 +99,6 @@ public:
 
     bool BackupDatabase(const std::string& backupPath) const;
     bool RestoreFromBackup(const std::string& backupPath);
+    void RunMigrations();
+    std::string CreateTimestampedBackup(const std::string& prefix = "backups/pre_sync_");
 };

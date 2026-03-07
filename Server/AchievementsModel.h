@@ -20,6 +20,9 @@ private:
     bool highRisk = false;
     bool perfectGame = false;
     bool sixSeven = false;
+    bool fullHouse = false;
+    bool thePurist = false;
+    bool solidarity = false;
 
 
 public:
@@ -42,6 +45,9 @@ public:
     bool GetHighRisk() const;
     bool GetPerfectGame() const;
     bool GetSixSeven() const;
+    bool GetFullHouse() const;
+    bool GetThePurist() const;
+    bool GetSolidarity() const;
 
     void SetId(int newId);
     void SetUserId(int newUserId);
@@ -59,4 +65,7 @@ public:
     void SetHighRisk(bool value);
     void SetPerfectGame(bool value);
     void SetSixSeven(bool value);
+    void SetFullHouse(bool value);
+    void SetThePurist(bool value);
+    void SetSolidarity(bool value);
 };

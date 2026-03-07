@@ -20,6 +20,9 @@ bool AchievementsModel::GetVanillaW() const { return vanillaW; }
 bool AchievementsModel::GetHighRisk() const { return highRisk; }
 bool AchievementsModel::GetPerfectGame() const { return perfectGame; }
 bool AchievementsModel::GetSixSeven() const { return sixSeven; }
+bool AchievementsModel::GetFullHouse() const { return fullHouse; }
+bool AchievementsModel::GetThePurist() const { return thePurist; }
+bool AchievementsModel::GetSolidarity() const { return solidarity; }
 
 void AchievementsModel::SetId(int newId) { id = newId; }
 void AchievementsModel::SetUserId(int newUserId) { userId = newUserId; }
@@ -37,3 +40,6 @@ void AchievementsModel::SetVanillaW(bool value) { vanillaW = value; }
 void AchievementsModel::SetHighRisk(bool value) { highRisk = value; }
 void AchievementsModel::SetPerfectGame(bool value) { perfectGame = value; }
 void AchievementsModel::SetSixSeven(bool value) { sixSeven = value; }
+void AchievementsModel::SetFullHouse(bool value) { fullHouse = value; }
+void AchievementsModel::SetThePurist(bool value) { thePurist = value; }
+void AchievementsModel::SetSolidarity(bool value) { solidarity = value; }
