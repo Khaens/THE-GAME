@@ -23,6 +23,8 @@ private:
     bool fullHouse = false;
     bool thePurist = false;
     bool solidarity = false;
+    bool veteran = false;
+    bool sixShooter = false;
 
 
 public:
@@ -48,6 +50,8 @@ public:
     bool GetFullHouse() const;
     bool GetThePurist() const;
     bool GetSolidarity() const;
+    bool GetVeteran() const;
+    bool GetSixShooter() const;
 
     void SetId(int newId);
     void SetUserId(int newUserId);
@@ -68,4 +72,6 @@ public:
     void SetFullHouse(bool value);
     void SetThePurist(bool value);
     void SetSolidarity(bool value);
+    void SetVeteran(bool value);
+    void SetSixShooter(bool value);
 };

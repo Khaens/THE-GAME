@@ -175,6 +175,11 @@ void AuthRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtils
             response["high_risk"] = ach.GetHighRisk();
             response["perfect_game"] = ach.GetPerfectGame();
             response["six_seven"] = ach.GetSixSeven();
+            response["full_house"] = ach.GetFullHouse();
+            response["the_purist"] = ach.GetThePurist();
+            response["solidarity"] = ach.GetSolidarity();
+            response["veteran"] = ach.GetVeteran();
+            response["six_shooter"] = ach.GetSixShooter();
             
             return crow::response(200, response);
         } catch (const std::exception& e) {

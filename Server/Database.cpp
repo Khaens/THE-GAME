@@ -1,4 +1,4 @@
-﻿#define _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
 #include "Database.h"
 #include <iostream>
 #include <fstream>
@@ -12,7 +12,7 @@ Database::Database(const std::string& path) : storage(initStorage(path)), dbPath
     //CreateTimestampedBackup();
 
     //RunMigrations();
-
+     
     try {
         auto users = storage.get_all<UserModel>();
         for (const auto& user : users) {
@@ -308,7 +308,9 @@ static const std::unordered_map<std::string, AchievementGetter> ACHIEVEMENT_GETT
     {"sixSeven", &AchievementsModel::GetSixSeven},
     {"fullHouse", &AchievementsModel::GetFullHouse},
     {"thePurist", &AchievementsModel::GetThePurist},
-    {"solidarity", &AchievementsModel::GetSolidarity}
+    {"solidarity", &AchievementsModel::GetSolidarity},
+    {"veteran", &AchievementsModel::GetVeteran},
+    {"sixShooter", &AchievementsModel::GetSixShooter}
 };
 
 
@@ -332,7 +334,9 @@ static const std::unordered_map<std::string, AchievementSetter> ACHIEVEMENT_SETT
     {"sixSeven", &AchievementsModel::SetSixSeven},
     {"fullHouse", &AchievementsModel::SetFullHouse},
     {"thePurist", &AchievementsModel::SetThePurist},
-    {"solidarity", &AchievementsModel::SetSolidarity}
+    {"solidarity", &AchievementsModel::SetSolidarity},
+    {"veteran", &AchievementsModel::SetVeteran},
+    {"sixShooter", &AchievementsModel::SetSixShooter}
 };
 
 std::vector<std::string> Database::UnlockAchievements(int userId, const std::unordered_map<std::string, bool>& achievementConditions) {
@@ -502,9 +506,7 @@ void Database::RunMigrations()
         sqlite3_exec(db, "BEGIN TRANSACTION;", nullptr, nullptr, nullptr);
 
         const char* migrations[] = {
-            "ALTER TABLE achievements ADD COLUMN full_house INTEGER DEFAULT 0;",
-            "ALTER TABLE achievements ADD COLUMN the_purist INTEGER DEFAULT 0;",
-            "ALTER TABLE achievements ADD COLUMN solidarity INTEGER DEFAULT 0;"
+            "ALTER TABLE achievements ADD COLUMN six_shooter INTEGER DEFAULT 0;"
         };
 
         for (const auto& migration : migrations) {

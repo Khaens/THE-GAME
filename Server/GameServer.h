@@ -54,6 +54,13 @@ private:
 	std::unordered_map<int, int> m_remainingCards;
 	mutable std::mutex m_stateMutex;
     std::chrono::steady_clock::time_point m_gameStartTime;
+    std::unordered_map<int, int> m_cardsPlayedThisTurnByUser;
+    std::unordered_map<int, bool> m_sixShooterAchieved;
+    std::array<bool, PILES_AMOUNT> m_pilesTouchedThisTurn{};
+    std::unordered_map<int, bool> m_fullHouseAchieved;
+    std::unordered_map<int, bool> m_usedPlusMinus10;
+    bool m_gameWasLost = false;
+    int m_winningUserId = -1;
 
 public:
 	Game(std::vector<UserModel>& users, Database& db);

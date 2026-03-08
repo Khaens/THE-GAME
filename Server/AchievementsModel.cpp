@@ -23,6 +23,8 @@ bool AchievementsModel::GetSixSeven() const { return sixSeven; }
 bool AchievementsModel::GetFullHouse() const { return fullHouse; }
 bool AchievementsModel::GetThePurist() const { return thePurist; }
 bool AchievementsModel::GetSolidarity() const { return solidarity; }
+bool AchievementsModel::GetVeteran() const { return veteran; }
+bool AchievementsModel::GetSixShooter() const { return sixShooter; }
 
 void AchievementsModel::SetId(int newId) { id = newId; }
 void AchievementsModel::SetUserId(int newUserId) { userId = newUserId; }
@@ -43,3 +45,5 @@ void AchievementsModel::SetSixSeven(bool value) { sixSeven = value; }
 void AchievementsModel::SetFullHouse(bool value) { fullHouse = value; }
 void AchievementsModel::SetThePurist(bool value) { thePurist = value; }
 void AchievementsModel::SetSolidarity(bool value) { solidarity = value; }
+void AchievementsModel::SetVeteran(bool value) { veteran = value; }
+void AchievementsModel::SetSixShooter(bool value) { sixShooter = value; }

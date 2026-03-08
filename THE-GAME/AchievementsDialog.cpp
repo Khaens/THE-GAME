@@ -164,6 +164,11 @@ void AchievementsDialog::loadAchievements()
         addAchievementItem("High Risk High Reward", "You played as the Gambler and utilised all your ability uses.", isUnlocked("high_risk"));
         addAchievementItem("Perfect Game", "Won the game and always played cards with a maximum difference of 3 points between them throughout the entire match.", isUnlocked("perfect_game"));
         addAchievementItem("Six-Seven", "You placed both 6 and 7 in a single round.", isUnlocked("six_seven"));
+        addAchievementItem("Full House", "In a single turn, you placed at least 4 cards, touching all piles, and all piles ended within boundaries (≤5 for ascending, ≥95 for descending).", isUnlocked("full_house"));
+        addAchievementItem("The Purist", "Won a game without using any +/-10 move.", isUnlocked("the_purist"));
+        addAchievementItem("Solidarity", "Lost the match with all players holding the same number of cards at the end.", isUnlocked("solidarity"));
+        addAchievementItem("Veteran", "Accumulated 100 hours of playtime.", isUnlocked("veteran"));
+        addAchievementItem("Six‑Shooter", "In a single turn, you emptied your hand by playing all 6 cards onto the piles.", isUnlocked("six_shooter"));
     } else {
         QLabel* err = new QLabel("Failed to load achievements", m_scrollContent);
         err->setStyleSheet("color: red; font-size: 20px; font-family: 'Jersey 15';");

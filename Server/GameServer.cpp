@@ -43,7 +43,14 @@ Game::Game(std::vector<UserModel>& users, Database& db) :
 	m_gameStats.reserve(m_numberOfPlayers);
 	for (int i = 0; i < m_numberOfPlayers; i++) {
 		m_gameStats.insert({ m_players[i].GetID(), GameStatistics() });
+        m_cardsPlayedThisTurnByUser[m_players[i].GetID()] = 0;
+        m_sixShooterAchieved[m_players[i].GetID()] = false;
+        m_usedPlusMinus10[m_players[i].GetID()] = false;
+        m_fullHouseAchieved[m_players[i].GetID()] = false;
 	}
+    m_pilesTouchedThisTurn.fill(false);
+    m_gameWasLost = false;
+    m_winningUserId = -1;
 }
 
 Game::~Game()
@@ -120,6 +127,9 @@ void Game::StartGame()
 	Round::FirstRoundDealing(*this);
 	m_currentPlayerIndex = WhoStartsFirst();
     m_gameStartTime = std::chrono::steady_clock::now();
+    m_pilesTouchedThisTurn.fill(false);
+    m_gameWasLost = false;
+    m_winningUserId = -1;
 }
 
 
@@ -174,6 +184,9 @@ Info Game::PlaceCard(size_t playerIndex, const Card& card, int pile)
 		} catch(...) {
 			std::cout << "Error calculating diff in PlaceCard." << std::endl;
 		}
+        if (diff == 10) {
+            m_usedPlusMinus10[m_players[playerIndex].GetID()] = true;
+        }
 		if (diff > 3) {
 			m_gameStats[GetCurrentPlayer().GetID()].perfectGame = false;
 		}
@@ -181,6 +194,10 @@ Info Game::PlaceCard(size_t playerIndex, const Card& card, int pile)
 		if (chosenCardValue == "7") m_gameStats[GetCurrentPlayer().GetID()].placed7 = true;
 		if (m_gameStats[GetCurrentPlayer().GetID()].placed6 && m_gameStats[GetCurrentPlayer().GetID()].placed7)
 			m_gameStats[GetCurrentPlayer().GetID()].placed6And7InSameRound = true;
+        m_cardsPlayedThisTurnByUser[m_players[playerIndex].GetID()]++;
+        if (pile >= 0 && pile < static_cast<int>(PILES_AMOUNT)) {
+            m_pilesTouchedThisTurn[static_cast<size_t>(pile)] = true;
+        }
 		chosenPile->PlaceCard(m_players[playerIndex].RemoveCardFromHand(chosenCard)); 
 		m_ctx.placedCardsThisTurn++;
 
@@ -190,12 +207,14 @@ Info Game::PlaceCard(size_t playerIndex, const Card& card, int pile)
 		if (Round::IsGameWon(*this, GetCurrentPlayer())) {
 			UpdateGameStats(true);
 			UpdateRemainingCards();
+            m_winningUserId = m_players[playerIndex].GetID();
 			return Info::GAME_WON;
 		}
 
 		if (IsGameOver(GetCurrentPlayer())) {
 			UpdateGameStats(false);
 			UpdateRemainingCards();
+            m_gameWasLost = true;
 			return Info::GAME_LOST;
 		}
 		return Info::CARD_PLACED;
@@ -223,6 +242,35 @@ Info Game::EndTurn(size_t playerIndex)
 		return Info::NOT_ENOUGH_PLAYED_CARDS;
 	}
 	
+    int userId = m_players[playerIndex].GetID();
+    bool emptyHandBeforeDraw = m_players[playerIndex].GetHand().size() == 0;
+    if (m_cardsPlayedThisTurnByUser[userId] >= 6 && emptyHandBeforeDraw) {
+        m_sixShooterAchieved[userId] = true;
+    }
+    if (m_cardsPlayedThisTurnByUser[userId] >= 4) {
+        bool allPilesTouched = true;
+        for (size_t i = 0; i < PILES_AMOUNT; ++i) {
+            if (!m_pilesTouchedThisTurn[i]) { allPilesTouched = false; break; }
+        }
+        if (allPilesTouched) {
+            auto piles = GetPiles();
+            bool boundaryOk = true;
+            for (size_t i = 0; i < PILES_AMOUNT; ++i) {
+                const Card* top = piles[i]->GetTopCard();
+                if (!top) { boundaryOk = false; break; }
+                int val = 0;
+                try { val = std::stoi(top->GetCardValue()); } catch (...) { boundaryOk = false; break; }
+                if (piles[i]->GetPileType() == PileType::ASCENDING) {
+                    if (val > 5) { boundaryOk = false; break; }
+                } else {
+                    if (val < 95) { boundaryOk = false; break; }
+                }
+            }
+            if (boundaryOk) {
+                m_fullHouseAchieved[userId] = true;
+            }
+        }
+    }
 	int cardsToDraw = m_ctx.placedCardsThisTurn;
 	for (int i = 0; i < cardsToDraw; i++) {
 		std::unique_ptr<Card> drawnCard = m_wholeDeck.DrawCard();
@@ -247,17 +295,21 @@ Info Game::EndTurn(size_t playerIndex)
 	CheckAchievements(GetCurrentPlayer());
 	m_gameStats[m_players[playerIndex].GetID()].placed7 = false;
 	m_gameStats[m_players[playerIndex].GetID()].placed6 = false;
+    m_cardsPlayedThisTurnByUser[userId] = 0;
+    m_pilesTouchedThisTurn.fill(false);
 	NextPlayer();
 	Round::UpdateContext(*this, m_ctx, GetCurrentPlayer());
 	m_ctx.placedCardsThisTurn = 0;
 	if (IsGameOver(GetCurrentPlayer())) {
 		UpdateGameStats(false);
 		UpdateRemainingCards();
+        m_gameWasLost = true;
 		return Info::GAME_LOST;
 	}
 	if (Round::IsGameWon(*this, GetCurrentPlayer())) {
 		UpdateGameStats(true);
 		UpdateRemainingCards();
+        m_winningUserId = userId;
 		return Info::GAME_WON;
 	}
 
@@ -322,6 +374,15 @@ static const std::unordered_map<std::string, AchievementChecker> ACHIEVEMENT_CHE
 std::vector<std::pair<int, std::string>> Game::UnlockAchievements()
 {
     std::vector<std::pair<int, std::string>> allNewlyUnlocked;
+    bool solidarityAllEqual = false;
+    if (m_gameWasLost && !m_remainingCards.empty()) {
+        auto it = m_remainingCards.begin();
+        int firstVal = it->second;
+        solidarityAllEqual = true;
+        for (const auto& kv : m_remainingCards) {
+            if (kv.second != firstVal) { solidarityAllEqual = false; break; }
+        }
+    }
     for (const auto& player : m_players) {
         int userId = player.GetId();
         const GameStatistics& stats = m_gameStats[userId];
@@ -333,6 +394,27 @@ std::vector<std::pair<int, std::string>> Game::UnlockAchievements()
             if (checker(player, stats, dbStats)) {
                 achievementConditions[achName] = true;
             }
+        }
+
+        try {
+            PlaytimeModel pt = m_database.GetPlaytimeByUserId(userId);
+            if (pt.GetTotalHours() >= 100.0f) {
+                achievementConditions["veteran"] = true;
+            }
+        } catch (...) {
+        }
+
+        if (m_sixShooterAchieved[userId]) {
+            achievementConditions["sixShooter"] = true;
+        }
+        if (m_fullHouseAchieved[userId]) {
+            achievementConditions["fullHouse"] = true;
+        }
+        if (m_winningUserId == userId && !m_usedPlusMinus10[userId]) {
+            achievementConditions["thePurist"] = true;
+        }
+        if (m_gameWasLost && solidarityAllEqual) {
+            achievementConditions["solidarity"] = true;
         }
 
         if (!achievementConditions.empty()) {

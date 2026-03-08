@@ -35,6 +35,8 @@ inline auto initStorage(const std::string& path) {
             make_column("full_house", &AchievementsModel::GetFullHouse, &AchievementsModel::SetFullHouse),
             make_column("the_purist", &AchievementsModel::GetThePurist, &AchievementsModel::SetThePurist),
             make_column("solidarity", &AchievementsModel::GetSolidarity, &AchievementsModel::SetSolidarity),
+            make_column("veteran", &AchievementsModel::GetVeteran, &AchievementsModel::SetVeteran),
+            make_column("six_shooter", &AchievementsModel::GetSixShooter, &AchievementsModel::SetSixShooter),
             foreign_key(&AchievementsModel::GetUserId).references(&UserModel::GetId).on_delete.cascade()),
         make_table("statistics",
             make_column("id", &StatisticsModel::GetId, &StatisticsModel::SetId, primary_key().autoincrement()),

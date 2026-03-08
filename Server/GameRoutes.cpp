@@ -172,6 +172,7 @@ void GameRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtils
                          std::cout << "Game finished for lobby " << lid << ". Destroying lobby." << std::endl;
                          
                          networkUtils.lobbies.erase(lid);
+                         return;
                      }
                      
                      if (result == Info::CARD_NOT_PLAYABLE || result == Info::NOT_CURRENT_PLAYER_TURN) {
@@ -193,7 +194,9 @@ void GameRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtils
                         }
                     }
 
-                     game->UnlockAchievements();
+                    if (result != Info::GAME_WON && result != Info::GAME_LOST) {
+                        game->UnlockAchievements();
+                    }
                  }
                  
                  if (type == "join_game") {
