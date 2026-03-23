@@ -133,9 +133,36 @@ void Game::StartGame()
 }
 
 
-void Game::NextPlayer()
+Info Game::NextPlayer()
 {
 	m_currentPlayerIndex = (m_currentPlayerIndex + 1) % m_numberOfPlayers;
+	if (!m_players[m_currentPlayerIndex].IsPlayerActive()) {
+		if (IsGameOver(GetCurrentPlayer())) return Info::GAME_LOST;
+		int playedCards = 0;
+		while (playedCards < m_ctx.currentRequired) {
+			CardChoice choice = AlgorithmCardSelection::ChooseCardAndPile(*this, GetPiles(), GetCurrentPlayer().GetHand());
+			if (choice.cardNum) {
+				Card cardToPlay(std::to_string(choice.cardNum));
+				PlaceCard(m_currentPlayerIndex, cardToPlay, choice.pileNum);
+				playedCards++;
+			}
+			else if (GetCurrentPlayer().CanUseAbility(m_ctx) && Round::GetNrOfPlayableCardsInHand(*this, m_ctx) < m_ctx.currentRequired) {
+				UseAbility(m_currentPlayerIndex);
+			}
+			else {
+				if(IsGameOver(GetCurrentPlayer())) return Info::GAME_LOST;
+				else if(Round::IsGameWon(*this, GetCurrentPlayer())) {
+					UpdateGameStats(true);
+					UpdateRemainingCards();
+					m_winningUserId = GetCurrentPlayer().GetID();
+					return Info::GAME_WON;
+				}
+			}
+		}
+		if(playedCards == m_ctx.currentRequired) {
+			return EndTurn(m_currentPlayerIndex);
+		}
+	}
 }
 
 Info Game::PlaceCard(size_t playerIndex, const Card& card, int pile)

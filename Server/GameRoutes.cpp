@@ -104,6 +104,8 @@ void GameRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtils
                              break;
                          }
                      }
+
+                     
                      
                      if (player_idx == -1) return; 
                      

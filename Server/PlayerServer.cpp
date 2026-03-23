@@ -229,3 +229,13 @@ void Player::SetSameTurn(bool sameTurn)
 {
     ability->SetSameTurn(sameTurn);
 }
+
+void Player::SetActive(bool state)
+{
+	m_isActive = state;
+}
+
+bool Player::IsPlayerActive() const
+{
+    return m_isActive;
+}

@@ -20,6 +20,7 @@ private:
     std::unique_ptr<IAbility> ability;
     size_t m_playerIndex = 10;
     bool m_finished = false;
+    bool m_isActive = true;
 public:
     Player() = default;
     Player(const UserModel& user, std::unique_ptr<IAbility> ability);
@@ -70,4 +71,7 @@ public:
 
     bool GetSameTurn();
     void SetSameTurn(bool sameTurn);
+
+	void SetActive(bool state);
+	bool IsPlayerActive() const;
 };

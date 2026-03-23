@@ -22,7 +22,7 @@ enum class Info {
 	ABILITY_USED,
 	CARD_PLACED
 };
-
+#include "AlgorithmCardSelection.h"
 #include <unordered_map>
 #include <iostream>
 #include <thread>
@@ -75,7 +75,7 @@ public:
 	size_t WhoStartsFirst();
 	bool IsGameOver(Player& currentPlayer);
 	void StartGame();
-	void NextPlayer();
+	Info NextPlayer();
 
 	Info PlaceCard(size_t playerIndex, const Card& card, int chosenPile);
 	Info UseAbility(size_t playerIndex);
