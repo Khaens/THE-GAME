@@ -6,6 +6,7 @@ constexpr size_t MAX_PLAYERS = 5;
 constexpr size_t MIN_PLAYERS = 2;
 
 enum class Info {
+	PLAYER_IS_ACTIVE,
 	PILE_NOT_FOUND,
 	CARD_NOT_PLAYABLE,
 	NOT_CURRENT_PLAYER_TURN,
@@ -75,11 +76,13 @@ public:
 	size_t WhoStartsFirst();
 	bool IsGameOver(Player& currentPlayer);
 	void StartGame();
-	Info NextPlayer();
+	void NextPlayer();
 
 	Info PlaceCard(size_t playerIndex, const Card& card, int chosenPile);
 	Info UseAbility(size_t playerIndex);
 	Info EndTurn(size_t playerIndex);
+
+	Info InactivePlayerTurn(size_t playerIndex);
 
 	std::vector<std::pair<int, std::string>> UnlockAchievements();
 	void CheckAchievements(Player& currentPlayer);
