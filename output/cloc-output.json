@@ -1,0 +1,69 @@
+{"header" : {
+  "cloc_url"           : "github.com/AlDanial/cloc",
+  "cloc_version"       : "1.98",
+  "elapsed_seconds"    : 0.192745923995972,
+  "n_files"            : 206,
+  "n_lines"            : 62964,
+  "files_per_second"   : 1068.76449436256,
+  "lines_per_second"   : 326668.386519634,
+  "report_file"        : "../output/cloc-output.json"},
+"C/C++ Header" :{
+  "nFiles": 53,
+  "blank": 4682,
+  "comment": 16403,
+  "code": 20354},
+"C++" :{
+  "nFiles": 58,
+  "blank": 1603,
+  "comment": 181,
+  "code": 8735},
+"C#" :{
+  "nFiles": 56,
+  "blank": 901,
+  "comment": 307,
+  "code": 4466},
+"Qt" :{
+  "nFiles": 2,
+  "blank": 0,
+  "comment": 0,
+  "code": 1703},
+"CMake" :{
+  "nFiles": 13,
+  "blank": 124,
+  "comment": 86,
+  "code": 867},
+"XAML" :{
+  "nFiles": 8,
+  "blank": 61,
+  "comment": 1,
+  "code": 843},
+"MSBuild script" :{
+  "nFiles": 4,
+  "blank": 4,
+  "comment": 0,
+  "code": 591},
+"Java" :{
+  "nFiles": 5,
+  "blank": 77,
+  "comment": 11,
+  "code": 584},
+"Visual Studio Solution" :{
+  "nFiles": 5,
+  "blank": 5,
+  "comment": 5,
+  "code": 217},
+"ANTLR Grammar" :{
+  "nFiles": 1,
+  "blank": 28,
+  "comment": 10,
+  "code": 98},
+"Maven" :{
+  "nFiles": 1,
+  "blank": 3,
+  "comment": 0,
+  "code": 14},
+"SUM": {
+  "blank": 7488,
+  "comment": 17004,
+  "code": 38472,
+  "nFiles": 206} }

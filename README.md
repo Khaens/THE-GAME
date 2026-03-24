@@ -1,8 +1,12 @@
 <!-- LANGUAGES BREAKDOWN START -->
+```
+[ LANGUAGES BREAKDOWN ]
 
+C#           --> 4,466 lines
+Others       --> 34,006 lines
 
-
-
+[ TOTAL LINES OF CODE: 38,472 ]
+```
 <!-- LANGUAGES BREAKDOWN END -->
 
 
