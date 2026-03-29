@@ -3,10 +3,10 @@
 [ LANGUAGES BREAKDOWN ]
 
 C++          --> 8,735 lines
-C#           --> 4,466 lines
-Others       --> 25,271 lines
+C#           --> 4,544 lines
+Others       --> 25,275 lines
 
-[ TOTAL LINES OF CODE: 38,472 ]
+[ TOTAL LINES OF CODE: 38,554 ]
 ```
 <!-- LANGUAGES BREAKDOWN END -->
 
