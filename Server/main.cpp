@@ -1,4 +1,4 @@
-﻿#include <crow.h>
+#include <crow.h>
 #include <memory>
 #include "Database.h"
 #include "NetworkUtils.h"
@@ -21,6 +21,9 @@ int main() {
     
     // Start WebSocket Send Worker (all WS sends go through this thread)
     networkUtils.StartWsWorker();
+
+    // Start WebSocket Ping Worker
+    networkUtils.StartPingWorker();
 
     // Register Routes (const instances as requested)
     const AuthRoutes authRoutes(app, db.get(), networkUtils);

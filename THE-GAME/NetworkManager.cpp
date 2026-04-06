@@ -439,10 +439,21 @@ void NetworkManager::onConnected() {
 }
 
 void NetworkManager::onTextMessageReceived(const QString& message) {
-    qDebug() << "Message Received: " << message;
     QJsonDocument doc = QJsonDocument::fromJson(message.toUtf8());
     if (!doc.isNull() && doc.isObject()) {
-        emit gameMessageReceived(doc.object());
+        QJsonObject obj = doc.object();
+        if (obj.contains("type") && obj["type"].toString() == "ping") {
+            qDebug() << "[NetworkManager] Ping received. Sending Pong...";
+            QJsonObject pongMsg;
+            pongMsg["type"] = "pong";
+            pongMsg["lobby_id"] = QString::fromStdString(m_gameLobbyId);
+            QJsonDocument pongDoc(pongMsg);
+            m_webSocket.sendTextMessage(QString::fromUtf8(pongDoc.toJson(QJsonDocument::Compact)));
+            return;
+        }
+
+        qDebug() << "Message Received: " << message;
+        emit gameMessageReceived(obj);
     }
 }
 

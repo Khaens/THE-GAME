@@ -19,6 +19,20 @@ void GameRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtils
         .onclose([&networkUtils](crow::websocket::connection& conn, const std::string& reason, uint16_t) {
             std::cout << "Game WebSocket closed: " << &conn << std::endl;
             
+            std::string lid;
+            int uid = -1;
+            {
+                std::lock_guard<std::mutex> lock(networkUtils.m_clientStatesMutex);
+                if (networkUtils.m_clientStates.count(&conn)) {
+                    lid = networkUtils.m_clientStates[&conn].lobby_id;
+                    uid = networkUtils.m_clientStates[&conn].user_id;
+                    networkUtils.m_clientStates.erase(&conn);
+                }
+            }
+            if (uid != -1) {
+                networkUtils.HandlePlayerDisconnect(lid, uid);
+            }
+
             {
                 std::lock_guard<std::mutex> lock(networkUtils.m_validConnMutex);
                 networkUtils.m_validConnections.erase(&conn);
@@ -47,6 +61,14 @@ void GameRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtils
                          if(c == &conn) found = true;
                      }
                      if(!found) networkUtils.lobby_connections[lid].push_back(&conn);
+                 }
+
+                 if (type == "pong") {
+                     std::lock_guard<std::mutex> lock(networkUtils.m_clientStatesMutex);
+                     if (networkUtils.m_clientStates.count(&conn)) {
+                         networkUtils.m_clientStates[&conn].last_activity = std::chrono::steady_clock::now();
+                     }
+                     return;
                  }
 
                  if (type == "chat") {
@@ -134,13 +156,14 @@ void GameRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtils
                              state_changed = true;
                          }
                      }
-                     else if (action == "end_turn") {
+                     if (action == "end_turn") {
                          result = game->EndTurn(player_idx);
                          state_changed = true;
                      }
 
+                     networkUtils.ProcessInactiveTurns(game, result, state_changed);
+
                      if (result == Info::GAME_WON || result == Info::GAME_LOST) {
-                         // [FIX] Ensure achievements are checked/saved BEFORE the game object is destroyed.
                          game->UnlockAchievements();
                          crow::json::wvalue over_msg;
                          over_msg["type"] = "game_over";
@@ -202,6 +225,11 @@ void GameRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtils
                  }
                  
                  if (type == "join_game") {
+                     if (body.has("user_id")) {
+                         int uid = body["user_id"].i();
+                         std::lock_guard<std::mutex> lock(networkUtils.m_clientStatesMutex);
+                         networkUtils.m_clientStates[&conn] = {lid, uid, std::chrono::steady_clock::now()};
+                     }
                      networkUtils.BroadcastGameState(lid, &conn);
                  }
              }

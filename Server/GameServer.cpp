@@ -320,11 +320,11 @@ Info Game::EndTurn(size_t playerIndex)
 
 Info Game::InactivePlayerTurn(size_t playerIndex)
 {
-	if(!playerIndex == m_currentPlayerIndex) {
+	if (playerIndex != m_currentPlayerIndex) {
 		std::cout << "It's not your turn!\n";
 		return Info::NOT_CURRENT_PLAYER_TURN;
 	}
-	if (!m_players[playerIndex].IsPlayerActive()) return Info::PLAYER_IS_ACTIVE;
+	if (m_players[playerIndex].IsPlayerActive()) return Info::PLAYER_IS_ACTIVE;
 	if (IsGameOver(GetCurrentPlayer())) return Info::GAME_LOST;
 	int playedCards = 0;
 	while (playedCards < m_ctx.currentRequired) {
@@ -344,12 +344,18 @@ Info Game::InactivePlayerTurn(size_t playerIndex)
 				UpdateRemainingCards();
 				m_winningUserId = GetCurrentPlayer().GetID();
 				return Info::GAME_WON;
-			}
+			} else {
+                UpdateGameStats(false);
+                UpdateRemainingCards();
+                m_gameWasLost = true;
+                return Info::GAME_LOST;
+            }
 		}
 	}
 	if (playedCards == m_ctx.currentRequired) {
 		return EndTurn(m_currentPlayerIndex);
 	}
+    return Info::TURN_ENDED;
 }
 
 using AchievementChecker = std::function<bool(const Player&, const GameStatistics&, const StatisticsModel&)>;

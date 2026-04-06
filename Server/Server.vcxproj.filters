@@ -1,7 +1,10 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="AchievementsModel.cpp" />
+    <ClCompile Include="AlgorithmCardSelection.cpp">
+      <Filter>Source Files\Game Logic</Filter>
+    </ClCompile>
     <ClCompile Include="Database.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="StatisticsModel.cpp" />
@@ -100,6 +103,9 @@
     </ClInclude>
     <ClInclude Include="AchievementsModel.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AlgorithmCardSelection.h">
+      <Filter>Header Files\Game Logic</Filter>
     </ClInclude>
     <ClInclude Include="CardServer.h">
       <Filter>Header Files\Game Logic</Filter>

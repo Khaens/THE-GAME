@@ -272,3 +272,158 @@ void NetworkUtils::CleanupPendingMessages() {
         m_pendingMessages.pop_front();
     }
 }
+
+void NetworkUtils::StartPingWorker() {
+    std::thread([this]() {
+        this->PingWorker();
+    }).detach();
+}
+
+void NetworkUtils::PingWorker() {
+    while (m_wsWorkerRunning) {
+        std::this_thread::sleep_for(std::chrono::seconds(5));
+        
+        auto now = std::chrono::steady_clock::now();
+        std::vector<std::pair<std::string, int>> disconnected_users;
+
+        // Check for timeouts
+        {
+            std::lock_guard<std::mutex> lock(m_clientStatesMutex);
+            for (auto it = m_clientStates.begin(); it != m_clientStates.end(); ) {
+                auto duration = std::chrono::duration_cast<std::chrono::seconds>(now - it->second.last_activity).count();
+                if (duration > 30) { 
+                    disconnected_users.push_back({it->second.lobby_id, it->second.user_id});
+                    it = m_clientStates.erase(it);
+                } else {
+                    ++it;
+                }
+            }
+        }
+
+        for (const auto& user : disconnected_users) {
+            std::cout << "PingWorker detected timeout for user: " << user.second << " in lobby: " << user.first << std::endl;
+            HandlePlayerDisconnect(user.first, user.second);
+        }
+
+        static auto last_ping_broadcast = std::chrono::steady_clock::now();
+        if (std::chrono::duration_cast<std::chrono::seconds>(now - last_ping_broadcast).count() >= 10) {
+            last_ping_broadcast = now;
+            std::cout << "[PingWorker] Broadcasting Ping to all active games..." << std::endl;
+            
+            crow::json::wvalue ping_msg;
+            ping_msg["type"] = "ping";
+            std::string msg_str = ping_msg.dump();
+
+            std::lock_guard<std::mutex> ws_lock(ws_mutex);
+            for (auto& [lobby_id, connections] : lobby_connections) {
+                for (auto* conn : connections) {
+                    SafeSendText(conn, msg_str);
+                }
+            }
+        }
+    }
+}
+
+void NetworkUtils::HandlePlayerDisconnect(const std::string& lobby_id, int user_id) {
+    std::lock_guard<std::mutex> lobby_lock(lobby_mutex);
+    if (lobbies.find(lobby_id) == lobbies.end()) return;
+    
+    Lobby& lobby = *lobbies[lobby_id];
+    Game* game = lobby.GetGame();
+    if (!game) return;
+    
+    int p_index = -1;
+    {
+        std::lock_guard<std::mutex> game_lock(game->GetStateMutex());
+        auto& players = game->GetPlayers();
+        for (size_t i = 0; i < players.size(); ++i) {
+            if (players[i].GetId() == user_id) {
+                players[i].SetActive(false);
+                p_index = (int)i;
+                break;
+            }
+        }
+    }
+    
+    if (p_index == -1) return;
+
+    bool state_changed = false;
+    Info result = Info::TURN_ENDED;
+
+    ProcessInactiveTurns(game, result, state_changed);
+
+    if (result == Info::GAME_WON || result == Info::GAME_LOST) {
+        game->UnlockAchievements();
+        crow::json::wvalue over_msg;
+        over_msg["type"] = "game_over";
+        over_msg["lobby_id"] = lobby_id;
+        if (result == Info::GAME_WON) {
+            int winner = -1;
+            {
+                std::lock_guard<std::mutex> game_lock(game->GetStateMutex());
+                winner = game->GetCurrentPlayer().GetID();
+            }
+            over_msg["winner_id"] = winner;
+            over_msg["result"] = "won";
+        } else {
+            over_msg["result"] = "lost"; 
+        }
+        
+        std::string msg = over_msg.dump();
+        {
+            std::lock_guard<std::mutex> ws_lock(ws_mutex);
+            if (lobby_connections.find(lobby_id) != lobby_connections.end()) {
+                for(auto* c : lobby_connections[lobby_id]) {
+                    SafeSendText(c, msg);
+                }
+                lobby_connections.erase(lobby_id);
+            }
+        }
+        
+        {
+            std::lock_guard<std::mutex> l_ws_lock(lobby_ws_mutex);
+            if (lobby_update_connections.find(lobby_id) != lobby_update_connections.end()) {
+                lobby_update_connections.erase(lobby_id);
+            }
+        }
+
+        std::cout << "Game finished for lobby " << lobby_id << " due to disconnect. Destroying." << std::endl;
+        lobbies.erase(lobby_id);
+        return;
+    }
+
+    if (state_changed) {
+        BroadcastGameStateLocked(lobby_id);
+        game->UnlockAchievements();
+    }
+}
+
+void NetworkUtils::ProcessInactiveTurns(Game* game, Info& result, bool& state_changed) {
+    while (true) {
+        size_t current_idx = 0;
+        {
+            std::lock_guard<std::mutex> game_lock(game->GetStateMutex());
+            current_idx = game->GetCurrentPlayer().GetPlayerIndex();
+            if (game->GetCurrentPlayer().IsPlayerActive()) {
+                break;
+            }
+            if (game->IsGameOver(game->GetCurrentPlayer())) {
+                break;
+            }
+        }
+        
+        Info ai_result = game->InactivePlayerTurn(current_idx);
+
+        if (ai_result == Info::GAME_WON || ai_result == Info::GAME_LOST) {
+            result = ai_result;
+            state_changed = true;
+            break;
+        }
+        // If AI turn made no progress (e.g. bad state), stop to avoid infinite loop
+        if (ai_result != Info::TURN_ENDED) {
+            std::cout << "[ProcessInactiveTurns] AI turn returned unexpected state, stopping." << std::endl;
+            break;
+        }
+        state_changed = true;
+    }
+}

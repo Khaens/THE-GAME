@@ -9,6 +9,13 @@
 #include <memory>
 #include <set>
 #include "Lobby.h"
+#include <chrono>
+
+struct ClientState {
+    std::string lobby_id;
+    int user_id;
+    std::chrono::steady_clock::time_point last_activity;
+};
 
 // Struct for chat messages
 struct ChatMessage {
@@ -28,7 +35,7 @@ public:
     ~NetworkUtils() = default;
 
     // --- Global State wrappers ---
-    
+
     // Core game state
     std::unordered_map<std::string, std::unique_ptr<Lobby>> lobbies;
     std::mutex lobby_mutex;
@@ -53,10 +60,13 @@ public:
     std::mutex wsSendMutex;
     std::condition_variable wsSendCv;
     bool m_wsWorkerRunning = true;
-    
+
     // Track valid connections to avoid sending to closed ones
     std::set<crow::websocket::connection*> m_validConnections;
     std::mutex m_validConnMutex;
+
+    std::unordered_map<crow::websocket::connection*, ClientState> m_clientStates;
+    std::mutex m_clientStatesMutex;
 
     // --- Helper Functions ---
     void BroadcastGameState(const std::string& lobby_id, crow::websocket::connection* targetConn = nullptr);
@@ -64,10 +74,14 @@ public:
     std::string CensorMessage(const std::string& input);
 
     void ChatWorker();
-    
+
     void StartChatWorker();
-    void StartWsWorker(); 
-    void WsWorker(); 
+    void StartWsWorker();
+    void WsWorker();
+    void StartPingWorker();
+    void PingWorker();
+    void HandlePlayerDisconnect(const std::string& lobby_id, int user_id);
+    void ProcessInactiveTurns(Game* game, Info& result, bool& state_changed);
     
     void SafeSendText(crow::websocket::connection* conn, const std::string& msg);
     void CleanupPendingMessages();

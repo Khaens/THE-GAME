@@ -144,6 +144,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AchievementsModel.cpp" />
+    <ClCompile Include="AlgorithmCardSelection.cpp" />
     <ClCompile Include="CardServer.cpp" />
     <ClCompile Include="Database.cpp" />
     <ClCompile Include="DeckServer.cpp" />
@@ -166,6 +167,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AchievementsModel.h" />
+    <ClInclude Include="AlgorithmCardSelection.h" />
     <ClInclude Include="CardServer.h" />
     <ClInclude Include="Database.h" />
     <ClInclude Include="DeckServer.h" />

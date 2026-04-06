@@ -16,12 +16,12 @@ CardChoice AlgorithmCardSelection::ChooseCardAndPile(Game& game, const std::arra
 			if(difference > maxDifference) {
 				maxDifference = difference;
 				maxChoice.cardNum = std::stoi(card->GetCardValue());
-				maxChoice.pileNum = i;
+				maxChoice.pileNum = i + 1;
 			}
 			if(difference < minDifference) {
 				minDifference = difference;
 				minChoice.cardNum = std::stoi(card->GetCardValue());
-				minChoice.pileNum = i;
+				minChoice.pileNum = i + 1;
 			}
 		}
 	}
