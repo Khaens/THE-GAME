@@ -29,21 +29,23 @@ void GameRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtils
                     networkUtils.m_clientStates.erase(&conn);
                 }
             }
-            if (uid != -1) {
-                networkUtils.HandlePlayerDisconnect(lid, uid);
-            }
-
             {
                 std::lock_guard<std::mutex> lock(networkUtils.m_validConnMutex);
                 networkUtils.m_validConnections.erase(&conn);
             }
-            
-            std::lock_guard<std::mutex> lock(networkUtils.ws_mutex);
-            for (auto& [lobby_id, connections] : networkUtils.lobby_connections) {
-                connections.erase(
-                    std::remove(connections.begin(), connections.end(), &conn),
-                    connections.end()
-                );
+
+            {
+                std::lock_guard<std::mutex> lock(networkUtils.ws_mutex);
+                for (auto& [lobby_id, connections] : networkUtils.lobby_connections) {
+                    connections.erase(
+                        std::remove(connections.begin(), connections.end(), &conn),
+                        connections.end()
+                    );
+                }
+            }
+
+            if (uid != -1) {
+                networkUtils.HandlePlayerDisconnect(lid, uid);
             }
         })
         .onmessage([&networkUtils](crow::websocket::connection& conn, const std::string& data, bool is_binary) {
