@@ -65,6 +65,15 @@ void Lobby::LeaveLobby(int userId)
         [userId](const UserModel& user) { return user.GetId() == userId; });
     
     if (it != m_Users.end()) {
+        if (m_status == LobbyStatus::Started && m_game) {
+            auto& players = m_game->GetPlayers();
+            for (auto& player : players) {
+                if (player.GetId() == userId) {
+                    player.SetActive(false);
+                    break;
+                }
+            }
+        }
         m_Users.erase(it);
         m_roundStartTime = std::chrono::steady_clock::now();
     }

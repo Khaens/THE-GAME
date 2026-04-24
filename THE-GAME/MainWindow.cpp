@@ -1,5 +1,6 @@
-﻿#include "MainWindow.h"
+#include "MainWindow.h"
 #include "NetworkConfig.h"
+#include "SoundManager.h"
 #include <QPixmap>
 #include <QMessageBox>
 #include <QShortcut>
@@ -173,6 +174,7 @@ void MainWindow::setupMenuStyle()
 
 void MainWindow::onNewGameClicked()
 {
+    SoundManager::instance()->play(SoundType::BigButtonClick);
     if (!m_accountDialog->isUserLoggedIn()) {
         QMessageBox::warning(this, "Login Required",
             "You need to be logged in to play!\n\nPlease click the Account button to login or register.");
@@ -185,21 +187,25 @@ void MainWindow::onNewGameClicked()
 
 void MainWindow::onExitClicked()
 {
+    SoundManager::instance()->play(SoundType::BigButtonClick);
     close();
 }
 
 void MainWindow::onHelpClicked()
 {
+    SoundManager::instance()->play(SoundType::BigButtonClick);
     m_helpDialog->showOverlay();
 }
 
 void MainWindow::onSettingsClicked()
 {
+    SoundManager::instance()->play(SoundType::BigButtonClick);
     m_settingsDialog->showOverlay();
 }
 
 void MainWindow::onAccountClicked()
 {
+    SoundManager::instance()->play(SoundType::BigButtonClick);
     m_accountDialog->showOverlay();
 }
 

@@ -1,4 +1,5 @@
 #include "AchievementsDialog.h"
+#include "SoundManager.h"
 #include <QPainter>
 #include <QGraphicsDropShadowEffect>
 #include <QDebug>
@@ -23,6 +24,7 @@ AchievementsDialog::~AchievementsDialog()
 
 void AchievementsDialog::onBackClicked()
 {
+    SoundManager::instance()->play(SoundType::BigButtonClick);
     close();
 }
 

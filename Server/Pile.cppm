@@ -1,11 +1,12 @@
-export module PileServer;
-import "CardServer.h";
-import "PileType.h";
-import <stack>;
-import <memory>;
-import <stdexcept>;
+#pragma once
 
-export class Pile
+#include "CardServer.h"
+#include "PileType.h"
+#include <stack>
+#include <memory>
+#include <stdexcept>
+
+class Pile
 {
 private:
 	std::stack<std::unique_ptr<Card>> m_cards;

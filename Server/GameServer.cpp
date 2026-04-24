@@ -298,6 +298,7 @@ Info Game::EndTurn(size_t playerIndex)
     m_cardsPlayedThisTurnByUser[userId] = 0;
     m_pilesTouchedThisTurn.fill(false);
 	NextPlayer();
+	m_turnCount++;
 	Round::UpdateContext(*this, m_ctx, GetCurrentPlayer());
 	m_ctx.placedCardsThisTurn = 0;
 	if (IsGameOver(GetCurrentPlayer())) {

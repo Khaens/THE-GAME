@@ -415,6 +415,12 @@ void NetworkManager::connectToGame(const std::string& lobby_id, int user_id) {
     m_webSocket.open(QUrl(urlStr));
 }
 
+void NetworkManager::disconnectFromGame() {
+    if (m_webSocket.isValid()) {
+        m_webSocket.close();
+    }
+}
+
 void NetworkManager::sendGameAction(const QJsonObject& action) {
     if (m_webSocket.isValid()) {
         QJsonDocument doc(action);

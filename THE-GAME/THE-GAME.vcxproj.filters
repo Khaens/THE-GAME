@@ -72,6 +72,12 @@
     <ClCompile Include="StatisticsDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SoundManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PauseMenuDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="MainWindow.h">
@@ -120,6 +126,12 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="StatisticsDialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="SoundManager.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="PauseMenuDialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

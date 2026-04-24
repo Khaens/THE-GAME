@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -36,6 +36,8 @@
     <ClCompile Include="UiUtils.cpp" />
     <ClCompile Include="WinDialog.cpp" />
     <ClCompile Include="PeasantDialog.cpp" />
+    <ClCompile Include="SoundManager.cpp" />
+    <ClCompile Include="PauseMenuDialog.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="AccountDialog.h" />
@@ -44,6 +46,7 @@
     <QtMoc Include="SettingsDialog.h" />
     <QtMoc Include="WinDialog.h" />
     <QtMoc Include="LossDialog.h" />
+    <QtMoc Include="PauseMenuDialog.h" />
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="GameWindow.ui" />
@@ -59,6 +62,7 @@
     <QtMoc Include="PeasantDialog.h" />
     <QtMoc Include="AchievementsDialog.h" />
     <QtMoc Include="StatisticsDialog.h" />
+    <QtMoc Include="SoundManager.h" />
     <ClInclude Include="UiUtils.h" />
   </ItemGroup>
   <ItemGroup>
@@ -222,26 +226,26 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -260,7 +264,7 @@
     <QtInstall>6.9.3_msvc2022_64</QtInstall>
   </PropertyGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <QtModules>core;gui;widgets;websockets</QtModules>
+    <QtModules>core;gui;widgets;websockets;multimedia</QtModules>
     <QtInstall>6.9.3_msvc2022_64</QtInstall>
   </PropertyGroup>
   <Target Name="QtMsBuildNotFound" BeforeTargets="CustomBuild;ClCompile" Condition="!Exists('$(QtMsBuild)\qt.targets') OR !Exists('$(QtMsBuild)\Qt.props')">

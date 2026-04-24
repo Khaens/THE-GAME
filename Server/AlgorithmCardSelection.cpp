@@ -3,8 +3,8 @@
 
 CardChoice AlgorithmCardSelection::ChooseCardAndPile(Game& game, const std::array<Pile*, 4>& piles, const std::vector<std::unique_ptr<Card>>& m_hand)
 {
-	CardChoice minChoice;
-	CardChoice maxChoice;
+	CardChoice minChoice = {0, 0};
+	CardChoice maxChoice = {0, 0};
 	int minDifference = std::numeric_limits<int>::max();
 	int maxDifference = std::numeric_limits<int>::min();
 	for(int i = 0; i < 4; i++) {

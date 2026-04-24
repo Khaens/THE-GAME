@@ -1,4 +1,5 @@
 #include "WinDialog.h"
+#include "SoundManager.h"
 #include <QVBoxLayout>
 #include <QGraphicsDropShadowEffect>
 
@@ -76,6 +77,7 @@ void WinDialog::setupUi()
     )");
 
     connect(m_backButton, &QPushButton::clicked, this, [this]() {
+        SoundManager::instance()->play(SoundType::BigButtonClick);
         emit backToMenuRequested();
         accept();
     });

@@ -102,6 +102,7 @@ public:
 
     // Game WebSocket
     void connectToGame(const std::string& lobby_id, int user_id);
+    void disconnectFromGame();
     void sendGameAction(const QJsonObject& action);
 
     // Lobby WebSocket

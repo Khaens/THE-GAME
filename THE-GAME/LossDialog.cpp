@@ -1,4 +1,5 @@
 #include "LossDialog.h"
+#include "SoundManager.h"
 #include <QVBoxLayout>
 
 LossDialog::LossDialog(QWidget *parent)
@@ -75,6 +76,7 @@ void LossDialog::setupUi()
     )");
 
     connect(m_backButton, &QPushButton::clicked, this, [this]() {
+        SoundManager::instance()->play(SoundType::BigButtonClick);
         emit backToMenuRequested();
         accept();
     });

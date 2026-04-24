@@ -1,4 +1,5 @@
-﻿#include "LobbyRoomDialog.h"
+#include "LobbyRoomDialog.h"
+#include "SoundManager.h"
 #include "GameWindow.h"
 #include "UiUtils.h"
 #include <QClipboard>
@@ -410,6 +411,7 @@ void LobbyRoomDialog::updateCountdown()
 
 void LobbyRoomDialog::onLeaveClicked()
 {
+    SoundManager::instance()->play(SoundType::BigButtonClick);
     stopRefreshTimer();
     stopCountdownTimer();
     
@@ -422,6 +424,7 @@ void LobbyRoomDialog::onLeaveClicked()
 
 void LobbyRoomDialog::onStartGameClicked()
 {
+    SoundManager::instance()->play(SoundType::BigButtonClick);
     if (!m_isHost && m_countdownSeconds > 0) {
         return;
     }
@@ -457,6 +460,7 @@ void LobbyRoomDialog::onStartGameClicked()
 
 void LobbyRoomDialog::onCopyCodeClicked()
 {
+    SoundManager::instance()->play(SoundType::BigButtonClick);
     QClipboard* clipboard = QApplication::clipboard();
     clipboard->setText(m_lobbyCode);
     QString originalText = m_copyCodeButton->text();

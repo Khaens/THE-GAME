@@ -1,4 +1,5 @@
 #include "JoinLobbyDialog.h"
+#include "SoundManager.h"
 
 JoinLobbyDialog::JoinLobbyDialog(QWidget* parent)
     : QDialog(parent)
@@ -143,6 +144,7 @@ void JoinLobbyDialog::setupStyle()
 
 void JoinLobbyDialog::onAccept()
 {
+    SoundManager::instance()->play(SoundType::BigButtonClick);
     m_lobbyCode = m_codeInput->text().toUpper().trimmed();
 
     if (m_lobbyCode.isEmpty()) {
@@ -166,5 +168,6 @@ void JoinLobbyDialog::onAccept()
 
 void JoinLobbyDialog::onCancel()
 {
+    SoundManager::instance()->play(SoundType::BigButtonClick);
     reject();
 }

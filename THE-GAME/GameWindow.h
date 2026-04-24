@@ -6,6 +6,8 @@
 #include <QTextEdit>
 #include "WinDialog.h"
 #include "LossDialog.h"
+#include "PauseMenuDialog.h"
+#include "SettingsDialog.h"
 
 class GameWindow : public QWidget
 {
@@ -29,6 +31,7 @@ protected:
 
 private slots:
     void onBackButtonClicked();
+    void onPauseButtonClicked();
     void onAbilityButtonClicked();
     void onGameConnected();
     void onGameMessageReceived(const QJsonObject& message);
@@ -58,7 +61,7 @@ private:
     bool m_wasSoothActive = false;
 
     void handleGameState(const QJsonObject& state);
-    void updateHand(const QJsonArray& hand);
+    int updateHand(const QJsonArray& hand);
     void updatePiles(const QJsonArray& piles);
     void updateSoothsayerView(const QJsonArray& players);
     void hideSoothsayerPanels();
@@ -75,6 +78,7 @@ private:
     int m_pileTopValues[4] = { 1, 1, 100, 100 }; 
     int m_deckCount = 0;
     int m_requiredCards = 2; 
+    int m_turnCount = 0;
     bool m_canUseAbility = true; 
     QString m_myAbilityName;
     int m_gamblerUsesLeft = 3; 
@@ -88,4 +92,8 @@ private:
     void updateAbilityButtonState();
     
     void resetGameState();
+    int m_previousHandSize = 0;
+
+    PauseMenuDialog* m_pauseMenu = nullptr;
+    SettingsDialog* m_settingsDialog = nullptr;
 };

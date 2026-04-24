@@ -1,4 +1,5 @@
-﻿#include "SettingsDialog.h"
+#include "SettingsDialog.h"
+#include "SoundManager.h"
 #include <QScreen>
 #include <QApplication>
 #include <QMainWindow>
@@ -292,6 +293,7 @@ void SettingsDialog::updateCurrentResolution()
 
 void SettingsDialog::onPreviousResolution()
 {
+    SoundManager::instance()->play(SoundType::RoundButtonClick);
     if (m_currentResolutionIndex > 0) {
         m_currentResolutionIndex--;
         updateResolutionDisplay();
@@ -300,6 +302,7 @@ void SettingsDialog::onPreviousResolution()
 
 void SettingsDialog::onNextResolution()
 {
+    SoundManager::instance()->play(SoundType::RoundButtonClick);
     if (m_currentResolutionIndex < m_resolutions.size() - 1) {
         m_currentResolutionIndex++;
         updateResolutionDisplay();
@@ -308,6 +311,7 @@ void SettingsDialog::onNextResolution()
 
 void SettingsDialog::onApplyResolution()
 {
+    SoundManager::instance()->play(SoundType::BigButtonClick);
     QMainWindow* mainWindow = qobject_cast<QMainWindow*>(parentWidget());
     if (!mainWindow) return;
 
@@ -338,6 +342,7 @@ void SettingsDialog::showOverlay()
 
 void SettingsDialog::hideOverlay()
 {
+    SoundManager::instance()->play(SoundType::BigButtonClick);
     hide();
 }
 

@@ -1,4 +1,5 @@
 #include "PeasantDialog.h"
+#include "SoundManager.h"
 
 PeasantDialog::PeasantDialog(QWidget* parent)
     : QDialog(parent)
@@ -57,7 +58,10 @@ PeasantDialog::PeasantDialog(QWidget* parent)
     okButton->setCursor(Qt::PointingHandCursor);
     containerLayout->addWidget(okButton, 0, Qt::AlignCenter);
     
-    connect(okButton, &QPushButton::clicked, this, &QDialog::accept);
+    connect(okButton, &QPushButton::clicked, this, [this]() {
+        SoundManager::instance()->play(SoundType::BigButtonClick);
+        accept();
+    });
 
     mainLayout->addWidget(container);
 }

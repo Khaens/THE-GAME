@@ -1,6 +1,7 @@
 #include "GameWindow.h"
 #include "ui_GameWindow.h"
 #include "UiUtils.h"
+#include "SoundManager.h"
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QLabel>
@@ -76,6 +77,27 @@ GameWindow::GameWindow(QWidget* parent)
             m_chatDisplay->setGeometry(ui->chatHistory->geometry());
         }
     }
+
+    m_pauseMenu = new PauseMenuDialog(this);
+    m_settingsDialog = new SettingsDialog(this);
+
+    if (ui->pauseButton) {
+        connect(ui->pauseButton, &QPushButton::clicked, this, &GameWindow::onPauseButtonClicked);
+    }
+
+    connect(m_pauseMenu, &PauseMenuDialog::settingsRequested, this, [this]() {
+        if (m_settingsDialog) {
+            m_settingsDialog->showOverlay();
+            m_settingsDialog->raise();
+        }
+    });
+
+    connect(m_pauseMenu, &PauseMenuDialog::leaveLobbyRequested, this, [this]() {
+        if (m_networkManager) {
+            m_networkManager->leaveLobby(m_userId, m_lobbyId);
+        }
+        emit backToMenuRequested();
+    });
 }
 
 GameWindow::~GameWindow()
@@ -92,6 +114,7 @@ void GameWindow::showOverlay()
     }
     raise();
     show();
+    SoundManager::instance()->play(SoundType::FancyShuffle);
 
     if (ui && ui->bannerLabel && ui->beerLabel && ui->cardBack) {
         resizeUI();
@@ -174,11 +197,17 @@ void GameWindow::resetGameState()
     }
 
     // Logic State
+    if (m_networkManager) {
+        m_networkManager->disconnectFromGame();
+    }
     m_isMyTurn = false;
     m_isHPMode = false;
     m_wasSoothActive = false;
     m_cardsPlayedThisTurn = 0;
     m_deckCount = 0;
+    m_turnCount = 0;
+    m_previousHandSize = 0;
+    m_lastTurnUserId = -1;
     
     // Reset Pile Values
     m_pileTopValues[0] = 1;
@@ -201,6 +230,13 @@ void GameWindow::resizeEvent(QResizeEvent* event)
     }
     resizeUI();
     
+    if (m_settingsDialog) {
+        m_settingsDialog->setGeometry(this->rect());
+    }
+    if (m_pauseMenu) {
+        m_pauseMenu->setGeometry(this->rect());
+    }
+
     QWidget::resizeEvent(event);
 }
 
@@ -271,11 +307,11 @@ void GameWindow::resizeUI()
          return scaleRect(1215, startY, 80, 80);
     };
 
-    if (ui->pfpCircle5) ui->pfpCircle5->setGeometry(scalePfp(170));
-    if (ui->pfpCircle4) ui->pfpCircle4->setGeometry(scalePfp(258));
-    if (ui->pfpCircle3) ui->pfpCircle3->setGeometry(scalePfp(346));
-    if (ui->pfpCircle2) ui->pfpCircle2->setGeometry(scalePfp(434));
-    if (ui->pfpCircle1) ui->pfpCircle1->setGeometry(scalePfp(522));
+    if (ui->pfpCircle5) ui->pfpCircle5->setGeometry(scalePfp(160));
+    if (ui->pfpCircle4) ui->pfpCircle4->setGeometry(scalePfp(248));
+    if (ui->pfpCircle3) ui->pfpCircle3->setGeometry(scalePfp(336));
+    if (ui->pfpCircle2) ui->pfpCircle2->setGeometry(scalePfp(424));
+    if (ui->pfpCircle1) ui->pfpCircle1->setGeometry(scalePfp(512));
     
     // New Piles (User-defined in .ui)
     // AscPile1: Base 275
@@ -304,6 +340,7 @@ void GameWindow::resizeUI()
         ui->turnLabel->lower(); // Put behind pfp/username
     }
     
+    /*
     if (ui->pfpLabel) {
         ui->pfpLabel->setGeometry(scaleRect(30, 310, 40, 40));
         ui->pfpLabel->setScaledContents(true);
@@ -334,6 +371,7 @@ void GameWindow::resizeUI()
         )");
         ui->usernameLabel->raise();
     }
+    */
     
     // End Turn Button
     if (ui->endTurnButton) {
@@ -462,6 +500,7 @@ bool GameWindow::eventFilter(QObject *obj, QEvent *event)
 {
     if (obj == ui->chatButton) {
         if (event->type() == QEvent::MouseButtonPress) {
+            SoundManager::instance()->play(SoundType::RoundButtonClick);
             QPixmap pressed("Resources/Button_Chat_Pressed.png");
             if (!pressed.isNull()) {
                 ui->chatButton->setPixmap(pressed);
@@ -735,8 +774,15 @@ void GameWindow::loadGameImage()
 
 void GameWindow::onBackButtonClicked()
 {
-    hideOverlay();
-    emit backToMenuRequested();
+    onPauseButtonClicked();
+}
+
+void GameWindow::onPauseButtonClicked()
+{
+    SoundManager::instance()->play(SoundType::BigButtonClick);
+    if (m_pauseMenu) {
+        m_pauseMenu->showOverlay();
+    }
 }
 
 void GameWindow::toggleChat()
@@ -837,10 +883,36 @@ void GameWindow::onGameMessageReceived(const QJsonObject& message)
         QString errorMsg = message["message"].toString();
         qDebug() << "Game Error:" << errorMsg;
     }
+    else if (type == "lobby_closed") {
+        QString reason = message["reason"].toString();
+        QMessageBox::information(this, "Lobby Closed", reason);
+        emit backToMenuRequested();
+    }
 }
 
 void GameWindow::handleGameState(const QJsonObject& state)
 {
+    bool wasMyTurn = m_isMyTurn;
+    int serverTurnCount = state.value("turn_count").toInt(m_turnCount);
+    bool turnTransitioned = (serverTurnCount != m_turnCount);
+    m_turnCount = serverTurnCount;
+
+    // Handle Turn transition first to ensure local variables are reset before any UI updates
+    if (state.contains("current_turn_player_id")) {
+        int turnId = state["current_turn_player_id"].toInt();
+        m_isMyTurn = (turnId == m_userId);
+        
+        if (m_isMyTurn && (turnTransitioned || !wasMyTurn)) {
+            m_cardsPlayedThisTurn = 0;
+            m_abilityUsedThisTurn = false;
+        }
+        
+        if (m_lastTurnUserId != -1 && turnId != m_lastTurnUserId) {
+            // Optional: play transition sound here if we want it early
+        }
+    }
+
+    int currentHandSize = m_previousHandSize;
     // Update Piles
     if (state.contains("piles")) {
         updatePiles(state["piles"].toArray());
@@ -920,8 +992,14 @@ void GameWindow::handleGameState(const QJsonObject& state)
         for (int i = 0; i < playerCount && i < 5; ++i) {
              QJsonObject p = players[i].toObject();
              int pid = p["user_id"].toInt();
-             
+             bool isActive = p.value("is_active").toBool(true);
+
              if (QLabel* circle = getCircle(i)) {
+                 if (!isActive) {
+                     circle->setVisible(false);
+                     circle->clear();
+                     continue;
+                 }
                  QPixmap avatar = UiUtils::GetAvatar(pid, m_networkManager);
                  if (!avatar.isNull()) {
                      QPixmap circularAvatar(75, 75);
@@ -945,7 +1023,7 @@ void GameWindow::handleGameState(const QJsonObject& state)
             QJsonObject player = p.toObject();
             if (player["user_id"].toInt() == m_userId) {
                 if (player.contains("hand")) {
-                    updateHand(player["hand"].toArray());
+                    currentHandSize = updateHand(player["hand"].toArray());
                 }
                 if (player.contains("ability")) {
                     QString abilityName = player["ability"].toString();
@@ -1001,23 +1079,24 @@ void GameWindow::handleGameState(const QJsonObject& state)
     if (state.contains("current_turn_username")) {
         QString currentTurn = state["current_turn_username"].toString();
         int currentTurnId = state["current_turn_player_id"].toInt();
-        
-        bool wasMyTurn = m_isMyTurn;
-        m_isMyTurn = (currentTurnId == m_userId);
-        
-        if (m_isMyTurn && !wasMyTurn) {
-            m_cardsPlayedThisTurn = 0;
-            m_abilityUsedThisTurn = false;
-        }
 
-        if (ui->usernameLabel) {
-             ui->usernameLabel->setVisible(false); 
-        }
-        if (ui->pfpLabel) {
-             ui->pfpLabel->setVisible(false);
+        // Turn transition sounds
+        if (m_lastTurnUserId != -1 && currentTurnId != m_lastTurnUserId) {
+            if (m_lastTurnUserId == m_userId) {
+                if (currentHandSize > m_previousHandSize) {
+                    SoundManager::instance()->play(SoundType::CardDraw);
+                } else {
+                    SoundManager::instance()->play(SoundType::RoundShuffle);
+                }
+            } else {
+                SoundManager::instance()->play(SoundType::RoundShuffle);
+            }
         }
 
         if (m_turnLabel) {
+            if (ui->pfpLabel) ui->pfpLabel->hide();
+            if (ui->usernameLabel) ui->usernameLabel->hide();
+            
             QString turnText = m_isMyTurn ? "YOUR TURN" : (currentTurn + "'s TURN");
             
             // Get Avatar
@@ -1047,25 +1126,25 @@ void GameWindow::handleGameState(const QJsonObject& state)
         }
         
         m_lastTurnUserId = currentTurnId;
-        
-        updateEndTurnButtonState();
-        updateAbilityButtonState();
+    }
 
-        if (wasMyTurn != m_isMyTurn) {
-            updatePileClickability();
-            // Clear selection when turn ends
-            if (!m_isMyTurn) {
-                clearCardSelection();
-                // Also hide Soothsayer panels when our turn ends
-                if (m_wasSoothActive) {
-                    m_wasSoothActive = false;
-                    hideSoothsayerPanels();
-                }
+    updateEndTurnButtonState();
+    updateAbilityButtonState();
+
+    if (wasMyTurn != m_isMyTurn) {
+        updatePileClickability();
+        // Clear selection when turn ends
+        if (!m_isMyTurn) {
+            clearCardSelection();
+            // Also hide Soothsayer panels when our turn ends
+            if (m_wasSoothActive) {
+                m_wasSoothActive = false;
+                hideSoothsayerPanels();
             }
         }
-        
-        qDebug() << "Current Turn:" << currentTurn << "(My turn:" << m_isMyTurn << ")";
     }
+
+    m_previousHandSize = currentHandSize;
 }
 
 void GameWindow::updateEndTurnButtonState()
@@ -1198,9 +1277,8 @@ void GameWindow::updatePiles(const QJsonArray& piles)
     }
 }
 
-void GameWindow::updateHand(const QJsonArray& hand)
+int GameWindow::updateHand(const QJsonArray& hand)
 {
-
     QVector<QLabel*> handSlots = { ui->hand1, ui->hand2, ui->hand3, ui->hand4, ui->hand5, ui->hand6 };
     
     for (int i = 0; i < handSlots.size(); ++i) {
@@ -1219,10 +1297,12 @@ void GameWindow::updateHand(const QJsonArray& hand)
             handSlots[i]->setVisible(false);
         }
     }
+    return hand.size();
 }
 
 void GameWindow::sendEndTurnAction()
 {
+    SoundManager::instance()->play(SoundType::BigButtonClick);
     if (m_networkManager) {
         QJsonObject action;
         action["type"] = "game_action";
@@ -1349,6 +1429,7 @@ void GameWindow::clearCardSelection()
 
 void GameWindow::onAbilityButtonClicked()
 {
+    SoundManager::instance()->play(SoundType::BigButtonClick);
     if (!m_isMyTurn) {
          return;
     }

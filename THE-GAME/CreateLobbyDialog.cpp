@@ -1,4 +1,5 @@
 #include "CreateLobbyDialog.h"
+#include "SoundManager.h"
 
 CreateLobbyDialog::CreateLobbyDialog(int userId, QWidget* parent)
     : QDialog(parent)
@@ -206,6 +207,7 @@ void CreateLobbyDialog::setupStyle()
 
 void CreateLobbyDialog::onAccept()
 {
+    SoundManager::instance()->play(SoundType::BigButtonClick);
     m_lobbyName = m_nameInput->text().trimmed();
     m_maxPlayers = m_playersSpinBox->value();
 
@@ -219,5 +221,6 @@ void CreateLobbyDialog::onAccept()
 
 void CreateLobbyDialog::onCancel()
 {
+    SoundManager::instance()->play(SoundType::BigButtonClick);
     reject();
 }

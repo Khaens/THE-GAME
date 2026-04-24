@@ -6,97 +6,101 @@ constexpr size_t MAX_PLAYERS = 5;
 constexpr size_t MIN_PLAYERS = 2;
 
 enum class Info {
-	PLAYER_IS_ACTIVE,
-	PILE_NOT_FOUND,
-	CARD_NOT_PLAYABLE,
-	NOT_CURRENT_PLAYER_TURN,
-	ABILITY_NOT_AVAILABLE,
-	NOT_ENOUGH_PLAYED_CARDS,
-	TAX_ABILITY_USED,
-	PEASANT_ABILITY_USED,
-	SOOTHSAYER_ABILITY_USED,
-	GAMBLER_ABILITY_USED,
-	HARRY_POTTER_ABILITY_USED,
-	GAME_WON,
-	GAME_LOST,
-	TURN_ENDED,
-	ABILITY_USED,
-	CARD_PLACED
+  PLAYER_IS_ACTIVE,
+  PILE_NOT_FOUND,
+  CARD_NOT_PLAYABLE,
+  NOT_CURRENT_PLAYER_TURN,
+  ABILITY_NOT_AVAILABLE,
+  NOT_ENOUGH_PLAYED_CARDS,
+  TAX_ABILITY_USED,
+  PEASANT_ABILITY_USED,
+  SOOTHSAYER_ABILITY_USED,
+  GAMBLER_ABILITY_USED,
+  HARRY_POTTER_ABILITY_USED,
+  GAME_WON,
+  GAME_LOST,
+  TURN_ENDED,
+  ABILITY_USED,
+  CARD_PLACED
 };
 #include "AlgorithmCardSelection.h"
-#include <unordered_map>
-#include <iostream>
-#include <thread>
-#include <vector>
-#include <future>
-#include <chrono>
-#include <random>
-#include <memory>
 #include "IPlayer.h"
 #include "PlayerServer.h"
-import PileServer;
-#include "DeckServer.h"
-#include "TurnContext.h"
-#include "Round.h"
-#include "GameStatistics.h"
+#include <chrono>
+#include <future>
+#include <iostream>
+#include <memory>
+#include <random>
+#include <thread>
+#include <unordered_map>
+#include <vector>
+
+#include "Pile.cppm"
 #include "Database.h"
+#include "DeckServer.h"
+#include "GameStatistics.h"
+#include "Round.h"
+#include "TurnContext.h"
+
 
 class Game {
 private:
-	size_t m_numberOfPlayers;
-	size_t m_currentPlayerIndex = 0;
-	size_t m_pileIndex = 0;
-	std::vector<Player> m_players;
-	std::array<std::unique_ptr<Pile>, PILES_AMOUNT> m_piles;
-	Deck m_wholeDeck;
-	TurnContext m_ctx;
-	Database& m_database;
-	std::unordered_map<int, GameStatistics> m_gameStats;
-	std::unordered_map<int, int> m_remainingCards;
-	mutable std::mutex m_stateMutex;
-    std::chrono::steady_clock::time_point m_gameStartTime;
-    std::unordered_map<int, int> m_cardsPlayedThisTurnByUser;
-    std::unordered_map<int, bool> m_sixShooterAchieved;
-    std::array<bool, PILES_AMOUNT> m_pilesTouchedThisTurn{};
-    std::unordered_map<int, bool> m_fullHouseAchieved;
-    std::unordered_map<int, bool> m_usedPlusMinus10;
-    bool m_gameWasLost = false;
-    int m_winningUserId = -1;
+  size_t m_numberOfPlayers;
+  size_t m_currentPlayerIndex = 0;
+  size_t m_pileIndex = 0;
+  std::vector<Player> m_players;
+  std::array<std::unique_ptr<Pile>, PILES_AMOUNT> m_piles;
+  Deck m_wholeDeck;
+  TurnContext m_ctx;
+  Database &m_database;
+  std::unordered_map<int, GameStatistics> m_gameStats;
+  std::unordered_map<int, int> m_remainingCards;
+  mutable std::mutex m_stateMutex;
+  std::chrono::steady_clock::time_point m_gameStartTime;
+  std::unordered_map<int, int> m_cardsPlayedThisTurnByUser;
+  std::unordered_map<int, bool> m_sixShooterAchieved;
+  std::array<bool, PILES_AMOUNT> m_pilesTouchedThisTurn{};
+  std::unordered_map<int, bool> m_fullHouseAchieved;
+  std::unordered_map<int, bool> m_usedPlusMinus10;
+  bool m_gameWasLost = false;
+  int m_winningUserId = -1;
+  int m_turnCount = 0;
 
 public:
-	Game(std::vector<UserModel>& users, Database& db);
-	~Game();
+  Game(std::vector<UserModel> &users, Database &db);
+  ~Game();
 
-    Game(Game&& other) noexcept;
-    Game& operator=(Game&& other) noexcept;
+  Game(Game &&other) noexcept;
+  Game &operator=(Game &&other) noexcept;
 
-    Game(const Game&) = delete;
-    Game& operator=(const Game&) = delete;
+  Game(const Game &) = delete;
+  Game &operator=(const Game &) = delete;
 
-	size_t WhoStartsFirst();
-	bool IsGameOver(Player& currentPlayer);
-	void StartGame();
-	void NextPlayer();
+  size_t WhoStartsFirst();
+  bool IsGameOver(Player &currentPlayer);
+  void StartGame();
+  void NextPlayer();
 
-	Info PlaceCard(size_t playerIndex, const Card& card, int chosenPile);
-	Info UseAbility(size_t playerIndex);
-	Info EndTurn(size_t playerIndex);
+  Info PlaceCard(size_t playerIndex, const Card &card, int chosenPile);
+  Info UseAbility(size_t playerIndex);
+  Info EndTurn(size_t playerIndex);
 
-	Info InactivePlayerTurn(size_t playerIndex);
+  Info InactivePlayerTurn(size_t playerIndex);
 
-	std::vector<std::pair<int, std::string>> UnlockAchievements();
-	void CheckAchievements(Player& currentPlayer);
-	void UpdateGameStats(bool won);
+  std::vector<std::pair<int, std::string>> UnlockAchievements();
+  void CheckAchievements(Player &currentPlayer);
+  void UpdateGameStats(bool won);
 
-	std::unique_ptr<Card> DrawCard();
-	void UpdateRemainingCards();
-	std::unordered_map<int, int> GetRemainingCards() const;
+  std::unique_ptr<Card> DrawCard();
+  void UpdateRemainingCards();
+  std::unordered_map<int, int> GetRemainingCards() const;
 
-	size_t GetDeckSize() const;
-	Player& GetCurrentPlayer();
-	TurnContext& GetCtx();
-	std::vector<Player>& GetPlayers();
-	std::array<Pile*, PILES_AMOUNT> GetPiles();
-	Deck& GetDeck();
-	std::mutex& GetStateMutex() { return m_stateMutex; }
+  size_t GetDeckSize() const;
+  int GetTurnCount() const { return m_turnCount; }
+  Player &GetCurrentPlayer();
+  TurnContext &GetCtx();
+  std::vector<Player> &GetPlayers();
+  std::array<Pile *, PILES_AMOUNT> GetPiles();
+  Deck &GetDeck();
+  std::mutex &GetStateMutex() { return m_stateMutex; }
 };

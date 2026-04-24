@@ -1,4 +1,5 @@
 #include "StatisticsDialog.h"
+#include "SoundManager.h"
 #include "NetworkManager.h"
 #include <QResizeEvent>
 #include <QMessageBox>
@@ -178,6 +179,7 @@ void StatisticsDialog::showOverlay()
 
 void StatisticsDialog::hideOverlay()
 {
+    SoundManager::instance()->play(SoundType::BigButtonClick);
     hide();
 }
 

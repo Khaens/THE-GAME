@@ -1,4 +1,5 @@
-﻿#include "LobbyDialog.h"
+#include "LobbyDialog.h"
+#include "SoundManager.h"
 #include "CreateLobbyDialog.h" 
 #include "JoinLobbyDialog.h"
 #include "LobbyRoomDialog.h"
@@ -144,11 +145,13 @@ void LobbyDialog::showOverlay()
 
 void LobbyDialog::hideOverlay()
 {
+    SoundManager::instance()->play(SoundType::BigButtonClick);
     hide();
 }
 
 void LobbyDialog::onCreateLobbyClicked()
 {
+    SoundManager::instance()->play(SoundType::BigButtonClick);
     if (m_userId == -1) {
         QMessageBox::warning(this, "Authentication Required", "Please log in to create a lobby.");
         return;
@@ -199,6 +202,7 @@ void LobbyDialog::onCreateLobbyClicked()
 
 void LobbyDialog::onJoinLobbyClicked()
 {
+    SoundManager::instance()->play(SoundType::BigButtonClick);
     if (m_userId == -1) {
         QMessageBox::warning(this, "Authentication Required", "Please log in to join a lobby.");
         return;

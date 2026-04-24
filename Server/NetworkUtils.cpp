@@ -58,6 +58,7 @@ void NetworkUtils::BroadcastGameStateLocked(const std::string& lobby_id, crow::w
     
     // Deck
     state_base["deck_count"] = game->GetDeckSize();
+    state_base["turn_count"] = game->GetTurnCount();
     
     // Turn info
     try {
@@ -88,6 +89,7 @@ void NetworkUtils::BroadcastGameStateLocked(const std::string& lobby_id, crow::w
             player_val["username"] = std::string(players[i].GetUsername());
             player_val["hand_count"] = (int)players[i].GetHand().size();
             player_val["is_finished"] = players[i].IsFinished();
+            player_val["is_active"] = players[i].IsPlayerActive();
             player_val["player_index"] = players[i].GetPlayerIndex();
             
             std::vector<std::string> hand_cards;
@@ -346,6 +348,44 @@ void NetworkUtils::HandlePlayerDisconnect(const std::string& lobby_id, int user_
     }
     
     if (p_index == -1) return;
+
+    if (lobby.IsOwner(user_id)) {
+        crow::json::wvalue update;
+        update["type"] = "lobby_closed";
+        update["lobby_id"] = lobby_id;
+        update["reason"] = "Host left the game";
+        std::string update_msg = update.dump();
+
+        {
+            std::lock_guard<std::mutex> ws_lock(lobby_ws_mutex);
+            for (auto* conn : lobby_update_connections[lobby_id]) {
+                SafeSendText(conn, update_msg);
+            }
+            lobby_update_connections.erase(lobby_id);
+        }
+        {
+            std::lock_guard<std::mutex> ws_lock(ws_mutex);
+            if (lobby_connections.count(lobby_id)) {
+                for (auto* conn : lobby_connections[lobby_id]) {
+                    SafeSendText(conn, update_msg);
+                }
+                lobby_connections.erase(lobby_id);
+            }
+        }
+
+        lobbies.erase(lobby_id);
+        std::cout << "Lobby " << lobby_id << " destroyed (host left)" << std::endl;
+        return;
+    }
+
+    // Remove from lobby users list as well
+    lobby.LeaveLobby(user_id);
+
+    if (lobby.GetCurrentPlayers() == 0) {
+        std::cout << "Lobby " << lobby_id << " destroyed (all players disconnected)" << std::endl;
+        lobbies.erase(lobby_id);
+        return;
+    }
 
     bool state_changed = false;
     Info result = Info::TURN_ENDED;

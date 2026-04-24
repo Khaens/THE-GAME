@@ -246,6 +246,16 @@ void LobbyRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtil
                 networkUtils.SafeSendText(conn, update_msg);
             }
           
+            {
+                std::lock_guard<std::mutex> game_ws_lock(networkUtils.ws_mutex);
+                if (networkUtils.lobby_connections.count(lobby_id)) {
+                    for (auto* conn : networkUtils.lobby_connections[lobby_id]) {
+                        networkUtils.SafeSendText(conn, update_msg);
+                    }
+                    networkUtils.lobby_connections.erase(lobby_id);
+                }
+            }
+
             networkUtils.lobby_update_connections[lobby_id].clear();
             networkUtils.lobbies.erase(lobby_id);
             
@@ -259,6 +269,21 @@ void LobbyRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtil
         else {
             lobby.LeaveLobby(user_id);
             
+            // Explicitly remove the user's connection from game connections if they are leaving manually
+            {
+                std::lock_guard<std::mutex> game_ws_lock(networkUtils.ws_mutex);
+                if (networkUtils.lobby_connections.count(lobby_id)) {
+                    auto& conns = networkUtils.lobby_connections[lobby_id];
+                    std::lock_guard<std::mutex> state_lock(networkUtils.m_clientStatesMutex);
+                    conns.erase(std::remove_if(conns.begin(), conns.end(), [&](crow::websocket::connection* c){
+                        if (networkUtils.m_clientStates.count(c)) {
+                            return networkUtils.m_clientStates[c].user_id == user_id;
+                        }
+                        return false;
+                    }), conns.end());
+                }
+            }
+
             std::lock_guard<std::mutex> ws_lock(networkUtils.lobby_ws_mutex);
             
             std::string username = "Player_" + std::to_string(user_id);
@@ -280,12 +305,55 @@ void LobbyRoutes::RegisterRoutes(crow::SimpleApp& app, Database* db, NetworkUtil
                 networkUtils.SafeSendText(conn, update_msg);
             }
             
+            // If game is started, trigger AI turns and broadcast state
+            if (lobby.IsStarted() && lobby.GetGame()) {
+                bool state_changed = false;
+                Info result = Info::TURN_ENDED;
+                networkUtils.ProcessInactiveTurns(lobby.GetGame(), result, state_changed);
+                
+                if (result == Info::GAME_WON || result == Info::GAME_LOST) {
+                    // Handle game over logic similar to HandlePlayerDisconnect
+                     crow::json::wvalue over_msg;
+                     over_msg["type"] = "game_over";
+                     over_msg["lobby_id"] = lobby_id;
+                     over_msg["result"] = (result == Info::GAME_WON ? "won" : "lost");
+                     std::string msg = over_msg.dump();
+                     
+                     {
+                         std::lock_guard<std::mutex> ws_lock(networkUtils.ws_mutex);
+                         if (networkUtils.lobby_connections.count(lobby_id)) {
+                             for(auto* c : networkUtils.lobby_connections[lobby_id]) {
+                                 networkUtils.SafeSendText(c, msg);
+                             }
+                             networkUtils.lobby_connections.erase(lobby_id);
+                         }
+                     }
+                     networkUtils.lobbies.erase(lobby_id);
+                     
+                     crow::json::wvalue response;
+                     response["success"] = true;
+                     response["lobby_deleted"] = true;
+                     return crow::response(200, response);
+                }
+                
+                if (state_changed) {
+                    networkUtils.BroadcastGameStateLocked(lobby_id);
+                }
+            }
+            
             std::cout << "Player " << user_id << " left lobby " << lobby_id << std::endl;
             
             crow::json::wvalue response;
             response["success"] = true;
             response["lobby_deleted"] = false;
-            response["current_players"] = lobby.GetCurrentPlayers();
+            
+            if (lobby.GetCurrentPlayers() == 0) {
+                networkUtils.lobbies.erase(lobby_id);
+                response["lobby_deleted"] = true;
+                std::cout << "Lobby " << lobby_id << " destroyed (empty)" << std::endl;
+            } else {
+                response["current_players"] = lobby.GetCurrentPlayers();
+            }
             return crow::response(200, response);
         }
     });

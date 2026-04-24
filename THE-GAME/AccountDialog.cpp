@@ -1,4 +1,5 @@
-﻿#include "AccountDialog.h"
+#include "AccountDialog.h"
+#include "SoundManager.h"
 #include "NetworkManager.h"
 #include "AchievementsDialog.h"
 #include "StatisticsDialog.h"
@@ -129,6 +130,7 @@ void AccountDialog::setupUI()
         }
     )");
     connect(m_loginVisibilityButton, &QPushButton::clicked, this, &AccountDialog::onToggleLoginPasswordVisibility);
+    connect(m_loginVisibilityButton, &QPushButton::clicked, []() { SoundManager::instance()->play(SoundType::RoundButtonClick); });
 
     passwordLayout->addWidget(m_loginPasswordInput);
     passwordLayout->addWidget(m_loginVisibilityButton);
@@ -267,6 +269,7 @@ void AccountDialog::setupUI()
         }
     )");
     connect(m_registerVisibilityButton, &QPushButton::clicked, this, &AccountDialog::onToggleRegisterPasswordVisibility);
+    connect(m_registerVisibilityButton, &QPushButton::clicked, []() { SoundManager::instance()->play(SoundType::RoundButtonClick); });
 
     regPasswordLayout->addWidget(m_registerPasswordInput);
     regPasswordLayout->addWidget(m_registerVisibilityButton);
@@ -386,6 +389,7 @@ void AccountDialog::setupUI()
         }
     )");
     connect(m_changeProfilePicButton, &QPushButton::clicked, this, &AccountDialog::onChangeProfilePicClicked);
+    connect(m_changeProfilePicButton, &QPushButton::clicked, []() { SoundManager::instance()->play(SoundType::BigButtonClick); });
     profileLayout->addWidget(m_changeProfilePicButton);
 
     m_achievementsButton = new QPushButton("Achievements");
@@ -416,6 +420,7 @@ void AccountDialog::setupUI()
         }
     )");
     connect(m_achievementsButton, &QPushButton::clicked, this, &AccountDialog::onAchievementsClicked);
+    connect(m_achievementsButton, &QPushButton::clicked, []() { SoundManager::instance()->play(SoundType::BigButtonClick); });
     profileLayout->addWidget(m_achievementsButton);
 
     m_statisticsButton = new QPushButton("Statistics");
@@ -446,6 +451,7 @@ void AccountDialog::setupUI()
         }
     )");
     connect(m_statisticsButton, &QPushButton::clicked, this, &AccountDialog::onStatisticsClicked);
+    connect(m_statisticsButton, &QPushButton::clicked, []() { SoundManager::instance()->play(SoundType::BigButtonClick); });
     profileLayout->addWidget(m_statisticsButton);
 
     profileLayout->addStretch();
@@ -543,6 +549,7 @@ void AccountDialog::showOverlay()
 
 void AccountDialog::hideOverlay()
 {
+    SoundManager::instance()->play(SoundType::BigButtonClick);
     hide();
 }
 
@@ -571,8 +578,10 @@ void AccountDialog::onChangeProfilePicClicked()
         "", 
         tr("Images (*.png *.jpg *.jpeg *.bmp)"));
 
-    if (fileName.isEmpty())
+    if (fileName.isEmpty()) {
+        SoundManager::instance()->play(SoundType::BigButtonClick);
         return;
+    }
 
     QPixmap p(fileName);
     if (!p.isNull()) {
@@ -665,6 +674,7 @@ void AccountDialog::showProfilePage()
 
 void AccountDialog::onLoginClicked()
 {
+    SoundManager::instance()->play(SoundType::BigButtonClick);
     QString username = m_loginUsernameInput->text().trimmed();
     QString password = m_loginPasswordInput->text();
 
@@ -698,6 +708,7 @@ void AccountDialog::onLoginClicked()
 
 void AccountDialog::onRegisterClicked()
 {
+    SoundManager::instance()->play(SoundType::BigButtonClick);
     QString username = m_registerUsernameInput->text().trimmed();
     QString password = m_registerPasswordInput->text();
 
@@ -736,6 +747,7 @@ void AccountDialog::onRegisterClicked()
 
 void AccountDialog::onLogoutClicked()
 {
+    SoundManager::instance()->play(SoundType::BigButtonClick);
     m_isLoggedIn = false;
     m_currentUsername.clear();
     m_currentUserId = -1;
@@ -751,11 +763,13 @@ void AccountDialog::onLogoutClicked()
 
 void AccountDialog::onGoToRegisterClicked()
 {
+    SoundManager::instance()->play(SoundType::BigButtonClick);
     showRegisterPage();
 }
 
 void AccountDialog::onGoToLoginClicked()
 {
+    SoundManager::instance()->play(SoundType::BigButtonClick);
     showLoginPage();
 }
 

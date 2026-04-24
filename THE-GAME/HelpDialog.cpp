@@ -1,4 +1,5 @@
-﻿#include "HelpDialog.h"
+#include "HelpDialog.h"
+#include "SoundManager.h"
 #include <QResizeEvent>
 #include <QFile>
 #include <QTextStream>
@@ -169,6 +170,7 @@ void HelpDialog::showOverlay()
 
 void HelpDialog::hideOverlay()
 {
+    SoundManager::instance()->play(SoundType::BigButtonClick);
     hide();
 }
 

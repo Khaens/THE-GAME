@@ -1,10 +1,7 @@
-module;
-
 #include <memory>
 #include "PileType.h"
 #include "CardServer.h"
-
-module PileServer;
+#include "Pile.cppm"
 
 Pile::Pile(PileType type) : m_type{ type }
 {
